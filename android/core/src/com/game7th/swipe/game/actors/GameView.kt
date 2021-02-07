@@ -103,7 +103,6 @@ class GameView(
         multiplexer.removeProcessor(processor)
 
         val dialog = GameFinishedDialog(context, text) {
-            //SWITCH SCENE
             println("Closing scene")
             finishCallback()
         }.apply {

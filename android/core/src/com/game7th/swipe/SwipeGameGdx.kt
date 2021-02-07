@@ -20,7 +20,7 @@ class SwipeGameGdx : ApplicationListener {
 
     val multiplexer = InputMultiplexer()
 
-    var constructorView: ConstructorView? = null
+    lateinit var constructorView: ConstructorView
     var gameView: GameView? = null
 
     lateinit var context: GdxGameContext
@@ -41,20 +41,20 @@ class SwipeGameGdx : ApplicationListener {
         Gdx.input.inputProcessor = multiplexer
         multiplexer.addProcessor(stage)
 
-        showConstructorView()
-    }
-
-    private fun showConstructorView() {
-        val constructor = ConstructorView(context) { battleConfig ->
-            constructorView?.remove().also { constructorView = null }
+        constructorView = ConstructorView(context) { battleConfig ->
+            constructorView.isVisible = false
             gameView = GameView(context, multiplexer, battleConfig) {
                 gameView?.remove().also { gameView = null }
                 showConstructorView()
             }
             stage.addActor(gameView)
         }
-        stage.addActor(constructor)
+        showConstructorView()
+        stage.addActor(constructorView)
+    }
 
+    private fun showConstructorView() {
+        constructorView.isVisible = true
     }
 
     override fun render() {
