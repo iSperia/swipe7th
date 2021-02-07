@@ -1,5 +1,6 @@
 package com.game7th.battle.ability
 
+import com.game7th.battle.DamageVector
 import com.game7th.battle.SwipeBattle
 import com.game7th.battle.balance.SwipeBalance
 import com.game7th.battle.event.BattleEvent
@@ -62,7 +63,7 @@ class GladiatorStrike(balance: SwipeBalance): PersonageAbility("skill_tile_holy_
                             * (1+tile.stackSize * b.gladiatorAtkTIer1TileKoef)).toInt()
 
                     battle.npcs.filter { it.value.stats.health > 0 }.forEach { (position, npc) ->
-                        battle.processDamage(npc, personage, damage, 0, 0)
+                        battle.processDamage(npc, personage, DamageVector(damage, 0, 0))
                         battle.notifyAoeProjectile("gladiator_wave", personage)
                     }
                     return true

@@ -1,5 +1,6 @@
 package com.game7th.battle.npc
 
+import com.game7th.battle.DamageVector
 import com.game7th.battle.SwipeBattle
 
 abstract class NpcAbility {
@@ -30,7 +31,7 @@ class SlimeAttackAbility : NpcAbility() {
             val target = battle.findClosestAlivePersonage()
             target?.let { target ->
                 battle.notifyAttack(personage, target)
-                battle.processDamage(target, personage, damage, 0, 0)
+                battle.processDamage(target, personage, DamageVector(damage, 0, 0))
             }
         }
     }

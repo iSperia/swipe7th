@@ -8,6 +8,10 @@
   "baseSkillTileEmitProbability": 30,
   "secondarySkillTileEmitProbability": 10,
 
+  "statsEvasionPerSpirit": 1,
+  "statsEvasionK": 14,
+  "statsEvasionP": 0.85,
+
   "defaultTier1Threshold": 5,
   "defaultTier2Threshold": 10,
 

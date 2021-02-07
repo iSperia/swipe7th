@@ -151,16 +151,30 @@ class SwipeBattle(val balance: SwipeBalance) {
         events.send(BattleEvent.PersonageAttackEvent(personage.toViewModel(), target.toViewModel()))
     }
 
-    suspend fun processDamage(target: SwipePersonage, source: NpcPersonage, physical: Int, magical: Int, chaos: Int) {
-        //TODO: apply shields and stuff
-        target.stats.health = max(0, target.stats.health - (physical + magical + chaos))
-        events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), physical, magical, chaos))
+    /*
+     * TODO: abstract out npc/personages as battle units
+     */
+
+    suspend fun processDamage(target: SwipePersonage, source: NpcPersonage, damage: DamageVector) {
+        val damage = DamageCalculator.calculateDamage(balance, source.stats, target.stats, damage)
+        val totalDamage = damage.damage.totalDamage()
+        if (totalDamage > 0) {
+            target.stats.health = max(0, target.stats.health - totalDamage)
+            events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
+        } else if (damage.status == DamageProcessStatus.DAMAGE_EVADED) {
+            events.send(BattleEvent.PersonageDamageEvadedEvent(target.toViewModel()))
+        }
     }
 
-    suspend fun processDamage(target: NpcPersonage, source: SwipePersonage, physical: Int, magical: Int, chaos: Int) {
-        //TODO: apply shields and stuff
-        target.stats.health = max(0, target.stats.health - (physical + magical + chaos))
-        events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), physical, magical, chaos))
+    suspend fun processDamage(target: NpcPersonage, source: SwipePersonage, damage: DamageVector) {
+        val damage = DamageCalculator.calculateDamage(balance, source.stats, target.stats, damage)
+        val totalDamage = damage.damage.totalDamage()
+        if (totalDamage > 0) {
+            target.stats.health = max(0, target.stats.health - totalDamage)
+            events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
+        } else if (damage.status == DamageProcessStatus.DAMAGE_EVADED) {
+            events.send(BattleEvent.PersonageDamageEvadedEvent(target.toViewModel()))
+        }
     }
 
     fun findClosestAlivePersonage(): SwipePersonage? {

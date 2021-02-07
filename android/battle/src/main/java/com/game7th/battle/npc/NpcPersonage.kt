@@ -12,7 +12,7 @@ abstract class NpcPersonage(
 }
 
 fun NpcPersonage.toViewModel(): PersonageViewModel {
-    return PersonageViewModel(stats, skin, id)
+    return PersonageViewModel(stats.copy(), skin, id)
 }
 
 class SlimePersonage(id: Int, stats: PersonageStats) : NpcPersonage("personage_slime", id, stats, listOf(

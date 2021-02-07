@@ -23,10 +23,12 @@ object PersonageFactory {
                         hp,
                         hp,
                         0,
+                        0,
                         secondaryStatTotal,
                         0,
-                        0,
+                        secondaryStatTotal,
                         tertiaryStatTotal,
+                        0,
                         0,
                         0,
                         config.level))

@@ -5,6 +5,7 @@ data class PersonageStats(
         var health: Int,
         var maxHealth: Int,
         var armor: Int,
+        var maxArmor: Int,
 
         var spirit: Int,
         var regeneration: Int,
@@ -13,6 +14,7 @@ data class PersonageStats(
         var mind: Int,
         var effectiveness: Int,
         var magicDefense: Int,
+        var maxMagicDefense: Int,
 
         var level: Int
 )

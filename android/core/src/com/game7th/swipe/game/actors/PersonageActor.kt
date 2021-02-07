@@ -2,10 +2,7 @@ package com.game7th.swipe.game.actors
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
-import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction
-import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction
-import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
+import com.badlogic.gdx.scenes.scene2d.actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.game7th.battle.personage.PersonageViewModel
@@ -20,6 +17,8 @@ class PersonageActor(
     val healthBarGreen: Image
     val healthBarRed: Image
     val healthAmount: Label
+
+    val effects = Group()
 
     init {
         showBody(vm)
@@ -47,6 +46,8 @@ class PersonageActor(
             zIndex = 10
         }
         addActor(healthAmount)
+
+        addActor(effects)
     }
 
     private fun hideBody() {
@@ -57,9 +58,11 @@ class PersonageActor(
                     alpha = 0f
                     duration = 0.2f
                 },
-                RunnableAction().apply { setRunnable {
-                    oldBody.clearActions()
-                    oldBody.remove()}
+                RunnableAction().apply {
+                    setRunnable {
+                        oldBody.clearActions()
+                        oldBody.remove()
+                    }
                 }
         ))
     }
@@ -83,6 +86,60 @@ class PersonageActor(
             showBody(viewModel)
         }
         vm = viewModel
+    }
+
+    fun showEvadeAnimation() {
+        val evasionText = Label("Evaded", Label.LabelStyle(context.font, Color.GREEN)).apply {
+            width = 60f
+            height = 20f
+            y = 100f
+        }
+
+        effects.addActor(evasionText)
+        evasionText.addAction(
+                SequenceAction(
+                        ParallelAction(
+                                MoveByAction().apply {
+                                    setAmount(0f, 50f)
+                                    duration = 0.4f
+                                },
+                                AlphaAction().apply {
+                                    alpha = 0f
+                                    duration = 0.4f
+                                }
+                        ),
+                        RunnableAction().apply {
+                            setRunnable {
+                                evasionText.clearActions()
+                                evasionText.remove()
+                            }
+                        }))
+
+        body?.addAction(RepeatAction().apply {
+            action = ParallelAction(
+                    SequenceAction(
+                            MoveByAction().apply {
+                                setAmount(1f, 0f)
+                                duration = 0.05f
+                            },
+                            MoveByAction().apply {
+                                setAmount(-1f, 0f)
+                                duration = 0.05f
+                            }
+                    ),
+                    SequenceAction(
+                            AlphaAction().apply {
+                                alpha = 0.5f
+                                duration = 0.05f
+                            },
+                            AlphaAction().apply {
+                                alpha = 1f
+                                duration = 0.05f
+                            }
+                    )
+            )
+            count = 5
+        })
     }
 
 }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.game7th.battle.event.BattleEvent
 import com.game7th.swipe.GdxGameContext
+import kotlinx.coroutines.delay
 import ktx.actors.alpha
 import ktx.actors.centerPosition
 
@@ -64,6 +65,11 @@ class BattleView(private val gameContext: GdxGameContext) : Group() {
                 val personageId = event.personage.id
                 val personageActor = personages.findActor<PersonageActor>("$personageId")
                 personageActor.updateFrom(event.personage)
+            }
+            is BattleEvent.PersonageDamageEvadedEvent -> {
+                val personageId = event.personage.id
+                val personageActor = personages.findActor<PersonageActor>("$personageId")
+                personageActor.showEvadeAnimation()
             }
             is BattleEvent.ShowNpcAoeEffect -> {
                 val personageId = event.personageId

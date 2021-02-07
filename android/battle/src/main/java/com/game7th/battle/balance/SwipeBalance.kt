@@ -11,6 +11,11 @@ data class SwipeBalance(
         val personageBodyMultiply: Int,
         val personageLevelMultiply: Int,
 
+        val statsEvasionPerSpirit: Int,
+        val statsEvasionK: Int,
+        val statsEvasionP: Float,
+        val statsEvasionKoef: Float,
+
         val slimeFlatDamage: Int,
         val slimeScaleDamage: Int,
         val slimeMulti: Float,
