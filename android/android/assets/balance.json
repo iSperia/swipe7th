@@ -1,0 +1,13 @@
+{
+  "version": "1.0",
+  "any_skill_level_multi_scaler": 0.05,
+  "any_skill_main_stat_scaler": 0.1,
+  "baseSkillTileEmitProbability": 30,
+  "secondarySkillTileEmitProbability": 10,
+  "defaultTier1Threshold": 5,
+  "defaultTier2Threshold": 10,
+
+  "slimeFlatDamage": 25,
+  "slimeScaleDamage": 35,
+  "slimeMulti": 0.15
+}

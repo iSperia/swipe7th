@@ -1,40 +1,82 @@
 
 pack_0.png
-size: 256, 64
+size: 1024, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-skill_tile_holy_strike
+battle_bg
   rotate: false
   xy: 2, 2
+  size: 480, 240
+  orig: 480, 240
+  offset: 0, 0
+  index: 0
+kn_shield
+  rotate: false
+  xy: 484, 54
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+p_gladiator
+  rotate: false
+  xy: 608, 122
+  size: 60, 120
+  orig: 60, 120
+  offset: 0, 0
+  index: -1
+personage_golbin
+  rotate: false
+  xy: 546, 122
+  size: 60, 120
+  orig: 60, 120
+  offset: 0, 0
+  index: -1
+personage_priest
+  rotate: false
+  xy: 670, 122
+  size: 60, 120
+  orig: 60, 120
+  offset: 0, 0
+  index: -1
+personage_slime
+  rotate: false
+  xy: 484, 122
+  size: 60, 120
+  orig: 60, 120
+  offset: 0, 0
+  index: -1
+skill_tile_holy_strike
+  rotate: false
+  xy: 484, 88
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 tile_bg
   rotate: false
-  xy: 36, 2
+  xy: 732, 210
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 tile_bg
   rotate: false
-  xy: 104, 2
+  xy: 732, 176
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 tile_bg_grey
   rotate: false
-  xy: 138, 2
+  xy: 766, 210
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 tile_fg_empire
   rotate: false
-  xy: 70, 2
+  xy: 518, 88
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
