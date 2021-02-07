@@ -2,11 +2,13 @@ package com.game7th.battle.tilefield
 
 import com.game7th.battle.tilefield.tile.SwipeTile
 import com.game7th.battle.toViewModel
+import kotlinx.coroutines.runBlocking
+import java.util.concurrent.ConcurrentHashMap
 
 class TileField(private val context: TileFieldContext) {
 
     //all the tiles by their position
-    var tiles = mutableMapOf<Int, SwipeTile>()
+    var tiles = ConcurrentHashMap<Int, SwipeTile>()
 
     var tileId = 0
 
@@ -62,7 +64,8 @@ class TileField(private val context: TileFieldContext) {
             }
         }
 
-        tiles = freshGeneration
+        tiles.clear()
+        tiles.putAll(freshGeneration)
 
         return result
     }
@@ -73,7 +76,7 @@ class TileField(private val context: TileFieldContext) {
         }
     }
 
-    fun updateById(id: Int, tile: SwipeTile) {
+    suspend fun updateById(id: Int, tile: SwipeTile) {
         tiles.forEach {
             if (it.value.id == tile.id) {
                 tiles[it.key] = tile
@@ -83,7 +86,8 @@ class TileField(private val context: TileFieldContext) {
     }
 
     fun removeById(id: Int) {
-        tiles.filter { it.value.id == id }.keys.firstOrNull().let { tiles.remove(it) }
+        val tile = tiles.filter { it.value.id == id }.keys.firstOrNull()
+        tile?.let { tiles.remove(it) }
     }
 
     fun newTileId(): Int {

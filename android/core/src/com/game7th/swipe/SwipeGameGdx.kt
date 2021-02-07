@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.game7th.battle.balance.SwipeBalance
-import com.game7th.swipe.game.GdxGameContext
+import com.game7th.swipe.constructor.ConstructorView
 import com.game7th.swipe.game.actors.GameView
 import com.google.gson.Gson
 import ktx.async.KtxAsync
@@ -35,8 +35,9 @@ class SwipeGameGdx : ApplicationListener {
 
         Gdx.input.inputProcessor = multiplexer
         multiplexer.addProcessor(stage)
-        val game = GameView(context, multiplexer)
-        stage.addActor(game)
+
+        val constructor = ConstructorView(context)
+        stage.addActor(constructor)
     }
 
     override fun render() {

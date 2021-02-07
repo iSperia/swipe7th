@@ -8,7 +8,7 @@ data class PersonageViewModel(
 
 fun SwipePersonage.toViewModel(): PersonageViewModel {
     return PersonageViewModel(
-            stats,
+            stats.copy(),
             skin,
             id
     )

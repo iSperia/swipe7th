@@ -1,7 +1,6 @@
 package com.game7th.swipe.game.actors
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.actions.*
@@ -9,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.game7th.battle.event.TileViewModel
-import com.game7th.swipe.game.GdxGameContext
+import com.game7th.swipe.GdxGameContext
 import ktx.actors.alpha
 import ktx.actors.repeatForever
 

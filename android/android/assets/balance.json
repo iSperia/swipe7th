@@ -11,12 +11,11 @@
   "defaultTier1Threshold": 5,
   "defaultTier2Threshold": 10,
 
-  "slimeFlatDamage": 25,
-  "slimeScaleDamage": 35,
-  "slimeMulti": 0.7,
-  "slimeBaseHealth": 10,
-  "slimeLevelMulti": 60,
-
+  "slimeFlatDamage": 10,
+  "slimeScaleDamage": 10,
+  "slimeMulti": 4,
+  "slimeBaseHealth": -30,
+  "slimeLevelMulti": 100,
 
   "gladiatorAtkTier1DmgConst": 20,
   "gladiatorAtkTier1LvlKoef": 0.05,

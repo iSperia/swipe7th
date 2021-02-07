@@ -18,7 +18,7 @@ abstract class PersonageAbility(
 
     abstract fun mergeTile(balance: SwipeBalance, tileField: TileField, tile1: SwipeTile, tile2: SwipeTile): SwipeTile?
 
-    abstract suspend fun attemptUseAbility(battle: SwipeBattle, personage: SwipePersonage, tileField: TileField, position: Int, tile: SwipeTile)
+    abstract suspend fun attemptUseAbility(battle: SwipeBattle, personage: SwipePersonage, tileField: TileField, position: Int, tile: SwipeTile): Boolean
 }
 
 class GladiatorStrike(balance: SwipeBalance): PersonageAbility("skill_tile_holy_strike") {
@@ -48,7 +48,7 @@ class GladiatorStrike(balance: SwipeBalance): PersonageAbility("skill_tile_holy_
         return SwipeTile(TileType.GLADIATOR_STRIKE, tile2.id, stackSize, tier)
     }
 
-    override suspend fun attemptUseAbility(battle: SwipeBattle, personage: SwipePersonage, tileField: TileField, position: Int, tile: SwipeTile) {
+    override suspend fun attemptUseAbility(battle: SwipeBattle, personage: SwipePersonage, tileField: TileField, position: Int, tile: SwipeTile): Boolean {
         if (tile.type == TileType.GLADIATOR_STRIKE) {
             when (tile.stage) {
                 TileStage.ABILITY_TIER_1,
@@ -65,8 +65,10 @@ class GladiatorStrike(balance: SwipeBalance): PersonageAbility("skill_tile_holy_
                         battle.processDamage(npc, personage, damage, 0, 0)
                         battle.notifyAoeProjectile("gladiator_wave", personage)
                     }
+                    return true
                 }
             }
         }
+        return false
     }
 }

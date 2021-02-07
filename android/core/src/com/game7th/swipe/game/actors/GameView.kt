@@ -1,22 +1,20 @@
 package com.game7th.swipe.game.actors
 
 import com.badlogic.gdx.InputMultiplexer
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Group
-import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.game7th.battle.BattleConfig
-import com.game7th.battle.NpcConfig
 import com.game7th.battle.PersonageConfig
 import com.game7th.battle.SwipeBattle
 import com.game7th.battle.event.BattleEvent
 import com.game7th.swipe.SwipeGameGdx
-import com.game7th.swipe.game.GdxGameContext
+import com.game7th.swipe.GdxGameContext
+import com.game7th.swipe.game.actors.ui.GameFinishedDialog
 import com.game7th.swipe.gestures.SimpleDirectionGestureDetector
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
-import ktx.actors.centerPosition
 import ktx.async.KtxAsync
 
 class GameView(
@@ -30,13 +28,14 @@ class GameView(
     val battleField: BattleView
 
     lateinit var battle: SwipeBattle
+    lateinit var processor: SimpleDirectionGestureDetector
 
     val handler = CoroutineExceptionHandler { _, exception ->
         exception.printStackTrace()
     }
 
     init {
-        multiplexer.addProcessor(0, SimpleDirectionGestureDetector(object : SimpleDirectionGestureDetector.DirectionListener {
+        processor = SimpleDirectionGestureDetector(object : SimpleDirectionGestureDetector.DirectionListener {
             override fun onLeft() {
                 KtxAsync.launch {
                     battle.processSwipe(-1, 0)
@@ -60,7 +59,8 @@ class GameView(
                     battle.processSwipe(0, 1)
                 }
             }
-        }))
+        })
+        multiplexer.addProcessor(0, processor)
 
         tileField = TileFieldView(context, this).apply {
             setScale(TILE_FIELD_SCALE)
@@ -79,8 +79,8 @@ class GameView(
 
     private fun initializeBattle() {
         KtxAsync.launch {
-            battle.initialize(BattleConfig(listOf(PersonageConfig("gladiator", 1)),
-                listOf(NpcConfig("slime", 1), NpcConfig("slime", 1))))
+            battle.initialize(BattleConfig(listOf(PersonageConfig("gladiator", 100)),
+                listOf(PersonageConfig("slime", 100), PersonageConfig("slime", 100), PersonageConfig("slime", 100))))
         }
     }
 
@@ -98,15 +98,16 @@ class GameView(
     }
 
     private fun debugShowBigText(text: String) {
-        val text = Label(text, Label.LabelStyle(context.font, Color.RED)).apply {
-            setFontScale(5f)
-            x = 0f
-            y = (720f - height)/2
-            zIndex = 1000
-            addActor(this)
+        tileField.touchable = Touchable.disabled
+        multiplexer.removeProcessor(processor)
 
-            removeActor(tileField)
-            removeActor(battleField)
+        val dialog = GameFinishedDialog(context, text) {
+            //SWITCH SCENE
+            println("Closing scene")
+        }.apply {
+            x = 40f
+            y = 220f
+            this@GameView.addActor(this)
         }
     }
 

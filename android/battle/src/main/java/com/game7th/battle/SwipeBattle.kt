@@ -20,8 +20,6 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     private val coroutineContext = newSingleThreadContext("battle")
 
-    private val swipes = Channel<Pair<Int, Int>>()
-
     val events = Channel<BattleEvent>()
 
     val tileFieldContext: TileFieldContext = object : TileFieldContext {
@@ -46,7 +44,6 @@ class SwipeBattle(val balance: SwipeBalance) {
     suspend fun initialize(config: BattleConfig) = withContext(coroutineContext) {
         generateInitialPersonages(config)
         generateInitialTiles()
-        processSwipes()
     }
 
     private suspend fun generateInitialTiles() = withContext(coroutineContext) {
@@ -97,10 +94,20 @@ class SwipeBattle(val balance: SwipeBalance) {
         return personageId.also { personageId++ }
     }
 
-    private suspend fun processSwipes() = withContext(coroutineContext) {
-        for (swipe in swipes) {
-            val dx = swipe.first
-            val dy = swipe.second
+    private suspend fun checkDeadPersonages() {
+        if (personages.values.none { it.stats.health > 0 }) {
+            //player has lost
+            events.send(BattleEvent.DefeatEvent)
+            events.close()
+        } else if (npcs.values.none { it.stats.health > 0 }) {
+            //player has won
+            events.send(BattleEvent.VictoryEvent)
+            events.close()
+        }
+    }
+
+    suspend fun processSwipe(dx: Int, dy: Int) = withContext(coroutineContext) {
+        if (!events.isClosedForSend) {
             var motionEvents = tileField.attemptSwipe(dx, dy)
             var hadAnyEvents = false
             while (motionEvents.isNotEmpty()) {
@@ -119,29 +126,17 @@ class SwipeBattle(val balance: SwipeBalance) {
         }
     }
 
-    private suspend fun checkDeadPersonages() {
-        if (personages.values.none { it.stats.health > 0 }) {
-            //player has lost
-            events.send(BattleEvent.DefeatEvent)
-        } else if (npcs.values.none { it.stats.health > 0 }) {
-            //player has won
-            events.send(BattleEvent.VictoryEvent)
-        }
-    }
-
-    suspend fun processSwipe(dx: Int, dy: Int) = withContext(coroutineContext) {
-        swipes.send(Pair(dx, dy))
-    }
-
     suspend fun attemptActivateTile(id: Int) = withContext(coroutineContext) {
-        tileField.tiles.entries.firstOrNull { it.value.id == id }?.let { (position, tile) ->
-            personages.filter { it.value.stats.health > 0 }.forEach { (position, personage) ->
-                personage.abilities.forEach { ability ->
-                    ability.attemptUseAbility(this@SwipeBattle, personage, tileField, position, tile)
+        if (!events.isClosedForSend) {
+            tileField.tiles.entries.firstOrNull { it.value.id == id }?.let { (position, tile) ->
+                personages.filter { it.value.stats.health > 0 }.entries.firstOrNull { (position, personage) ->
+                    personage.abilities.firstOrNull { ability ->
+                        ability.attemptUseAbility(this@SwipeBattle, personage, tileField, position, tile)
+                    } != null
                 }
             }
+            checkDeadPersonages()
         }
-        checkDeadPersonages()
     }
 
     suspend fun processTickNpc() {
