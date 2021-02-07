@@ -24,7 +24,7 @@ class PersonageSelector(
                 width = 60f
                 height = 120f
                 x = (it.index % 6) * 60f
-                y = 360f - (1 + it.index / 6) * 210f
+                y = 360f - (1 + it.index / 6) * 120f
             }
 
             addActor(skin)

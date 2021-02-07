@@ -19,7 +19,9 @@ import ktx.async.KtxAsync
 
 class GameView(
         private val context: GdxGameContext,
-        private val multiplexer: InputMultiplexer
+        private val multiplexer: InputMultiplexer,
+        private val config: BattleConfig,
+        private val finishCallback: () -> Unit
 ) : Group(), TileDoubleTapCallback {
 
     lateinit var atlas: TextureAtlas
@@ -79,8 +81,7 @@ class GameView(
 
     private fun initializeBattle() {
         KtxAsync.launch {
-            battle.initialize(BattleConfig(listOf(PersonageConfig("gladiator", 100)),
-                listOf(PersonageConfig("slime", 100), PersonageConfig("slime", 100), PersonageConfig("slime", 100))))
+            battle.initialize(config)
         }
     }
 
@@ -104,6 +105,7 @@ class GameView(
         val dialog = GameFinishedDialog(context, text) {
             //SWITCH SCENE
             println("Closing scene")
+            finishCallback()
         }.apply {
             x = 40f
             y = 220f

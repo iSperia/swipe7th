@@ -11,7 +11,8 @@ import ktx.actors.*
 
 class PersonagePreview(
         val context: GdxGameContext,
-        var config: PersonageConfig
+        var config: PersonageConfig,
+        val selectSkinCallback: () -> Unit
 ) : Group() {
 
     val bg = Image(context.atlas.createPatch("ui_button")).apply {
@@ -19,7 +20,7 @@ class PersonagePreview(
         height = 120f
     }
 
-    lateinit var charImage: Image
+    var charImage: Image? = null
 
     val levelChooser = Group()
 
@@ -75,20 +76,18 @@ class PersonagePreview(
         }
     }
 
-    private fun applyCharImage() {
-        charImage = Image(context.atlas.findRegion(getSkin(config.codeName))).apply {
+    fun applyCharImage() {
+        charImage?.remove()
+
+        charImage = Image(context.atlas.findRegion(ConstructorView.getSkin(config.codeName))).apply {
             setScale(0.8f)
             x = 20f
             y = 12f
         }
         addActor(charImage)
-    }
 
-    private fun getSkin(codename: String): String {
-        return when (codename) {
-            "gladiator" -> "p_gladiator"
-            "slime" -> "personage_slime"
-            else -> "personage_dead"
+        charImage?.onClick {
+            selectSkinCallback()
         }
     }
 }

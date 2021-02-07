@@ -20,6 +20,11 @@ class SwipeGameGdx : ApplicationListener {
 
     val multiplexer = InputMultiplexer()
 
+    var constructorView: ConstructorView? = null
+    var gameView: GameView? = null
+
+    lateinit var context: GdxGameContext
+
     override fun create() {
         KtxAsync.initiate()
 
@@ -31,13 +36,25 @@ class SwipeGameGdx : ApplicationListener {
         val balanceFile = Gdx.files.internal("balance.json")
         val balanceText = balanceFile.readString()
         val balance = Gson().fromJson<SwipeBalance>(balanceText, SwipeBalance::class.java)
-        val context = GdxGameContext(atlas, font, balance)
+        context = GdxGameContext(atlas, font, balance)
 
         Gdx.input.inputProcessor = multiplexer
         multiplexer.addProcessor(stage)
 
-        val constructor = ConstructorView(context)
+        showConstructorView()
+    }
+
+    private fun showConstructorView() {
+        val constructor = ConstructorView(context) { battleConfig ->
+            constructorView?.remove().also { constructorView = null }
+            gameView = GameView(context, multiplexer, battleConfig) {
+                gameView?.remove().also { gameView = null }
+                showConstructorView()
+            }
+            stage.addActor(gameView)
+        }
         stage.addActor(constructor)
+
     }
 
     override fun render() {

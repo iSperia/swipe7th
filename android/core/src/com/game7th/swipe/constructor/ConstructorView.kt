@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
+import com.game7th.battle.BattleConfig
 import com.game7th.battle.PersonageConfig
 import com.game7th.swipe.GdxGameContext
 import ktx.actors.*
@@ -13,7 +14,10 @@ enum class ConstructorMode {
     PERSONAGES, NPCS
 }
 
-class ConstructorView(private val context: GdxGameContext) : Group() {
+class ConstructorView(
+        private val context: GdxGameContext,
+        val launchBattleCallback: (BattleConfig) -> Unit
+) : Group() {
 
     val personages = Group()
     val npcs = Group()
@@ -22,6 +26,8 @@ class ConstructorView(private val context: GdxGameContext) : Group() {
 
     val personageCodenames = listOf("gladiator")
     val npcCodenames = listOf("slime")
+
+    var selector: PersonageSelector? = null
 
     val personagesLabel = Label("Personages", Label.LabelStyle(context.font, Color.WHITE)).apply {
         width = 160f
@@ -63,15 +69,35 @@ class ConstructorView(private val context: GdxGameContext) : Group() {
             height = 680f
         }
 
-        val createButton = Label("New", Label.LabelStyle(context.font, Color.BLUE)).apply {
+        val createButtonBg = Image(context.atlas.createPatch("ui_button")).apply {
+            width = 120f
+            height = 30f
+            x = 180f
+            y = 50f
+        }
+        addActor(createButtonBg)
+
+        val createButton = Label("Start", Label.LabelStyle(context.font, Color.BLUE)).apply {
             width = 120f
             height = 30f
             setFontScale(2f)
             x = 180f
-            y = 10f
+            y = 50f
             setAlignment(Align.center)
         }
         addActor(createButton)
+        createButton.onClick {
+            //collect battle config
+            val personageConfigs = (1..3).map { index ->
+                personages.getChild(index) as PersonagePreview
+            }.map { it.config }.filter { personageCodenames.contains(it.codeName) }
+            val npcsConfigs = (1..3).map { index ->
+                npcs.getChild(index) as PersonagePreview
+            }.map { it.config }.filter { npcCodenames.contains(it.codeName) }
+
+            val battleConfig = BattleConfig(personageConfigs, npcsConfigs)
+            launchBattleCallback(battleConfig)
+        }
 
         personages += personagesBg
         npcs += npcsBg
@@ -79,18 +105,49 @@ class ConstructorView(private val context: GdxGameContext) : Group() {
         showPersonages()
 
         for (i in 0..2) {
-            val p = PersonagePreview(context, PersonageConfig(if (i == 1) "gladiator" else "dead", 1))
+            val p = PersonagePreview(context, PersonageConfig(if (i == 1) "gladiator" else "dead", 1)) {
+                hideSelector()
+                selector = PersonageSelector(personageCodenames.map { getSkin(it) }, context) { index ->
+                    val p: PersonagePreview = personages.getChild(i + 1) as PersonagePreview
+                    p.config = p.config.copy(codeName = personageCodenames[index])
+                    p.applyCharImage()
+                    hideSelector()
+                }.apply {
+                    zIndex = 30
+                    x = 55f
+                    y = 150f
+                }
+                addActor(selector)
+
+            }
             p.x = 40f
-            p.y = 720f - 80f - 120f*(i+1)
+            p.y = 720f - 80f - 120f * (i+1)
             personages += p
         }
 
         for (i in 0..2) {
-            val n = PersonagePreview(context, PersonageConfig("slime", 1))
+            val n = PersonagePreview(context, PersonageConfig("slime", 1)) {
+                hideSelector()
+                selector = PersonageSelector(npcCodenames.map { getSkin(it) }, context) { index ->
+                    val p: PersonagePreview = npcs.getChild(i + 1) as PersonagePreview
+                    p.config = p.config.copy(codeName = npcCodenames[index])
+                    p.applyCharImage()
+                    hideSelector()
+                }.apply {
+                    zIndex = 30
+                    x = 55f
+                    y = 150f
+                }
+                addActor(selector)
+            }
             n.x = 40f
-            n.y = 720f - 80f - 120f*(i+1)
+            n.y = 720f - 80f - 120f * (i+1)
             npcs += n
         }
+    }
+
+    private fun hideSelector() {
+        selector?.remove().also { selector = null }
     }
 
     private fun showPersonages() {
@@ -105,5 +162,15 @@ class ConstructorView(private val context: GdxGameContext) : Group() {
         personages.isVisible = false
         personagesLabel.color = Color.WHITE
         npcsLabel.color = Color.RED
+    }
+
+    companion object {
+        fun getSkin(codename: String): String {
+            return when (codename) {
+                "gladiator" -> "p_gladiator"
+                "slime" -> "personage_slime"
+                else -> "personage_dead"
+            }
+        }
     }
 }
