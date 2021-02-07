@@ -71,6 +71,11 @@ class BattleView(private val gameContext: GdxGameContext) : Group() {
                 val personageActor = personages.findActor<PersonageActor>("$personageId")
                 personageActor.showEvadeAnimation()
             }
+            is BattleEvent.PersonageUpdateEvent -> {
+                val personageId = event.personage.id
+                val personageActor = personages.findActor<PersonageActor>("$personageId")
+                personageActor.updateFrom(event.personage)
+            }
             is BattleEvent.ShowNpcAoeEffect -> {
                 val personageId = event.personageId
 

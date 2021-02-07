@@ -18,14 +18,15 @@ object PersonageFactory {
         return when (config.codeName) {
             "gladiator" -> {
                 val hp = balance.personageHealthBase + balance.personageBodyMultiply * primaryStatTotal + balance.personageLevelMultiply * (config.level-1)
+                val armor = primaryStatTotal * balance.personageArmorPerBodyMultiply
                 return Gladiator(id, balance, PersonageStats(
                         primaryStatTotal,
                         hp,
                         hp,
-                        0,
-                        0,
+                        armor,
+                        armor,
                         secondaryStatTotal,
-                        0,
+                        (balance.personageRegenerationPerBodyMultiply * secondaryStatTotal).toInt(),
                         secondaryStatTotal,
                         tertiaryStatTotal,
                         0,

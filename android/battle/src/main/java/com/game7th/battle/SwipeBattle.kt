@@ -15,6 +15,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.withContext
 import kotlin.math.max
+import kotlin.math.min
 
 class SwipeBattle(val balance: SwipeBalance) {
 
@@ -118,6 +119,7 @@ class SwipeBattle(val balance: SwipeBalance) {
             }
             if (hadAnyEvents) {
                 processTickEmit()
+                processTickUnits()
                 processTickNpc()
                 tick++
 
@@ -139,13 +141,32 @@ class SwipeBattle(val balance: SwipeBalance) {
         }
     }
 
-    suspend fun processTickNpc() {
+    private suspend fun processTickNpc() {
         npcs.entries.filter { it.value.stats.health > 0 }.forEach { (position, npc) ->
             npc.abilities.forEach { ability ->
                 ability.tick(this, npc)
             }
         }
     }
+
+    private suspend fun processTickUnits() {
+        //calculate regeneration
+        alivePersonages().forEach {
+            if (it.value.stats.regeneration > 0 && it.value.stats.health < it.value.stats.maxHealth) {
+                it.value.stats.health = min(it.value.stats.maxHealth, it.value.stats.health + it.value.stats.regeneration)
+                events.send(BattleEvent.PersonageUpdateEvent(it.value.toViewModel()))
+            }
+        }
+        aliveNpcs().forEach {
+            if (it.value.stats.regeneration > 0 && it.value.stats.health < it.value.stats.maxHealth) {
+                it.value.stats.health = min(it.value.stats.maxHealth, it.value.stats.health + it.value.stats.regeneration)
+                events.send(BattleEvent.PersonageUpdateEvent(it.value.toViewModel()))
+            }
+        }
+    }
+
+    private fun alivePersonages() = personages.entries.filter { it.value.stats.health > 0 }
+    private fun aliveNpcs() = npcs.entries.filter { it.value.stats.health > 0 }
 
     suspend fun notifyAttack(personage: NpcPersonage, target: SwipePersonage) {
         events.send(BattleEvent.PersonageAttackEvent(personage.toViewModel(), target.toViewModel()))
@@ -158,8 +179,9 @@ class SwipeBattle(val balance: SwipeBalance) {
     suspend fun processDamage(target: SwipePersonage, source: NpcPersonage, damage: DamageVector) {
         val damage = DamageCalculator.calculateDamage(balance, source.stats, target.stats, damage)
         val totalDamage = damage.damage.totalDamage()
-        if (totalDamage > 0) {
+        if (totalDamage > 0 || damage.armorDeplete > 0) {
             target.stats.health = max(0, target.stats.health - totalDamage)
+            target.stats.armor = max(0, target.stats.armor - damage.armorDeplete)
             events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
         } else if (damage.status == DamageProcessStatus.DAMAGE_EVADED) {
             events.send(BattleEvent.PersonageDamageEvadedEvent(target.toViewModel()))
@@ -169,8 +191,9 @@ class SwipeBattle(val balance: SwipeBalance) {
     suspend fun processDamage(target: NpcPersonage, source: SwipePersonage, damage: DamageVector) {
         val damage = DamageCalculator.calculateDamage(balance, source.stats, target.stats, damage)
         val totalDamage = damage.damage.totalDamage()
-        if (totalDamage > 0) {
+        if (totalDamage > 0 || damage.armorDeplete > 0) {
             target.stats.health = max(0, target.stats.health - totalDamage)
+            target.stats.armor = max(0, target.stats.armor - damage.armorDeplete)
             events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
         } else if (damage.status == DamageProcessStatus.DAMAGE_EVADED) {
             events.send(BattleEvent.PersonageDamageEvadedEvent(target.toViewModel()))

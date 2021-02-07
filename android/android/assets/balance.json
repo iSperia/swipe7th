@@ -4,6 +4,8 @@
   "personageHealthBase": 50,
   "personageBodyMultiply": 10,
   "personageLevelMultiply": 10,
+  "personageArmorPerBodyMultiply": 10,
+  "personageRegenerationPerBodyMultiply": 0.5,
 
   "baseSkillTileEmitProbability": 30,
   "secondarySkillTileEmitProbability": 10,

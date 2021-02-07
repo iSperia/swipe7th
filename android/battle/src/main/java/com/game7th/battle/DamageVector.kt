@@ -15,5 +15,7 @@ enum class DamageProcessStatus{
 
 data class DamageProcessResult(
         val damage: DamageVector,
+        val armorDeplete: Int,
+        val resistDeplete: Int,
         val status: DamageProcessStatus
 )

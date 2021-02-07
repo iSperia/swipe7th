@@ -47,6 +47,10 @@ sealed class BattleEvent {
             val damage: Int
     ) : BattleEvent()
 
+    data class PersonageUpdateEvent(
+            val personage: PersonageViewModel
+    ) : BattleEvent()
+
     data class PersonageDamageEvadedEvent(
             val personage: PersonageViewModel
     ) : BattleEvent()
