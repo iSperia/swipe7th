@@ -3,19 +3,18 @@ package com.game7th.battle
 import com.game7th.battle.balance.SwipeBalance
 import com.game7th.battle.event.BattleEvent
 import com.game7th.battle.event.TileViewModel
+import com.game7th.battle.npc.NpcFactory
 import com.game7th.battle.npc.NpcPersonage
 import com.game7th.battle.npc.SlimePersonage
 import com.game7th.battle.npc.toViewModel
-import com.game7th.battle.personage.Gladiator
-import com.game7th.battle.personage.PersonageStats
-import com.game7th.battle.personage.SwipePersonage
-import com.game7th.battle.personage.toViewModel
+import com.game7th.battle.personage.*
 import com.game7th.battle.tilefield.TileField
 import com.game7th.battle.tilefield.TileFieldContext
 import com.game7th.battle.tilefield.tile.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.withContext
+import kotlin.math.max
 
 class SwipeBattle(val balance: SwipeBalance) {
 
@@ -42,8 +41,10 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     var personageId = 0
 
-    suspend fun initialize() = withContext(coroutineContext) {
-        generateInitialPersonages()
+    var tick = 0
+
+    suspend fun initialize(config: BattleConfig) = withContext(coroutineContext) {
+        generateInitialPersonages(config)
         generateInitialTiles()
         processSwipes()
     }
@@ -65,7 +66,7 @@ class SwipeBattle(val balance: SwipeBalance) {
             }
         }
 
-        personages.values.forEach { personage ->
+        personages.values.filter { it.stats.health > 0 }.forEach { personage ->
             personage.abilities.forEach { ability ->
                 val abilityEvents = ability.processEmit(false, balance, tileField, personage)
                 abilityEvents.forEach { events.send(it) }
@@ -73,15 +74,23 @@ class SwipeBattle(val balance: SwipeBalance) {
         }
     }
 
-    private suspend fun generateInitialPersonages() = withContext(coroutineContext) {
-        personages[1] = Gladiator(
-                newPersonageId(),
-                balance,
-                PersonageStats(30, 10000, 10, 20, 3, 10, 10, 3, 10, 4))
-        events.send(BattleEvent.CreatePersonageEvent(personages[1]!!.toViewModel(), 1))
+    private suspend fun generateInitialPersonages(config: BattleConfig) = withContext(coroutineContext) {
+        config.personages.withIndex().forEach {
+            val personage = PersonageFactory.producePersonage(it.value, balance, newPersonageId())
+            personage?.let { personage ->
+                personages[it.index] = personage
+                events.send(BattleEvent.CreatePersonageEvent(personages[it.index]!!.toViewModel(), it.index))
+            }
+        }
 
-        npcs[5] = SlimePersonage(newPersonageId(), PersonageStats(0, 30, 0, 0, 0, 0, 0, 0, 0, 1))
-        events.send(BattleEvent.CreatePersonageEvent(npcs[5]!!.toViewModel(), 5))
+        config.npcs.withIndex().forEach {
+            val npc = NpcFactory.produceNpc(it.value, balance, newPersonageId())
+            val position = it.index + 5
+            npc?.let { npc ->
+                npcs[position] = npc
+                events.send(BattleEvent.CreatePersonageEvent(npc.toViewModel(), position))
+            }
+        }
     }
 
     private fun newPersonageId(): Int {
@@ -103,24 +112,40 @@ class SwipeBattle(val balance: SwipeBalance) {
             if (hadAnyEvents) {
                 processTickEmit()
                 processTickNpc()
+                tick++
+
+                checkDeadPersonages()
             }
         }
     }
 
-    suspend fun processSwipe(dx: Int, dy: Int) {
+    private suspend fun checkDeadPersonages() {
+        if (personages.values.none { it.stats.health > 0 }) {
+            //player has lost
+            events.send(BattleEvent.DefeatEvent)
+        } else if (npcs.values.none { it.stats.health > 0 }) {
+            //player has won
+            events.send(BattleEvent.VictoryEvent)
+        }
+    }
+
+    suspend fun processSwipe(dx: Int, dy: Int) = withContext(coroutineContext) {
         swipes.send(Pair(dx, dy))
     }
 
     suspend fun attemptActivateTile(id: Int) = withContext(coroutineContext) {
         tileField.tiles.entries.firstOrNull { it.value.id == id }?.let { (position, tile) ->
-            personages.flatMap { it.value.abilities }.forEach { ability ->
-                ability.processTileDoubleTap(this@SwipeBattle, tileField, position, tile)
+            personages.filter { it.value.stats.health > 0 }.forEach { (position, personage) ->
+                personage.abilities.forEach { ability ->
+                    ability.attemptUseAbility(this@SwipeBattle, personage, tileField, position, tile)
+                }
             }
         }
+        checkDeadPersonages()
     }
 
     suspend fun processTickNpc() {
-        npcs.entries.forEach { (position, npc) ->
+        npcs.entries.filter { it.value.stats.health > 0 }.forEach { (position, npc) ->
             npc.abilities.forEach { ability ->
                 ability.tick(this, npc)
             }
@@ -133,7 +158,13 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     suspend fun processDamage(target: SwipePersonage, source: NpcPersonage, physical: Int, magical: Int, chaos: Int) {
         //TODO: apply shields and stuff
-        target.stats.health -= physical + magical + chaos
+        target.stats.health = max(0, target.stats.health - (physical + magical + chaos))
+        events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), physical, magical, chaos))
+    }
+
+    suspend fun processDamage(target: NpcPersonage, source: SwipePersonage, physical: Int, magical: Int, chaos: Int) {
+        //TODO: apply shields and stuff
+        target.stats.health = max(0, target.stats.health - (physical + magical + chaos))
         events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), physical, magical, chaos))
     }
 
@@ -143,6 +174,10 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     suspend fun notifyTileRemoved(id: Int) {
         events.send(BattleEvent.RemoveTileEvent(id))
+    }
+
+    suspend fun notifyAoeProjectile(skin: String, personage: SwipePersonage) {
+        events.send(BattleEvent.ShowNpcAoeEffect(skin, personage.id))
     }
 }
 

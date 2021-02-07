@@ -82,8 +82,12 @@ class TileField(private val context: TileFieldContext) {
         }
     }
 
+    fun removeById(id: Int) {
+        tiles.filter { it.value.id == id }.keys.firstOrNull().let { tiles.remove(it) }
+    }
+
     fun newTileId(): Int {
-        return tileId.also { tileId++ }
+        return ++tileId
     }
 
     companion object {

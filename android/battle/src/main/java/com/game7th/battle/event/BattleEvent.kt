@@ -48,4 +48,12 @@ sealed class BattleEvent {
             val amountMagical: Int,
             val amountChaos: Int
     ) : BattleEvent()
+
+    data class ShowNpcAoeEffect(
+            val skin: String,
+            val personageId: Int
+    ) : BattleEvent()
+
+    object VictoryEvent: BattleEvent()
+    object DefeatEvent : BattleEvent()
 }

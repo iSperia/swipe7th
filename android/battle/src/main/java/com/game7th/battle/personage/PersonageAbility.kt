@@ -18,7 +18,7 @@ abstract class PersonageAbility(
 
     abstract fun mergeTile(balance: SwipeBalance, tileField: TileField, tile1: SwipeTile, tile2: SwipeTile): SwipeTile?
 
-    abstract suspend fun processTileDoubleTap(battle: SwipeBattle, tileField: TileField, position: Int, tile: SwipeTile)
+    abstract suspend fun attemptUseAbility(battle: SwipeBattle, personage: SwipePersonage, tileField: TileField, position: Int, tile: SwipeTile)
 }
 
 class GladiatorStrike(balance: SwipeBalance): PersonageAbility("skill_tile_holy_strike") {
@@ -48,13 +48,23 @@ class GladiatorStrike(balance: SwipeBalance): PersonageAbility("skill_tile_holy_
         return SwipeTile(TileType.GLADIATOR_STRIKE, tile2.id, stackSize, tier)
     }
 
-    override suspend fun processTileDoubleTap(battle: SwipeBattle, tileField: TileField, position: Int, tile: SwipeTile) {
+    override suspend fun attemptUseAbility(battle: SwipeBattle, personage: SwipePersonage, tileField: TileField, position: Int, tile: SwipeTile) {
         if (tile.type == TileType.GLADIATOR_STRIKE) {
             when (tile.stage) {
                 TileStage.ABILITY_TIER_1,
                 TileStage.ABILITY_TIER_2 -> {
-                    tileField.tiles.remove(position)
+                    tileField.removeById(tile.id)
                     battle.notifyTileRemoved(tile.id)
+
+                    val b = battle.balance
+                    val damage = (b.gladiatorAtkTier1DmgConst
+                            * (1 + b.gladiatorAtkTier1LvlKoef * personage.stats.level + b.gladiatorAtkTier1StrKoef * personage.stats.body)
+                            * (1+tile.stackSize * b.gladiatorAtkTIer1TileKoef)).toInt()
+
+                    battle.npcs.filter { it.value.stats.health > 0 }.forEach { (position, npc) ->
+                        battle.processDamage(npc, personage, damage, 0, 0)
+                        battle.notifyAoeProjectile("gladiator_wave", personage)
+                    }
                 }
             }
         }

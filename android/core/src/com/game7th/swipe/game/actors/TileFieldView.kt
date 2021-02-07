@@ -1,12 +1,14 @@
 package com.game7th.swipe.game.actors
 
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.game7th.battle.event.BattleEvent
 import com.game7th.battle.event.TileViewModel
 import com.game7th.battle.tilefield.TileFieldEvent
 import com.game7th.swipe.game.GdxGameContext
+import kotlinx.coroutines.delay
 import ktx.actors.alpha
 
 class TileFieldView(
@@ -36,7 +38,7 @@ class TileFieldView(
         addActor(tileGroup)
     }
 
-    fun processAction(action: BattleEvent) {
+    suspend fun processAction(action: BattleEvent) {
         println("Processing action ${action.javaClass.name}")
         when (action) {
             is BattleEvent.CreateTileEvent -> {
@@ -75,6 +77,7 @@ class TileFieldView(
                         }
                     }
                 }
+                delay(50L)
             }
             is BattleEvent.UpdateTileEvent -> {
                 val tile = tileGroup.findActor<TileView>("${action.id}")
@@ -108,6 +111,14 @@ class TileFieldView(
 
     private fun animatedMoveAndDestroy(id: Int, position: Int, updateTile: TileViewModel) {
         val tile = findActor<TileView>("$id")
+        findActor<TileView>("${updateTile.id}").addAction(SequenceAction(
+                DelayAction(MOVE_STEP_LENGTH),
+                RunnableAction().apply {
+                    setRunnable {
+                        findActor<TileView>("${updateTile.id}").updateFrom(updateTile)
+                    }
+                }
+        ))
         tile.addAction(SequenceAction(
                 ParallelAction(
                         MoveToAction().apply {
@@ -117,13 +128,16 @@ class TileFieldView(
                         AlphaAction().apply {
                             alpha = 0f
                             duration = MOVE_STEP_LENGTH
+                        },
+                        ScaleToAction().apply {
+                            setScale(1.3f)
+                            duration = MOVE_STEP_LENGTH
                         }
                 ),
                 RunnableAction().apply {
                     setRunnable {
-                        findActor<TileView>("${updateTile.id}").updateFrom(updateTile)
                         tile.clearActions()
-                        removeActor(tile)
+                        tile.remove()
                     }
                 }
         ))

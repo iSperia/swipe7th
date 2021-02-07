@@ -1,13 +1,25 @@
 {
   "version": "1.0",
-  "any_skill_level_multi_scaler": 0.05,
-  "any_skill_main_stat_scaler": 0.1,
+
+  "personageHealthBase": 50,
+  "personageBodyMultiply": 10,
+  "personageLevelMultiply": 10,
+
   "baseSkillTileEmitProbability": 30,
   "secondarySkillTileEmitProbability": 10,
+
   "defaultTier1Threshold": 5,
   "defaultTier2Threshold": 10,
 
   "slimeFlatDamage": 25,
   "slimeScaleDamage": 35,
-  "slimeMulti": 0.15
+  "slimeMulti": 0.7,
+  "slimeBaseHealth": 10,
+  "slimeLevelMulti": 60,
+
+
+  "gladiatorAtkTier1DmgConst": 20,
+  "gladiatorAtkTier1LvlKoef": 0.05,
+  "gladiatorAtkTier1StrKoef": 0.1,
+  "gladiatorAtkTIer1TileKoef": 0.02
 }

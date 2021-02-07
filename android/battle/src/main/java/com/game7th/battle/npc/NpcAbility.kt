@@ -25,7 +25,7 @@ class SlimeAttackAbility : NpcAbility() {
     }
 
     override suspend fun primaryAbility(battle: SwipeBattle, personage: NpcPersonage) {
-        val damage = (battle.balance.slimeFlatDamage + (battle.balance.slimeScaleDamage * personage.stats.level - 1) * battle.balance.slimeMulti).toInt()
+        val damage = (battle.balance.slimeFlatDamage + (battle.balance.slimeScaleDamage * (personage.stats.level - 1)) * battle.balance.slimeMulti).toInt()
         if (damage > 0) {
             val target = battle.findClosestAlivePersonage()
             target?.let { target ->

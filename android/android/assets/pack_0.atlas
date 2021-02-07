@@ -6,77 +6,98 @@ filter: Nearest, Nearest
 repeat: none
 battle_bg
   rotate: false
-  xy: 2, 2
+  xy: 2, 5
   size: 480, 240
   orig: 480, 240
   offset: 0, 0
   index: 0
+gladiator_wave
+  rotate: false
+  xy: 484, 59
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+health_bar_green
+  rotate: false
+  xy: 484, 22
+  size: 5, 1
+  orig: 5, 1
+  offset: 0, 0
+  index: -1
+health_bar_red
+  rotate: false
+  xy: 2, 2
+  size: 5, 1
+  orig: 5, 1
+  offset: 0, 0
+  index: -1
 kn_shield
   rotate: false
-  xy: 484, 54
+  xy: 550, 91
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 p_gladiator
   rotate: false
-  xy: 608, 122
+  xy: 608, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 personage_golbin
   rotate: false
-  xy: 546, 122
+  xy: 546, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 personage_priest
   rotate: false
-  xy: 670, 122
+  xy: 670, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 personage_slime
   rotate: false
-  xy: 484, 122
+  xy: 484, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 skill_tile_holy_strike
   rotate: false
-  xy: 484, 88
+  xy: 732, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 tile_bg
   rotate: false
-  xy: 732, 210
+  xy: 484, 25
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 tile_bg
   rotate: false
-  xy: 732, 176
+  xy: 766, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 tile_bg_grey
   rotate: false
-  xy: 766, 210
+  xy: 584, 91
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 tile_fg_empire
   rotate: false
-  xy: 518, 88
+  xy: 732, 179
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

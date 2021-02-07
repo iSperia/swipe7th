@@ -8,9 +8,11 @@ import org.junit.Test
 
 class TileFieldTest {
 
-    private val mergers = listOf<TileMerger>(ConcatStackTileMerger(TileType.GLADIATOR_STRIKE))
     private val context = object : TileFieldContext {
-        override fun mergers(): List<TileMerger> = mergers
+        override fun merge(tile: SwipeTile, swipeTile: SwipeTile): SwipeTile? {
+            if (tile.type != swipeTile.type) return null
+            return SwipeTile(tile.type, swipeTile.id, tile.stackSize + swipeTile.stackSize, tile.stage)
+        }
     }
 
     @Test
@@ -40,6 +42,7 @@ class TileFieldTest {
 
         assert(events.size == 2)
         assert(field.tiles[29]!!.stackSize == 3)
+        assert(field.tiles[29]!!.id == 1)
     }
 
     @Test

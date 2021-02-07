@@ -50,10 +50,6 @@ class TileView(
         })
     }
 
-    override fun hit(x: Float, y: Float, touchable: Boolean): Actor? {
-        return if (x > 0f && y > 0f && x < 32f && y < 32f) this else super.hit(x, y, touchable)
-    }
-
     fun updateFrom(viewModel: TileViewModel) {
         val isBackgroundChanged = vm?.background != viewModel.background || vm?.backgroundIndex != viewModel.backgroundIndex
         val isForegroundChanged = vm?.fractionForeground != viewModel.fractionForeground
@@ -61,6 +57,7 @@ class TileView(
         val isStackSizeChanged = vm?.stackSize != viewModel.stackSize
 
         vm = viewModel
+        name = "${viewModel.id}"
 
         if (isBackgroundChanged) {
             removeBackground()
