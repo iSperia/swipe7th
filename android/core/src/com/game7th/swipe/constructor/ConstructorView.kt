@@ -20,6 +20,9 @@ class ConstructorView(private val context: GdxGameContext) : Group() {
 
     val mode = ConstructorMode.PERSONAGES
 
+    val personageCodenames = listOf("gladiator")
+    val npcCodenames = listOf("slime")
+
     val personagesLabel = Label("Personages", Label.LabelStyle(context.font, Color.WHITE)).apply {
         width = 160f
         height = 40f

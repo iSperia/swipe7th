@@ -11,8 +11,7 @@ import ktx.actors.*
 
 class PersonagePreview(
         val context: GdxGameContext,
-        var config: PersonageConfig,
-        val codenames: List<String>
+        var config: PersonageConfig
 ) : Group() {
 
     val bg = Image(context.atlas.createPatch("ui_button")).apply {
@@ -24,7 +23,7 @@ class PersonagePreview(
 
     val levelChooser = Group()
 
-    val levels = listOf<Int>(1,10,20,30,50,75,100)
+    val levels = listOf(1,10,20,30,50,75,100)
 
     init {
         addActor(bg)
