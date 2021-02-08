@@ -179,9 +179,10 @@ class SwipeBattle(val balance: SwipeBalance) {
     suspend fun processDamage(target: SwipePersonage, source: NpcPersonage, damage: DamageVector) {
         val damage = DamageCalculator.calculateDamage(balance, source.stats, target.stats, damage)
         val totalDamage = damage.damage.totalDamage()
-        if (totalDamage > 0 || damage.armorDeplete > 0) {
+        if (totalDamage > 0 || damage.armorDeplete > 0 || damage.resistDeplete > 0) {
             target.stats.health = max(0, target.stats.health - totalDamage)
             target.stats.armor = max(0, target.stats.armor - damage.armorDeplete)
+            target.stats.magicDefense = max(0, target.stats.magicDefense - damage.resistDeplete)
             events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
         } else if (damage.status == DamageProcessStatus.DAMAGE_EVADED) {
             events.send(BattleEvent.PersonageDamageEvadedEvent(target.toViewModel()))
@@ -191,9 +192,10 @@ class SwipeBattle(val balance: SwipeBalance) {
     suspend fun processDamage(target: NpcPersonage, source: SwipePersonage, damage: DamageVector) {
         val damage = DamageCalculator.calculateDamage(balance, source.stats, target.stats, damage)
         val totalDamage = damage.damage.totalDamage()
-        if (totalDamage > 0 || damage.armorDeplete > 0) {
+        if (totalDamage > 0 || damage.armorDeplete > 0 || damage.resistDeplete > 0) {
             target.stats.health = max(0, target.stats.health - totalDamage)
             target.stats.armor = max(0, target.stats.armor - damage.armorDeplete)
+            target.stats.magicDefense = max(0, target.stats.magicDefense - damage.resistDeplete)
             events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
         } else if (damage.status == DamageProcessStatus.DAMAGE_EVADED) {
             events.send(BattleEvent.PersonageDamageEvadedEvent(target.toViewModel()))

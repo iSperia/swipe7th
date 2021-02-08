@@ -22,10 +22,12 @@ object DamageCalculator {
             DamageProcessResult(DamageVector(0,0,0), 0, 0, DamageProcessStatus.DAMAGE_EVADED)
         } else {
             val physArmorReduction = if (target.armor > 0) min(Random.nextInt(target.armor + 1), damage.physical) else 0
+            val magicDefenseReduction = if (target.magicDefense > 0) min(Random.nextInt(target.magicDefense + 1), damage.magical) else 0
 
             DamageProcessResult(damage.copy(
-                    physical = damage.physical - physArmorReduction
-            ), physArmorReduction, 0, DamageProcessStatus.DAMAGE_DEALT)
+                    physical = damage.physical - physArmorReduction,
+                    magical = damage.magical - magicDefenseReduction
+            ), physArmorReduction, magicDefenseReduction, DamageProcessStatus.DAMAGE_DEALT)
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.game7th.battle.ability
 
 import com.game7th.battle.DamageVector
+import com.game7th.battle.EfficencyCalculator
 import com.game7th.battle.SwipeBattle
 import com.game7th.battle.balance.SwipeBalance
 import com.game7th.battle.event.BattleEvent
@@ -26,11 +27,12 @@ class GladiatorStrike(balance: SwipeBalance): PersonageAbility("skill_tile_holy_
 
     override fun processEmit(isGuaranteed: Boolean, balance: SwipeBalance, tileField: TileField, personage: SwipePersonage): List<BattleEvent> {
         val result = mutableListOf<BattleEvent>()
-        val isProc = isGuaranteed || Random.nextInt(100) < balance.baseSkillTileEmitProbability
+        val amount = if (isGuaranteed) 1 else EfficencyCalculator.calculateStackSize(balance, personage.stats.level, personage.stats.effectiveness)
+        val isProc = amount > 0
         if (isProc) {
             val position: Int? = tileField.calculateFreePosition()
             position?.let { position ->
-                val tile = SwipeTile(TileType.GLADIATOR_STRIKE, tileField.newTileId(), 1, TileStage.ABILITY_TIER_0)
+                val tile = SwipeTile(TileType.GLADIATOR_STRIKE, tileField.newTileId(), amount, TileStage.ABILITY_TIER_0)
                 tileField.tiles[position] = tile
                 result.add(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
             }

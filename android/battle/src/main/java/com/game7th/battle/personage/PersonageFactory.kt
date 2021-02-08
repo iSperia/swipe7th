@@ -6,7 +6,7 @@ import com.game7th.battle.balance.SwipeBalance
 object PersonageFactory {
 
     fun producePersonage(config: PersonageConfig, balance: SwipeBalance, id: Int): SwipePersonage? {
-        val totalStats = (config.level - 1) * (1 + config.level) / 2
+        val totalStats = (config.level - 1) * (config.level) / 2
         val tertiaryStat = totalStats / 6
         val secondaryStat = totalStats / 3
         val primaryStat = totalStats - secondaryStat - tertiaryStat
@@ -19,6 +19,7 @@ object PersonageFactory {
             "gladiator" -> {
                 val hp = balance.personageHealthBase + balance.personageBodyMultiply * primaryStatTotal + balance.personageLevelMultiply * (config.level-1)
                 val armor = primaryStatTotal * balance.personageArmorPerBodyMultiply
+                val magicDefense = tertiaryStatTotal * balance.personageMagicDefPerMindMultiply
                 return Gladiator(id, balance, PersonageStats(
                         primaryStatTotal,
                         hp,
@@ -29,9 +30,9 @@ object PersonageFactory {
                         (balance.personageRegenerationPerBodyMultiply * secondaryStatTotal).toInt(),
                         secondaryStatTotal,
                         tertiaryStatTotal,
-                        0,
-                        0,
-                        0,
+                        tertiaryStatTotal,
+                        magicDefense,
+                        magicDefense,
                         config.level))
             }
             else -> null

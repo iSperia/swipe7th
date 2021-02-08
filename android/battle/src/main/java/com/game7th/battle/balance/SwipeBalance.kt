@@ -10,8 +10,10 @@ data class SwipeBalance(
         val personageHealthBase: Int,
         val personageBodyMultiply: Int,
         val personageArmorPerBodyMultiply: Int,
+        val personageMagicDefPerMindMultiply: Int,
         val personageLevelMultiply: Int,
         val personageRegenerationPerBodyMultiply: Float,
+        val personageEfficencyStackKoef: Float,
 
         val statsEvasionPerSpirit: Int,
         val statsEvasionK: Int,

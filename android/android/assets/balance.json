@@ -5,7 +5,9 @@
   "personageBodyMultiply": 10,
   "personageLevelMultiply": 10,
   "personageArmorPerBodyMultiply": 10,
+  "personageMagicDefPerMindMultiply": 10,
   "personageRegenerationPerBodyMultiply": 0.5,
+  "personageEfficencyStackKoef": 0.125,
 
   "baseSkillTileEmitProbability": 30,
   "secondarySkillTileEmitProbability": 10,

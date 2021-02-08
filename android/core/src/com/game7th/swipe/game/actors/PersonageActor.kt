@@ -18,8 +18,11 @@ class PersonageActor(
     val healthBarRed: Image
     var armorBarBlack: Image? = null
     var armorBarGrey: Image? = null
+    var resistBarBlack: Image? = null
+    var resistBarGrey: Image? = null
     val healthAmount: Label
     val armorAmount: Label
+    val resistAmount: Label
 
     val effects = Group()
 
@@ -65,20 +68,47 @@ class PersonageActor(
             }
             addActor(armorBarGrey)
         }
+        if (vm.stats.magicDefense > 0) {
+            nextY += 3f
+            resistBarBlack = Image(context.atlas.findRegion("resist_bar_black")).apply {
+                y = nextY
+                x = 10f
+                width = 40f
+                height = 2f
+            }
+            addActor(resistBarBlack)
 
-        healthAmount = Label("${vm.stats.health}", Label.LabelStyle(context.font, Color.BLUE)).apply {
+
+            resistBarGrey = Image(context.atlas.findRegion("resist_bar_blue")).apply {
+                y = nextY
+                x = 10f
+                width = 40f
+                height = 2f
+                scaleX = vm.stats.armor.toFloat() / vm.stats.maxArmor
+            }
+            addActor(resistBarGrey)
+        }
+
+        healthAmount = Label("${vm.stats.health}", Label.LabelStyle(context.font, Color.RED)).apply {
             x = 10f
-            y = 20f
+            y = 22f
             zIndex = 10
         }
         armorAmount = Label("${vm.stats.armor}", Label.LabelStyle(context.font, Color.BLACK)).apply {
             x = 10f
-            y = 9f
+            y = 10f
             setFontScale(0.8f)
             zIndex = 12
         }
+        resistAmount = Label("${vm.stats.magicDefense}", Label.LabelStyle(context.font, Color.BLUE)).apply {
+            x = 10f
+            y = 0f
+            setFontScale(0.8f)
+            zIndex = 13
+        }
         addActor(healthAmount)
         addActor(armorAmount)
+        addActor(resistAmount)
 
         addActor(effects)
     }
@@ -128,6 +158,13 @@ class PersonageActor(
             armorAmount.setText("${viewModel.stats.armor}")
         }
 
+        if (viewModel.stats.maxMagicDefense > 0) {
+            resistBarGrey?.addAction(ScaleToAction().apply {
+                setScale(viewModel.stats.magicDefense.toFloat() / viewModel.stats.maxMagicDefense, 1f)
+                duration = 0.2f
+            })
+            armorAmount.setText("${viewModel.stats.magicDefense}")
+        }
     }
 
     fun showEvadeAnimation() {
