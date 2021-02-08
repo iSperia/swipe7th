@@ -7,7 +7,6 @@ object EfficencyCalculator {
 
     fun calculateStackSize(balance: SwipeBalance, level: Int, efficency: Int): Int {
         val efficencyValue = balance.personageEfficencyStackKoef * efficency.toFloat() / level
-        println("effic: $efficencyValue")
         val extraProb = efficencyValue % 1
         return efficencyValue.toInt() + if (Random.nextFloat() < extraProb) 1 else 0
     }
