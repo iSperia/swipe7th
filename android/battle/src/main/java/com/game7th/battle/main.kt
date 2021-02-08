@@ -27,7 +27,7 @@ suspend fun emulateBattle(balance: SwipeBalance, config: BattleConfig) {
 
     GlobalScope.async(handler) {
 
-        val results = (0..99).map {
+        val results = (0..999).map {
             async {
                 val battle = SwipeBattle(balance)
 

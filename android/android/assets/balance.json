@@ -21,12 +21,12 @@
 
   "slimeFlatDamage": 10,
   "slimeScaleDamage": 10,
-  "slimeMulti": 4,
+  "slimeMulti": 0.84,
   "slimeBaseHealth": -30,
   "slimeLevelMulti": 100,
 
   "gladiatorAtkTier1DmgConst": 20,
   "gladiatorAtkTier1LvlKoef": 0.05,
   "gladiatorAtkTier1StrKoef": 0.1,
-  "gladiatorAtkTIer1TileKoef": 0.02
+  "gladiatorAtkTIer1TileKoef": 0.4
 }
