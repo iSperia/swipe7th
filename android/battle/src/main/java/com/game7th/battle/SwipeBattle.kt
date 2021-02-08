@@ -156,17 +156,27 @@ class SwipeBattle(val balance: SwipeBalance) {
                 it.value.stats.health = min(it.value.stats.maxHealth, it.value.stats.health + it.value.stats.regeneration)
                 events.send(BattleEvent.PersonageUpdateEvent(it.value.toViewModel()))
             }
+
         }
         aliveNpcs().forEach {
             if (it.value.stats.regeneration > 0 && it.value.stats.health < it.value.stats.maxHealth) {
                 it.value.stats.health = min(it.value.stats.maxHealth, it.value.stats.health + it.value.stats.regeneration)
                 events.send(BattleEvent.PersonageUpdateEvent(it.value.toViewModel()))
             }
+            val personage = it.value
+            if (personage.ailments.poisonDuration > 0) {
+                personage.ailments.poisonDuration--
+                processAilmentDamage(personage, DamageVector(0, 0, personage.ailments.poisonDamage))
+                events.send(BattleEvent.ShowAilmentEffect(personage.id, "effect_poision"))
+                if (personage.ailments.poisonDuration == 0) {
+                    personage.ailments.poisonDamage = 0
+                }
+            }
         }
     }
 
-    private fun alivePersonages() = personages.entries.filter { it.value.stats.health > 0 }
-    private fun aliveNpcs() = npcs.entries.filter { it.value.stats.health > 0 }
+    fun alivePersonages() = personages.entries.filter { it.value.stats.health > 0 }
+    fun aliveNpcs() = npcs.entries.filter { it.value.stats.health > 0 }
 
     suspend fun notifyAttack(personage: NpcPersonage, target: SwipePersonage) {
         events.send(BattleEvent.PersonageAttackEvent(personage.toViewModel(), target.toViewModel()))
@@ -189,7 +199,7 @@ class SwipeBattle(val balance: SwipeBalance) {
         }
     }
 
-    suspend fun processDamage(target: NpcPersonage, source: SwipePersonage, damage: DamageVector) {
+    suspend fun processDamage(target: NpcPersonage, source: SwipePersonage, damage: DamageVector): DamageProcessResult {
         val damage = DamageCalculator.calculateDamage(balance, source.stats, target.stats, damage)
         val totalDamage = damage.damage.totalDamage()
         if (totalDamage > 0 || damage.armorDeplete > 0 || damage.resistDeplete > 0) {
@@ -200,6 +210,12 @@ class SwipeBattle(val balance: SwipeBalance) {
         } else if (damage.status == DamageProcessStatus.DAMAGE_EVADED) {
             events.send(BattleEvent.PersonageDamageEvadedEvent(target.toViewModel()))
         }
+        return damage
+    }
+
+    suspend fun processAilmentDamage(target: NpcPersonage, damage: DamageVector) {
+        target.stats.health = max(0, target.stats.health - damage.totalDamage())
+        events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.totalDamage()))
     }
 
     fun findClosestAlivePersonage(): SwipePersonage? {
@@ -212,6 +228,16 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     suspend fun notifyAoeProjectile(skin: String, personage: SwipePersonage) {
         events.send(BattleEvent.ShowNpcAoeEffect(skin, personage.id))
+    }
+
+    suspend fun notifyTargetedProjectile(skin: String, personage: SwipePersonage, target: NpcPersonage) {
+        events.send(BattleEvent.ShowProjectile(skin, personage.id, target.id))
+    }
+
+    suspend fun applyPoison(target: NpcPersonage, poisonTicks: Int, poisonDmg: Int) {
+        target.ailments.poisonDamage += poisonDmg
+        target.ailments.poisonDuration += poisonTicks
+        events.send(BattleEvent.ShowAilmentEffect(target.id, "effect_poision"))
     }
 }
 

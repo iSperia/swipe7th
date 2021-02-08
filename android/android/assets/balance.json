@@ -28,5 +28,13 @@
   "gladiatorAtkTier1DmgConst": 20,
   "gladiatorAtkTier1LvlKoef": 0.05,
   "gladiatorAtkTier1StrKoef": 0.1,
-  "gladiatorAtkTIer1TileKoef": 0.02
+  "gladiatorAtkTIer1TileKoef": 0.02,
+
+  "poisonArcherAtkTier1Const": 20,
+  "poisonArcherAtkTier1LvlKoef": 0.05,
+  "poisonArcherAtkTier1SpiritKoef": 0.1,
+  "poisonArcherTier1TileKoef": 0.02,
+  "poisonArcherDotKoef": 0.4,
+  "poisonArcherTileMultiplier": 0.2,
+  "poisonArcherPoisonDuration": 10
 }

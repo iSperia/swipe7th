@@ -24,7 +24,7 @@ class ConstructorView(
 
     val mode = ConstructorMode.PERSONAGES
 
-    val personageCodenames = listOf("gladiator")
+    val personageCodenames = listOf("gladiator", "poison_archer")
     val npcCodenames = listOf("slime")
 
     var selector: PersonageSelector? = null
@@ -168,6 +168,7 @@ class ConstructorView(
         fun getSkin(codename: String): String {
             return when (codename) {
                 "gladiator" -> "p_gladiator"
+                "poison_archer" -> "personage_ranger"
                 "slime" -> "personage_slime"
                 else -> "personage_dead"
             }

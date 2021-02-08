@@ -35,6 +35,25 @@ object PersonageFactory {
                         magicDefense,
                         config.level))
             }
+            "poison_archer" -> {
+                val hp = balance.personageHealthBase + balance.personageBodyMultiply * tertiaryStatTotal + balance.personageLevelMultiply * (config.level-1)
+                val armor = tertiaryStatTotal * balance.personageArmorPerBodyMultiply
+                val magicDefense = secondaryStatTotal * balance.personageMagicDefPerMindMultiply
+                return PoisonArcher(id, balance, PersonageStats(
+                        tertiaryStatTotal,
+                        hp,
+                        hp,
+                        armor,
+                        armor,
+                        primaryStatTotal,
+                        (balance.personageRegenerationPerBodyMultiply * primaryStatTotal).toInt(),
+                        secondaryStatTotal,
+                        secondaryStatTotal,
+                        secondaryStatTotal,
+                        magicDefense,
+                        magicDefense,
+                        config.level))
+            }
             else -> null
         }
     }

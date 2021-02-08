@@ -29,5 +29,13 @@ data class SwipeBalance(
         val gladiatorAtkTier1DmgConst: Int,
         val gladiatorAtkTier1LvlKoef: Float,
         val gladiatorAtkTier1StrKoef: Float,
-        val gladiatorAtkTIer1TileKoef: Float
+        val gladiatorAtkTIer1TileKoef: Float,
+
+        val poisonArcherAtkTier1Const: Int,
+        val poisonArcherAtkTier1LvlKoef: Float,
+        val poisonArcherAtkTier1SpiritKoef: Float,
+        val poisonArcherTier1TileKoef: Float,
+        val poisonArcherDotKoef: Float,
+        val poisonArcherTileMultiplier: Float,
+        val poisonArcherPoisonDuration: Int
 )

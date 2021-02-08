@@ -2,6 +2,7 @@ package com.game7th.battle.personage
 
 import com.game7th.battle.ability.GladiatorStrike
 import com.game7th.battle.ability.PersonageAbility
+import com.game7th.battle.ability.PoisionArrow
 import com.game7th.battle.balance.SwipeBalance
 
 sealed class SwipePersonage(
@@ -16,3 +17,9 @@ class Gladiator(
         balance: SwipeBalance,
         stats: PersonageStats
 ) : SwipePersonage(id, "p_gladiator", stats, listOf(GladiatorStrike(balance)))
+
+class PoisonArcher(
+        id: Int,
+        balance: SwipeBalance,
+        stats: PersonageStats
+) : SwipePersonage(id, "personage_ranger", stats, listOf(PoisionArrow(balance)))

@@ -60,6 +60,17 @@ sealed class BattleEvent {
             val personageId: Int
     ) : BattleEvent()
 
+    data class ShowProjectile(
+            val skin: String,
+            val sourceId: Int,
+            val targetId: Int
+    ) : BattleEvent()
+
+    data class ShowAilmentEffect(
+            val target: Int,
+            val effectSkin: String
+    ) : BattleEvent()
+
     object VictoryEvent: BattleEvent()
     object DefeatEvent : BattleEvent()
 }

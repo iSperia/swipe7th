@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.game7th.battle.event.BattleEvent
 import com.game7th.swipe.GdxGameContext
-import kotlinx.coroutines.delay
 import ktx.actors.alpha
 import ktx.actors.centerPosition
 
@@ -110,6 +109,45 @@ class BattleView(private val gameContext: GdxGameContext) : Group() {
                 }
 
                 effectsForeground.addActor(projectileImage)
+            }
+            is BattleEvent.ShowProjectile -> {
+                val projectileImage = Image(gameContext.atlas.findRegion(event.skin))
+                val sourceActor = personages.findActor<PersonageActor>("${event.sourceId}")
+                val targetActor = personages.findActor<PersonageActor>("${event.targetId}")
+                effectsForeground.addActor(projectileImage)
+                projectileImage.apply {
+                    x = sourceActor.x
+                    y = sourceActor.y +50f
+                    addAction(SequenceAction(
+                            MoveToAction().apply {
+                                setPosition(targetActor.x, targetActor.y)
+                                duration = 0.2f
+                            },
+                            RunnableAction().apply {
+                                setRunnable {
+                                    projectileImage.clearActions()
+                                    projectileImage.remove()
+                                }
+                            }
+                    ))
+                }
+            }
+            is BattleEvent.ShowAilmentEffect -> {
+                val effectImage = Image(gameContext.atlas.findRegion(event.effectSkin, 0))
+                val targetActor = personages.findActor<PersonageActor>("${event.target}")
+                effectImage.apply {
+                    x = targetActor.x
+                    y = targetActor.y + 50f
+                }
+                effectsForeground.addActor(effectImage)
+                effectImage.addAction(DelayAction(0.1f).apply {
+                    action = RunnableAction().apply {
+                        setRunnable {
+                            effectImage.clearActions()
+                            effectImage.remove()
+                        }
+                    }
+                })
             }
         }
     }
