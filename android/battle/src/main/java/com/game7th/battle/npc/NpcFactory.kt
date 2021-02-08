@@ -9,7 +9,7 @@ object NpcFactory {
     fun produceNpc(config: PersonageConfig, balance: SwipeBalance, id: Int): NpcPersonage? {
         return when (config.codeName) {
             "slime" -> {
-                val hp = balance.slimeBaseHealth + balance.slimeLevelMulti * config.level
+                val hp = (1 + config.level * (2 * config.level)) + balance.slimeBaseHealth
                 return SlimePersonage(id, PersonageStats(
                         0,
                         hp,

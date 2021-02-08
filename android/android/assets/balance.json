@@ -19,16 +19,16 @@
   "defaultTier1Threshold": 5,
   "defaultTier2Threshold": 10,
 
-  "slimeFlatDamage": 10,
+  "slimeFlatDamage": 30,
   "slimeScaleDamage": 10,
-  "slimeMulti": 0.84,
-  "slimeBaseHealth": -30,
+  "slimeMulti": 0.30,
+  "slimeBaseHealth": 50,
   "slimeLevelMulti": 100,
 
   "gladiatorAtkTier1DmgConst": 20,
   "gladiatorAtkTier1LvlKoef": 0.05,
   "gladiatorAtkTier1StrKoef": 0.1,
-  "gladiatorAtkTIer1TileKoef": 0.4,
+  "gladiatorAtkTIer1TileKoef": 0.02,
 
   "poisonArcherAtkTier1Const": 20,
   "poisonArcherAtkTier1LvlKoef": 0.05,
