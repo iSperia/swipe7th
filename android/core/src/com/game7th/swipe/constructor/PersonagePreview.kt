@@ -24,7 +24,7 @@ class PersonagePreview(
 
     val levelChooser = Group()
 
-    val levels = listOf(1,10,20,30,50,75,100)
+    val levels = listOf(1,2,3,5,10,15,20,25,50,75,100)
 
     init {
         addActor(bg)
