@@ -11,10 +11,6 @@ import com.game7th.battle.unit.UnitType
 import com.game7th.swipe.GdxGameContext
 import ktx.actors.*
 
-enum class ConstructorMode {
-    PERSONAGES, NPCS
-}
-
 class ConstructorView(
         private val context: GdxGameContext,
         val launchBattleCallback: (BattleConfig) -> Unit
@@ -23,10 +19,8 @@ class ConstructorView(
     val personages = Group()
     val npcs = Group()
 
-    val mode = ConstructorMode.PERSONAGES
-
-    val personageCodenames = listOf(UnitType.GLADIATOR, UnitType.POISON_ARCHER)
-    val npcCodenames = listOf(UnitType.GREEN_SLIME)
+    val personageCodenames = UnitType.values().filter { it != UnitType.UNKNOWN }
+    val npcCodenames = personageCodenames
 
     var selector: PersonageSelector? = null
 

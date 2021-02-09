@@ -88,19 +88,19 @@ class BattleView(private val gameContext: GdxGameContext) : Group() {
 
                     addAction(SequenceAction(
                             ParallelAction(
-                            AlphaAction().apply {
-                                alpha = 0.5f
-                                duration = 0.1f
-                            },
-                            ScaleToAction().apply {
-                                setScale(1.5f)
-                                duration = 0.5f
-                            },
-                            MoveByAction().apply {
-                                amountX = 340f
-                                duration = 0.5f
-                            }
-                    ), RunnableAction().apply {
+                                    AlphaAction().apply {
+                                        alpha = 0.5f
+                                        duration = 0.1f
+                                    },
+                                    ScaleToAction().apply {
+                                        setScale(1.5f)
+                                        duration = 0.5f
+                                    },
+                                    MoveByAction().apply {
+                                        amountX = 340f
+                                        duration = 0.5f
+                                    }
+                            ), RunnableAction().apply {
                         setRunnable {
                             projectileImage.clearActions()
                             projectileImage.remove()
@@ -117,7 +117,7 @@ class BattleView(private val gameContext: GdxGameContext) : Group() {
                 effectsForeground.addActor(projectileImage)
                 projectileImage.apply {
                     x = sourceActor.x
-                    y = sourceActor.y +50f
+                    y = sourceActor.y + 50f
                     addAction(SequenceAction(
                             MoveToAction().apply {
                                 setPosition(targetActor.x, targetActor.y)
