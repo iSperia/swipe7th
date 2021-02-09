@@ -3,18 +3,18 @@
 
   "stats": {
     "baseHealth":50,
-    "healthPerBody": 10,
+    "healthPerBody": 20,
     "healthPerLevel": 10,
-    "armorPerBody": 10,
+    "armorPerBody": 20,
     "resistPerMind": 10,
-    "regenerationPerSpirit": 0.5,
-    "wizdomMultiplier": 0.125,
+    "regenerationPerSpirit": 1,
+    "wizdomMultiplier": 0.08,
     "evasionPerSpirit": 1,
     "evasion": { "k": 14, "p": 0.85 }
   },
 
-  "slime": {"flatDmg":  30, "scaleDmg":  10, "m":  0.3, "baseHp":  50, "levelHp":  100},
-  "gladiator": {"c":  20, "k":  0.05, "str_k":  0.1, "tile_k": 0.02},
-  "poison_archer": {"c":  20, "k":  0.05, "spi_k":  0.1, "tile_k": 0.02, "dot_k":  0.4, "tile_m":  0.2, "d":  10},
-  "gunner": {"c":  3, "k":  0.05, "mind_k":  0.005, "tile_k": 0.02, "bullets":  24}
+  "slime": {"flatDmg":  20, "scaleDmg":  10, "m":  0.3, "baseHp":  50},
+  "gladiator": {"c":  8, "k":  0.05, "str_k":  0.05, "tile_k": 0.2},
+  "poison_archer": {"c":  20, "k":  0.05, "spi_k":  0.05, "tile_k": 0.05, "dot_k":  0.25, "tile_m":  0.25, "d":  10},
+  "gunner": {"c":  2, "k":  0.05, "mind_k":  0.05, "tile_k": 0.1, "bullets":  24}
 }

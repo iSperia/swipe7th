@@ -60,7 +60,7 @@ object UnitFactory {
 
                             if (result.status != DamageProcessStatus.DAMAGE_EVADED) {
                                 val poisonTicks = b.poison_archer.d
-                                val poisonDmg = (b.poison_archer.dot_k * damage * sqrt(b.poison_archer.tile_k * tile.stackSize)).toInt()
+                                val poisonDmg = (b.poison_archer.dot_k * damage * sqrt(b.poison_archer.tile_m * tile.stackSize)).toInt()
                                 battle.applyPoison(target, poisonTicks, poisonDmg)
                             }
                         }
