@@ -1,12 +1,13 @@
 package com.game7th.swipe.game.actors
 
 import com.badlogic.gdx.InputMultiplexer
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Touchable
+import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.game7th.battle.BattleConfig
-import com.game7th.battle.PersonageConfig
 import com.game7th.battle.SwipeBattle
 import com.game7th.battle.event.BattleEvent
 import com.game7th.swipe.SwipeGameGdx
@@ -15,6 +16,7 @@ import com.game7th.swipe.game.actors.ui.GameFinishedDialog
 import com.game7th.swipe.gestures.SimpleDirectionGestureDetector
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
+import ktx.actors.onClick
 import ktx.async.KtxAsync
 
 class GameView(
@@ -31,6 +33,8 @@ class GameView(
 
     lateinit var battle: SwipeBattle
     lateinit var processor: SimpleDirectionGestureDetector
+
+    lateinit var buttonConcede: Label
 
     val handler = CoroutineExceptionHandler { _, exception ->
         exception.printStackTrace()
@@ -77,6 +81,13 @@ class GameView(
         battle = SwipeBattle(context.balance)
         initializeBattle()
         listenEvents()
+
+        buttonConcede = Label("Concede", Label.LabelStyle(context.font, Color.YELLOW))
+        buttonConcede.onClick {
+            debugShowBigText("DEFEAT")
+        }
+        buttonConcede.y = 700f
+        addActor(buttonConcede)
     }
 
     private fun initializeBattle() {
