@@ -100,7 +100,7 @@ class BattleView(private val gameContext: GdxGameContext) : Group() {
                                         duration = 0.5f
                                     },
                                     MoveByAction().apply {
-                                        amountX = 340f
+                                        amountX = 340f * event.direction
                                         duration = 0.5f
                                     }
                             ), RunnableAction().apply {

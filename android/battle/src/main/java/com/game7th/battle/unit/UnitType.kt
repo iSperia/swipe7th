@@ -6,6 +6,7 @@ enum class UnitType {
     MACHINE_GUNNER,
 
     GREEN_SLIME,
+    CITADEL_WARLOCK,
 
     UNKNOWN
 }

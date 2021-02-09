@@ -25,6 +25,16 @@ data class SlimeBalance(
     val levelHp: Int
 )
 
+data class CitadelWarlockBalance(
+        val flatDmg: Int,
+        val scaleDmg: Float,
+        val m: Float,
+        val baseHp: Int,
+        val levelHp: Int,
+        val healPercentage: Float
+)
+
+
 data class GladiatorBalance(
         val c: Int,
         val k: Float,
@@ -55,6 +65,7 @@ data class SwipeBalance(
 
         val stats: StatBalance,
         val slime: SlimeBalance,
+        val citadel_warlock: CitadelWarlockBalance,
         val gladiator: GladiatorBalance,
         val poison_archer: PoisonArcherBalance,
         val gunner: GunnerBalance

@@ -57,7 +57,8 @@ sealed class BattleEvent {
 
     data class ShowNpcAoeEffect(
             val skin: String,
-            val personageId: Int
+            val personageId: Int,
+            val direction: Int
     ) : BattleEvent()
 
     data class ShowProjectile(

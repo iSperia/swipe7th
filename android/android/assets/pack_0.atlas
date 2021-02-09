@@ -1,222 +1,236 @@
 
 pack_0.png
-size: 1024, 256
+size: 2048, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 armor_bar_grey
   rotate: false
-  xy: 995, 249
+  xy: 1181, 144
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
   index: -1
 battle_bg
   rotate: false
-  xy: 2, 10
+  xy: 2, 5
   size: 480, 240
   orig: 480, 240
   offset: 0, 0
   index: 0
 effect_poision
   rotate: false
-  xy: 736, 68
+  xy: 1247, 185
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: 4
 effect_poision
   rotate: false
-  xy: 798, 68
+  xy: 1309, 185
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: 1
 effect_poision
   rotate: false
-  xy: 860, 68
+  xy: 1371, 185
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: 3
 effect_poision
   rotate: false
-  xy: 922, 68
+  xy: 1433, 185
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: 0
 effect_poision
   rotate: false
-  xy: 670, 2
+  xy: 1495, 185
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: 2
 gladiator_wave
   rotate: false
-  xy: 670, 64
+  xy: 1181, 181
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 health_bar_green
   rotate: false
-  xy: 586, 33
+  xy: 1247, 182
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
   index: -1
 health_bar_red
   rotate: false
-  xy: 2, 7
+  xy: 608, 150
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
   index: -1
 kn_shield
   rotate: false
-  xy: 552, 2
+  xy: 1591, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 p_gladiator
   rotate: false
-  xy: 747, 130
+  xy: 871, 125
+  size: 60, 120
+  orig: 60, 120
+  offset: 0, 0
+  index: -1
+personage_citadel_warlock
+  rotate: false
+  xy: 747, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 personage_dead
   rotate: false
-  xy: 546, 36
+  xy: 546, 31
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 personage_golbin
   rotate: false
-  xy: 685, 130
+  xy: 809, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 personage_gunner
   rotate: false
-  xy: 623, 130
+  xy: 685, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 personage_priest
   rotate: false
-  xy: 809, 130
+  xy: 933, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 personage_ranger
   rotate: false
-  xy: 608, 8
+  xy: 1119, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 personage_slime
   rotate: false
-  xy: 484, 36
+  xy: 484, 31
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 projectile_arrow
   rotate: false
-  xy: 871, 130
+  xy: 995, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 projectile_bullet
   rotate: false
-  xy: 933, 130
+  xy: 1057, 125
+  size: 60, 120
+  orig: 60, 120
+  offset: 0, 0
+  index: -1
+projectile_skull
+  rotate: false
+  xy: 623, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 resist_bar_black
   rotate: false
-  xy: 608, 155
+  xy: 2, 2
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
   index: -1
 armor_bar_black
   rotate: false
-  xy: 608, 155
+  xy: 2, 2
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
   index: -1
 resist_bar_blue
   rotate: false
-  xy: 870, 65
+  xy: 1215, 178
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
   index: -1
 skill_tile_gun
   rotate: false
-  xy: 984, 62
+  xy: 1659, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 skill_tile_holy_strike
   rotate: false
-  xy: 484, 2
+  xy: 1181, 147
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 skill_tile_poison_arrow
   rotate: false
-  xy: 770, 34
+  xy: 1727, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 tile_bg
   rotate: false
-  xy: 518, 2
+  xy: 1557, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 tile_bg
   rotate: false
-  xy: 736, 34
+  xy: 1693, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 tile_bg_grey
   rotate: false
-  xy: 804, 34
+  xy: 1761, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 tile_fg_empire
   rotate: false
-  xy: 984, 96
+  xy: 1625, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ui_button
   rotate: false
-  xy: 838, 51
+  xy: 484, 14
   size: 30, 15
   split: 4, 4, 4, 4
   orig: 30, 15
@@ -224,7 +238,7 @@ ui_button
   index: -1
 ui_dialog
   rotate: false
-  xy: 484, 158
+  xy: 484, 153
   size: 137, 92
   split: 10, 8, 9, 8
   orig: 137, 92

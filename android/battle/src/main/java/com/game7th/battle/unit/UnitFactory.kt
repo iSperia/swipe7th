@@ -36,7 +36,7 @@ object UnitFactory {
 
                             battle.aliveEnemies(unit).forEach { enemy ->
                                 battle.processDamage(enemy, unit, DamageVector(damage, 0, 0))
-                                battle.notifyAoeProjectile("gladiator_wave", unit)
+                                battle.notifyAoeProjectile("gladiator_wave", unit, 1)
                             }
                         }
                     }
@@ -113,6 +113,30 @@ object UnitFactory {
                     }
                 }
                 slime
+            }
+            UnitType.CITADEL_WARLOCK -> {
+                val hp = (1 + level * (2 * level)) + balance.citadel_warlock.baseHp
+                val warlock = UnitStats(skin = "personage_citadel_warlock", level = level, health = CappedStat(hp, hp))
+                warlock += ability {
+                    ticker {
+                        ticksToTrigger = 5
+                        body = { battle, unit ->
+                            battle.notifyAoeProjectile("projectile_skull", unit, -1)
+                            val damage = (battle.balance.citadel_warlock.flatDmg + (unit.stats.level * (2 * unit.stats.level - 1)) * battle.balance.citadel_warlock.m).toInt()
+
+                            if (damage > 0) {
+                                battle.aliveEnemies(unit).forEach { enemy ->
+                                    val result = battle.processDamage(enemy, unit, DamageVector(0, damage, 0))
+                                    if (result.status != DamageProcessStatus.DAMAGE_EVADED) {
+                                        //heal up!
+                                        battle.processHeal(unit, damage * battle.balance.citadel_warlock.healPercentage)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                warlock
             }
             else -> null
         }

@@ -170,11 +170,7 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     private suspend fun processTickUnits() {
         aliveUnits().forEach { unit ->
-            if (unit.stats.regeneration > 0 && unit.stats.health.notCapped()) {
-                val healAmount = min(unit.stats.health.maxValue - unit.stats.health.value, unit.stats.regeneration)
-                unit.stats.health.value += healAmount
-                events.send(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
-            }
+            processHeal(unit, unit.stats.regeneration.toFloat())
 
             if (unit.stats.ailPoisonDuration > 0) {
                 unit.stats.ailPoisonDuration--
@@ -218,8 +214,8 @@ class SwipeBattle(val balance: SwipeBalance) {
         events.send(BattleEvent.RemoveTileEvent(id))
     }
 
-    suspend fun notifyAoeProjectile(skin: String, unit: BattleUnit) {
-        events.send(BattleEvent.ShowNpcAoeEffect(skin, unit.id))
+    suspend fun notifyAoeProjectile(skin: String, unit: BattleUnit, direction: Int) {
+        events.send(BattleEvent.ShowNpcAoeEffect(skin, unit.id, direction))
     }
 
     suspend fun notifyTargetedProjectile(skin: String, source: BattleUnit, target: BattleUnit) {
@@ -243,6 +239,15 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     fun aliveEnemies(unit: BattleUnit): List<BattleUnit> {
         return aliveUnits().filter { it.team != unit.team }
+    }
+
+    suspend fun processHeal(unit: BattleUnit, amount: Float) {
+        val hp = amount.toInt()
+        if (hp > 0 && unit.stats.health.notCapped()) {
+            val healAmount = min(unit.stats.health.maxValue - unit.stats.health.value, hp)
+            unit.stats.health.value += healAmount
+            events.send(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
+        }
     }
 }
 
