@@ -56,13 +56,26 @@ class SwipeBattle(val balance: SwipeBalance) {
     }
 
     private suspend fun generateInitialTiles() = withContext(coroutineContext) {
-        for (i in 0..5) {
-            processTick(true)
+        for (i in 0 until 6) {
+            produceGuaranteedTile()
+        }
+    }
+
+    private suspend fun produceGuaranteedTile() {
+        val event = InternalBattleEvent.ProduceGuaranteedTileEvent(this@SwipeBattle)
+        propagateInternalEvent(event)
+        if (event.candidates.isEmpty()) return
+        event.candidates.random().let { tile ->
+            val position = tileField.calculateFreePosition()
+            position?.let { position ->
+                event.battle.tileField.tiles[position] = tile
+                event.battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
+            }
         }
     }
 
     private suspend fun processTick(preventTickers: Boolean) {
-        propagateInternalEvent(InternalBattleEvent.ProduceGuaranteedTileEvent(this))
+        produceGuaranteedTile()
         propagateInternalEvent(InternalBattleEvent.TickEvent(this, preventTickers))
     }
 

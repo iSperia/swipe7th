@@ -39,8 +39,15 @@ class DefaultSkillTileEmitter : AbilityTrigger {
                         tier1,
                         tier2)
 
-                event.battle.tileField.tiles[position] = tile
-                event.battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
+                when (event) {
+                    is InternalBattleEvent.ProduceGuaranteedTileEvent -> {
+                        event.candidates.add(tile)
+                    }
+                    else -> {
+                        event.battle.tileField.tiles[position] = tile
+                        event.battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
+                    }
+                }
             }
         }
     }
