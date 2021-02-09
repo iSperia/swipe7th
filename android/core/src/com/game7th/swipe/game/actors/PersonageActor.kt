@@ -176,7 +176,7 @@ class PersonageActor(
                 setScale(viewModel.stats.magicDefense.toFloat() / viewModel.stats.maxMagicDefense, 1f)
                 duration = 0.2f
             })
-            armorAmount.setText("${viewModel.stats.magicDefense}")
+            resistAmount.setText("${viewModel.stats.magicDefense}")
         }
 
         tickLabel.setText(getTickText())
