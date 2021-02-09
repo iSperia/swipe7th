@@ -17,20 +17,24 @@ data class EvasionBalance(
         val p: Float
 )
 
+data class HpBalance(
+    val f: Int,
+    val k: Float,
+    val m: Int
+)
+
 data class SlimeBalance(
     val flatDmg: Int,
     val scaleDmg: Float,
     val m: Float,
-    val baseHp: Int,
-    val levelHp: Int
+    val hp: HpBalance
 )
 
 data class CitadelWarlockBalance(
         val flatDmg: Int,
         val scaleDmg: Float,
         val m: Float,
-        val baseHp: Int,
-        val levelHp: Int,
+        val hp: HpBalance,
         val healPercentage: Float
 )
 

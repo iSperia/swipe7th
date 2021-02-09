@@ -6,6 +6,7 @@ import com.game7th.battle.ability.ability
 import com.game7th.battle.balance.SwipeBalance
 import com.game7th.battle.tilefield.tile.TileType
 import kotlin.math.abs
+import kotlin.math.exp
 import kotlin.math.sqrt
 import kotlin.random.Random
 
@@ -95,7 +96,7 @@ object UnitFactory {
                 }
             }
             UnitType.GREEN_SLIME -> {
-                val hp = (1 + level * (2 * level)) + balance.slime.baseHp
+                val hp = balance.slime.hp.let { it.f + it.m * level + exp(it.k * level) }.toInt()
                 val slime = UnitStats(skin = "personage_slime", level = level, health = CappedStat(hp, hp))
                 slime += ability {
                     ticker {
@@ -115,7 +116,7 @@ object UnitFactory {
                 slime
             }
             UnitType.CITADEL_WARLOCK -> {
-                val hp = (1 + level * (2 * level)) + balance.citadel_warlock.baseHp
+                val hp = balance.citadel_warlock.hp.let { it.f + it.m * level + exp(it.k * level) }.toInt()
                 val warlock = UnitStats(skin = "personage_citadel_warlock", level = level, health = CappedStat(hp, hp))
                 warlock += ability {
                     ticker {

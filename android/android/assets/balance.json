@@ -13,8 +13,8 @@
     "evasion": { "k": 14, "p": 0.85 }
   },
 
-  "slime": {"flatDmg":  20, "scaleDmg":  10, "m":  0.3, "baseHp":  50},
-  "citadel_warlock": {"flatDmg":  14, "scaleDmg":  10, "m":  0.3, "baseHp":  100, "healPercentage": 0.5},
+  "slime": {"flatDmg":  20, "scaleDmg":  10, "m":  0.3, "hp":  {"f":  50, "k": 0.097, "m": 40}},
+  "citadel_warlock": {"flatDmg":  14, "scaleDmg":  10, "m":  0.3, "healPercentage": 0.5, "hp":  {"f":  50, "k": 0.097, "m": 40}},
 
   "gladiator": {"c":  8, "k":  0.05, "str_k":  0.05, "tile_k": 0.2},
   "poison_archer": {"c":  20, "k":  0.05, "spi_k":  0.05, "tile_k": 0.05, "dot_k":  0.25, "tile_m":  0.25, "d":  10},
