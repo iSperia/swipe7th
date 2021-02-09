@@ -13,29 +13,7 @@
     "evasion": { "k": 14, "p": 0.85 }
   },
 
-  "statsEvasionPerSpirit": 1,
-  "statsEvasionK": 14,
-  "statsEvasionP": 0.85,
-
-  "defaultTier1Threshold": 5,
-  "defaultTier2Threshold": 10,
-
-  "slimeFlatDamage": 30,
-  "slimeScaleDamage": 10,
-  "slimeMulti": 0.30,
-  "slimeBaseHealth": 50,
-  "slimeLevelMulti": 100,
-
-  "gladiatorAtkTier1DmgConst": 20,
-  "gladiatorAtkTier1LvlKoef": 0.05,
-  "gladiatorAtkTier1StrKoef": 0.1,
-  "gladiatorAtkTIer1TileKoef": 0.02,
-
-  "poisonArcherAtkTier1Const": 20,
-  "poisonArcherAtkTier1LvlKoef": 0.05,
-  "poisonArcherAtkTier1SpiritKoef": 0.1,
-  "poisonArcherTier1TileKoef": 0.02,
-  "poisonArcherDotKoef": 0.4,
-  "poisonArcherTileMultiplier": 0.2,
-  "poisonArcherPoisonDuration": 10
+  "slime": {"flatDmg":  30, "scaleDmg":  10, "m":  0.3, "baseHp":  50, "levelHp":  100},
+  "gladiator": {"c":  20, "k":  0.05, "str_k":  0.1, "tile_k": 0.02},
+  "poison_archer": {"c":  20, "k":  0.05, "spi_k":  0.1, "tile_k": 0.02, "dot_k":  0.4, "tile_m":  0.2, "d":  10}
 }

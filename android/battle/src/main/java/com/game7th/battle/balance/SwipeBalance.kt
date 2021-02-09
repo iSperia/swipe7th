@@ -17,29 +17,36 @@ data class EvasionBalance(
         val p: Float
 )
 
+data class SlimeBalance(
+    val flatDmg: Int,
+    val scaleDmg: Float,
+    val m: Float,
+    val baseHp: Int,
+    val levelHp: Int
+)
+
+data class GladiatorBalance(
+        val c: Int,
+        val k: Float,
+        val str_k: Float,
+        val tile_k: Float
+)
+
+data class PoisonArcherBalance(
+        val c: Int,
+        val k: Float,
+        val spi_k: Float,
+        val tile_k: Float,
+        val dot_k: Float,
+        val tile_m: Float,
+        val d: Int
+)
+
 data class SwipeBalance(
         val version: String,
-        val defaultTier1Threshold: Int,
-        val defaultTier2Threshold: Int,
 
         val stats: StatBalance,
-
-        val slimeFlatDamage: Int,
-        val slimeScaleDamage: Int,
-        val slimeMulti: Float,
-        val slimeBaseHealth: Int,
-        val slimeLevelMulti: Int,
-
-        val gladiatorAtkTier1DmgConst: Int,
-        val gladiatorAtkTier1LvlKoef: Float,
-        val gladiatorAtkTier1StrKoef: Float,
-        val gladiatorAtkTIer1TileKoef: Float,
-
-        val poisonArcherAtkTier1Const: Int,
-        val poisonArcherAtkTier1LvlKoef: Float,
-        val poisonArcherAtkTier1SpiritKoef: Float,
-        val poisonArcherTier1TileKoef: Float,
-        val poisonArcherDotKoef: Float,
-        val poisonArcherTileMultiplier: Float,
-        val poisonArcherPoisonDuration: Int
+        val slime: SlimeBalance,
+        val gladiator: GladiatorBalance,
+        val poison_archer: PoisonArcherBalance
 )

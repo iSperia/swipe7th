@@ -28,9 +28,9 @@ object UnitFactory {
                         body = { battle, tile, unit: BattleUnit ->
 
                             val b = battle.balance
-                            val damage = (b.gladiatorAtkTier1DmgConst
-                                    * (1 + b.gladiatorAtkTier1LvlKoef * unit.stats.level + b.gladiatorAtkTier1StrKoef * unit.stats.body)
-                                    * (1 + tile.stackSize * b.gladiatorAtkTIer1TileKoef)).toInt()
+                            val damage = (b.gladiator.c
+                                    * (1 + b.gladiator.k * unit.stats.level + b.gladiator.str_k * unit.stats.body)
+                                    * (1 + tile.stackSize * b.gladiator.tile_k)).toInt()
 
                             battle.aliveEnemies(unit).forEach { enemy ->
                                 battle.processDamage(enemy, unit, DamageVector(damage, 0, 0))
@@ -50,15 +50,15 @@ object UnitFactory {
 
                             val b = battle.balance
                             val target = battle.aliveEnemies(unit).random()
-                            val damage = (b.poisonArcherAtkTier1Const
-                                    * (1 + b.poisonArcherAtkTier1LvlKoef * unit.stats.level + b.poisonArcherAtkTier1SpiritKoef * unit.stats.spirit)
-                                    * (1 + tile.stackSize * b.poisonArcherTier1TileKoef)).toInt()
+                            val damage = (b.poison_archer.c
+                                    * (1 + b.poison_archer.k * unit.stats.level + b.poison_archer.spi_k * unit.stats.spirit)
+                                    * (1 + tile.stackSize * b.poison_archer.tile_k)).toInt()
                             val result = battle.processDamage(target, unit, DamageVector(damage, 0, 0))
-                            battle.notifyTargetedProjectile("projectile_arrow", target, target)
+                            battle.notifyTargetedProjectile("projectile_arrow", unit, target)
 
                             if (result.status != DamageProcessStatus.DAMAGE_EVADED) {
-                                val poisonTicks = b.poisonArcherPoisonDuration
-                                val poisonDmg = (b.poisonArcherDotKoef * damage * sqrt(b.poisonArcherTier1TileKoef * tile.stackSize)).toInt()
+                                val poisonTicks = b.poison_archer.d
+                                val poisonDmg = (b.poison_archer.dot_k * damage * sqrt(b.poison_archer.tile_k * tile.stackSize)).toInt()
                                 battle.applyPoison(target, poisonTicks, poisonDmg)
                             }
                         }
@@ -66,13 +66,13 @@ object UnitFactory {
                 }
             }
             UnitType.GREEN_SLIME -> {
-                val hp = (1 + level * (2 * level)) + balance.slimeBaseHealth
+                val hp = (1 + level * (2 * level)) + balance.slime.baseHp
                 val slime = UnitStats(skin = "personage_slime", level = level, health = CappedStat(hp, hp))
                 slime += ability {
                     ticker {
                         ticksToTrigger = 3
                         body = { battle, unit ->
-                            val damage = (battle.balance.slimeFlatDamage + (unit.stats.level * (2 * unit.stats.level - 1)) * battle.balance.slimeMulti).toInt()
+                            val damage = (battle.balance.slime.flatDmg + (unit.stats.level * (2 * unit.stats.level - 1)) * battle.balance.slime.m).toInt()
                             if (damage > 0) {
                                 val target = battle.findClosestAliveEnemy(unit)
                                 target?.let { target ->
@@ -80,7 +80,6 @@ object UnitFactory {
                                     battle.processDamage(target, unit, DamageVector(damage, 0, 0))
                                 }
                             }
-
                         }
                     }
                 }
