@@ -5,7 +5,9 @@ import com.game7th.battle.DamageVector
 import com.game7th.battle.ability.ability
 import com.game7th.battle.balance.SwipeBalance
 import com.game7th.battle.tilefield.tile.TileType
+import kotlin.math.abs
 import kotlin.math.sqrt
+import kotlin.random.Random
 
 enum class UnitStatPriority {
     PRIMARY, SECONDARY, TERTIARY;
@@ -65,6 +67,33 @@ object UnitFactory {
                     }
                 }
             }
+            UnitType.MACHINE_GUNNER -> producePersonage(balance, "personage_gunner", level, UnitStatPriority.SECONDARY, UnitStatPriority.TERTIARY, UnitStatPriority.PRIMARY) {
+                it.addAbility {
+                    defaultEmitter { tileType = TileType.MACHINE_GUN; tier1 = 5; tier2 = 10 }
+                    defaultMerger { tileType = TileType.MACHINE_GUN }
+                    consumeExecute {
+                        tileType = TileType.MACHINE_GUN
+                        body = { battle, tile, unit ->
+                            val b = battle.balance
+                            val bulletDamage = (b.gunner.c
+                                    * (1 + b.gunner.k * unit.stats.level + b.gunner.mind_k * unit.stats.mind)
+                                    * (1 + tile.stackSize * b.gunner.tile_k)).toInt()
+                            val bulletAmount = b.gunner.bullets
+                            val enemies = battle.aliveEnemies(unit).sortedByDescending { abs(unit.position - it.position) }
+                            val weights = enemies.withIndex().map { it.index + 1 }
+                            val totalWeight = weights.sumBy { it }
+                            (0 until bulletAmount)
+                                    .map { Random.nextInt(totalWeight) }
+                                    .map { findIndex(it, weights) }
+                                    .map { enemies[it] }
+                                    .forEach { enemy ->
+                                        battle.processDamage(enemy, unit, DamageVector(bulletDamage, 0, 0))
+                                        battle.notifyTargetedProjectile("projectile_bullet", unit, enemy)
+                                    }
+                        }
+                    }
+                }
+            }
             UnitType.GREEN_SLIME -> {
                 val hp = (1 + level * (2 * level)) + balance.slime.baseHp
                 val slime = UnitStats(skin = "personage_slime", level = level, health = CappedStat(hp, hp))
@@ -87,6 +116,18 @@ object UnitFactory {
             }
             else -> null
         }
+    }
+
+    private fun findIndex(roll: Int, weights: List<Int>): Int {
+        var sum = 0
+        weights.withIndex().forEach {
+            if (sum + it.value > roll) {
+                return it.index
+            } else {
+                sum += it.value
+            }
+        }
+        return weights.size - 1
     }
 
     private fun producePersonage(

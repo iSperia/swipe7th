@@ -42,11 +42,20 @@ data class PoisonArcherBalance(
         val d: Int
 )
 
+data class GunnerBalance(
+    val c: Int,
+    val k: Float,
+    val mind_k: Float,
+    val tile_k: Float,
+    val bullets: Int
+)
+
 data class SwipeBalance(
         val version: String,
 
         val stats: StatBalance,
         val slime: SlimeBalance,
         val gladiator: GladiatorBalance,
-        val poison_archer: PoisonArcherBalance
+        val poison_archer: PoisonArcherBalance,
+        val gunner: GunnerBalance
 )

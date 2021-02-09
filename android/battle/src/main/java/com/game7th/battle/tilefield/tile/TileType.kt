@@ -8,6 +8,7 @@ enum class TileType(
 
     GLADIATOR_STRIKE("skill_tile_holy_strike", Fraction.EMPIRE, true),
     POISON_ARROW("skill_tile_poison_arrow", Fraction.EMPIRE, true),
-    KNIGHT_SHIELD("kn_shield", Fraction.EMPIRE, false)
+    MACHINE_GUN("skill_tile_gun", Fraction.EMPIRE, true),
 
+    KNIGHT_SHIELD("kn_shield", Fraction.EMPIRE, false)
 }

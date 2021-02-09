@@ -165,6 +165,7 @@ class ConstructorView(
                 UnitType.GLADIATOR -> "p_gladiator"
                 UnitType.POISON_ARCHER -> "personage_ranger"
                 UnitType.GREEN_SLIME -> "personage_slime"
+                UnitType.MACHINE_GUNNER -> "personage_gunner"
                 else -> "personage_dead"
             }
         }

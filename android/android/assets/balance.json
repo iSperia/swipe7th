@@ -15,5 +15,6 @@
 
   "slime": {"flatDmg":  30, "scaleDmg":  10, "m":  0.3, "baseHp":  50, "levelHp":  100},
   "gladiator": {"c":  20, "k":  0.05, "str_k":  0.1, "tile_k": 0.02},
-  "poison_archer": {"c":  20, "k":  0.05, "spi_k":  0.1, "tile_k": 0.02, "dot_k":  0.4, "tile_m":  0.2, "d":  10}
+  "poison_archer": {"c":  20, "k":  0.05, "spi_k":  0.1, "tile_k": 0.02, "dot_k":  0.4, "tile_m":  0.2, "d":  10},
+  "gunner": {"c":  3, "k":  0.05, "mind_k":  0.005, "tile_k": 0.02, "bullets":  24}
 }
