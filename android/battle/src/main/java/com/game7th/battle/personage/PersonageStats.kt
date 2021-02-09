@@ -16,5 +16,8 @@ data class PersonageStats(
         var magicDefense: Int,
         var maxMagicDefense: Int,
 
-        var level: Int
+        var level: Int,
+
+        val tick: Int,
+        val maxTick: Int
 )

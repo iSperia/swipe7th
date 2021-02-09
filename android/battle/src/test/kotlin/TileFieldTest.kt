@@ -1,5 +1,5 @@
 import com.game7th.battle.tilefield.TileField
-import com.game7th.battle.tilefield.TileFieldContext
+import com.game7th.battle.tilefield.TileFieldMerger
 import com.game7th.battle.tilefield.TileFieldEvent
 import com.game7th.battle.tilefield.tile.SwipeTile
 import com.game7th.battle.tilefield.tile.TileStage
@@ -8,7 +8,7 @@ import org.junit.Test
 
 class TileFieldTest {
 
-    private val context = object : TileFieldContext {
+    private val context = object : TileFieldMerger {
         override fun merge(tile: SwipeTile, swipeTile: SwipeTile): SwipeTile? {
             if (tile.type != swipeTile.type) return null
             return SwipeTile(tile.type, swipeTile.id, tile.stackSize + swipeTile.stackSize, tile.stage)

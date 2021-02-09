@@ -1,24 +1,28 @@
 package com.game7th.battle.balance
 
+data class StatBalance(
+        val baseHealth: Int,
+        val healthPerBody: Int,
+        val healthPerLevel: Int,
+        val armorPerBody: Int,
+        val resistPerMind: Int,
+        val regenerationPerSpirit: Float,
+        val wizdomMultiplier: Float,
+        val evasionPerSpirit: Int,
+        val evasion: EvasionBalance
+)
+
+data class EvasionBalance(
+        val k: Int,
+        val p: Float
+)
+
 data class SwipeBalance(
         val version: String,
-        val baseSkillTileEmitProbability: Float,
-        val secondarySkillTileEmitProbability: Float,
         val defaultTier1Threshold: Int,
         val defaultTier2Threshold: Int,
 
-        val personageHealthBase: Int,
-        val personageBodyMultiply: Int,
-        val personageArmorPerBodyMultiply: Int,
-        val personageMagicDefPerMindMultiply: Int,
-        val personageLevelMultiply: Int,
-        val personageRegenerationPerBodyMultiply: Float,
-        val personageEfficencyStackKoef: Float,
-
-        val statsEvasionPerSpirit: Int,
-        val statsEvasionK: Int,
-        val statsEvasionP: Float,
-        val statsEvasionKoef: Float,
+        val stats: StatBalance,
 
         val slimeFlatDamage: Int,
         val slimeScaleDamage: Int,

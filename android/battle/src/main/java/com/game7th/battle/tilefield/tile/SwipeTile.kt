@@ -10,6 +10,10 @@ data class SwipeTile(
         //The size of the stack
         val stackSize: Int,
 
-        //The stage of tile if applicable
-        val stage: TileStage
-)
+        val thresholdTier1: Int,
+        val thresholdTier2: Int
+) {
+    fun tier1() = stackSize >= thresholdTier1
+
+    fun tier2() = stackSize >= thresholdTier2
+}

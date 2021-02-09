@@ -3,17 +3,18 @@ package com.game7th.battle
 import com.game7th.battle.balance.SwipeBalance
 import com.game7th.battle.event.BattleEvent
 import com.game7th.battle.event.TileViewModel
-import com.game7th.battle.npc.NpcFactory
-import com.game7th.battle.npc.NpcPersonage
-import com.game7th.battle.npc.SlimePersonage
-import com.game7th.battle.npc.toViewModel
+import com.game7th.battle.internal_event.InternalBattleEvent
 import com.game7th.battle.personage.*
 import com.game7th.battle.tilefield.TileField
-import com.game7th.battle.tilefield.TileFieldContext
+import com.game7th.battle.tilefield.TileFieldMerger
 import com.game7th.battle.tilefield.tile.*
+import com.game7th.battle.unit.BattleUnit
+import com.game7th.battle.unit.Team
+import com.game7th.battle.unit.UnitFactory
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.withContext
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -23,70 +24,64 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     val events = Channel<BattleEvent>()
 
-    val tileFieldContext: TileFieldContext = object : TileFieldContext {
-        override fun merge(tile: SwipeTile, swipeTile: SwipeTile): SwipeTile? {
-            personages.flatMap { it.value.abilities }.forEach {
-                it.mergeTile(balance, tileField, tile, swipeTile)?.let { return it }
+    private val tileFieldMerger: TileFieldMerger = object : TileFieldMerger {
+        override suspend fun merge(tile1: SwipeTile, tile2: SwipeTile): SwipeTile? {
+            val event = InternalBattleEvent.TileMergeEvent(this@SwipeBattle, tile1, tile2)
+            propagateInternalEvent(event)
+            return event.result
+       }
+    }
+
+    val tileField = TileField(tileFieldMerger)
+
+    var personageId = 0
+    var tick = 0
+
+    val units = mutableListOf<BattleUnit>()
+
+    private suspend fun propagateInternalEvent(event: InternalBattleEvent) {
+        aliveUnits().forEach { battleUnit ->
+            battleUnit.stats.abilities.flatMap { it.triggers }.forEach { trigger ->
+                trigger.process(event, battleUnit)
             }
-            return null
         }
     }
 
-    val tileField = TileField(tileFieldContext)
-
-    val personages = mutableMapOf<Int, SwipePersonage>()
-
-    val npcs = mutableMapOf<Int, NpcPersonage>()
-
-    var personageId = 0
-
-    var tick = 0
+    private fun aliveUnits() = units.filter { it.stats.health.value > 0 }
 
     suspend fun initialize(config: BattleConfig) = withContext(coroutineContext) {
         generateInitialPersonages(config)
         generateInitialTiles()
+        propagateInternalEvent(InternalBattleEvent.BattleStartedEvent(this@SwipeBattle))
     }
 
     private suspend fun generateInitialTiles() = withContext(coroutineContext) {
         for (i in 0..5) {
-            processTickEmit()
+            processTick(true)
         }
     }
 
-    private suspend fun processTickEmit() {
-        //guaranteed
-        personages.values.filter { it.stats.health > 0 }.let { personages ->
-            if (personages.isNotEmpty()) {
-                personages.random().let { personage ->
-                    val abilityEvents = personage.abilities[0].processEmit(true, balance, tileField, personage)
-                    abilityEvents.forEach { events.send(it) }
-                }
-            }
-        }
-
-        personages.values.filter { it.stats.health > 0 }.forEach { personage ->
-            personage.abilities.forEach { ability ->
-                val abilityEvents = ability.processEmit(false, balance, tileField, personage)
-                abilityEvents.forEach { events.send(it) }
-            }
-        }
+    private suspend fun processTick(preventTickers: Boolean) {
+        propagateInternalEvent(InternalBattleEvent.ProduceGuaranteedTileEvent(this))
+        propagateInternalEvent(InternalBattleEvent.TickEvent(this, preventTickers))
     }
 
     private suspend fun generateInitialPersonages(config: BattleConfig) = withContext(coroutineContext) {
         config.personages.withIndex().forEach {
-            val personage = PersonageFactory.producePersonage(it.value, balance, newPersonageId())
-            personage?.let { personage ->
-                personages[it.index] = personage
-                events.send(BattleEvent.CreatePersonageEvent(personages[it.index]!!.toViewModel(), it.index))
+            val unitStats = UnitFactory.produce(it.value.name, balance, it.value.level)
+            unitStats?.let { stats ->
+                val unit = BattleUnit(newPersonageId(), it.index, stats, Team.LEFT)
+                units.add(unit)
+                events.send(BattleEvent.CreatePersonageEvent(unit.toViewModel(), it.index))
             }
         }
 
         config.npcs.withIndex().forEach {
-            val npc = NpcFactory.produceNpc(it.value, balance, newPersonageId())
-            val position = it.index + 5
-            npc?.let { npc ->
-                npcs[position] = npc
-                events.send(BattleEvent.CreatePersonageEvent(npc.toViewModel(), position))
+            val unitStats = UnitFactory.produce(it.value.name, balance, it.value.level)
+            unitStats?.let { stats ->
+                val unit = BattleUnit(newPersonageId(), 7 - it.index, stats, Team.RIGHT)
+                units.add(unit)
+                events.send(BattleEvent.CreatePersonageEvent(unit.toViewModel(), 7 - it.index))
             }
         }
     }
@@ -96,12 +91,12 @@ class SwipeBattle(val balance: SwipeBalance) {
     }
 
     private suspend fun checkDeadPersonages() {
-        if (personages.values.none { it.stats.health > 0 }) {
-            //player has lost
+        val leftTeamCount = aliveUnits().count { it.team == Team.LEFT }
+        val rightTeamCount = aliveUnits().count { it.team == Team.RIGHT }
+        if (leftTeamCount == 0) {
             events.send(BattleEvent.DefeatEvent)
             events.close()
-        } else if (npcs.values.none { it.stats.health > 0 }) {
-            //player has won
+        } else if (rightTeamCount == 0) {
             events.send(BattleEvent.VictoryEvent)
             events.close()
         }
@@ -118,9 +113,8 @@ class SwipeBattle(val balance: SwipeBalance) {
                 motionEvents = tileField.attemptSwipe(dx, dy)
             }
             if (hadAnyEvents) {
-                processTickEmit()
+                processTick(false)
                 processTickUnits()
-                processTickNpc()
                 tick++
 
                 checkDeadPersonages()
@@ -130,82 +124,47 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     suspend fun attemptActivateTile(id: Int) = withContext(coroutineContext) {
         if (!events.isClosedForSend) {
-            tileField.tiles.entries.firstOrNull { it.value.id == id }?.let { (position, tile) ->
-                personages.filter { it.value.stats.health > 0 }.entries.firstOrNull { (position, personage) ->
-                    personage.abilities.firstOrNull { ability ->
-                        ability.attemptUseAbility(this@SwipeBattle, personage, tileField, position, tile)
-                    } != null
-                }
-            }
-            checkDeadPersonages()
-        }
-    }
-
-    private suspend fun processTickNpc() {
-        npcs.entries.filter { it.value.stats.health > 0 }.forEach { (position, npc) ->
-            npc.abilities.forEach { ability ->
-                ability.tick(this, npc)
+            tileField.tiles.values.firstOrNull { it.id == id }?.let { tile ->
+                propagateInternalEvent(InternalBattleEvent.AbilityUseEvent(this@SwipeBattle, tile))
+                checkDeadPersonages()
             }
         }
     }
 
     private suspend fun processTickUnits() {
-        //calculate regeneration
-        alivePersonages().forEach {
-            if (it.value.stats.regeneration > 0 && it.value.stats.health < it.value.stats.maxHealth) {
-                it.value.stats.health = min(it.value.stats.maxHealth, it.value.stats.health + it.value.stats.regeneration)
-                events.send(BattleEvent.PersonageUpdateEvent(it.value.toViewModel()))
+        aliveUnits().forEach { unit ->
+            if (unit.stats.regeneration > 0 && unit.stats.health.notCapped()) {
+                val healAmount = min(unit.stats.health.maxValue - unit.stats.health.value, unit.stats.regeneration)
+                unit.stats.health.value += healAmount
+                events.send(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
             }
 
-        }
-        aliveNpcs().forEach {
-            if (it.value.stats.regeneration > 0 && it.value.stats.health < it.value.stats.maxHealth) {
-                it.value.stats.health = min(it.value.stats.maxHealth, it.value.stats.health + it.value.stats.regeneration)
-                events.send(BattleEvent.PersonageUpdateEvent(it.value.toViewModel()))
-            }
-            val personage = it.value
-            if (personage.ailments.poisonDuration > 0) {
-                personage.ailments.poisonDuration--
-                processAilmentDamage(personage, DamageVector(0, 0, personage.ailments.poisonDamage))
-                events.send(BattleEvent.ShowAilmentEffect(personage.id, "effect_poision"))
-                if (personage.ailments.poisonDuration == 0) {
-                    personage.ailments.poisonDamage = 0
+            if (unit.stats.ailPoisonDuration > 0) {
+                unit.stats.ailPoisonDuration--
+                processAilmentDamage(unit, DamageVector(0, 0, unit.stats.ailPoisonDamage))
+                events.send(BattleEvent.ShowAilmentEffect(unit.id, "effect_poision"))
+                if (unit.stats.ailPoisonDuration == 0) {
+                    unit.stats.ailPoisonDamage = 0
                 }
             }
         }
     }
 
-    fun alivePersonages() = personages.entries.filter { it.value.stats.health > 0 }
-    fun aliveNpcs() = npcs.entries.filter { it.value.stats.health > 0 }
-
-    suspend fun notifyAttack(personage: NpcPersonage, target: SwipePersonage) {
-        events.send(BattleEvent.PersonageAttackEvent(personage.toViewModel(), target.toViewModel()))
+    suspend fun notifyAttack(source: BattleUnit, target: BattleUnit) {
+        events.send(BattleEvent.PersonageAttackEvent(source.toViewModel(), target.toViewModel()))
     }
 
     /*
      * TODO: abstract out npc/personages as battle units
      */
 
-    suspend fun processDamage(target: SwipePersonage, source: NpcPersonage, damage: DamageVector) {
+    suspend fun processDamage(target: BattleUnit, source: BattleUnit, damage: DamageVector): DamageProcessResult {
         val damage = DamageCalculator.calculateDamage(balance, source.stats, target.stats, damage)
         val totalDamage = damage.damage.totalDamage()
         if (totalDamage > 0 || damage.armorDeplete > 0 || damage.resistDeplete > 0) {
-            target.stats.health = max(0, target.stats.health - totalDamage)
-            target.stats.armor = max(0, target.stats.armor - damage.armorDeplete)
-            target.stats.magicDefense = max(0, target.stats.magicDefense - damage.resistDeplete)
-            events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
-        } else if (damage.status == DamageProcessStatus.DAMAGE_EVADED) {
-            events.send(BattleEvent.PersonageDamageEvadedEvent(target.toViewModel()))
-        }
-    }
-
-    suspend fun processDamage(target: NpcPersonage, source: SwipePersonage, damage: DamageVector): DamageProcessResult {
-        val damage = DamageCalculator.calculateDamage(balance, source.stats, target.stats, damage)
-        val totalDamage = damage.damage.totalDamage()
-        if (totalDamage > 0 || damage.armorDeplete > 0 || damage.resistDeplete > 0) {
-            target.stats.health = max(0, target.stats.health - totalDamage)
-            target.stats.armor = max(0, target.stats.armor - damage.armorDeplete)
-            target.stats.magicDefense = max(0, target.stats.magicDefense - damage.resistDeplete)
+            target.stats.health.value = max(0, target.stats.health.value - totalDamage)
+            target.stats.armor.value = max(0, target.stats.armor.value - damage.armorDeplete)
+            target.stats.resist.value = max(0, target.stats.resist.value - damage.resistDeplete)
             events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
         } else if (damage.status == DamageProcessStatus.DAMAGE_EVADED) {
             events.send(BattleEvent.PersonageDamageEvadedEvent(target.toViewModel()))
@@ -213,31 +172,40 @@ class SwipeBattle(val balance: SwipeBalance) {
         return damage
     }
 
-    suspend fun processAilmentDamage(target: NpcPersonage, damage: DamageVector) {
-        target.stats.health = max(0, target.stats.health - damage.totalDamage())
+    suspend fun processAilmentDamage(target: BattleUnit, damage: DamageVector) {
+        target.stats.health.value = max(0, target.stats.health.value - damage.totalDamage())
         events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.totalDamage()))
-    }
-
-    fun findClosestAlivePersonage(): SwipePersonage? {
-        return personages.entries.filter { it.value.stats.health > 0 }.maxBy { it.key }?.value
     }
 
     suspend fun notifyTileRemoved(id: Int) {
         events.send(BattleEvent.RemoveTileEvent(id))
     }
 
-    suspend fun notifyAoeProjectile(skin: String, personage: SwipePersonage) {
-        events.send(BattleEvent.ShowNpcAoeEffect(skin, personage.id))
+    suspend fun notifyAoeProjectile(skin: String, unit: BattleUnit) {
+        events.send(BattleEvent.ShowNpcAoeEffect(skin, unit.id))
     }
 
-    suspend fun notifyTargetedProjectile(skin: String, personage: SwipePersonage, target: NpcPersonage) {
-        events.send(BattleEvent.ShowProjectile(skin, personage.id, target.id))
+    suspend fun notifyTargetedProjectile(skin: String, source: BattleUnit, target: BattleUnit) {
+        events.send(BattleEvent.ShowProjectile(skin, source.id, target.id))
     }
 
-    suspend fun applyPoison(target: NpcPersonage, poisonTicks: Int, poisonDmg: Int) {
-        target.ailments.poisonDamage += poisonDmg
-        target.ailments.poisonDuration += poisonTicks
+    suspend fun applyPoison(target: BattleUnit, poisonTicks: Int, poisonDmg: Int) {
+        target.stats.ailPoisonDamage += poisonDmg
+        target.stats.ailPoisonDuration += poisonTicks
         events.send(BattleEvent.ShowAilmentEffect(target.id, "effect_poision"))
+    }
+
+    suspend fun notifyEvent(event: BattleEvent) {
+        events.send(event)
+
+    }
+
+    fun findClosestAliveEnemy(unit: BattleUnit): BattleUnit? {
+        return aliveUnits().filter { it.team != unit.team }.minBy { abs(it.position - unit.position) }
+    }
+
+    fun aliveEnemies(unit: BattleUnit): List<BattleUnit> {
+        return aliveUnits().filter { it.team != unit.team }
     }
 }
 
@@ -246,20 +214,20 @@ fun SwipeTile.toViewModel(): TileViewModel {
             id,
             type.skin,
             stackSize,
-            tileBackground(type),
-            tileBackgroundIndex(stage),
+            tileBackground(),
+            tileBackgroundIndex(),
             foreground()
     )
 }
 
-fun tileBackground(type: TileType) = if (type.background) "tile_bg" else null
+fun SwipeTile.tileBackground() = if (type.background) "tile_bg" else null
 
-fun tileBackgroundIndex(stage: TileStage) = when (stage) {
-    TileStage.ABILITY_TIER_1, TileStage.ABILITY_TIER_2 -> 1
-    else -> 0
-}
+fun SwipeTile.tileBackgroundIndex() =
+        if (!type.background) 0
+        else if (tier1()) 1
+        else 0
 
 fun SwipeTile.foreground(): String? = when {
-    stage == TileStage.ABILITY_TIER_2 -> type.fraction.id
+    type.background && tier2() -> type.fraction.id
     else -> null
 }

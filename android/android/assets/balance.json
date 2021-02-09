@@ -1,6 +1,18 @@
 {
   "version": "1.0",
 
+  "stats": {
+    "baseHealth":50,
+    "healthPerBody": 10,
+    "healthPerLevel": 10,
+    "armorPerBody": 10,
+    "resistPerMind": 10,
+    "regenerationPerSpirit": 0.5,
+    "wizdomMultiplier": 0.125,
+    "evasionPerSpirit": 1,
+    "evasion": { "k": 14, "p": 0.85 }
+  },
+
   "personageHealthBase": 50,
   "personageBodyMultiply": 10,
   "personageLevelMultiply": 10,
@@ -8,9 +20,6 @@
   "personageMagicDefPerMindMultiply": 10,
   "personageRegenerationPerBodyMultiply": 0.5,
   "personageEfficencyStackKoef": 0.125,
-
-  "baseSkillTileEmitProbability": 30,
-  "secondarySkillTileEmitProbability": 10,
 
   "statsEvasionPerSpirit": 1,
   "statsEvasionK": 14,

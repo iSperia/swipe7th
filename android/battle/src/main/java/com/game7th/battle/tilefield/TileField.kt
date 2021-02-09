@@ -2,17 +2,16 @@ package com.game7th.battle.tilefield
 
 import com.game7th.battle.tilefield.tile.SwipeTile
 import com.game7th.battle.toViewModel
-import kotlinx.coroutines.runBlocking
 import java.util.concurrent.ConcurrentHashMap
 
-class TileField(private val context: TileFieldContext) {
+class TileField(private val merger: TileFieldMerger) {
 
     //all the tiles by their position
     var tiles = ConcurrentHashMap<Int, SwipeTile>()
 
     var tileId = 0
 
-    fun attemptSwipe(dx: Int, dy: Int): List<TileFieldEvent> {
+    suspend fun attemptSwipe(dx: Int, dy: Int): List<TileFieldEvent> {
         val result = mutableListOf<TileFieldEvent>()
 
         val orderedPositions = tiles.keys.toList().sortedWith(Comparator { p1, p2 ->
@@ -48,7 +47,7 @@ class TileField(private val context: TileFieldContext) {
                     freshGeneration[newPosition] = tile
                 } else {
                     //we are maybe merge subjects
-                    val mergeResult = context.merge(tile, freshGeneration[newPosition]!!)
+                    val mergeResult = merger.merge(tile, freshGeneration[newPosition]!!)
                     if (mergeResult != null) {
                         //we are merging
                         freshGeneration[newPosition] = mergeResult

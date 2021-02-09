@@ -57,7 +57,7 @@ suspend fun emulateBattle(balance: SwipeBalance, config: BattleConfig) {
                         val dy = if (r == 2) 1 else if (r == 3) -1 else 0
                         battle.processSwipe(dx, dy)
 
-                        val tileId = battle.tileField.tiles.toMap().filter { it.value.stage == TileStage.ABILITY_TIER_1 || it.value.stage == TileStage.ABILITY_TIER_2 }.values.shuffled().firstOrNull()?.let { tile ->
+                        val tileId = battle.tileField.tiles.toMap().filter { it.value.tier1() }.values.shuffled().firstOrNull()?.let { tile ->
                             tile.id
                         }
 

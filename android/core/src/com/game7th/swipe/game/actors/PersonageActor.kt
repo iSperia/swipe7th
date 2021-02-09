@@ -23,6 +23,7 @@ class PersonageActor(
     val healthAmount: Label
     val armorAmount: Label
     val resistAmount: Label
+    val tickLabel: Label
 
     val effects = Group()
 
@@ -106,11 +107,23 @@ class PersonageActor(
             setFontScale(0.8f)
             zIndex = 13
         }
+        tickLabel = Label(getTickText(), Label.LabelStyle(context.font, Color.CYAN)).apply {
+            x = 10f
+            y = 120f
+            zIndex = 14
+        }
         addActor(healthAmount)
         addActor(armorAmount)
         addActor(resistAmount)
+        addActor(tickLabel)
 
         addActor(effects)
+    }
+
+    private fun getTickText(): String {
+        return if (vm.stats.maxTick > 0) {
+            "${vm.stats.tick}/${vm.stats.maxTick}"
+        } else ""
     }
 
     private fun hideBody() {
@@ -165,6 +178,8 @@ class PersonageActor(
             })
             armorAmount.setText("${viewModel.stats.magicDefense}")
         }
+
+        tickLabel.setText(getTickText())
     }
 
     fun showEvadeAnimation() {
