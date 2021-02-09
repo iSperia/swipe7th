@@ -71,6 +71,14 @@ sealed class BattleEvent {
             val effectSkin: String
     ) : BattleEvent()
 
+    data class RemovePersonageEvent(
+            val target: Int
+    ) : BattleEvent()
+
+    data class NewWaveEvent(
+            val wave: Int
+    ) : BattleEvent()
+
     object VictoryEvent: BattleEvent()
     object DefeatEvent : BattleEvent()
 }

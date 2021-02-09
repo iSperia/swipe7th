@@ -24,6 +24,10 @@ class ConstructorView(
 
     var selector: PersonageSelector? = null
 
+    var wavesNumber = Group()
+
+    var waves = 1
+
     val personagesLabel = Label("Personages", Label.LabelStyle(context.font, Color.WHITE)).apply {
         width = 160f
         height = 40f
@@ -90,7 +94,9 @@ class ConstructorView(
                 npcs.getChild(index) as PersonagePreview
             }.map { it.config }.filter { npcCodenames.contains(it.name) }
 
-            val battleConfig = BattleConfig(personageConfigs, npcsConfigs)
+            val wavesConfig = mutableListOf<List<PersonageConfig>>()
+            (0 until waves).forEach { wavesConfig.add(npcsConfigs.toList()) }
+            val battleConfig = BattleConfig(personageConfigs, wavesConfig)
             launchBattleCallback(battleConfig)
         }
 
@@ -138,6 +144,32 @@ class ConstructorView(
             n.x = 40f
             n.y = 720f - 80f - 120f * (i+1)
             npcs += n
+        }
+
+        addActor(wavesNumber)
+        wavesNumber.y = 5f
+        var wid = 0f
+        var padding = 10f
+        for (i in 1..5) {
+            val label = Label("$i waves", Label.LabelStyle(context.font, Color.WHITE))
+            label.x = wid + padding
+            wid += label.width + padding
+            wavesNumber.addActor(label)
+            label.onClick {
+                waves = i
+                updateWaves()
+            }
+        }
+        updateWaves()
+    }
+
+    private fun updateWaves() {
+        wavesNumber.children.withIndex().forEach {
+            if (it.index + 1 == waves) {
+                it.value.color = Color.BLUE
+            } else {
+                it.value.color = Color.WHITE
+            }
         }
     }
 

@@ -4,7 +4,7 @@ import com.game7th.battle.unit.UnitType
 
 data class BattleConfig(
         val personages: List<PersonageConfig>,
-        val npcs: List<PersonageConfig>
+        val waves: List<List<PersonageConfig>>
 )
 
 data class PersonageConfig(

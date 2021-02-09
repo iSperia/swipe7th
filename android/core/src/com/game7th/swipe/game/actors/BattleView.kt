@@ -1,8 +1,11 @@
 package com.game7th.swipe.game.actors
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.utils.Align
 import com.game7th.battle.event.BattleEvent
 import com.game7th.swipe.GdxGameContext
 import ktx.actors.alpha
@@ -63,17 +66,17 @@ class BattleView(private val gameContext: GdxGameContext) : Group() {
                 //TODO: add animated numbers
                 val personageId = event.personage.id
                 val personageActor = personages.findActor<PersonageActor>("$personageId")
-                personageActor.updateFrom(event.personage)
+                personageActor?.updateFrom(event.personage)
             }
             is BattleEvent.PersonageDamageEvadedEvent -> {
                 val personageId = event.personage.id
                 val personageActor = personages.findActor<PersonageActor>("$personageId")
-                personageActor.showEvadeAnimation()
+                personageActor?.showEvadeAnimation()
             }
             is BattleEvent.PersonageUpdateEvent -> {
                 val personageId = event.personage.id
                 val personageActor = personages.findActor<PersonageActor>("$personageId")
-                personageActor.updateFrom(event.personage)
+                personageActor?.updateFrom(event.personage)
             }
             is BattleEvent.ShowNpcAoeEffect -> {
                 val personageId = event.personageId
@@ -114,40 +117,75 @@ class BattleView(private val gameContext: GdxGameContext) : Group() {
                 val projectileImage = Image(gameContext.atlas.findRegion(event.skin))
                 val sourceActor = personages.findActor<PersonageActor>("${event.sourceId}")
                 val targetActor = personages.findActor<PersonageActor>("${event.targetId}")
-                effectsForeground.addActor(projectileImage)
-                projectileImage.apply {
-                    x = sourceActor.x
-                    y = sourceActor.y + 50f
-                    addAction(SequenceAction(
-                            MoveToAction().apply {
-                                setPosition(targetActor.x, targetActor.y)
-                                duration = 0.2f
-                            },
-                            RunnableAction().apply {
-                                setRunnable {
-                                    projectileImage.clearActions()
-                                    projectileImage.remove()
+                if (sourceActor != null && targetActor != null) {
+                    effectsForeground.addActor(projectileImage)
+                    projectileImage.apply {
+                        x = sourceActor.x
+                        y = sourceActor.y + 50f
+                        addAction(SequenceAction(
+                                MoveToAction().apply {
+                                    setPosition(targetActor.x, targetActor.y)
+                                    duration = 0.2f
+                                },
+                                RunnableAction().apply {
+                                    setRunnable {
+                                        projectileImage.clearActions()
+                                        projectileImage.remove()
+                                    }
                                 }
-                            }
-                    ))
+                        ))
+                    }
                 }
             }
             is BattleEvent.ShowAilmentEffect -> {
                 val effectImage = Image(gameContext.atlas.findRegion(event.effectSkin, 0))
                 val targetActor = personages.findActor<PersonageActor>("${event.target}")
-                effectImage.apply {
-                    x = targetActor.x
-                    y = targetActor.y + 50f
-                }
-                effectsForeground.addActor(effectImage)
-                effectImage.addAction(DelayAction(0.1f).apply {
-                    action = RunnableAction().apply {
-                        setRunnable {
-                            effectImage.clearActions()
-                            effectImage.remove()
-                        }
+                targetActor?.let { targetActor ->
+                    effectImage.apply {
+                        x = targetActor.x
+                        y = targetActor.y + 50f
                     }
-                })
+                    effectsForeground.addActor(effectImage)
+                    effectImage.addAction(DelayAction(0.1f).apply {
+                        action = RunnableAction().apply {
+                            setRunnable {
+                                effectImage.clearActions()
+                                effectImage.remove()
+                            }
+                        }
+                    })
+                }
+            }
+            is BattleEvent.RemovePersonageEvent -> {
+                val targetActor = personages.findActor<PersonageActor>("${event.target}")
+                targetActor.remove()
+            }
+            is BattleEvent.NewWaveEvent -> {
+                val label = Label("WAVE ${event.wave + 1}", Label.LabelStyle(gameContext.font, Color.CYAN)).apply {
+                    setFontScale(3f)
+                    setAlignment(Align.center)
+                    x = (480f - width) / 2f
+                    y = (240f - height) / 2f
+                }
+                effectsForeground.addActor(label)
+                label.addAction(SequenceAction(
+                        ParallelAction(
+                                AlphaAction().apply {
+                                    alpha = 0f
+                                    duration = 2f
+                                },
+                                ScaleToAction().apply {
+                                    setScale(4f)
+                                    duration = 2f
+                                }
+                        ),
+                        RunnableAction().apply {
+                            setRunnable {
+                                label.clearActions()
+                                label.remove()
+                            }
+                        }
+                ))
             }
         }
     }

@@ -32,10 +32,13 @@ class SwipeBattle(val balance: SwipeBalance) {
        }
     }
 
+    lateinit var config: BattleConfig
     val tileField = TileField(tileFieldMerger)
 
     var personageId = 0
     var tick = 0
+
+    var wave = 0
 
     val units = mutableListOf<BattleUnit>()
 
@@ -50,6 +53,7 @@ class SwipeBattle(val balance: SwipeBalance) {
     private fun aliveUnits() = units.filter { it.stats.health.value > 0 }
 
     suspend fun initialize(config: BattleConfig) = withContext(coroutineContext) {
+        this@SwipeBattle.config = config
         generateInitialPersonages(config)
         generateInitialTiles()
         propagateInternalEvent(InternalBattleEvent.BattleStartedEvent(this@SwipeBattle))
@@ -89,7 +93,13 @@ class SwipeBattle(val balance: SwipeBalance) {
             }
         }
 
-        config.npcs.withIndex().forEach {
+        generateNpcs(config)
+        propagateInternalEvent(InternalBattleEvent.BattleStartedEvent(this@SwipeBattle))
+    }
+
+    private suspend fun generateNpcs(config: BattleConfig) {
+        events.send(BattleEvent.NewWaveEvent(wave))
+        config.waves[wave].withIndex().forEach {
             val unitStats = UnitFactory.produce(it.value.name, balance, it.value.level)
             unitStats?.let { stats ->
                 val unit = BattleUnit(newPersonageId(), 7 - it.index, stats, Team.RIGHT)
@@ -110,8 +120,22 @@ class SwipeBattle(val balance: SwipeBalance) {
             events.send(BattleEvent.DefeatEvent)
             events.close()
         } else if (rightTeamCount == 0) {
-            events.send(BattleEvent.VictoryEvent)
-            events.close()
+            if (wave < config.waves.size - 1) {
+                wave++
+                clearNpcs()
+                units.removeAll { it.team == Team.RIGHT }
+                generateNpcs(config)
+                propagateInternalEvent(InternalBattleEvent.BattleStartedEvent(this@SwipeBattle))
+            } else {
+                events.send(BattleEvent.VictoryEvent)
+                events.close()
+            }
+        }
+    }
+
+    private suspend fun clearNpcs() {
+        units.filter { it.team == Team.RIGHT }.forEach {
+            events.send(BattleEvent.RemovePersonageEvent(it.id))
         }
     }
 
