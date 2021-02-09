@@ -90,7 +90,7 @@ class ConstructorView(
             val personageConfigs = (1..3).map { index ->
                 personages.getChild(index) as PersonagePreview
             }.map { it.config }.filter { personageCodenames.contains(it.name) }
-            val npcsConfigs = (1..3).map { index ->
+            val npcsConfigs = (1..4).map { index ->
                 npcs.getChild(index) as PersonagePreview
             }.map { it.config }.filter { npcCodenames.contains(it.name) }
 
@@ -126,7 +126,7 @@ class ConstructorView(
             personages += p
         }
 
-        for (i in 0..2) {
+        for (i in 0..3) {
             val n = PersonagePreview(context, PersonageConfig(UnitType.GREEN_SLIME, 1)) {
                 hideSelector()
                 selector = PersonageSelector(npcCodenames.map { getSkin(it) }, context) { index ->
