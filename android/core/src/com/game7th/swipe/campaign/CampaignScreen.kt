@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.input.GestureDetector
+import com.badlogic.gdx.math.Rectangle
 import com.game7th.metagame.campaign.CampaignConfig
 import com.game7th.metagame.campaign.CampaignNodeConfig
 import com.game7th.metagame.campaign.CampaignNodeType
@@ -26,11 +27,14 @@ class CampaignScreen(
 ) : Screen {
 
     private val batch = SpriteBatch()
-    val campaignConfig: CampaignConfig
-    val backgroundTexture: Texture
-    val viewModel: CampaignViewModel
+    lateinit var campaignConfig: CampaignConfig
+    lateinit var backgroundTexture: Texture
+    lateinit var viewModel: CampaignViewModel
 
     val starsCache = mutableMapOf<Int, Int>()
+
+    var circleScale: Float = 0f
+    var circleOffset: Float = 0f
 
     val linkRenderer = ShapeRenderer()
     val linkMainColor = Color(0.1f, 0.1f, 0.1f, 0.8f)
@@ -42,15 +46,13 @@ class CampaignScreen(
     private var scrollImpulse = 0f
     lateinit var gestureDetector: GestureDetector
 
-    init {
+    override fun show() {
         val campaignFile = Gdx.files.internal("campaign_0.json")
         campaignConfig = Gson().fromJson<CampaignConfig>(campaignFile.readString(), CampaignConfig::class.java)
         viewModel = CampaignViewModel(campaignConfig)
         backgroundTexture = Texture(Gdx.files.internal(campaignConfig.texture))
-    }
 
-    override fun show() {
-        gestureDetector = GestureDetector(object : GestureDetector.GestureAdapter() {
+        gestureDetector = GestureDetector(game.width / 12f, 0.4f, 1.1f, Float.MAX_VALUE, object : GestureDetector.GestureAdapter() {
             override fun pan(x: Float, y: Float, deltaX: Float, deltaY: Float): Boolean {
                 scrollImpulse = 0f
                 scroll += deltaY
@@ -62,8 +64,30 @@ class CampaignScreen(
                 scrollImpulse = velocityY
                 return super.fling(velocityX, velocityY, button)
             }
+
+            override fun tap(x: Float, y: Float, count: Int, button: Int): Boolean {
+                val wy = (game.height - y + scroll) / game.scale
+                val wx = x / game.scale
+                campaignConfig.nodes.forEach {
+                    val rect = Rectangle(it.x - 30, it.y - 30, 60f, 60f)
+                    if (rect.contains(wx, wy)) {
+                        val stars = starsCache[it.id]
+                        stars?.let { stars ->
+                            val normalized = if (stars > 4) 0 else stars + 1
+                            starsCache[it.id] = normalized
+                        }
+
+                    }
+                }
+                return super.tap(x, y, count, button)
+            }
         })
         game.multiplexer.addProcessor(0, gestureDetector)
+
+        val texture = getTextureForCircle(CampaignNodeType.FARM)
+        val circleScale = game.width / 8 / texture.regionWidth
+        val circleOffset = game.width / 16
+
     }
 
     private fun normalizeScroll() {
@@ -135,17 +159,17 @@ class CampaignScreen(
 
     private fun CampaignNodeConfig.draw(batch: SpriteBatch) {
         val texture = getTextureForCircle(type)
-        val scale = game.width / 8 / texture.regionWidth
-        val offset = game.width / 16
+        val circleScale = game.width / 8 / texture.regionWidth
+        val circleOffset = game.width / 16
         batch.draw(texture,
-                game.scale * x - offset,
-                game.scale * y - offset - scroll,
+                game.scale * x - circleOffset,
+                game.scale * y - circleOffset - scroll,
                 0f,
                 0f,
                 texture.regionWidth.toFloat(),
                 texture.regionHeight.toFloat(),
-                scale,
-                scale,
+                circleScale,
+                circleScale,
                 0f)
 
         if (type != CampaignNodeType.FARM) {
@@ -159,8 +183,8 @@ class CampaignScreen(
                 val alpha = 2 * alphaStep - i * alphaStep
                 val texture = if (i <= stars - 1) yellowStarTexture else greyStarTexture
                 batch.draw(texture,
-                        game.scale * x - offset * sin(alpha) - starOffset,
-                        game.scale * y - offset * cos(alpha) - starOffset - scroll,
+                        game.scale * x - circleOffset * sin(alpha) - starOffset,
+                        game.scale * y - circleOffset * cos(alpha) - starOffset - scroll,
                         0f,
                         0f,
                         texture.regionWidth.toFloat(),
