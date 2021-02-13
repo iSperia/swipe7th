@@ -39,7 +39,7 @@ class SwipeGameGdx : Game() {
 
         Gdx.input.inputProcessor = multiplexer
 
-        screen = CampaignScreen(this)
+        setScreen(CampaignScreen(this))
     }
 
     override fun render() {
@@ -60,5 +60,6 @@ class SwipeGameGdx : Game() {
     }
 
     override fun resize(width: Int, height: Int) {
+        super.resize(width, height)
     }
 }
