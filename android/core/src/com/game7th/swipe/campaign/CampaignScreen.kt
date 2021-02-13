@@ -76,7 +76,7 @@ class CampaignScreen(
             scroll += scrollImpulse * delta
             scrollImpulse *= 1 - 2f * delta
             normalizeScroll()
-            if (abs(scrollImpulse) < 1f) {
+            if (abs(scrollImpulse) < 5f) {
                 scrollImpulse = 0f
             }
         }
