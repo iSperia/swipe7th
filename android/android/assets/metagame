@@ -1,0 +1,48 @@
+
+metagame.png
+size: 1024, 256
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+circle_blue
+  rotate: false
+  xy: 394, 55
+  size: 138, 142
+  orig: 138, 142
+  offset: 0, 0
+  index: -1
+circle_orange
+  rotate: false
+  xy: 674, 55
+  size: 138, 142
+  orig: 138, 142
+  offset: 0, 0
+  index: -1
+circle_red
+  rotate: false
+  xy: 534, 55
+  size: 138, 142
+  orig: 138, 142
+  offset: 0, 0
+  index: -1
+lock
+  rotate: false
+  xy: 814, 63
+  size: 96, 134
+  orig: 96, 134
+  offset: 0, 0
+  index: -1
+star_grey
+  rotate: false
+  xy: 198, 4
+  size: 194, 193
+  orig: 194, 193
+  offset: 0, 0
+  index: -1
+star_yellow
+  rotate: false
+  xy: 2, 2
+  size: 194, 195
+  orig: 194, 195
+  offset: 0, 0
+  index: -1

@@ -1,35 +1,34 @@
 package com.game7th.swipe
 
 import com.badlogic.gdx.ApplicationListener
+import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.utils.viewport.FitViewport
 import com.game7th.battle.balance.SwipeBalance
-import com.game7th.swipe.constructor.ConstructorView
-import com.game7th.swipe.game.actors.GameView
+import com.game7th.metagame.campaign.CampaignViewModel
+import com.game7th.swipe.campaign.CampaignScreen
 import com.google.gson.Gson
 import ktx.async.KtxAsync
 
-class SwipeGameGdx : ApplicationListener {
-    lateinit var stage: Stage
-    lateinit var viewport: FitViewport
+class SwipeGameGdx : Game() {
 
     val multiplexer = InputMultiplexer()
 
-    lateinit var constructorView: ConstructorView
-    var gameView: GameView? = null
-
     lateinit var context: GdxGameContext
+
+    var width = 0f
+    var height = 0f
+    var scale = 0f
 
     override fun create() {
         KtxAsync.initiate()
 
-        viewport = FitViewport(VP_WIDTH, VP_HEIGHT)
-        stage = Stage(viewport)
+        width = Gdx.graphics.width.toFloat()
+        height = Gdx.graphics.height.toFloat()
+        scale = Gdx.graphics.width / 480f
 
         val atlas = TextureAtlas(Gdx.files.internal("pack_0.atlas"))
         val font = BitmapFont()
@@ -39,30 +38,15 @@ class SwipeGameGdx : ApplicationListener {
         context = GdxGameContext(atlas, font, balance)
 
         Gdx.input.inputProcessor = multiplexer
-        multiplexer.addProcessor(stage)
 
-        constructorView = ConstructorView(context) { battleConfig ->
-            constructorView.isVisible = false
-            gameView = GameView(context, multiplexer, battleConfig) {
-                gameView?.remove().also { gameView = null }
-                showConstructorView()
-            }
-            stage.addActor(gameView)
-        }
-        showConstructorView()
-        stage.addActor(constructorView)
-    }
-
-    private fun showConstructorView() {
-        constructorView.isVisible = true
+        screen = CampaignScreen(this)
     }
 
     override fun render() {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-        stage.act(Gdx.graphics.deltaTime)
-        stage.draw()
+        super.render()
     }
 
     override fun pause() {
@@ -72,14 +56,9 @@ class SwipeGameGdx : ApplicationListener {
     }
 
     override fun dispose() {
-
+        super.dispose()
     }
 
     override fun resize(width: Int, height: Int) {
-    }
-
-    companion object {
-        const val VP_WIDTH = 480f
-        const val VP_HEIGHT = 720f
     }
 }

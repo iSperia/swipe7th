@@ -12,6 +12,7 @@ import com.game7th.battle.SwipeBattle
 import com.game7th.battle.event.BattleEvent
 import com.game7th.swipe.SwipeGameGdx
 import com.game7th.swipe.GdxGameContext
+import com.game7th.swipe.game.GameScreen
 import com.game7th.swipe.game.actors.ui.GameFinishedDialog
 import com.game7th.swipe.gestures.SimpleDirectionGestureDetector
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -71,7 +72,7 @@ class GameView(
         tileField = TileFieldView(context, this).apply {
             setScale(TILE_FIELD_SCALE)
             x = 0f
-            y = SwipeGameGdx.VP_HEIGHT - 6 * 32 * TILE_FIELD_SCALE -  240
+            y = GameScreen.VP_HEIGHT - 6 * 32 * TILE_FIELD_SCALE -  240
         }
         addActor(tileField)
 

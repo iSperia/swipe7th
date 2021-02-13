@@ -118,6 +118,7 @@ project(":core") {
 
     dependencies {
         implementation project(":battle")
+        implementation project(":metagame")
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
         implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines"
 

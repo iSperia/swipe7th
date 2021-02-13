@@ -1,3 +1,4 @@
+include ':metagame'
 include ':balance-tool'
 include ':battle'
 include 'desktop', 'android', 'ios', 'core'
