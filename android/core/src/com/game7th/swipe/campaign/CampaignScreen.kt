@@ -20,7 +20,6 @@ import com.game7th.swipe.state.LocationState
 import com.game7th.swipe.state.StateStorage
 import com.google.gson.Gson
 import kotlin.math.*
-import kotlin.random.Random
 
 /**
  * The screen for single campaign
@@ -95,7 +94,7 @@ class CampaignScreen(
                                 locationCache[unlock] = LocationState(unlock, 0)
                             }
                         }
-                        storage.updateCampaign(0, locationCache.toState(campaign))
+                        storage.updateCampaign(0, convertState(campaign))
                     }
                 }
                 return super.tap(x, y, count, button)
@@ -240,7 +239,7 @@ class CampaignScreen(
         return map
     }
 
-    private fun Map<Int, LocationState>.toState(state: CampaignState): CampaignState {
+    private fun convertState(state: CampaignState): CampaignState {
         return state.copy(locations = locationCache.values.toList())
     }
 
