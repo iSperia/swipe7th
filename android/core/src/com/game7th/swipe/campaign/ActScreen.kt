@@ -10,29 +10,26 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.input.GestureDetector
 import com.badlogic.gdx.math.Rectangle
-import com.game7th.metagame.campaign.CampaignConfig
-import com.game7th.metagame.campaign.CampaignNodeConfig
-import com.game7th.metagame.campaign.CampaignNodeType
-import com.game7th.metagame.campaign.CampaignViewModel
+import com.game7th.metagame.campaign.*
+import com.game7th.metagame.state.ActProgressState
+import com.game7th.metagame.state.LocationProgressState
 import com.game7th.swipe.SwipeGameGdx
-import com.game7th.swipe.state.CampaignState
-import com.game7th.swipe.state.LocationState
-import com.game7th.swipe.state.StateStorage
-import com.google.gson.Gson
 import kotlin.math.*
 
 /**
  * The screen for single campaign
  */
-class CampaignScreen(
+class ActScreen(
         private val game: SwipeGameGdx,
-        private val storage: StateStorage
+        private val actsService: ActsService,
+        private val actId: Int
 ) : Screen {
 
     private val batch = SpriteBatch()
-    lateinit var campaignConfig: CampaignConfig
+    lateinit var actConfig: ActConfig
     lateinit var backgroundTexture: Texture
-    lateinit var viewModel: CampaignViewModel
+
+    lateinit var config: ActConfig
 
     var circleScale: Float = 0f
     var circleOffset: Float = 0f
@@ -52,19 +49,15 @@ class CampaignScreen(
     private var scrollImpulse = 0f
     lateinit var gestureDetector: GestureDetector
 
-    lateinit var campaign: CampaignState
-    private val locationCache = mutableMapOf<Int, LocationState>()
+    private val locationCache = mutableMapOf<Int, LocationProgressState>()
 
     override fun show() {
-        storage.load().let { gameState ->
-            locationCache.putAll(gameState.campaigns[0].asMap())
-            campaign = gameState.campaigns.first { it.id == 0 }
-        }
+        config = actsService.getActConfig(actId)
+        val progressState: ActProgressState = actsService.getActProgress(actId)
 
-        val campaignFile = Gdx.files.internal("campaign_0.json")
-        campaignConfig = Gson().fromJson<CampaignConfig>(campaignFile.readString(), CampaignConfig::class.java)
-        viewModel = CampaignViewModel(campaignConfig)
-        backgroundTexture = Texture(Gdx.files.internal(campaignConfig.texture))
+        updateLocationProgressCache(progressState)
+        actConfig = actsService.getActConfig(actId)
+        backgroundTexture = Texture(Gdx.files.internal(actConfig.texture))
 
         gestureDetector = GestureDetector(game.width / 12f, 0.4f, 1.1f, Float.MAX_VALUE, object : GestureDetector.GestureAdapter() {
             override fun pan(x: Float, y: Float, deltaX: Float, deltaY: Float): Boolean {
@@ -82,19 +75,14 @@ class CampaignScreen(
             override fun tap(x: Float, y: Float, count: Int, button: Int): Boolean {
                 val wy = (game.height - y + scroll) / game.scale
                 val wx = x / game.scale
-                campaignConfig.nodes.forEach { node ->
+                actConfig.nodes.forEach { node ->
                     val rect = Rectangle(node.x - 30, node.y - 30, 60f, 60f)
                     if (rect.contains(wx, wy) && locationCache.containsKey(node.id)) {
                         val stars = locationCache[node.id]?.stars ?: 0
                         val normalized = min(5, stars + 1)
-                        locationCache[node.id] = LocationState(node.id, normalized)
-                        //unlock linked
-                        campaignConfig.nodes.first { it.id == node.id }.unlock.forEach { unlock ->
-                            if (!locationCache.containsKey(unlock)) {
-                                locationCache[unlock] = LocationState(unlock, 0)
-                            }
+                        if (actsService.markLocationComplete(actId, node.id, normalized)) {
+                            updateLocationProgressCache(actsService.getActProgress(actId))
                         }
-                        storage.updateCampaign(0, convertState(campaign))
                     }
                 }
                 return super.tap(x, y, count, button)
@@ -113,6 +101,11 @@ class CampaignScreen(
         val lockTexture = atlas.findRegion("lock")
         lockScale = game.width / 10 / lockTexture.regionWidth
         lockOffset = game.width / 20
+    }
+
+    private fun updateLocationProgressCache(progressState: ActProgressState) {
+        locationCache.clear()
+        locationCache.putAll(progressState.asMap())
     }
 
     private fun normalizeScroll() {
@@ -136,14 +129,14 @@ class CampaignScreen(
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         linkRenderer.begin(ShapeRenderer.ShapeType.Filled)
-        viewModel.nodeConfigs.forEach {
+        config.nodes.forEach {
             it.drawLinks()
         }
         linkRenderer.end()
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
         batch.begin()
-        viewModel.nodeConfigs.forEach {
+        config.nodes.forEach {
             it.draw(batch)
         }
         batch.end()
@@ -167,9 +160,9 @@ class CampaignScreen(
     override fun dispose() {
     }
 
-    private fun CampaignNodeConfig.drawLinks() {
+    private fun LocationConfig.drawLinks() {
         unlock.forEach { index ->
-            campaignConfig.findNode(index)?.let { targetNode ->
+            actConfig.findNode(index)?.let { targetNode ->
                 val x1 = x * game.scale
                 val x2 = targetNode.x * game.scale
                 val y1 = y * game.scale - scroll
@@ -182,7 +175,7 @@ class CampaignScreen(
         }
     }
 
-    private fun CampaignNodeConfig.draw(batch: SpriteBatch) {
+    private fun LocationConfig.draw(batch: SpriteBatch) {
         val texture = getTextureForCircle(type)
         batch.draw(texture,
                 game.scale * x - circleOffset,
@@ -231,16 +224,16 @@ class CampaignScreen(
         }
     }
 
-    private fun CampaignState.asMap(): Map<Int, LocationState> {
-        val map = mutableMapOf<Int, LocationState>()
+    private fun ActProgressState.asMap(): Map<Int, LocationProgressState> {
+        val map = mutableMapOf<Int, LocationProgressState>()
         locations.forEach {
             map[it.id] = it
         }
         return map
     }
 
-    private fun convertState(state: CampaignState): CampaignState {
-        return state.copy(locations = locationCache.values.toList())
+    private fun convertProgressState(): List<LocationProgressState> {
+        return locationCache.values.toList()
     }
 
     private fun getTextureForCircle(type: CampaignNodeType) = when (type) {

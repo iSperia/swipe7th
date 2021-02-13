@@ -1,0 +1,50 @@
+
+ui.png
+size: 512, 128
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+arrowBlue_left
+  rotate: false
+  xy: 2, 25
+  size: 22, 21
+  orig: 22, 21
+  offset: 0, 0
+  index: -1
+arrowBlue_right
+  rotate: false
+  xy: 2, 2
+  size: 22, 21
+  orig: 22, 21
+  offset: 0, 0
+  index: -1
+iconCircle_blue
+  rotate: false
+  xy: 26, 29
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: -1
+iconCircle_grey
+  rotate: false
+  xy: 424, 109
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: -1
+panel_blue
+  rotate: false
+  xy: 322, 26
+  size: 100, 100
+  split: 10, 9, 8, 7
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+ui_dialog_bg
+  rotate: false
+  xy: 2, 48
+  size: 318, 78
+  split: 15, 15, 15, 15
+  orig: 318, 78
+  offset: 0, 0
+  index: -1
