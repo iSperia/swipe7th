@@ -15,6 +15,9 @@ import com.game7th.metagame.campaign.CampaignNodeConfig
 import com.game7th.metagame.campaign.CampaignNodeType
 import com.game7th.metagame.campaign.CampaignViewModel
 import com.game7th.swipe.SwipeGameGdx
+import com.game7th.swipe.state.CampaignState
+import com.game7th.swipe.state.LocationState
+import com.game7th.swipe.state.StateStorage
 import com.google.gson.Gson
 import kotlin.math.*
 import kotlin.random.Random
@@ -23,7 +26,8 @@ import kotlin.random.Random
  * The screen for single campaign
  */
 class CampaignScreen(
-        private val game: SwipeGameGdx
+        private val game: SwipeGameGdx,
+        private val storage: StateStorage
 ) : Screen {
 
     private val batch = SpriteBatch()
@@ -31,13 +35,13 @@ class CampaignScreen(
     lateinit var backgroundTexture: Texture
     lateinit var viewModel: CampaignViewModel
 
-    val starsCache = mutableMapOf<Int, Int>()
-
     var circleScale: Float = 0f
     var circleOffset: Float = 0f
     var starScale: Float = 0f
     var starOffset: Float = 0f
     val starAlphaStep = Math.toRadians(30.0).toFloat()
+    var lockScale: Float = 0f
+    var lockOffset: Float = 0f
 
     val linkRenderer = ShapeRenderer()
     val linkMainColor = Color(0.1f, 0.1f, 0.1f, 0.8f)
@@ -49,7 +53,15 @@ class CampaignScreen(
     private var scrollImpulse = 0f
     lateinit var gestureDetector: GestureDetector
 
+    lateinit var campaign: CampaignState
+    private val locationCache = mutableMapOf<Int, LocationState>()
+
     override fun show() {
+        storage.load().let { gameState ->
+            locationCache.putAll(gameState.campaigns[0].asMap())
+            campaign = gameState.campaigns.first { it.id == 0 }
+        }
+
         val campaignFile = Gdx.files.internal("campaign_0.json")
         campaignConfig = Gson().fromJson<CampaignConfig>(campaignFile.readString(), CampaignConfig::class.java)
         viewModel = CampaignViewModel(campaignConfig)
@@ -71,15 +83,19 @@ class CampaignScreen(
             override fun tap(x: Float, y: Float, count: Int, button: Int): Boolean {
                 val wy = (game.height - y + scroll) / game.scale
                 val wx = x / game.scale
-                campaignConfig.nodes.forEach {
-                    val rect = Rectangle(it.x - 30, it.y - 30, 60f, 60f)
-                    if (rect.contains(wx, wy)) {
-                        val stars = starsCache[it.id]
-                        stars?.let { stars ->
-                            val normalized = if (stars > 4) 0 else stars + 1
-                            starsCache[it.id] = normalized
+                campaignConfig.nodes.forEach { node ->
+                    val rect = Rectangle(node.x - 30, node.y - 30, 60f, 60f)
+                    if (rect.contains(wx, wy) && locationCache.containsKey(node.id)) {
+                        val stars = locationCache[node.id]?.stars ?: 0
+                        val normalized = min(5, stars + 1)
+                        locationCache[node.id] = LocationState(node.id, normalized)
+                        //unlock linked
+                        campaignConfig.nodes.first { it.id == node.id }.unlock.forEach { unlock ->
+                            if (!locationCache.containsKey(unlock)) {
+                                locationCache[unlock] = LocationState(unlock, 0)
+                            }
                         }
-
+                        storage.updateCampaign(0, locationCache.toState(campaign))
                     }
                 }
                 return super.tap(x, y, count, button)
@@ -95,7 +111,9 @@ class CampaignScreen(
         starScale = game.width / 24 / greyStarTexture.regionWidth
         starOffset = game.width / 48
 
-
+        val lockTexture = atlas.findRegion("lock")
+        lockScale = game.width / 10 / lockTexture.regionWidth
+        lockOffset = game.width / 20
     }
 
     private fun normalizeScroll() {
@@ -181,7 +199,7 @@ class CampaignScreen(
         if (type != CampaignNodeType.FARM) {
             val greyStarTexture = atlas.findRegion("star_grey")
             val yellowStarTexture = atlas.findRegion("star_yellow")
-            val stars = starsCache[id] ?: Random.nextInt(0, 6).apply { starsCache[id] = this }
+            val stars = if (locationCache.containsKey(id)) locationCache[id]?.stars ?: 0 else 0
             (4 downTo 0).forEach { i ->
                 val alpha = 2 * starAlphaStep - i * starAlphaStep
                 val texture = if (i <= stars - 1) yellowStarTexture else greyStarTexture
@@ -197,6 +215,33 @@ class CampaignScreen(
                         0f)
             }
         }
+
+        if (!locationCache.containsKey(id)) {
+            val texture = atlas.findRegion("lock")
+            batch.draw(texture,
+                    game.scale * x - lockOffset,
+                    game.scale * y - lockOffset - scroll,
+                    0f,
+                    0f,
+                    texture.regionWidth.toFloat(),
+                    texture.regionHeight.toFloat(),
+                    lockScale,
+                    lockScale,
+                    0f
+            )
+        }
+    }
+
+    private fun CampaignState.asMap(): Map<Int, LocationState> {
+        val map = mutableMapOf<Int, LocationState>()
+        locations.forEach {
+            map[it.id] = it
+        }
+        return map
+    }
+
+    private fun Map<Int, LocationState>.toState(state: CampaignState): CampaignState {
+        return state.copy(locations = locationCache.values.toList())
     }
 
     private fun getTextureForCircle(type: CampaignNodeType) = when (type) {

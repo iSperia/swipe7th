@@ -1,6 +1,5 @@
 package com.game7th.swipe
 
-import com.badlogic.gdx.ApplicationListener
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
@@ -8,12 +7,12 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.game7th.battle.balance.SwipeBalance
-import com.game7th.metagame.campaign.CampaignViewModel
 import com.game7th.swipe.campaign.CampaignScreen
+import com.game7th.swipe.state.StateStorage
 import com.google.gson.Gson
 import ktx.async.KtxAsync
 
-class SwipeGameGdx : Game() {
+class SwipeGameGdx(private val storage: StateStorage) : Game() {
 
     val multiplexer = InputMultiplexer()
 
@@ -39,7 +38,7 @@ class SwipeGameGdx : Game() {
 
         Gdx.input.inputProcessor = multiplexer
 
-        setScreen(CampaignScreen(this))
+        setScreen(CampaignScreen(this, storage))
     }
 
     override fun render() {
