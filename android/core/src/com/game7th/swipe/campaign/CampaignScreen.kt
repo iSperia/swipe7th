@@ -35,6 +35,9 @@ class CampaignScreen(
 
     var circleScale: Float = 0f
     var circleOffset: Float = 0f
+    var starScale: Float = 0f
+    var starOffset: Float = 0f
+    val starAlphaStep = Math.toRadians(30.0).toFloat()
 
     val linkRenderer = ShapeRenderer()
     val linkMainColor = Color(0.1f, 0.1f, 0.1f, 0.8f)
@@ -85,8 +88,13 @@ class CampaignScreen(
         game.multiplexer.addProcessor(0, gestureDetector)
 
         val texture = getTextureForCircle(CampaignNodeType.FARM)
-        val circleScale = game.width / 8 / texture.regionWidth
-        val circleOffset = game.width / 16
+        circleScale = game.width / 8 / texture.regionWidth
+        circleOffset = game.width / 16
+
+        val greyStarTexture = atlas.findRegion("star_grey")
+        starScale = game.width / 24 / greyStarTexture.regionWidth
+        starOffset = game.width / 48
+
 
     }
 
@@ -159,8 +167,6 @@ class CampaignScreen(
 
     private fun CampaignNodeConfig.draw(batch: SpriteBatch) {
         val texture = getTextureForCircle(type)
-        val circleScale = game.width / 8 / texture.regionWidth
-        val circleOffset = game.width / 16
         batch.draw(texture,
                 game.scale * x - circleOffset,
                 game.scale * y - circleOffset - scroll,
@@ -176,11 +182,8 @@ class CampaignScreen(
             val greyStarTexture = atlas.findRegion("star_grey")
             val yellowStarTexture = atlas.findRegion("star_yellow")
             val stars = starsCache[id] ?: Random.nextInt(0, 6).apply { starsCache[id] = this }
-            val starScale = game.width / 24 / greyStarTexture.regionWidth
-            val starOffset = game.width / 48
-            val alphaStep = Math.toRadians(30.0).toFloat()
             (4 downTo 0).forEach { i ->
-                val alpha = 2 * alphaStep - i * alphaStep
+                val alpha = 2 * starAlphaStep - i * starAlphaStep
                 val texture = if (i <= stars - 1) yellowStarTexture else greyStarTexture
                 batch.draw(texture,
                         game.scale * x - circleOffset * sin(alpha) - starOffset,
