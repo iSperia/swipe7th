@@ -81,8 +81,11 @@ class ActScreen(
                         val stars = locationCache[node.id]?.stars ?: 0
                         val normalized = min(5, stars + 1)
                         if (actsService.markLocationComplete(actId, node.id, normalized)) {
-                            updateLocationProgressCache(actsService.getActProgress(actId))
+                            node.unlock.forEach { locationId ->
+                                actsService.unlockLocation(actId, locationId)
+                            }
                         }
+                        updateLocationProgressCache(actsService.getActProgress(actId))
                     }
                 }
                 return super.tap(x, y, count, button)

@@ -22,7 +22,7 @@ class ActsServiceImpl(
     override fun getActProgress(id: Int): ActProgressState {
         //TODO: check if act is locked or not
         val data = storage.get("$STATE_ACT-$id")
-        val stateFromStorage = data?.let { gson.fromJson<ActProgressState>(it, null) }
+        val stateFromStorage = data?.let { gson.fromJson<ActProgressState>(it, ActProgressState::class.java) }
         return stateFromStorage ?: createDefaultActProgress(id)
     }
 
@@ -37,6 +37,20 @@ class ActsServiceImpl(
                 .let {
                     storage.put("$STATE_ACT-$actId", gson.toJson(it))
                 }
+        return true
+    }
+
+    override fun unlockLocation(actId: Int, locationId: Int): Boolean {
+        val currentState = getActProgress(actId)
+        val isLocked = currentState.locations.count { it.id == locationId } == 0
+        if (isLocked) {
+            currentState.locations
+                    .plus(LocationProgressState(locationId, 0))
+                    .let { ActProgressState(actId, it) }
+                    .let {
+                        storage.put("$STATE_ACT-$actId", gson.toJson(it))
+                    }
+        }
         return true
     }
 

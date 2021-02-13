@@ -12,4 +12,9 @@ interface ActsService {
      * Mark user completed some location with some stars involved
      */
     fun markLocationComplete(actId: Int, locationId: Int, starCount: Int): Boolean
+
+    /**
+     * Unlocks location so player may play this level
+     */
+    fun unlockLocation(actId: Int, locationId: Int): Boolean
 }
