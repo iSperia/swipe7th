@@ -186,6 +186,7 @@ class ActScreen(
 
     override fun hide() {
         game.multiplexer.removeProcessor(gestureDetector)
+        game.multiplexer.removeProcessor(stage)
         backgroundTexture.dispose()
         batch.dispose()
     }
