@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.game7th.battle.BattleConfig
 import com.game7th.battle.PersonageConfig
-import com.game7th.battle.unit.UnitType
+import com.game7th.metagame.unit.UnitType
 import com.game7th.swipe.GdxGameContext
 import ktx.actors.*
 
@@ -108,7 +108,7 @@ class ConstructorView(
         for (i in 0..2) {
             val p = PersonagePreview(context, PersonageConfig(if (i == 1) UnitType.GLADIATOR else UnitType.UNKNOWN, 1)) {
                 hideSelector()
-                selector = PersonageSelector(personageCodenames.map { getSkin(it) }, context) { index ->
+                selector = PersonageSelector(personageCodenames.map { it.getSkin() }, context) { index ->
                     val p: PersonagePreview = personages.getChild(i + 1) as PersonagePreview
                     p.config = p.config.copy(name = personageCodenames[index])
                     p.applyCharImage()
@@ -129,7 +129,7 @@ class ConstructorView(
         for (i in 0..3) {
             val n = PersonagePreview(context, PersonageConfig(UnitType.GREEN_SLIME, 1)) {
                 hideSelector()
-                selector = PersonageSelector(npcCodenames.map { getSkin(it) }, context) { index ->
+                selector = PersonageSelector(npcCodenames.map { it.getSkin() }, context) { index ->
                     val p: PersonagePreview = npcs.getChild(i + 1) as PersonagePreview
                     p.config = p.config.copy(name = npcCodenames[index])
                     p.applyCharImage()
@@ -189,18 +189,5 @@ class ConstructorView(
         personages.isVisible = false
         personagesLabel.color = Color.WHITE
         npcsLabel.color = Color.RED
-    }
-
-    companion object {
-        fun getSkin(codename: UnitType): String {
-            return when (codename) {
-                UnitType.GLADIATOR -> "p_gladiator"
-                UnitType.POISON_ARCHER -> "personage_ranger"
-                UnitType.GREEN_SLIME -> "personage_slime"
-                UnitType.MACHINE_GUNNER -> "personage_gunner"
-                UnitType.CITADEL_WARLOCK -> "personage_citadel_warlock"
-                else -> "personage_dead"
-            }
-        }
     }
 }

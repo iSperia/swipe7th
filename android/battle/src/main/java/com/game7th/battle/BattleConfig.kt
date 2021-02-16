@@ -1,6 +1,6 @@
 package com.game7th.battle
 
-import com.game7th.battle.unit.UnitType
+import com.game7th.metagame.unit.UnitType
 
 data class BattleConfig(
         val personages: List<PersonageConfig>,

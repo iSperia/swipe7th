@@ -4,16 +4,51 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
+import com.game7th.battle.BattleConfig
+import com.game7th.battle.PersonageConfig
+import com.game7th.metagame.unit.UnitType
 import com.game7th.swipe.SwipeGameGdx
+import com.game7th.swipe.campaign.ActScreen
+import com.game7th.swipe.game.actors.GameView
 
-class GameScreen(private val game: SwipeGameGdx) : Screen {
+class GameScreen(private val game: SwipeGameGdx,
+                 private val actId: Int,
+                 private val locationId: Int,
+                 private val difficulty: Int,
+                 private val personageSquadId: Int
+    ) : Screen {
 
     lateinit var stage: Stage
     lateinit var viewport: FitViewport
 
+    lateinit var gameView: GameView
+
     override fun show() {
         viewport = FitViewport(VP_WIDTH, VP_HEIGHT)
         stage = Stage(viewport)
+
+        val wave = listOf(
+                PersonageConfig(UnitType.CITADEL_WARLOCK, 1 + (difficulty - 1) * 3),
+                PersonageConfig(UnitType.GREEN_SLIME, 1 + (difficulty - 1) * 3),
+                PersonageConfig(UnitType.GREEN_SLIME, 1 + (difficulty - 1) * 3))
+
+        gameView = GameView(game.context, game.multiplexer, BattleConfig(
+                personages = listOf(
+                        PersonageConfig(UnitType.POISON_ARCHER, personageSquadId + 1),
+                        PersonageConfig(UnitType.MACHINE_GUNNER, personageSquadId + 1),
+                        PersonageConfig(UnitType.GLADIATOR, personageSquadId + 1)
+                ),
+                waves = listOf(
+                        wave.toList(),
+                        wave.toList(),
+                        wave.toList()
+                )
+        )) {
+            game.screen = ActScreen(game, game.actService, actId, game.screenContext)
+        }
+
+        stage.addActor(gameView)
+
         game.multiplexer.addProcessor(stage)
     }
 
@@ -23,24 +58,20 @@ class GameScreen(private val game: SwipeGameGdx) : Screen {
     }
 
     override fun resize(width: Int, height: Int) {
-        TODO("Not yet implemented")
     }
 
     override fun pause() {
-        TODO("Not yet implemented")
     }
 
     override fun resume() {
-        TODO("Not yet implemented")
     }
 
     override fun hide() {
-        TODO("Not yet implemented")
     }
 
     override fun dispose() {
-        TODO("Not yet implemented")
     }
+
     companion object {
         const val VP_WIDTH = 480f
         const val VP_HEIGHT = 720f

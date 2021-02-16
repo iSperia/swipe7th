@@ -1,50 +1,100 @@
 
 ui.png
-size: 512, 128
+size: 2048, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 arrowBlue_left
   rotate: false
-  xy: 2, 25
+  xy: 322, 93
   size: 22, 21
   orig: 22, 21
   offset: 0, 0
   index: -1
 arrowBlue_right
   rotate: false
-  xy: 2, 2
+  xy: 1266, 131
   size: 22, 21
   orig: 22, 21
   offset: 0, 0
   index: -1
+btn_blue_dn
+  rotate: false
+  xy: 385, 116
+  size: 381, 138
+  orig: 381, 138
+  offset: 0, 0
+  index: -1
+btn_blue_up
+  rotate: false
+  xy: 2, 116
+  size: 381, 138
+  orig: 381, 138
+  offset: 0, 0
+  index: -1
 iconCircle_blue
   rotate: false
-  xy: 26, 29
+  xy: 138, 17
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
   index: -1
 iconCircle_grey
   rotate: false
-  xy: 424, 109
+  xy: 1368, 237
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
   index: -1
 panel_blue
   rotate: false
-  xy: 322, 26
+  xy: 1266, 154
   size: 100, 100
   split: 10, 9, 8, 7
   orig: 100, 100
   offset: 0, 0
   index: -1
+star_grey
+  rotate: false
+  xy: 768, 61
+  size: 194, 193
+  orig: 194, 193
+  offset: 0, 0
+  index: -1
+star_yellow
+  rotate: false
+  xy: 964, 59
+  size: 194, 195
+  orig: 194, 195
+  offset: 0, 0
+  index: -1
+ui_button.fw
+  rotate: false
+  xy: 70, 2
+  size: 66, 32
+  orig: 66, 32
+  offset: 0, 0
+  index: -1
+ui_button_dn.fw
+  rotate: false
+  xy: 2, 2
+  size: 66, 32
+  orig: 66, 32
+  offset: 0, 0
+  index: -1
 ui_dialog_bg
   rotate: false
-  xy: 2, 48
+  xy: 2, 36
   size: 318, 78
   split: 15, 15, 15, 15
   orig: 318, 78
+  offset: 0, 0
+  index: -1
+ui_dialog_bg.fw
+  rotate: false
+  xy: 1160, 12
+  size: 104, 242
+  split: 39, 42, 40, 43
+  orig: 104, 242
   offset: 0, 0
   index: -1

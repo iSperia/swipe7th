@@ -5,6 +5,7 @@ import com.game7th.battle.DamageVector
 import com.game7th.battle.ability.ability
 import com.game7th.battle.balance.SwipeBalance
 import com.game7th.battle.tilefield.tile.TileType
+import com.game7th.metagame.unit.UnitType
 import kotlin.math.abs
 import kotlin.math.exp
 import kotlin.math.sqrt

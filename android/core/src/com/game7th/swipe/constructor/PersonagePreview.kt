@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.game7th.battle.PersonageConfig
-import com.game7th.battle.unit.UnitType
+import com.game7th.metagame.unit.UnitType
 import com.game7th.swipe.GdxGameContext
 import ktx.actors.*
 
@@ -80,7 +80,7 @@ class PersonagePreview(
     fun applyCharImage() {
         charImage?.remove()
 
-        charImage = Image(context.atlas.findRegion(ConstructorView.getSkin(config.name))).apply {
+        charImage = Image(context.atlas.findRegion(config.name.getSkin())).apply {
             setScale(0.8f)
             x = 20f
             y = 12f

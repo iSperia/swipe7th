@@ -10,10 +10,14 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.input.GestureDetector
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.game7th.metagame.campaign.*
 import com.game7th.metagame.state.ActProgressState
 import com.game7th.metagame.state.LocationProgressState
+import com.game7th.swipe.ScreenContext
 import com.game7th.swipe.SwipeGameGdx
+import com.game7th.swipe.campaign.prepare.BattlePrepareDialog
 import kotlin.math.*
 
 /**
@@ -22,32 +26,36 @@ import kotlin.math.*
 class ActScreen(
         private val game: SwipeGameGdx,
         private val actsService: ActsService,
-        private val actId: Int
+        private val actId: Int,
+        private val context: ScreenContext
 ) : Screen {
 
     private val batch = SpriteBatch()
-    lateinit var actConfig: ActConfig
-    lateinit var backgroundTexture: Texture
+    private lateinit var actConfig: ActConfig
+    private lateinit var backgroundTexture: Texture
 
-    lateinit var config: ActConfig
+    private lateinit var config: ActConfig
 
-    var circleScale: Float = 0f
-    var circleOffset: Float = 0f
-    var starScale: Float = 0f
-    var starOffset: Float = 0f
-    val starAlphaStep = Math.toRadians(30.0).toFloat()
-    var lockScale: Float = 0f
-    var lockOffset: Float = 0f
+    private var circleScale: Float = 0f
+    private var circleOffset: Float = 0f
+    private var starScale: Float = 0f
+    private var starOffset: Float = 0f
+    private val starAlphaStep = Math.toRadians(30.0).toFloat()
+    private var lockScale: Float = 0f
+    private var lockOffset: Float = 0f
 
-    val linkRenderer = ShapeRenderer()
-    val linkMainColor = Color(0.1f, 0.1f, 0.1f, 0.8f)
-    val linkSubColor = Color(0.1f, 0.1f, 0.1f, 0.5f)
+    private val linkRenderer = ShapeRenderer()
+    private val linkMainColor = Color(0.1f, 0.1f, 0.1f, 0.8f)
+    private val linkSubColor = Color(0.1f, 0.1f, 0.1f, 0.5f)
 
-    val atlas = TextureAtlas(Gdx.files.internal("metagame"))
+    private val atlas = TextureAtlas(Gdx.files.internal("metagame"))
 
     private var scroll = 0f
     private var scrollImpulse = 0f
     lateinit var gestureDetector: GestureDetector
+
+    lateinit var stage: Stage
+    var showingOverlay: Boolean = false
 
     private val locationCache = mutableMapOf<Int, LocationProgressState>()
 
@@ -61,6 +69,7 @@ class ActScreen(
 
         gestureDetector = GestureDetector(game.width / 12f, 0.4f, 1.1f, Float.MAX_VALUE, object : GestureDetector.GestureAdapter() {
             override fun pan(x: Float, y: Float, deltaX: Float, deltaY: Float): Boolean {
+                closeOverlay()
                 scrollImpulse = 0f
                 scroll += deltaY
                 normalizeScroll()
@@ -68,24 +77,20 @@ class ActScreen(
             }
 
             override fun fling(velocityX: Float, velocityY: Float, button: Int): Boolean {
+                closeOverlay()
                 scrollImpulse = velocityY
                 return super.fling(velocityX, velocityY, button)
             }
 
             override fun tap(x: Float, y: Float, count: Int, button: Int): Boolean {
+                closeOverlay()
                 val wy = (game.height - y + scroll) / game.scale
                 val wx = x / game.scale
                 actConfig.nodes.forEach { node ->
                     val rect = Rectangle(node.x - 30, node.y - 30, 60f, 60f)
                     if (rect.contains(wx, wy) && locationCache.containsKey(node.id)) {
-                        val stars = locationCache[node.id]?.stars ?: 0
-                        val normalized = min(5, stars + 1)
-                        if (actsService.markLocationComplete(actId, node.id, normalized)) {
-                            node.unlock.forEach { locationId ->
-                                actsService.unlockLocation(actId, locationId)
-                            }
-                        }
-                        updateLocationProgressCache(actsService.getActProgress(actId))
+                        stage.addActor(BattlePrepareDialog(game = game, context = context, actId = this@ActScreen.actId, locationId = node.id))
+                        showingOverlay = true
                     }
                 }
                 return super.tap(x, y, count, button)
@@ -104,6 +109,20 @@ class ActScreen(
         val lockTexture = atlas.findRegion("lock")
         lockScale = game.width / 10 / lockTexture.regionWidth
         lockOffset = game.width / 20
+
+        stage = Stage(ScreenViewport())
+        game.multiplexer.addProcessor(0, stage)
+    }
+
+    private fun requestLocationProgressUpdate(node: LocationConfig) {
+        val stars = locationCache[node.id]?.stars ?: 0
+        val normalized = min(5, stars + 1)
+        if (actsService.markLocationComplete(actId, node.id, normalized)) {
+            node.unlock.forEach { locationId ->
+                actsService.unlockLocation(actId, locationId)
+            }
+        }
+        updateLocationProgressCache(actsService.getActProgress(actId))
     }
 
     private fun updateLocationProgressCache(progressState: ActProgressState) {
@@ -115,8 +134,16 @@ class ActScreen(
         scroll = max(0f, min(scroll, game.scale * backgroundTexture.height - game.height))
     }
 
-    override fun render(delta: Float) {
+    private fun closeOverlay() {
+        if (showingOverlay) {
+            showingOverlay = false
+            stage.actors.toList().forEach {
+                it.remove()
+            }
+        }
+    }
 
+    override fun render(delta: Float) {
         if (scrollImpulse != 0f) {
             scroll += scrollImpulse * delta
             scrollImpulse *= 1 - 2f * delta
@@ -143,6 +170,9 @@ class ActScreen(
             it.draw(batch)
         }
         batch.end()
+
+        stage.act(delta)
+        stage.draw()
     }
 
     override fun resize(width: Int, height: Int) {
@@ -233,10 +263,6 @@ class ActScreen(
             map[it.id] = it
         }
         return map
-    }
-
-    private fun convertProgressState(): List<LocationProgressState> {
-        return locationCache.values.toList()
     }
 
     private fun getTextureForCircle(type: CampaignNodeType) = when (type) {

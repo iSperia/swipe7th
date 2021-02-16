@@ -116,7 +116,6 @@ project(":ios") {
 project(":core") {
     apply plugin: "kotlin"
 
-
     dependencies {
         implementation project(":battle")
         implementation project(":metagame")
