@@ -130,10 +130,10 @@ class BattlePrepareDialog(
         addActor(starImages)
         (1..5).forEach { i ->
             val image = Image(context.uiAtlas.findRegion("star_grey")).apply {
-                width = 12 * game.scale
-                height = 12 * game.scale
-                x = (168 + i * 14) * game.scale
-                y = h - 22 * game.scale
+                width = 24 * game.scale
+                height = 24 * game.scale
+                x = (168 + i * 26) * game.scale
+                y = h - 28 * game.scale
             }
             starImages.addActor(image)
             image.onClick {

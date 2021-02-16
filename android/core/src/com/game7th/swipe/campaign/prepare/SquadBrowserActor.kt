@@ -35,16 +35,16 @@ class SquadBrowserActor(
         addActorAt(0, background)
 
         btnPrev = Button(Button.ButtonStyle(TextureRegionDrawable(context.uiAtlas.findRegion("arrowBlue_left")), null, null)).apply {
-            width = context.scale * 12
-            height = context.scale * 12
+            width = context.scale * 24
+            height = context.scale * 24
             x = 2 * context.scale
-            y = 46 * context.scale
+            y = 40 * context.scale
         }
         btnNext = Button(Button.ButtonStyle(TextureRegionDrawable(context.uiAtlas.findRegion("arrowBlue_right")), null, null)).apply {
-            width = context.scale * 12
-            height = context.scale * 12
-            x = 146 * context.scale
-            y = 46 * context.scale
+            width = context.scale * 24
+            height = context.scale * 24
+            x = 134 * context.scale
+            y = 40 * context.scale
         }
         addActor(btnPrev)
         addActor(btnNext)
