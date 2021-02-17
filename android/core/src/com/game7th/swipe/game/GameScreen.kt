@@ -65,6 +65,7 @@ class GameScreen(private val game: SwipeGameGdx,
     }
 
     override fun hide() {
+        stage.dispose()
     }
 
     override fun dispose() {
