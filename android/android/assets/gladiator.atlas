@@ -1,0 +1,479 @@
+
+gladiator.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+gladiator0002
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0007
+  rotate: false
+  xy: 512, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0012
+  rotate: false
+  xy: 1024, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0015
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0023
+  rotate: false
+  xy: 0, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0025
+  rotate: false
+  xy: 1536, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0028
+  rotate: false
+  xy: 1536, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0001
+  rotate: false
+  xy: 1536, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0020
+  rotate: false
+  xy: 1536, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0053
+  rotate: false
+  xy: 1536, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0033
+  rotate: false
+  xy: 1024, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0036
+  rotate: false
+  xy: 0, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0038
+  rotate: false
+  xy: 1536, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0041
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0046
+  rotate: false
+  xy: 1536, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0049
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0054
+  rotate: false
+  xy: 512, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0059
+  rotate: false
+  xy: 1024, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0062
+  rotate: false
+  xy: 512, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+
+gladiator2.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+gladiator0004
+  rotate: false
+  xy: 512, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0006
+  rotate: false
+  xy: 1536, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0009
+  rotate: false
+  xy: 512, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0014
+  rotate: false
+  xy: 1024, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0017
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0022
+  rotate: false
+  xy: 1536, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0027
+  rotate: false
+  xy: 1536, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0030
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0035
+  rotate: false
+  xy: 512, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0040
+  rotate: false
+  xy: 1024, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0043
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0048
+  rotate: false
+  xy: 1536, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0051
+  rotate: false
+  xy: 0, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0056
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0061
+  rotate: false
+  xy: 1024, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0064
+  rotate: false
+  xy: 0, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+
+gladiator3.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+gladiator0003
+  rotate: false
+  xy: 512, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0008
+  rotate: false
+  xy: 1536, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0011
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0016
+  rotate: false
+  xy: 1024, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0019
+  rotate: false
+  xy: 0, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0021
+  rotate: false
+  xy: 1536, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0024
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0029
+  rotate: false
+  xy: 1024, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0032
+  rotate: false
+  xy: 0, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0037
+  rotate: false
+  xy: 1536, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0042
+  rotate: false
+  xy: 1536, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0045
+  rotate: false
+  xy: 512, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0050
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0055
+  rotate: false
+  xy: 1024, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0058
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0063
+  rotate: false
+  xy: 512, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+
+gladiator4.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+gladiator0005
+  rotate: false
+  xy: 512, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0010
+  rotate: false
+  xy: 1024, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0013
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0018
+  rotate: false
+  xy: 512, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0026
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0031
+  rotate: false
+  xy: 1024, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0034
+  rotate: false
+  xy: 0, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0039
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0044
+  rotate: false
+  xy: 1536, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0047
+  rotate: false
+  xy: 0, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0052
+  rotate: false
+  xy: 1536, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0057
+  rotate: false
+  xy: 1024, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0060
+  rotate: false
+  xy: 512, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator0065
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
