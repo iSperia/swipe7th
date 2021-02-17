@@ -24,7 +24,7 @@ class GameView(
         private val context: GdxGameContext,
         private val multiplexer: InputMultiplexer,
         private val config: BattleConfig,
-        private val finishCallback: () -> Unit
+        private val finishCallback: (Boolean) -> Unit
 ) : Group(), TileDoubleTapCallback {
 
     lateinit var atlas: TextureAtlas
@@ -85,7 +85,7 @@ class GameView(
 
         buttonConcede = Label("Concede", Label.LabelStyle(context.font, Color.YELLOW))
         buttonConcede.onClick {
-            debugShowBigText("DEFEAT")
+            debugShowBigText(false, "DEFEAT")
         }
         buttonConcede.y = 700f
         addActor(buttonConcede)
@@ -103,20 +103,20 @@ class GameView(
                 tileField.processAction(event)
                 battleField.processAction(event)
                 when (event) {
-                    is BattleEvent.VictoryEvent -> {debugShowBigText("VICTORY")}
-                    is BattleEvent.DefeatEvent -> {debugShowBigText("DEFEAT")}
+                    is BattleEvent.VictoryEvent -> {debugShowBigText(true, "VICTORY")}
+                    is BattleEvent.DefeatEvent -> {debugShowBigText(false, "DEFEAT")}
                 }
             }
         }
     }
 
-    private fun debugShowBigText(text: String) {
+    private fun debugShowBigText(victory: Boolean, text: String) {
         tileField.touchable = Touchable.disabled
         multiplexer.removeProcessor(processor)
 
         val dialog = GameFinishedDialog(context, text) {
             println("Closing scene")
-            finishCallback()
+            finishCallback(victory)
         }.apply {
             x = 40f
             y = 220f

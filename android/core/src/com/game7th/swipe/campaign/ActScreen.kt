@@ -89,7 +89,13 @@ class ActScreen(
                 actConfig.nodes.forEach { node ->
                     val rect = Rectangle(node.x - 30, node.y - 30, 60f, 60f)
                     if (rect.contains(wx, wy) && locationCache.containsKey(node.id)) {
-                        stage.addActor(BattlePrepareDialog(game = game, context = context, actId = this@ActScreen.actId, locationId = node.id))
+                        stage.addActor(BattlePrepareDialog(
+                                game = game,
+                                context = context,
+                                actId = this@ActScreen.actId,
+                                locationId = node.id,
+                                config = node,
+                                actsService = actsService))
                         showingOverlay = true
                     }
                 }
@@ -112,17 +118,6 @@ class ActScreen(
 
         stage = Stage(ScreenViewport())
         game.multiplexer.addProcessor(0, stage)
-    }
-
-    private fun requestLocationProgressUpdate(node: LocationConfig) {
-        val stars = locationCache[node.id]?.stars ?: 0
-        val normalized = min(5, stars + 1)
-        if (actsService.markLocationComplete(actId, node.id, normalized)) {
-            node.unlock.forEach { locationId ->
-                actsService.unlockLocation(actId, locationId)
-            }
-        }
-        updateLocationProgressCache(actsService.getActProgress(actId))
     }
 
     private fun updateLocationProgressCache(progressState: ActProgressState) {

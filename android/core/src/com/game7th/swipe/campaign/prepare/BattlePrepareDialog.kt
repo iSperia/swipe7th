@@ -15,6 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
+import com.game7th.metagame.campaign.ActsService
+import com.game7th.metagame.campaign.LocationConfig
 import com.game7th.metagame.unit.SquadConfig
 import com.game7th.metagame.unit.UnitConfig
 import com.game7th.metagame.unit.UnitType
@@ -28,7 +30,9 @@ class BattlePrepareDialog(
         private val game: SwipeGameGdx,
         private val context: ScreenContext,
         private val actId: Int,
-        private val locationId: Int
+        private val locationId: Int,
+        private val config: LocationConfig,
+        private val actsService: ActsService
 ) : Group() {
 
     val scale = game.scale
@@ -80,15 +84,13 @@ class BattlePrepareDialog(
     }
 
     val npcAdapter = object : SquadBrowserAdapter {
-        override fun count() = 3
+        override fun count() = config.waves.size
 
         override fun getSquad(index: Int): SquadConfig {
             val bonus = (difficulty - 1) * 3
-            return SquadConfig("Wave ${index + 1}", listOf(
-                    UnitConfig(UnitType.CITADEL_WARLOCK, 1 + bonus),
-                    UnitConfig(UnitType.GREEN_SLIME, 1 + bonus),
-                    UnitConfig(UnitType.GREEN_SLIME, 1 + bonus)
-            ))
+            return SquadConfig("Wave ${index + 1}", config.waves[index].map {
+                it.copy(level = it.level + bonus)
+            })
         }
     }
 
@@ -179,7 +181,8 @@ class BattlePrepareDialog(
                 actId,
                 locationId,
                 difficulty,
-                personageSquadBrowser.index
+                personageSquadBrowser.index,
+                actsService
         )
     }
 

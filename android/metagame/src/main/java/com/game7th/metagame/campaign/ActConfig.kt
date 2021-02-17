@@ -1,5 +1,7 @@
 package com.game7th.metagame.campaign
 
+import com.game7th.metagame.unit.UnitConfig
+
 enum class CampaignNodeType {
     REGULAR, BOSS, FARM
 }
@@ -9,7 +11,8 @@ data class LocationConfig(
         val type: CampaignNodeType,
         val x: Float,
         val y: Float,
-        val unlock: List<Int>
+        val unlock: List<Int>,
+        val waves: List<List<UnitConfig>> = mutableListOf()
 )
 
 data class ActConfig(

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.game7th.battle.balance.SwipeBalance
+import com.game7th.metagame.FileProvider
 import com.game7th.metagame.GameService
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.campaign.ActConfig
@@ -15,6 +16,7 @@ import com.game7th.metagame.campaign.ActsServiceImpl
 import com.game7th.swipe.campaign.ActScreen
 import com.google.gson.Gson
 import ktx.async.KtxAsync
+import java.io.File
 
 class SwipeGameGdx(private val storage: PersistentStorage) : Game() {
 
@@ -57,10 +59,11 @@ class SwipeGameGdx(private val storage: PersistentStorage) : Game() {
     }
 
     private fun initializeActService() {
-        val actConfig = gson.fromJson<ActConfig>(
-                Gdx.files.internal("campaign_0.json").readString(),
-                ActConfig::class.java)
-        actService = ActsServiceImpl(gson, actConfig, storage)
+        actService = ActsServiceImpl(gson, storage, object : FileProvider {
+            override fun getFileContent(name: String): String? {
+                return Gdx.files.internal(name).readString()
+            }
+        })
     }
 
     override fun render() {

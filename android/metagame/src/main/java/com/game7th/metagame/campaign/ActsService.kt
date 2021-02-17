@@ -16,5 +16,5 @@ interface ActsService {
     /**
      * Unlocks location so player may play this level
      */
-    fun unlockLocation(actId: Int, locationId: Int): Boolean
+    fun unlockLocation(currentState: ActProgressState, actId: Int, locationId: Int): ActProgressState
 }

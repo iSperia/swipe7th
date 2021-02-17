@@ -11,4 +11,7 @@ java {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'com.google.code.gson:gson:2.8.5'
+
+    //gradle kotlin DSL
+    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.0")
 }

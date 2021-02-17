@@ -7,6 +7,9 @@ enum class UnitType {
 
     GREEN_SLIME,
     CITADEL_WARLOCK,
+    FLAME_ELEMENT,
+    EARTH_ELEMENT,
+    BOSS_BLOOD_KNIGHT,
 
     UNKNOWN;
 
