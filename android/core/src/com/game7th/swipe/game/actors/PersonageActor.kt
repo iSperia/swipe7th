@@ -109,7 +109,7 @@ class PersonageActor(
         }
         tickLabel = Label(getTickText(), Label.LabelStyle(context.font, Color.CYAN)).apply {
             x = 10f
-            y = 120f
+            y = 200f
             zIndex = 14
         }
         addActor(healthAmount)

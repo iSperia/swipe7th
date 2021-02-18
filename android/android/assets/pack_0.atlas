@@ -6,7 +6,7 @@ filter: Nearest, Nearest
 repeat: none
 armor_bar_grey
   rotate: false
-  xy: 1181, 144
+  xy: 1367, 144
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
@@ -18,51 +18,66 @@ battle_bg
   orig: 480, 240
   offset: 0, 0
   index: 0
-effect_poision
+dialog
   rotate: false
-  xy: 1247, 185
-  size: 60, 60
-  orig: 60, 60
+  xy: 484, 153
+  size: 137, 92
+  orig: 137, 92
   offset: 0, 0
-  index: 4
-effect_poision
+  index: -1
+ui_dialog
   rotate: false
-  xy: 1309, 185
-  size: 60, 60
-  orig: 60, 60
+  xy: 484, 153
+  size: 137, 92
+  split: 10, 8, 9, 8
+  orig: 137, 92
   offset: 0, 0
-  index: 1
-effect_poision
-  rotate: false
-  xy: 1371, 185
-  size: 60, 60
-  orig: 60, 60
-  offset: 0, 0
-  index: 3
+  index: -1
 effect_poision
   rotate: false
   xy: 1433, 185
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
-  index: 0
+  index: 4
 effect_poision
   rotate: false
   xy: 1495, 185
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
+  index: 1
+effect_poision
+  rotate: false
+  xy: 1557, 185
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: 3
+effect_poision
+  rotate: false
+  xy: 1619, 185
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: 0
+effect_poision
+  rotate: false
+  xy: 1681, 185
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
   index: 2
 gladiator_wave
   rotate: false
-  xy: 1181, 181
+  xy: 1367, 181
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 health_bar_green
   rotate: false
-  xy: 1247, 182
+  xy: 1433, 182
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
@@ -76,21 +91,21 @@ health_bar_red
   index: -1
 kn_shield
   rotate: false
-  xy: 1591, 213
+  xy: 1777, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 p_gladiator
   rotate: false
-  xy: 871, 125
+  xy: 995, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 personage_citadel_warlock
   rotate: false
-  xy: 747, 125
+  xy: 871, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
@@ -102,30 +117,44 @@ personage_dead
   orig: 60, 120
   offset: 0, 0
   index: -1
+personage_earth_element
+  rotate: false
+  xy: 747, 125
+  size: 60, 120
+  orig: 60, 120
+  offset: 0, 0
+  index: -1
+personage_fire_element
+  rotate: false
+  xy: 623, 125
+  size: 60, 120
+  orig: 60, 120
+  offset: 0, 0
+  index: -1
 personage_golbin
-  rotate: false
-  xy: 809, 125
-  size: 60, 120
-  orig: 60, 120
-  offset: 0, 0
-  index: -1
-personage_gunner
-  rotate: false
-  xy: 685, 125
-  size: 60, 120
-  orig: 60, 120
-  offset: 0, 0
-  index: -1
-personage_priest
   rotate: false
   xy: 933, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
+personage_gunner
+  rotate: false
+  xy: 809, 125
+  size: 60, 120
+  orig: 60, 120
+  offset: 0, 0
+  index: -1
+personage_priest
+  rotate: false
+  xy: 1057, 125
+  size: 60, 120
+  orig: 60, 120
+  offset: 0, 0
+  index: -1
 personage_ranger
   rotate: false
-  xy: 1119, 125
+  xy: 1305, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
@@ -139,21 +168,28 @@ personage_slime
   index: -1
 projectile_arrow
   rotate: false
-  xy: 995, 125
+  xy: 1181, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 projectile_bullet
   rotate: false
-  xy: 1057, 125
+  xy: 1243, 125
+  size: 60, 120
+  orig: 60, 120
+  offset: 0, 0
+  index: -1
+projectile_fireball
+  rotate: false
+  xy: 1119, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 projectile_skull
   rotate: false
-  xy: 623, 125
+  xy: 685, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
@@ -174,56 +210,56 @@ armor_bar_black
   index: -1
 resist_bar_blue
   rotate: false
-  xy: 1215, 178
+  xy: 1401, 178
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
   index: -1
 skill_tile_gun
   rotate: false
-  xy: 1659, 213
+  xy: 1845, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 skill_tile_holy_strike
   rotate: false
-  xy: 1181, 147
+  xy: 1367, 147
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 skill_tile_poison_arrow
   rotate: false
-  xy: 1727, 213
+  xy: 1913, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 tile_bg
   rotate: false
-  xy: 1557, 213
+  xy: 1743, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 tile_bg
   rotate: false
-  xy: 1693, 213
+  xy: 1879, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 tile_bg_grey
   rotate: false
-  xy: 1761, 213
+  xy: 1947, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 tile_fg_empire
   rotate: false
-  xy: 1625, 213
+  xy: 1811, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -234,13 +270,5 @@ ui_button
   size: 30, 15
   split: 4, 4, 4, 4
   orig: 30, 15
-  offset: 0, 0
-  index: -1
-ui_dialog
-  rotate: false
-  xy: 484, 153
-  size: 137, 92
-  split: 10, 8, 9, 8
-  orig: 137, 92
   offset: 0, 0
   index: -1

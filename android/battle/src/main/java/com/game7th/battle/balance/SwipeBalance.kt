@@ -23,21 +23,45 @@ data class HpBalance(
     val m: Int
 )
 
+/**
+ * DMG = F + (LVL-1) * S
+ */
+data class LinearDamageBalance(
+        val f: Float,     //flat
+        val m: Float    //scale
+)
+
+/**
+ * DMG = O * ( EXP(K*LVL) + F + M * LVL )
+ * O - overall koef
+ */
+data class ExponentialDamageBalance(
+        val k: Float,
+        val f: Float,
+        val m: Float,
+        val o: Float
+)
+
 data class SlimeBalance(
-    val flatDmg: Int,
-    val scaleDmg: Float,
-    val m: Float,
-    val hp: HpBalance
+    val hp: HpBalance,
+    val damage: LinearDamageBalance
 )
 
 data class CitadelWarlockBalance(
-        val flatDmg: Int,
-        val scaleDmg: Float,
-        val m: Float,
+        val damage: LinearDamageBalance,
         val hp: HpBalance,
         val healPercentage: Float
 )
 
+data class FireElementBalance(
+        val damage: ExponentialDamageBalance,
+        val hp: HpBalance
+)
+
+data class EarthElementBalance(
+        val damage: ExponentialDamageBalance,
+        val hp: HpBalance
+)
 
 data class GladiatorBalance(
         val c: Int,
@@ -70,6 +94,8 @@ data class SwipeBalance(
         val stats: StatBalance,
         val slime: SlimeBalance,
         val citadel_warlock: CitadelWarlockBalance,
+        val fire_element: FireElementBalance,
+        val earth_element: EarthElementBalance,
         val gladiator: GladiatorBalance,
         val poison_archer: PoisonArcherBalance,
         val gunner: GunnerBalance

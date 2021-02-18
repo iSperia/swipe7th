@@ -13,6 +13,7 @@ import kotlin.random.Random
 
 enum class UnitStatPriority {
     PRIMARY, SECONDARY, TERTIARY;
+
     fun selectStat(s1: Int, s2: Int, s3: Int) = when (ordinal) {
         0 -> s1
         1 -> s2
@@ -103,7 +104,7 @@ object UnitFactory {
                     ticker {
                         ticksToTrigger = 3
                         body = { battle, unit ->
-                            val damage = (battle.balance.slime.flatDmg + (unit.stats.level * (2 * unit.stats.level - 1)) * battle.balance.slime.m).toInt()
+                            val damage = (battle.balance.slime.damage.f + (unit.stats.level * (2 * unit.stats.level - 1)) * battle.balance.slime.damage.m).toInt()
                             if (damage > 0) {
                                 val target = battle.findClosestAliveEnemy(unit)
                                 target?.let { target ->
@@ -116,6 +117,52 @@ object UnitFactory {
                 }
                 slime
             }
+            UnitType.EARTH_ELEMENT -> {
+                val hp = balance.earth_element.hp.let { it.f + it.m * level + exp(it.k * level) }.toInt()
+                val result = UnitStats(skin = "personage_earth_element", level = level, health = CappedStat(hp, hp))
+                result += ability {
+                    ticker {
+                        ticksToTrigger = 3
+                        body = { battle, unit ->
+                            val damage = (battle.balance.earth_element.damage.f + (unit.stats.level * (2 * unit.stats.level - 1)) * battle.balance.earth_element.damage.m).toInt()
+                            if (damage > 0) {
+                                val target = battle.findClosestAliveEnemy(unit)
+                                target?.let { target ->
+                                    battle.notifyAttack(unit, target)
+                                    val result = battle.processDamage(target, unit, DamageVector(damage, 0, 0))
+                                    if (result.status != DamageProcessStatus.DAMAGE_EVADED) {
+                                        //stun?
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                result
+            }
+            UnitType.FLAME_ELEMENT -> {
+                val hp = balance.fire_element.hp.let { it.f + it.m * level + exp(it.k * level) }.toInt()
+                val result = UnitStats(skin = "personage_fire_element", level = level, health = CappedStat(hp, hp))
+                result += ability {
+                    ticker {
+                        ticksToTrigger = 3
+                        body = { battle, unit ->
+                            battle.notifyAoeProjectile("projectile_fireball", unit, -1)
+                            val damage = (battle.balance.fire_element.damage.f + (unit.stats.level * (2 * unit.stats.level - 1)) * battle.balance.fire_element.damage.m).toInt()
+
+                            if (damage > 0) {
+                                battle.aliveEnemies(unit).forEach { enemy ->
+                                    val result = battle.processDamage(enemy, unit, DamageVector(0, damage, 0))
+                                    if (result.status != DamageProcessStatus.DAMAGE_EVADED) {
+                                        //ignite?
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                result
+            }
             UnitType.CITADEL_WARLOCK -> {
                 val hp = balance.citadel_warlock.hp.let { it.f + it.m * level + exp(it.k * level) }.toInt()
                 val warlock = UnitStats(skin = "personage_citadel_warlock", level = level, health = CappedStat(hp, hp))
@@ -124,7 +171,7 @@ object UnitFactory {
                         ticksToTrigger = 5
                         body = { battle, unit ->
                             battle.notifyAoeProjectile("projectile_skull", unit, -1)
-                            val damage = (battle.balance.citadel_warlock.flatDmg + (unit.stats.level * (2 * unit.stats.level - 1)) * battle.balance.citadel_warlock.m).toInt()
+                            val damage = (battle.balance.citadel_warlock.damage.f + (unit.stats.level * (2 * unit.stats.level - 1)) * battle.balance.citadel_warlock.damage.m).toInt()
 
                             if (damage > 0) {
                                 battle.aliveEnemies(unit).forEach { enemy ->

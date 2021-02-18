@@ -14,11 +14,13 @@ enum class UnitType {
     UNKNOWN;
 
     fun getSkin(): String = when (this) {
-        UnitType.GLADIATOR -> "p_gladiator"
-        UnitType.POISON_ARCHER -> "personage_ranger"
-        UnitType.GREEN_SLIME -> "personage_slime"
-        UnitType.MACHINE_GUNNER -> "personage_gunner"
-        UnitType.CITADEL_WARLOCK -> "personage_citadel_warlock"
+        GLADIATOR -> "p_gladiator"
+        POISON_ARCHER -> "personage_ranger"
+        GREEN_SLIME -> "personage_slime"
+        MACHINE_GUNNER -> "personage_gunner"
+        CITADEL_WARLOCK -> "personage_citadel_warlock"
+        FLAME_ELEMENT -> "personage_fire_element"
+        EARTH_ELEMENT -> "personage_earth_element"
         else -> "personage_dead"
     }
 }
