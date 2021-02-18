@@ -21,6 +21,7 @@ enum class UnitType {
         CITADEL_WARLOCK -> "personage_citadel_warlock"
         FLAME_ELEMENT -> "personage_fire_element"
         EARTH_ELEMENT -> "personage_earth_element"
+        BOSS_BLOOD_KNIGHT -> "personage_boss_blood_knight"
         else -> "personage_dead"
     }
 }

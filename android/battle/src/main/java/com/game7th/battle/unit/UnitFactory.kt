@@ -140,6 +140,29 @@ object UnitFactory {
                 }
                 result
             }
+            UnitType.BOSS_BLOOD_KNIGHT -> {
+                val hp = balance.boss_blood_knight.hp.let { it.f + it.m * level + exp(it.k * level) }.toInt()
+                val result = UnitStats(skin = "personage_boss_blood_knight", level = level, health = CappedStat(hp, hp))
+                result += ability {
+                    ticker {
+                        ticksToTrigger = 3
+                        body = { battle, unit ->
+                            val damage = balance.boss_blood_knight.damage.o * (exp(balance.boss_blood_knight.damage.k * unit.stats.level) + balance.boss_blood_knight.damage.f + balance.boss_blood_knight.damage.m * unit.stats.level)
+                            if (damage > 0) {
+                                val target = battle.findClosestAliveEnemy(unit)
+                                target?.let { target ->
+                                    battle.notifyAttack(unit, target)
+                                    val result = battle.processDamage(target, unit, DamageVector(damage.toInt(), 0, 0))
+                                    if (result.status != DamageProcessStatus.DAMAGE_EVADED) {
+                                        battle.processHeal(unit, damage * battle.balance.boss_blood_knight.healPercentage)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                result
+            }
             UnitType.FLAME_ELEMENT -> {
                 val hp = balance.fire_element.hp.let { it.f + it.m * level + exp(it.k * level) }.toInt()
                 val result = UnitStats(skin = "personage_fire_element", level = level, health = CappedStat(hp, hp))

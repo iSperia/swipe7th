@@ -17,6 +17,8 @@
   "fire_element":  {"damage": {"k": 0.09, "f": 40, "m":  20, "o": 0.5}, "hp":  {"f":  100, "k": 0.097, "m": 100}},
   "earth_element": {"damage": {"k": 0.09, "f": 40, "m":  20, "o": 0.5}, "hp":  {"f":  120, "k": 0.097, "m": 120}},
   "citadel_warlock": {"damage": {"f":  14, "m":  3}, "healPercentage": 0.5, "hp":  {"f":  50, "k": 0.097, "m": 40}},
+  "boss_blood_knight": {"damage": {"k": 0.0075, "f": 20, "m":  20, "o": 0.5}, "hp":  {"f":  100, "k": 0.099, "m": 100}, "healPercentage":  0.5},
+
 
   "gladiator": {"c":  8, "k":  0.05, "str_k":  0.05, "tile_k": 0.2},
   "poison_archer": {"c":  20, "k":  0.05, "spi_k":  0.05, "tile_k": 0.05, "dot_k":  0.25, "tile_m":  0.25, "d":  10},

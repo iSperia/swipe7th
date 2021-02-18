@@ -63,6 +63,12 @@ data class EarthElementBalance(
         val hp: HpBalance
 )
 
+data class BossBloodKnightBalance(
+        val damage: ExponentialDamageBalance,
+        val hp: HpBalance,
+        val healPercentage: Float
+)
+
 data class GladiatorBalance(
         val c: Int,
         val k: Float,
@@ -96,6 +102,7 @@ data class SwipeBalance(
         val citadel_warlock: CitadelWarlockBalance,
         val fire_element: FireElementBalance,
         val earth_element: EarthElementBalance,
+        val boss_blood_knight: BossBloodKnightBalance,
         val gladiator: GladiatorBalance,
         val poison_archer: PoisonArcherBalance,
         val gunner: GunnerBalance
