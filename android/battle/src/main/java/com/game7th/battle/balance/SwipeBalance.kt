@@ -32,6 +32,14 @@ data class LinearDamageBalance(
 )
 
 /**
+ * DMG = F + LVL * ( 2 * LVL - 1 ) * M
+ */
+data class SquareDamageBalance(
+        val f: Float,
+        val m: Float
+)
+
+/**
  * DMG = O * ( EXP(K*LVL) + F + M * LVL )
  * O - overall koef
  */
@@ -44,7 +52,7 @@ data class ExponentialDamageBalance(
 
 data class SlimeBalance(
     val hp: HpBalance,
-    val damage: LinearDamageBalance
+    val damage: SquareDamageBalance
 )
 
 data class CitadelWarlockBalance(

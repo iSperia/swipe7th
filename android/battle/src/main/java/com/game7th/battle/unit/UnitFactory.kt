@@ -194,11 +194,11 @@ object UnitFactory {
                         ticksToTrigger = 5
                         body = { battle, unit ->
                             battle.notifyAoeProjectile("projectile_skull", unit, -1)
-                            val damage = (battle.balance.citadel_warlock.damage.f + (unit.stats.level * (2 * unit.stats.level - 1)) * battle.balance.citadel_warlock.damage.m).toInt()
+                            val damage = battle.balance.citadel_warlock.damage.f + 0.5f * (unit.stats.level - 1) * battle.balance.citadel_warlock.damage.m
 
                             if (damage > 0) {
                                 battle.aliveEnemies(unit).forEach { enemy ->
-                                    val result = battle.processDamage(enemy, unit, DamageVector(0, damage, 0))
+                                    val result = battle.processDamage(enemy, unit, DamageVector(0, damage.toInt(), 0))
                                     if (result.status != DamageProcessStatus.DAMAGE_EVADED) {
                                         //heal up!
                                         battle.processHeal(unit, damage * battle.balance.citadel_warlock.healPercentage)
