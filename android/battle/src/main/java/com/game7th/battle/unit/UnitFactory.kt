@@ -124,12 +124,12 @@ object UnitFactory {
                     ticker {
                         ticksToTrigger = 3
                         body = { battle, unit ->
-                            val damage = (battle.balance.earth_element.damage.f + (unit.stats.level * (2 * unit.stats.level - 1)) * battle.balance.earth_element.damage.m).toInt()
+                            val damage = balance.earth_element.damage.o * (exp(balance.earth_element.damage.k * unit.stats.level) + balance.earth_element.damage.f + balance.earth_element.damage.m * unit.stats.level)
                             if (damage > 0) {
                                 val target = battle.findClosestAliveEnemy(unit)
                                 target?.let { target ->
                                     battle.notifyAttack(unit, target)
-                                    val result = battle.processDamage(target, unit, DamageVector(damage, 0, 0))
+                                    val result = battle.processDamage(target, unit, DamageVector(damage.toInt(), 0, 0))
                                     if (result.status != DamageProcessStatus.DAMAGE_EVADED) {
                                         //stun?
                                     }
@@ -148,11 +148,11 @@ object UnitFactory {
                         ticksToTrigger = 3
                         body = { battle, unit ->
                             battle.notifyAoeProjectile("projectile_fireball", unit, -1)
-                            val damage = (battle.balance.fire_element.damage.f + (unit.stats.level * (2 * unit.stats.level - 1)) * battle.balance.fire_element.damage.m).toInt()
+                            val damage = balance.fire_element.damage.o * (exp(balance.fire_element.damage.k * unit.stats.level) + balance.fire_element.damage.f + balance.fire_element.damage.m * unit.stats.level)
 
                             if (damage > 0) {
                                 battle.aliveEnemies(unit).forEach { enemy ->
-                                    val result = battle.processDamage(enemy, unit, DamageVector(0, damage, 0))
+                                    val result = battle.processDamage(enemy, unit, DamageVector(0, damage.toInt(), 0))
                                     if (result.status != DamageProcessStatus.DAMAGE_EVADED) {
                                         //ignite?
                                     }
