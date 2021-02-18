@@ -6,7 +6,7 @@ filter: Nearest, Nearest
 repeat: none
 armor_bar_grey
   rotate: false
-  xy: 2035, 244
+  xy: 1741, 210
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
@@ -33,72 +33,58 @@ ui_dialog
   orig: 137, 92
   offset: 0, 0
   index: -1
-effect_poision
+effect_poison
   rotate: false
-  xy: 1555, 185
-  size: 60, 60
-  orig: 60, 60
+  xy: 993, 125
+  size: 60, 120
+  orig: 60, 120
   offset: 0, 0
-  index: 4
-effect_poision
+  index: -1
+effect_scorch
   rotate: false
-  xy: 1617, 185
-  size: 60, 60
-  orig: 60, 60
+  xy: 1117, 125
+  size: 60, 120
+  orig: 60, 120
   offset: 0, 0
-  index: 1
-effect_poision
+  index: -1
+effect_stun
   rotate: false
-  xy: 1679, 185
-  size: 60, 60
-  orig: 60, 60
+  xy: 869, 125
+  size: 60, 120
+  orig: 60, 120
   offset: 0, 0
-  index: 3
-effect_poision
-  rotate: false
-  xy: 1741, 185
-  size: 60, 60
-  orig: 60, 60
-  offset: 0, 0
-  index: 0
-effect_poision
-  rotate: false
-  xy: 1803, 185
-  size: 60, 60
-  orig: 60, 60
-  offset: 0, 0
-  index: 2
+  index: -1
 gladiator_wave
   rotate: false
-  xy: 1489, 181
+  xy: 1675, 181
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 health_bar_green
   rotate: false
-  xy: 1865, 210
+  xy: 1709, 178
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
   index: -1
 health_bar_red
   rotate: false
-  xy: 1489, 144
+  xy: 1675, 144
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
   index: -1
 kn_shield
   rotate: false
-  xy: 1899, 213
+  xy: 1775, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 p_gladiator
   rotate: false
-  xy: 1117, 125
+  xy: 1303, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
@@ -112,7 +98,7 @@ personage_boss_blood_knight
   index: -1
 personage_citadel_warlock
   rotate: false
-  xy: 993, 125
+  xy: 1179, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
@@ -126,7 +112,7 @@ personage_dead
   index: -1
 personage_earth_element
   rotate: false
-  xy: 869, 125
+  xy: 931, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
@@ -140,28 +126,28 @@ personage_fire_element
   index: -1
 personage_golbin
   rotate: false
-  xy: 1055, 125
+  xy: 1241, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 personage_gunner
   rotate: false
-  xy: 931, 125
+  xy: 1055, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 personage_priest
   rotate: false
-  xy: 1179, 125
+  xy: 1365, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 personage_ranger
   rotate: false
-  xy: 1427, 125
+  xy: 1613, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
@@ -175,21 +161,21 @@ personage_slime
   index: -1
 projectile_arrow
   rotate: false
-  xy: 1303, 125
+  xy: 1489, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 projectile_bullet
   rotate: false
-  xy: 1365, 125
+  xy: 1551, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 projectile_fireball
   rotate: false
-  xy: 1241, 125
+  xy: 1427, 125
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
@@ -217,56 +203,56 @@ armor_bar_black
   index: -1
 resist_bar_blue
   rotate: false
-  xy: 1557, 148
+  xy: 1979, 244
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
   index: -1
 skill_tile_gun
   rotate: false
-  xy: 1967, 213
+  xy: 1843, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 skill_tile_holy_strike
   rotate: false
-  xy: 1489, 147
+  xy: 1675, 147
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 skill_tile_poison_arrow
   rotate: false
-  xy: 1523, 147
+  xy: 1911, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 tile_bg
   rotate: false
-  xy: 1865, 213
+  xy: 1741, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 tile_bg
   rotate: false
-  xy: 2001, 213
+  xy: 1877, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 tile_bg_grey
   rotate: false
-  xy: 1557, 151
+  xy: 1945, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 tile_fg_empire
   rotate: false
-  xy: 1933, 213
+  xy: 1809, 213
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

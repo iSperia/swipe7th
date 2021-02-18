@@ -14,8 +14,8 @@
   },
 
   "slime": {"damage": {"f": 30, "m":  0.3}, "hp":  {"f":  50, "k": 0.097, "m": 40}},
-  "fire_element":  {"damage": {"k": 0.09, "f": 40, "m":  20, "o": 0.5}, "hp":  {"f":  100, "k": 0.097, "m": 100}},
-  "earth_element": {"damage": {"k": 0.09, "f": 40, "m":  20, "o": 0.5}, "hp":  {"f":  120, "k": 0.097, "m": 120}},
+  "fire_element":  {"damage": {"k": 0.09, "f": 40, "m":  20, "o": 0.5}, "hp":  {"f":  100, "k": 0.097, "m": 100}, "scorch_k": 0.9, "scorch_duration": 3},
+  "earth_element": {"damage": {"k": 0.09, "f": 40, "m":  20, "o": 0.5}, "hp":  {"f":  120, "k": 0.097, "m": 120}, "stun_duration":  {"min": 2, "max":  3}},
   "citadel_warlock": {"damage": {"f":  35, "m":  17.5 }, "healPercentage": 0.5, "hp":  {"f":  50, "k": 0.097, "m": 40}},
   "boss_blood_knight": {"damage": {"k": 0.0075, "f": 20, "m":  20, "o": 0.5}, "hp":  {"f":  100, "k": 0.099, "m": 100}, "heal_k":  1.5},
 

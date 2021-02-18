@@ -1,5 +1,7 @@
 package com.game7th.battle.balance
 
+import kotlin.random.Random
+
 data class StatBalance(
         val baseHealth: Int,
         val healthPerBody: Int,
@@ -50,6 +52,13 @@ data class ExponentialDamageBalance(
         val o: Float
 )
 
+data class RangeBalance(
+        val min: Int,
+        val max: Int
+) {
+    fun calculate() = Random.nextInt(min, max + 1)
+}
+
 data class SlimeBalance(
     val hp: HpBalance,
     val damage: SquareDamageBalance
@@ -63,12 +72,15 @@ data class CitadelWarlockBalance(
 
 data class FireElementBalance(
         val damage: ExponentialDamageBalance,
-        val hp: HpBalance
+        val hp: HpBalance,
+        val scorch_k: Float,
+        val scorch_duration: Int
 )
 
 data class EarthElementBalance(
         val damage: ExponentialDamageBalance,
-        val hp: HpBalance
+        val hp: HpBalance,
+        val stun_duration: RangeBalance
 )
 
 data class BossBloodKnightBalance(

@@ -14,7 +14,7 @@ class ConsumeOnUseTrigger : AbilityTrigger {
     override suspend fun process(event: InternalBattleEvent, unit: BattleUnit) {
         when (event) {
             is InternalBattleEvent.AbilityUseEvent -> {
-                if (event.tile.type == tileType && event.tile.tier1()) {
+                if (event.tile.type == tileType && event.tile.tier1() && unit.isNotStunned()) {
                     //We are using ourselves
                     event.battle.tileField.removeById(event.tile.id)
                     event.battle.notifyTileRemoved(event.tile.id)

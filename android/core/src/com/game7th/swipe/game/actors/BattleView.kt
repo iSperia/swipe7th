@@ -138,7 +138,7 @@ class BattleView(private val gameContext: GdxGameContext) : Group() {
                 }
             }
             is BattleEvent.ShowAilmentEffect -> {
-                val effectImage = Image(gameContext.atlas.findRegion(event.effectSkin, 0))
+                val effectImage = Image(gameContext.atlas.findRegion(event.effectSkin))
                 val targetActor = personages.findActor<PersonageActor>("${event.target}")
                 targetActor?.let { targetActor ->
                     effectImage.apply {

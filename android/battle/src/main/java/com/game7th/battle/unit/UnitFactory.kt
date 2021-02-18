@@ -122,7 +122,7 @@ object UnitFactory {
                 val result = UnitStats(skin = "personage_earth_element", level = level, health = CappedStat(hp, hp))
                 result += ability {
                     ticker {
-                        ticksToTrigger = 3
+                        ticksToTrigger = 5
                         body = { battle, unit ->
                             val damage = balance.earth_element.damage.o * (exp(balance.earth_element.damage.k * unit.stats.level) + balance.earth_element.damage.f + balance.earth_element.damage.m * unit.stats.level)
                             if (damage > 0) {
@@ -131,7 +131,7 @@ object UnitFactory {
                                     battle.notifyAttack(unit, target)
                                     val result = battle.processDamage(target, unit, DamageVector(damage.toInt(), 0, 0))
                                     if (result.status != DamageProcessStatus.DAMAGE_EVADED) {
-                                        //stun?
+                                        battle.applyStun(target, battle.balance.earth_element.stun_duration.calculate())
                                     }
                                 }
                             }
@@ -169,7 +169,7 @@ object UnitFactory {
                 val result = UnitStats(skin = "personage_fire_element", level = level, health = CappedStat(hp, hp))
                 result += ability {
                     ticker {
-                        ticksToTrigger = 3
+                        ticksToTrigger = 5
                         body = { battle, unit ->
                             battle.notifyAoeProjectile("projectile_fireball", unit, -1)
                             val damage = balance.fire_element.damage.o * (exp(balance.fire_element.damage.k * unit.stats.level) + balance.fire_element.damage.f + balance.fire_element.damage.m * unit.stats.level)
@@ -178,7 +178,7 @@ object UnitFactory {
                                 battle.aliveEnemies(unit).forEach { enemy ->
                                     val result = battle.processDamage(enemy, unit, DamageVector(0, damage.toInt(), 0))
                                     if (result.status != DamageProcessStatus.DAMAGE_EVADED) {
-                                        //ignite?
+                                        battle.applyScorch(enemy, balance.fire_element.scorch_duration, (balance.fire_element.scorch_k * unit.stats.level * damage).toInt())
                                     }
                                 }
                             }

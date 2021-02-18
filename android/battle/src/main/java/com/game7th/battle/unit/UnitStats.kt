@@ -40,12 +40,27 @@ data class BattleUnit(
                     magicDefense = stats.resist.value,
                     maxMagicDefense = stats.resist.maxValue,
                     tick = stats.tick,
-                    maxTick = stats.maxTick
+                    maxTick = stats.maxTick,
+                    isStunned = !isNotStunned()
             ),
             skin = stats.skin,
             id = id
     )
+
+    fun isNotStunned(): Boolean {
+        return stats.ailments.firstOrNull { it.ailmentType == AilmentType.STUN } == null
+    }
 }
+
+enum class AilmentType {
+    POISON, STUN, SCORCH
+}
+
+data class UnitAilment(
+        val ailmentType: AilmentType,
+        var ticks: Int,
+        var value: Float
+)
 
 /**
  * Generic unit information
@@ -68,8 +83,7 @@ data class UnitStats(
         var tick: Int = 0,
         var maxTick: Int = 0,
 
-        var ailPoisonDuration: Int = 0,
-        var ailPoisonDamage: Int = 0
+        var ailments: MutableList<UnitAilment> = mutableListOf()
 ) {
     val abilities = mutableListOf<UnitAbility>()
 

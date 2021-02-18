@@ -19,5 +19,7 @@ data class PersonageStats(
         var level: Int,
 
         val tick: Int,
-        val maxTick: Int
+        val maxTick: Int,
+
+        val isStunned: Boolean
 )

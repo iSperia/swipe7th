@@ -24,6 +24,7 @@ class PersonageActor(
     val armorAmount: Label
     val resistAmount: Label
     val tickLabel: Label
+    val stunImage: Image
 
     val effects = Group()
 
@@ -112,10 +113,17 @@ class PersonageActor(
             y = 200f
             zIndex = 14
         }
+
         addActor(healthAmount)
         addActor(armorAmount)
         addActor(resistAmount)
         addActor(tickLabel)
+
+        stunImage = Image(context.atlas.findRegion("effect_stun")).apply {
+            isVisible = false
+            y = 60f
+        }
+        addActor(stunImage)
 
         addActor(effects)
     }
@@ -180,6 +188,7 @@ class PersonageActor(
         }
 
         tickLabel.setText(getTickText())
+        stunImage.isVisible = viewModel.stats.isStunned
     }
 
     fun showEvadeAnimation() {

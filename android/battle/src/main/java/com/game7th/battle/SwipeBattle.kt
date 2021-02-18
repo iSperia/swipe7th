@@ -8,9 +8,7 @@ import com.game7th.battle.personage.*
 import com.game7th.battle.tilefield.TileField
 import com.game7th.battle.tilefield.TileFieldMerger
 import com.game7th.battle.tilefield.tile.*
-import com.game7th.battle.unit.BattleUnit
-import com.game7th.battle.unit.Team
-import com.game7th.battle.unit.UnitFactory
+import com.game7th.battle.unit.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.withContext
@@ -173,14 +171,24 @@ class SwipeBattle(val balance: SwipeBalance) {
         aliveUnits().forEach { unit ->
             processHeal(unit, unit.stats.regeneration.toFloat())
 
-            if (unit.stats.ailPoisonDuration > 0) {
-                unit.stats.ailPoisonDuration--
-                processAilmentDamage(unit, DamageVector(0, 0, unit.stats.ailPoisonDamage))
-                events.send(BattleEvent.ShowAilmentEffect(unit.id, "effect_poision"))
-                if (unit.stats.ailPoisonDuration == 0) {
-                    unit.stats.ailPoisonDamage = 0
+            unit.stats.ailments.forEach { ailment ->
+                when (ailment.ailmentType) {
+                    AilmentType.POISON -> {
+                        processAilmentDamage(unit, DamageVector(0, 0, ailment.value.toInt()))
+                        events.send(BattleEvent.ShowAilmentEffect(unit.id, "effect_poison"))
+                    }
+                    AilmentType.SCORCH -> {
+                        processAilmentDamage(unit, DamageVector(0, ailment.value.toInt(), 0))
+                        events.send(BattleEvent.ShowAilmentEffect(unit.id, "effect_scorch"))
+                    }
+                    AilmentType.STUN -> {
+                        events.send(BattleEvent.ShowAilmentEffect(unit.id, "effect_stun"))
+                    }
                 }
+                ailment.ticks--
             }
+
+            unit.stats.ailments = unit.stats.ailments.filter { it.ticks > 0 }.toMutableList()
         }
     }
 
@@ -224,9 +232,24 @@ class SwipeBattle(val balance: SwipeBalance) {
     }
 
     suspend fun applyPoison(target: BattleUnit, poisonTicks: Int, poisonDmg: Int) {
-        target.stats.ailPoisonDamage += poisonDmg
-        target.stats.ailPoisonDuration += poisonTicks
-        events.send(BattleEvent.ShowAilmentEffect(target.id, "effect_poision"))
+        val currentPoison = target.stats.ailments.firstOrNull { it.ailmentType == AilmentType.POISON }
+        if (currentPoison != null) {
+            currentPoison.value += poisonDmg
+            currentPoison.ticks += poisonTicks
+        } else {
+            target.stats.ailments.add(UnitAilment(AilmentType.POISON, poisonTicks, poisonDmg.toFloat()))
+        }
+        events.send(BattleEvent.ShowAilmentEffect(target.id, "effect_poison"))
+    }
+
+    suspend fun applyScorch(target: BattleUnit, ticks: Int, dmg: Int) {
+        target.stats.ailments.add(UnitAilment(AilmentType.SCORCH, ticks, dmg.toFloat()))
+        events.send(BattleEvent.ShowAilmentEffect(target.id, "effect_scorch"))
+    }
+
+    suspend fun applyStun(target: BattleUnit, ticks: Int) {
+        target.stats.ailments.add(UnitAilment(AilmentType.STUN, ticks, 0f))
+        events.send(BattleEvent.ShowAilmentEffect(target.id, "effect_stun"))
     }
 
     suspend fun notifyEvent(event: BattleEvent) {
