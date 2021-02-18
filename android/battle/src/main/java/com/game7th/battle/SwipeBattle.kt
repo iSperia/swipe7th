@@ -170,6 +170,7 @@ class SwipeBattle(val balance: SwipeBalance) {
     private suspend fun processTickUnits() {
         aliveUnits().forEach { unit ->
             processHeal(unit, unit.stats.regeneration.toFloat())
+            var needPersonageUpdate = false
 
             unit.stats.ailments.forEach { ailment ->
                 when (ailment.ailmentType) {
@@ -182,6 +183,7 @@ class SwipeBattle(val balance: SwipeBalance) {
                         events.send(BattleEvent.ShowAilmentEffect(unit.id, "effect_scorch"))
                     }
                     AilmentType.STUN -> {
+                        needPersonageUpdate = true
                         events.send(BattleEvent.ShowAilmentEffect(unit.id, "effect_stun"))
                     }
                 }
@@ -189,6 +191,7 @@ class SwipeBattle(val balance: SwipeBalance) {
             }
 
             unit.stats.ailments = unit.stats.ailments.filter { it.ticks > 0 }.toMutableList()
+            if (needPersonageUpdate) events.send(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
         }
     }
 
@@ -250,6 +253,7 @@ class SwipeBattle(val balance: SwipeBalance) {
     suspend fun applyStun(target: BattleUnit, ticks: Int) {
         target.stats.ailments.add(UnitAilment(AilmentType.STUN, ticks, 0f))
         events.send(BattleEvent.ShowAilmentEffect(target.id, "effect_stun"))
+        events.send(BattleEvent.PersonageUpdateEvent(target.toViewModel()))
     }
 
     suspend fun notifyEvent(event: BattleEvent) {

@@ -126,9 +126,9 @@ object UnitFactory {
                         body = { battle, unit ->
                             val damage = balance.earth_element.damage.o * (exp(balance.earth_element.damage.k * unit.stats.level) + balance.earth_element.damage.f + balance.earth_element.damage.m * unit.stats.level)
                             if (damage > 0) {
-                                val target = battle.findClosestAliveEnemy(unit)
+                                val target = battle.aliveEnemies(unit).random()
                                 target?.let { target ->
-                                    battle.notifyAttack(unit, target)
+                                    battle.notifyTargetedProjectile("projectile_stone", unit, target)
                                     val result = battle.processDamage(target, unit, DamageVector(damage.toInt(), 0, 0))
                                     if (result.status != DamageProcessStatus.DAMAGE_EVADED) {
                                         battle.applyStun(target, battle.balance.earth_element.stun_duration.calculate())
