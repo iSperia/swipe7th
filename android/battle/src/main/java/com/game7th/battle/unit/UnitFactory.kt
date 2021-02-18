@@ -154,7 +154,8 @@ object UnitFactory {
                                     battle.notifyAttack(unit, target)
                                     val result = battle.processDamage(target, unit, DamageVector(damage.toInt(), 0, 0))
                                     if (result.status != DamageProcessStatus.DAMAGE_EVADED) {
-                                        battle.processHeal(unit, damage * battle.balance.boss_blood_knight.healPercentage)
+                                        val healAmount = unit.stats.level * battle.balance.boss_blood_knight.heal_k * result.damage.totalDamage()
+                                        battle.processHeal(unit, healAmount)
                                     }
                                 }
                             }

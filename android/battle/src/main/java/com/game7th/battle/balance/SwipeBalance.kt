@@ -74,7 +74,7 @@ data class EarthElementBalance(
 data class BossBloodKnightBalance(
         val damage: ExponentialDamageBalance,
         val hp: HpBalance,
-        val healPercentage: Float
+        val heal_k: Float
 )
 
 data class GladiatorBalance(
