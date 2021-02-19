@@ -1,0 +1,25 @@
+{
+  "figures": [
+    {
+      "name": "personage_gladiator",
+      "atlas": "personage_gladiator",
+      "poses": [
+        {"name": "attack", "start":  1, "end": 19},
+        {"name": "damage", "start":  20, "end": 27},
+        {"name": "idle", "start":  28, "end": 52, "behavior": "REPEAT"},
+        {"name": "death", "start": 53, "end": 65, "behavior": "FREEZE"}
+      ]
+    }
+  ],
+  "effects": [
+    {
+      "name": "gladiator_wave",
+      "atlas": "personage_gladiator",
+      "type": "STEPPED_GENERATOR",
+      "step": 64,
+      "time": 0.1,
+      "width": 64,
+      "height": 128
+    }
+  ]
+}

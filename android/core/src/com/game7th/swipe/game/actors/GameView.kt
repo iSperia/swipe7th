@@ -24,6 +24,7 @@ class GameView(
         private val context: GdxGameContext,
         private val multiplexer: InputMultiplexer,
         private val config: BattleConfig,
+        private val screen: GameScreen,
         private val finishCallback: (Boolean) -> Unit
 ) : Group(), TileDoubleTapCallback {
 
@@ -46,6 +47,7 @@ class GameView(
             override fun onLeft() {
                 KtxAsync.launch {
                     battle.processSwipe(-1, 0)
+                    screen.test()
                 }
             }
 

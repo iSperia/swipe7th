@@ -2,6 +2,8 @@ package com.game7th.swipe.game
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.game7th.battle.BattleConfig
@@ -11,6 +13,7 @@ import com.game7th.metagame.unit.UnitType
 import com.game7th.swipe.SwipeGameGdx
 import com.game7th.swipe.campaign.ActScreen
 import com.game7th.swipe.game.actors.GameView
+import com.game7th.swipe.game.battle.BattleController
 
 class GameScreen(private val game: SwipeGameGdx,
                  private val actId: Int,
@@ -25,9 +28,15 @@ class GameScreen(private val game: SwipeGameGdx,
 
     lateinit var gameView: GameView
 
+    lateinit var battleController: BattleController
+
+    lateinit var batch: SpriteBatch
+
     override fun show() {
         viewport = FitViewport(VP_WIDTH, VP_HEIGHT)
         stage = Stage(viewport)
+
+        batch = SpriteBatch()
 
         gameView = GameView(game.context, game.multiplexer, BattleConfig(
                 personages = listOf(
@@ -38,7 +47,7 @@ class GameScreen(private val game: SwipeGameGdx,
                 waves = actService.getActConfig(actId).findNode(locationId)?.waves?.map {
                     it.map { PersonageConfig(it.unitType, it.level) }
                 } ?: emptyList()
-        )) { victory ->
+        ), this) { victory ->
             if (victory) {
                 actService.markLocationComplete(actId, locationId, difficulty)
             }
@@ -48,11 +57,22 @@ class GameScreen(private val game: SwipeGameGdx,
         stage.addActor(gameView)
 
         game.multiplexer.addProcessor(stage)
+
+        battleController = BattleController(GameContextWrapper(
+                gameContext = game.context,
+                atlases = mapOf("personage_gladiator" to TextureAtlas(Gdx.files.internal("personage_gladiator.atlas")))
+        ))
+        battleController.testEffect()
+
     }
 
     override fun render(delta: Float) {
         stage.act(Gdx.graphics.deltaTime)
         stage.draw()
+
+        batch.begin()
+        battleController.render(batch, delta)
+        batch.end()
     }
 
     override fun resize(width: Int, height: Int) {
@@ -69,6 +89,10 @@ class GameScreen(private val game: SwipeGameGdx,
     }
 
     override fun dispose() {
+    }
+
+    fun test() {
+        battleController.testEffect()
     }
 
     companion object {
