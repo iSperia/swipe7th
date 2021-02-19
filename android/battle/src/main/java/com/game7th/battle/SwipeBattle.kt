@@ -205,6 +205,7 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     suspend fun processDamage(target: BattleUnit, source: BattleUnit, damage: DamageVector): DamageProcessResult {
         val damage = DamageCalculator.calculateDamage(balance, source.stats, target.stats, damage)
+        println("Damage to ${target.stats.skin}: ${damage.damage.totalDamage()} ${damage.status}")
         val totalDamage = damage.damage.totalDamage()
         if (totalDamage > 0 || damage.armorDeplete > 0 || damage.resistDeplete > 0) {
             target.stats.health.value = max(0, target.stats.health.value - totalDamage)
