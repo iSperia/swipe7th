@@ -124,7 +124,7 @@ object UnitFactory {
                     ticker {
                         ticksToTrigger = 5
                         body = { battle, unit ->
-                            val damage = balance.earth_element.damage.o * (exp(balance.earth_element.damage.k * unit.stats.level) + balance.earth_element.damage.f + balance.earth_element.damage.m * unit.stats.level)
+                            val damage = balance.earth_element.damage.calculate(unit.stats.level)
                             if (damage > 0) {
                                 val target = battle.aliveEnemies(unit).random()
                                 target?.let { target ->
@@ -147,7 +147,7 @@ object UnitFactory {
                     ticker {
                         ticksToTrigger = 3
                         body = { battle, unit ->
-                            val damage = balance.boss_blood_knight.damage.o * (exp(balance.boss_blood_knight.damage.k * unit.stats.level) + balance.boss_blood_knight.damage.f + balance.boss_blood_knight.damage.m * unit.stats.level)
+                            val damage = balance.boss_blood_knight.damage.calculate(unit.stats.level)
                             if (damage > 0) {
                                 val target = battle.findClosestAliveEnemy(unit)
                                 target?.let { target ->
@@ -172,7 +172,7 @@ object UnitFactory {
                         ticksToTrigger = 5
                         body = { battle, unit ->
                             battle.notifyAoeProjectile("projectile_fireball", unit, -1)
-                            val damage = balance.fire_element.damage.o * (exp(balance.fire_element.damage.k * unit.stats.level) + balance.fire_element.damage.f + balance.fire_element.damage.m * unit.stats.level)
+                            val damage = balance.fire_element.damage.calculate(unit.stats.level)
 
                             if (damage > 0) {
                                 battle.aliveEnemies(unit).forEach { enemy ->
@@ -195,8 +195,7 @@ object UnitFactory {
                         ticksToTrigger = 5
                         body = { battle, unit ->
                             battle.notifyAoeProjectile("projectile_skull", unit, -1)
-                            val damage = battle.balance.citadel_warlock.damage.f + 0.5f * (unit.stats.level - 1) * battle.balance.citadel_warlock.damage.m
-
+                            val damage = battle.balance.citadel_warlock.damage.calculate(unit.stats.level)
                             if (damage > 0) {
                                 battle.aliveEnemies(unit).forEach { enemy ->
                                     val result = battle.processDamage(enemy, unit, DamageVector(0, damage.toInt(), 0))

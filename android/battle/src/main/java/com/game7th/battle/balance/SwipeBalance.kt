@@ -1,5 +1,6 @@
 package com.game7th.battle.balance
 
+import kotlin.math.exp
 import kotlin.random.Random
 
 data class StatBalance(
@@ -50,7 +51,11 @@ data class ExponentialDamageBalance(
         val f: Float,
         val m: Float,
         val o: Float
-)
+) {
+    fun calculate(level: Int): Int {
+        return (o * (exp(k * level) + f + m * level)).toInt()
+    }
+}
 
 data class RangeBalance(
         val min: Int,
@@ -65,7 +70,7 @@ data class SlimeBalance(
 )
 
 data class CitadelWarlockBalance(
-        val damage: LinearDamageBalance,
+        val damage: ExponentialDamageBalance,
         val hp: HpBalance,
         val healPercentage: Float
 )
