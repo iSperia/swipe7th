@@ -24,7 +24,7 @@ enum class UnitStatPriority {
 object UnitFactory {
     fun produce(type: UnitType, balance: SwipeBalance, level: Int): UnitStats? {
         return when (type) {
-            UnitType.GLADIATOR -> producePersonage(balance, "p_gladiator", level, UnitStatPriority.PRIMARY, UnitStatPriority.SECONDARY, UnitStatPriority.TERTIARY) {
+            UnitType.GLADIATOR -> producePersonage(balance, "personage_gladiator", level, UnitStatPriority.PRIMARY, UnitStatPriority.SECONDARY, UnitStatPriority.TERTIARY) {
                 it.addAbility {
                     defaultEmitter { tileType = TileType.GLADIATOR_STRIKE; tier1 = 5; tier2 = 10 }
                     defaultMerger { tileType = TileType.GLADIATOR_STRIKE }

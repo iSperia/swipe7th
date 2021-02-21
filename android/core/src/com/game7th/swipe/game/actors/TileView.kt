@@ -30,10 +30,10 @@ class TileView(
     private var stackSizeLabel: Label? = null
 
     init {
-        originX = 16f
-        originY = 16f
-        width = 32f
-        height = 32f
+        originX = 18f
+        originY = 18f
+        width = 36f
+        height = 36f
 
         updateFrom(viewModel)
 
@@ -88,7 +88,7 @@ class TileView(
                 setFontScale(0.5f)
                 originX = width
                 originY = 0f
-                x = 32f - width
+                x = 36f - width
                 y = 0f
                 zIndex = 3
             }
@@ -101,6 +101,10 @@ class TileView(
         vm?.let { vm ->
             skillImage = Image(gameContext.atlas.findRegion(vm.skin)).apply {
                 zIndex = 2
+                originY = 18f
+                originX = 18f
+                width = 36f
+                height = 36f
             }
 
             addActor(skillImage)
@@ -111,8 +115,10 @@ class TileView(
         vm?.let { vm ->
             backgroundImage = Image(gameContext.atlas.findRegion(vm.background, vm.backgroundIndex ?: 0)).apply {
                 zIndex = 1
-                originX = 16f
-                originY = 16f
+                originX = 18f
+                originY = 18f
+                width = 36f
+                height = 36f
             }
 
             addActor(backgroundImage)
@@ -124,10 +130,12 @@ class TileView(
             foregroundImage = Group().apply { zIndex = 4 }
             for (i in 0..5) {
                 foregroundImage?.addActor(Image(gameContext.atlas.findRegion("tile_fg_${vm.fractionForeground}")).apply {
-                    originX = 16f
-                    originY = 16f
+                    originX = 18f
+                    originY = 18f
                     rotation = i * 360f / 6
                     setScale(1.1f)
+                    width = 36f
+                    height = 36f
                     addAction(ParallelAction(
                             RotateByAction().apply {
                                 amount = 360f
@@ -181,7 +189,7 @@ class TileView(
     }
 
     fun applyPosition(x: Int, y: Int) {
-        this.x = 32f * x
-        this.y = 32f * (5 - y)
+        this.x = 36f * x + 18f
+        this.y = 36f * (4 - y)
     }
 }

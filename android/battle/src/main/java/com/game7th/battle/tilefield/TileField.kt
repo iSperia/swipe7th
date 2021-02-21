@@ -94,7 +94,7 @@ class TileField(private val merger: TileFieldMerger) {
     }
 
     companion object {
-        const val WIDTH = 6
-        const val HEIGHT = 6
+        const val WIDTH = 5
+        const val HEIGHT = 5
     }
 }

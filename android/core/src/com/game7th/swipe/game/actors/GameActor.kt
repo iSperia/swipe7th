@@ -66,7 +66,7 @@ class GameActor(
     }
 
     suspend fun processAction(event: BattleEvent) {
-        battleField.processAction(event)
+//        battleField.processAction(event)
         tileField.processAction(event)
         when (event) {
             is BattleEvent.VictoryEvent -> debugShowBigText(true, "Victory")
@@ -75,6 +75,6 @@ class GameActor(
     }
 
     companion object {
-        const val TILE_FIELD_SCALE = 480f / (6f * 32f)
+        const val TILE_FIELD_SCALE = 480f / (6f * 36f)
     }
 }

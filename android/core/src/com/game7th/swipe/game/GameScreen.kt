@@ -16,7 +16,9 @@ import com.game7th.swipe.SwipeGameGdx
 import com.game7th.swipe.campaign.ActScreen
 import com.game7th.swipe.game.actors.GameActor
 import com.game7th.swipe.game.battle.BattleController
+import com.game7th.swipe.game.battle.model.GdxModel
 import com.game7th.swipe.gestures.SimpleDirectionGestureDetector
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import ktx.async.KtxAsync
@@ -80,8 +82,8 @@ class GameScreen(private val game: SwipeGameGdx,
 
         config = BattleConfig(
                 personages = listOf(
-                        PersonageConfig(UnitType.POISON_ARCHER, personageSquadId + 1),
-                        PersonageConfig(UnitType.MACHINE_GUNNER, personageSquadId + 1),
+//                        PersonageConfig(UnitType.POISON_ARCHER, personageSquadId + 1),
+//                        PersonageConfig(UnitType.MACHINE_GUNNER, personageSquadId + 1),
                         PersonageConfig(UnitType.GLADIATOR, personageSquadId + 1)
                 ),
                 waves = actService.getActConfig(actId).findNode(locationId)?.waves?.map {
@@ -105,11 +107,15 @@ class GameScreen(private val game: SwipeGameGdx,
 
         game.multiplexer.addProcessor(stage)
 
+        val gdxModel = Gson().fromJson<GdxModel>(Gdx.files.internal("figures.json").readString(), GdxModel::class.java)
+
         battleController = BattleController(GameContextWrapper(
                 gameContext = game.context,
+                gdxModel = gdxModel,
                 width = Gdx.graphics.width.toFloat(),
                 height = Gdx.graphics.height.toFloat(),
-                atlases = mapOf("personage_gladiator" to TextureAtlas(Gdx.files.internal("personage_gladiator.atlas")))
+                atlases = mapOf("personage_gladiator" to TextureAtlas(Gdx.files.internal("personage_gladiator.atlas")),
+                    "slime" to TextureAtlas(Gdx.files.internal("slime.atlas")))
         ), Gdx.graphics.width.toFloat())
     }
 

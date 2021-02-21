@@ -3,8 +3,6 @@ package com.game7th.swipe.game.battle
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.game7th.battle.event.BattleEvent
 import com.game7th.swipe.game.GameContextWrapper
-import com.game7th.swipe.game.battle.model.FigureGdxModel
-import com.game7th.swipe.game.battle.model.PoseGdxModel
 
 /**
  * GDX graph controller for battle
@@ -47,26 +45,18 @@ class BattleController(
         }
     }
 
-    private var c1 = false
+    private val paddingSide = context.width * 0.05f
 
     private fun processEvent(event: BattleEvent) {
         when (event) {
             is BattleEvent.CreatePersonageEvent -> {
-                if (!c1) {
-                    c1 = true
-                    val figure = FigureController(context,
-                            FigureGdxModel(
-                                    "body_gladiator",
-                                    "personage_gladiator",
-                                    listOf(
-                                            PoseGdxModel("idle", 26, 51)
-                                    )
-                            ),
-                            100f,
-                            y,
-                             context.gameContext.scale)
-                    controllers.add(figure)
-                }
+                val figure = FigureController(context,
+                        context.gdxModel.figure(event.personage.skin) ?: context.gdxModel.figure("personage_slime")!!,
+                        paddingSide + (context.width - 2 * paddingSide) * 0.2f * (0.5f + event.position),
+                        y,
+                        context.gameContext.scale * 0.8f,
+                        event.personage.team > 0)
+                controllers.add(figure)
             }
         }
     }
