@@ -1,14 +1,9 @@
 package com.game7th.swipe.game.battle.model
 
-enum class PoseAnimationBehavior {
-    FREEZE, SWITCH_IDLE, REPEAT
-}
-
 data class PoseGdxModel(
         val name: String,
         val startFrame: Int,
-        val endFrame: Int,
-        val behavior: PoseAnimationBehavior = PoseAnimationBehavior.SWITCH_IDLE
+        val endFrame: Int
 )
 
 data class FigureGdxModel(

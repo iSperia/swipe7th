@@ -5,5 +5,7 @@ import com.game7th.swipe.GdxGameContext
 
 data class GameContextWrapper(
         val gameContext: GdxGameContext,
+        val width: Float,
+        val height: Float,
         val atlases: Map<String, TextureAtlas>
 )
