@@ -4,10 +4,20 @@
       "name": "personage_gladiator",
       "atlas": "personage_gladiator",
       "poses": [
-        {"name": "attack", "start":  1, "end": 19},
+        {"name": "attack", "start":  1, "end": 19, "triggers": [14]},
         {"name": "damage", "start":  20, "end": 27},
-        {"name": "idle", "start":  28, "end": 52, "behavior": "REPEAT"},
-        {"name": "death", "start": 53, "end": 65, "behavior": "FREEZE"}
+        {"name": "idle", "start":  28, "end": 52},
+        {"name": "death", "start": 53, "end": 65}
+      ]
+    },
+    {
+      "name": "personage_slime",
+      "atlas": "slime",
+      "poses": [
+        {"name":  "attack", "start":  1, "end":  35, "triggers": [23]},
+        {"name":  "damage", "start":  54, "end":  65},
+        {"name":  "idle", "start":  36, "end":  53},
+        {"name":  "death", "start":  66, "end":  87}
       ]
     }
   ],
