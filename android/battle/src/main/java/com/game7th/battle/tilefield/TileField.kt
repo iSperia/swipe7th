@@ -70,7 +70,7 @@ class TileField(private val merger: TileFieldMerger) {
     }
 
     fun calculateFreePosition(): Int? {
-        return (0..35).filter { !tiles.containsKey(it) }.let {
+        return (0 until WIDTH * HEIGHT).filter { !tiles.containsKey(it) }.let {
             if (it.isEmpty()) null else it.random()
         }
     }

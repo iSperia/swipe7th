@@ -2,6 +2,7 @@ package com.game7th.battle.unit
 
 import com.game7th.battle.DamageVector
 import com.game7th.battle.ability.ability
+import com.game7th.battle.action.AttackAction
 import com.game7th.battle.balance.SwipeBalance
 import com.game7th.battle.event.TileTemplate
 import com.game7th.battle.tilefield.tile.TileNames
@@ -22,15 +23,28 @@ object UnitFactory {
     fun produce(type: UnitType, balance: SwipeBalance, level: Int): UnitStats? {
         return when (type) {
             UnitType.GLADIATOR -> producePersonage(balance, "personage_gladiator", level, UnitStatPriority.PRIMARY, UnitStatPriority.SECONDARY, UnitStatPriority.TERTIARY) {
+                val strikeTemplate = TileTemplate(TileNames.GLADIATOR_STRIKE, balance.gladiator.t1)
+                val waveTemplate = TileTemplate(TileNames.GLADIATOR_WAVE, balance.gladiator.t2)
+                val dropTemplate = TileTemplate(TileNames.GLADIATOR_DROP, 0)
                 it.addAbility {
-                    defaultEmitter {
-                        skills.add(it.body to TileTemplate(TileNames.GLADIATOR_STRIKE, 3))
-                        skills.add(it.spirit to TileTemplate(TileNames.GLADIATOR_WAVE, 4))
-                        skills.add(it.spirit to TileTemplate(TileNames.GLADIATOR_DROP, 0))
+                    defaultEmitter { skills.addAll(listOf(it.body to strikeTemplate, it.spirit to waveTemplate, it.mind to dropTemplate)) }
+                    defaultMerger { tileType = strikeTemplate.skin }
+                    defaultMerger { tileType = waveTemplate.skin }
+                    consume {
+                        template = waveTemplate
+                        action = AttackAction().apply {
+                            attackIndex = 1
+                            target = { battle, unit -> battle.aliveEnemies(unit)}
+                            damage = { battle, unit, target, ss, ms -> (balance.gladiator.a2n * unit.stats.spirit * ss / ms).toInt().let { DamageVector(it, 0, 0) }}
+                        }
                     }
-                    defaultMerger { tileType = TileNames.GLADIATOR_STRIKE }
-                    defaultMerger { tileType = TileNames.GLADIATOR_WAVE }
-
+                    consume {
+                        template = strikeTemplate
+                        action = AttackAction().apply {
+                            target = { battle, unit -> battle.findClosestAliveEnemy(unit)?.let { listOf(it) } ?: emptyList() }
+                            damage = { battle, unit, target, ss, ms -> (balance.gladiator.a1n * unit.stats.body * ss / ms).toInt().let { DamageVector(it, 0, 0) } }
+                        }
+                    }
                 }
             }
             UnitType.GREEN_SLIME -> {
@@ -38,14 +52,14 @@ object UnitFactory {
                 val slime = UnitStats(skin = "personage_slime", level = level, health = CappedStat(hp, hp))
                 slime += ability {
                     ticker {
-                        ticksToTrigger = 3
+                        ticksToTrigger = 4
                         body = { battle, unit ->
                             val damage = (battle.balance.slime.damage.f + (unit.stats.level * (2 * unit.stats.level - 1)) * battle.balance.slime.damage.m).toInt()
                             if (damage > 0) {
                                 val target = battle.findClosestAliveEnemy(unit)
                                 target?.let { target ->
-                                    battle.notifyAttack(unit, target)
-                                    battle.processDamage(target, unit, DamageVector(damage, 0, 0))
+                                    val damageResult = battle.processDamage(target, unit, DamageVector(1, 0, 0))
+                                    battle.notifyAttack(unit, listOf(Pair(target, damageResult)), 0)
                                 }
                             }
                         }

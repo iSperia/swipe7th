@@ -29,14 +29,20 @@ class DefaultSkillTileEmitter : AbilityTrigger {
 
         if (amount > 0) {
             val totalWeight = skills.sumBy { it.first }
-            val roll = Random.nextInt(totalWeight)
+            val roll = Random.nextInt(1, totalWeight + 1)
             var sum = 0
             val skill = skills.firstOrNull {
                 sum += it.first
                 sum >= roll
             }
+            if (skill == null) {
+                println("No skill found: weight=$totalWeight roll=$roll")
+            }
             skill?.let { skill ->
                 val position: Int? = event.battle.tileField.calculateFreePosition()
+                if (position == null) {
+                    println("No position found")
+                }
                 position?.let { position ->
 
                     val tile = SwipeTile(
@@ -44,15 +50,8 @@ class DefaultSkillTileEmitter : AbilityTrigger {
                             event.battle.tileField.newTileId(),
                             amount)
 
-                    when (event) {
-                        is InternalBattleEvent.ProduceGuaranteedTileEvent -> {
-                            event.candidates.add(tile)
-                        }
-                        else -> {
-                            event.battle.tileField.tiles[position] = tile
-                            event.battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
-                        }
-                    }
+                    event.battle.tileField.tiles[position] = tile
+                    event.battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
                 }
             }
         }

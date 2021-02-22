@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.game7th.swipe.game.GameContextWrapper
+import com.game7th.swipe.game.battle.model.BattleControllerEvent
 import com.game7th.swipe.game.battle.model.FigureGdxModel
 import com.game7th.swipe.game.battle.model.mapNameToFigure
 
@@ -21,12 +22,17 @@ enum class FigurePose(val poseName: String) {
  */
 class FigureController(
         context: GameContextWrapper,
-        private val figureModel: FigureGdxModel,
-        private val x: Float,
-        private val y: Float,
+        id: Int,
+        val battle: BattleController,
+        val figureModel: FigureGdxModel,
+        val originX: Float,
+        val originY: Float,
         private val scale: Float,
-        private val flipped: Boolean
-) : ElementController(context) {
+        val flipped: Boolean
+) : ElementController(context, id) {
+
+    var x = originX
+    var y = originY
 
     var timePassed = 0f
     var timePoseStarted = 0f
@@ -35,8 +41,12 @@ class FigureController(
     val allTextures = filterAtlas(atlas, figureModel.name.mapNameToFigure()).toList()
     var animation: Animation<TextureRegion>? = null
 
+    var isDead = false
+
     lateinit var pose: FigurePose
     private val flipMultiplier = if (flipped) -1 else 1
+
+    var oldIndex = -1
 
     init {
         switchPose(FigurePose.POSE_IDLE)
@@ -47,20 +57,47 @@ class FigureController(
         timePassed += delta
 
         animation?.let { animation ->
-            batch.draw(animation.getKeyFrame(timePassed, true),
-                    x - 256f * scale * flipMultiplier,
-                    y,
-                    512f * scale * flipMultiplier,
-                    512f * scale)
+            if (pose != FigurePose.POSE_DEATH || !animation.isAnimationFinished(timePassed - timePoseStarted)) {
+                batch.draw(animation.getKeyFrame(timePassed - timePoseStarted, true),
+                        x - 256f * scale * flipMultiplier,
+                        y,
+                        512f * scale * flipMultiplier,
+                        512f * scale)
+            }
+
+            val index = animation.getKeyFrameIndex(timePassed - timePoseStarted)
+            if (index != oldIndex) {
+                oldIndex = index
+                val pose = figureModel.poses.first { pose.poseName == it.name }
+
+                val hasTrigger = pose.triggers?.contains(index) == true
+                if (hasTrigger) {
+                    battle.propagate(BattleControllerEvent.FigurePoseFrameIndexEvent(id, index))
+                }
+
+            }
+            if (animation.isAnimationFinished(timePassed - timePoseStarted) && animation.playMode == Animation.PlayMode.NORMAL
+                    && pose != FigurePose.POSE_DEATH) {
+                switchPose(FigurePose.POSE_IDLE)
+            }
         }
 
     }
 
-    private fun switchPose(pose: FigurePose) {
+    override fun handle(event: BattleControllerEvent) {
+    }
+
+    fun switchPose(pose: FigurePose) {
         timePoseStarted = timePassed
         this.pose = pose
         val pose = figureModel.poses.firstOrNull { it.name == pose.poseName }
-        this.animation = Animation(FRAME_DURATION, Array(allTextures.subList((pose?.start ?: 1) - 1, (pose?.end ?: 1)).toTypedArray()))
+        val playMode = when (this.pose) {
+            FigurePose.POSE_IDLE -> Animation.PlayMode.LOOP
+            FigurePose.POSE_ATTACK -> Animation.PlayMode.NORMAL
+            FigurePose.POSE_DAMAGE -> Animation.PlayMode.NORMAL
+            FigurePose.POSE_DEATH -> Animation.PlayMode.NORMAL
+        }
+        this.animation = Animation(FRAME_DURATION, Array(allTextures.subList((pose?.start ?: 1) - 1, (pose?.end ?: 1)).toTypedArray()), playMode)
     }
 
     companion object {

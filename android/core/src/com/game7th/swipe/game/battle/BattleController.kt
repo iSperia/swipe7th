@@ -2,7 +2,10 @@ package com.game7th.swipe.game.battle
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.game7th.battle.event.BattleEvent
+import com.game7th.battle.personage.PersonageViewModel
 import com.game7th.swipe.game.GameContextWrapper
+import com.game7th.swipe.game.battle.model.BattleControllerEvent
+import com.game7th.swipe.game.battle.model.GdxAttackType
 
 /**
  * GDX graph controller for battle
@@ -21,11 +24,17 @@ class BattleController(
      * As soon as lock is zero, we are ready to process next event.
      * Use orchestrators to reduce event lock
      */
-    private val eventProcessLock = 0
+    private var eventProcessLock = 0
 
-    private val controllers = mutableListOf<ElementController>()
+    private val figures = mutableListOf<FigureController>()
+    private val effects = mutableListOf<ElementController>()
 
     private val backgroundTexture = context.gameContext.atlas.findRegion("battle_bg", 1)
+
+    var effectId = 0
+    val scale = 0.85f * context.gameContext.scale
+
+    val controllersToRemove = mutableListOf<ElementController>()
 
     fun enqueueEvent(event: BattleEvent) {
         eventQueue.add(event)
@@ -34,7 +43,10 @@ class BattleController(
     fun act(batch: SpriteBatch, delta: Float) {
         batch.draw(backgroundTexture, 0f, y, context.width, context.width * 0.67f)
 
-        controllers.forEach {
+        figures.forEach {
+            it.render(batch, delta)
+        }
+        effects.forEach {
             it.render(batch, delta)
         }
 
@@ -43,6 +55,9 @@ class BattleController(
             //ok, we have an event
             processEvent(event)
         }
+
+        effects.removeAll(controllersToRemove)
+        controllersToRemove.clear()
     }
 
     private val paddingSide = context.width * 0.05f
@@ -51,13 +66,92 @@ class BattleController(
         when (event) {
             is BattleEvent.CreatePersonageEvent -> {
                 val figure = FigureController(context,
+                        event.personage.id,
+                        this@BattleController,
                         context.gdxModel.figure(event.personage.skin) ?: context.gdxModel.figure("personage_slime")!!,
                         paddingSide + (context.width - 2 * paddingSide) * 0.2f * (0.5f + event.position),
                         y,
-                        context.gameContext.scale * 0.8f,
+                        scale,
                         event.personage.team > 0)
-                controllers.add(figure)
+                figures.add(figure)
+            }
+            is BattleEvent.PersonageAttackEvent -> {
+                handleAttack(event)
+            }
+            is BattleEvent.PersonageDamageEvent -> {
+                val figure = figures.first { it.id == event.personage.id }
+            }
+            is BattleEvent.PersonageUpdateEvent -> {
+                val figure = figures.first { it.id == event.personage.id }
+                checkFigureDead(figure, event.personage)
             }
         }
+    }
+
+    private fun checkFigureDead(figureController: FigureController, personage: PersonageViewModel) {
+        if (!figureController.isDead && personage.stats.health == 0) {
+            figureController.isDead = true
+            figureController.switchPose(FigurePose.POSE_DEATH)
+        }
+    }
+
+    private fun handleAttack(event: BattleEvent.PersonageAttackEvent) {
+        val figure = figures.firstOrNull { it.id == event.source.id }
+        figure?.let { figure ->
+            val attack = figure.figureModel.attacks[event.attackIndex]
+            when (attack.attackType) {
+                GdxAttackType.MOVE_AND_PUNCH -> {
+                    val targetPersonage = event.targets.firstOrNull()
+                    targetPersonage?.let { targetPersonage ->
+                        val targetFigure = figures.firstOrNull { it.id == targetPersonage.first.id }
+                        targetFigure?.let { targetFigure ->
+                            val orchestrator = MovePunchOrchestrator(
+                                    context,
+                                    effectId++,
+                                    this,
+                                    figure,
+                                    targetFigure
+                            )
+                            effects.add(orchestrator)
+                        }
+                    }
+                }
+                GdxAttackType.AOE_STEPPED_GENERATOR -> {
+                    figure.figureModel.attacks[event.attackIndex].effect?.let { effect ->
+                        val orchestrator = AoeSteppedGeneratorOrchestrator(
+                                context,
+                                effectId++,
+                                this@BattleController,
+                                figure,
+                                event.targets.map { target -> figures.first { it.id == target.first.id } }.sortedBy { it.x },
+                                effect)
+                        effects.add(orchestrator)
+                    }
+                }
+            }
+        }
+    }
+
+    fun lock(lock: Int) {
+        eventProcessLock += lock
+    }
+
+    fun unlock() {
+        eventProcessLock--
+    }
+
+    fun removeController(controller: ElementController) {
+        controller.dispose()
+        controllersToRemove.add(controller)
+    }
+
+    fun propagate(event: BattleControllerEvent) {
+        effects.forEach {
+            it.handle(event)
+        }
+    }
+
+    fun addEffect(effect: SteppedGeneratorEffectController) {
+        effects.add(effect)
     }
 }

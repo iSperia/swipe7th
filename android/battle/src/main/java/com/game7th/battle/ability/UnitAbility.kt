@@ -33,6 +33,13 @@ class UnitAbility {
         return trigger
     }
 
+    fun consume(init: ConsumeTrigger.() -> Unit) : ConsumeTrigger {
+        val trigger = ConsumeTrigger()
+        trigger.init()
+        triggers.add(trigger)
+        return trigger
+    }
+
     /**END OF DSL*/
 }
 

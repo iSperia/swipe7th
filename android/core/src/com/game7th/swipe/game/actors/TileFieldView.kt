@@ -40,7 +40,6 @@ class TileFieldView(
     }
 
     suspend fun processAction(action: BattleEvent) {
-        println("Processing action ${action.javaClass.name}")
         when (action) {
             is BattleEvent.CreateTileEvent -> {
                 val x = action.position % FIELD_WIDTH
@@ -85,8 +84,9 @@ class TileFieldView(
                 tile.updateFrom(action.tile)
             }
             is BattleEvent.RemoveTileEvent -> {
+                println("remove tileEvent ${action.id}")
                 val tile = tileGroup.findActor<TileView>("${action.id}")
-                tile.addAction(SequenceAction(
+                tile?.addAction(SequenceAction(
                         AlphaAction().apply {
                             alpha = 0f
                             duration = 0.1f
@@ -104,7 +104,7 @@ class TileFieldView(
 
     private fun animatedMove(id: Int, position: Int) {
         val tile = findActor<TileView>("$id")
-        tile.addAction(MoveToAction().apply {
+        tile?.addAction(MoveToAction().apply {
             setPosition(18f + 36f * (position % FIELD_WIDTH), 36f * (FIELD_WIDTH - 1 - (position / FIELD_WIDTH)))
             duration = MOVE_STEP_LENGTH
         })
@@ -112,7 +112,7 @@ class TileFieldView(
 
     private fun animatedMoveAndDestroy(id: Int, position: Int, updateTile: TileViewModel) {
         val tile = findActor<TileView>("$id")
-        findActor<TileView>("${updateTile.id}").addAction(SequenceAction(
+        findActor<TileView>("${updateTile.id}")?.addAction(SequenceAction(
                 DelayAction(MOVE_STEP_LENGTH),
                 RunnableAction().apply {
                     setRunnable {
@@ -120,7 +120,7 @@ class TileFieldView(
                     }
                 }
         ))
-        tile.addAction(SequenceAction(
+        tile?.addAction(SequenceAction(
                 ParallelAction(
                         MoveToAction().apply {
                             setPosition(18f + 36f * (position % FIELD_WIDTH), 36f * (FIELD_WIDTH - 1 - (position / FIELD_WIDTH)))

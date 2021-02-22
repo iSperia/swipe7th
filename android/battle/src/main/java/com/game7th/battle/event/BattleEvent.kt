@@ -1,5 +1,6 @@
 package com.game7th.battle.event
 
+import com.game7th.battle.DamageProcessResult
 import com.game7th.battle.personage.PersonageViewModel
 import com.game7th.battle.tilefield.TileFieldEvent
 
@@ -42,7 +43,8 @@ sealed class BattleEvent {
 
     data class PersonageAttackEvent(
             val source: PersonageViewModel,
-            val target: PersonageViewModel
+            val targets: List<Pair<PersonageViewModel, DamageProcessResult>>,
+            val attackIndex: Int
     ) : BattleEvent()
 
     data class PersonageDamageEvent(

@@ -11,6 +11,7 @@ import com.game7th.battle.tilefield.tile.*
 import com.game7th.battle.unit.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlin.math.abs
 import kotlin.math.max
@@ -66,14 +67,6 @@ class SwipeBattle(val balance: SwipeBalance) {
     private suspend fun produceGuaranteedTile() {
         val event = InternalBattleEvent.ProduceGuaranteedTileEvent(this@SwipeBattle)
         propagateInternalEvent(event)
-        if (event.candidates.isEmpty()) return
-        event.candidates.random().let { tile ->
-            val position = tileField.calculateFreePosition()
-            position?.let { position ->
-                event.battle.tileField.tiles[position] = tile
-                event.battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
-            }
-        }
     }
 
     private suspend fun processTick(preventTickers: Boolean) {
@@ -142,13 +135,17 @@ class SwipeBattle(val balance: SwipeBalance) {
         if (!events.isClosedForSend) {
             var motionEvents = tileField.attemptSwipe(dx, dy)
             var hadAnyEvents = false
+            val eventCache = mutableListOf<BattleEvent>()
             while (motionEvents.isNotEmpty()) {
                 hadAnyEvents = true
-                events.send(BattleEvent.SwipeMotionEvent(motionEvents))
+                eventCache.add(BattleEvent.SwipeMotionEvent(motionEvents))
                 //TODO: post process stacks stages etc.
                 motionEvents = tileField.attemptSwipe(dx, dy)
             }
             if (hadAnyEvents) {
+                runBlocking {
+                    eventCache.forEach { events.send(it) }
+                }
                 processTick(false)
                 processTickUnits()
                 tick++
@@ -195,8 +192,8 @@ class SwipeBattle(val balance: SwipeBalance) {
         }
     }
 
-    suspend fun notifyAttack(source: BattleUnit, target: BattleUnit) {
-        events.send(BattleEvent.PersonageAttackEvent(source.toViewModel(), target.toViewModel()))
+    suspend fun notifyAttack(source: BattleUnit, targets: List<Pair<BattleUnit, DamageProcessResult>>, attackIndex: Int) {
+        events.send(BattleEvent.PersonageAttackEvent(source.toViewModel(), targets.map { Pair(it.first.toViewModel(), it.second) }, attackIndex))
     }
 
     /*
@@ -224,14 +221,6 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     suspend fun notifyTileRemoved(id: Int) {
         events.send(BattleEvent.RemoveTileEvent(id))
-    }
-
-    suspend fun notifyAoeProjectile(skin: String, unit: BattleUnit, direction: Int) {
-        events.send(BattleEvent.ShowNpcAoeEffect(skin, unit.id, direction))
-    }
-
-    suspend fun notifyTargetedProjectile(skin: String, source: BattleUnit, target: BattleUnit) {
-        events.send(BattleEvent.ShowProjectile(skin, source.id, target.id))
     }
 
     suspend fun applyPoison(target: BattleUnit, poisonTicks: Int, poisonDmg: Int) {

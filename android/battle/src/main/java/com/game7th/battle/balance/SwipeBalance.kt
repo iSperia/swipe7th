@@ -92,8 +92,11 @@ data class BossBloodKnightBalance(
 data class GladiatorBalance(
         val c: Int,
         val k: Float,
-        val str_k: Float,
-        val tile_k: Float
+        val a1n: Float,
+        val a2n: Float,
+        val a3n: Float,
+        val t1: Int,
+        val t2: Int
 )
 
 data class PoisonArcherBalance(

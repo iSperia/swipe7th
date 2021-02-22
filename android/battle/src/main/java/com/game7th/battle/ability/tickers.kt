@@ -18,7 +18,7 @@ class TickerTrigger : AbilityTrigger {
             is InternalBattleEvent.TickEvent -> {
                 if (!event.preventTickers) {
                     tick++
-                    if (tick >= ticksToTrigger && unit.isNotStunned()) {
+                    if (tick >= ticksToTrigger && unit.isNotStunned() && unit.stats.health.value > 0) {
                         tick = 0
                         body(event.battle, unit)
                     }
