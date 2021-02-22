@@ -26,13 +26,6 @@ class UnitAbility {
         return trigger
     }
 
-    fun consumeExecute(init: ConsumeOnUseTrigger.() -> Unit) : ConsumeOnUseTrigger {
-        val trigger = ConsumeOnUseTrigger()
-        trigger.init()
-        triggers.add(trigger)
-        return trigger
-    }
-
     fun ticker(init: TickerTrigger.() -> Unit) : TickerTrigger {
         val trigger = TickerTrigger()
         trigger.init()

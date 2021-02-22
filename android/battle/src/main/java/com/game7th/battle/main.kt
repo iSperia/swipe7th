@@ -2,7 +2,6 @@ package com.game7th.battle
 
 import com.game7th.battle.balance.SwipeBalance
 import com.game7th.battle.event.BattleEvent
-import com.game7th.battle.tilefield.tile.TileStage
 import com.google.gson.Gson
 import kotlinx.coroutines.*
 import java.io.FileInputStream
@@ -56,12 +55,6 @@ suspend fun emulateBattle(balance: SwipeBalance, config: BattleConfig) {
                         val dx = if (r == 0) 1 else if (r == 1) -1 else 0
                         val dy = if (r == 2) 1 else if (r == 3) -1 else 0
                         battle.processSwipe(dx, dy)
-
-                        val tileId = battle.tileField.tiles.toMap().filter { it.value.tier1() }.values.shuffled().firstOrNull()?.let { tile ->
-                            tile.id
-                        }
-
-                        tileId?.let {battle.attemptActivateTile(tileId)}
                     }
                 }
 

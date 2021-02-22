@@ -2,20 +2,19 @@ package com.game7th.battle.ability
 
 import com.game7th.battle.EfficencyCalculator
 import com.game7th.battle.event.BattleEvent
+import com.game7th.battle.event.TileTemplate
 import com.game7th.battle.internal_event.InternalBattleEvent
 import com.game7th.battle.tilefield.tile.SwipeTile
-import com.game7th.battle.tilefield.tile.TileType
 import com.game7th.battle.toViewModel
 import com.game7th.battle.unit.BattleUnit
+import kotlin.random.Random
 
 /**
  * This is the default skill tile emitter used by most of personages
  */
 class DefaultSkillTileEmitter : AbilityTrigger {
 
-    lateinit var tileType: TileType
-    var tier1: Int = 5
-    var tier2: Int = 10
+    val skills = mutableListOf<Pair<Int, TileTemplate>>()
 
     override suspend fun process(event: InternalBattleEvent, unit: BattleUnit) {
 
@@ -29,23 +28,30 @@ class DefaultSkillTileEmitter : AbilityTrigger {
         }
 
         if (amount > 0) {
-            val position: Int? = event.battle.tileField.calculateFreePosition()
-            position?.let { position ->
+            val totalWeight = skills.sumBy { it.first }
+            val roll = Random.nextInt(totalWeight)
+            var sum = 0
+            val skill = skills.firstOrNull {
+                sum += it.first
+                sum >= roll
+            }
+            skill?.let { skill ->
+                val position: Int? = event.battle.tileField.calculateFreePosition()
+                position?.let { position ->
 
-                val tile = SwipeTile(
-                        tileType,
-                        event.battle.tileField.newTileId(),
-                        amount,
-                        tier1,
-                        tier2)
+                    val tile = SwipeTile(
+                            skill.second,
+                            event.battle.tileField.newTileId(),
+                            amount)
 
-                when (event) {
-                    is InternalBattleEvent.ProduceGuaranteedTileEvent -> {
-                        event.candidates.add(tile)
-                    }
-                    else -> {
-                        event.battle.tileField.tiles[position] = tile
-                        event.battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
+                    when (event) {
+                        is InternalBattleEvent.ProduceGuaranteedTileEvent -> {
+                            event.candidates.add(tile)
+                        }
+                        else -> {
+                            event.battle.tileField.tiles[position] = tile
+                            event.battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
+                        }
                     }
                 }
             }

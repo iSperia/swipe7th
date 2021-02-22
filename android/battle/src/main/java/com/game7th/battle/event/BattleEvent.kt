@@ -3,13 +3,16 @@ package com.game7th.battle.event
 import com.game7th.battle.personage.PersonageViewModel
 import com.game7th.battle.tilefield.TileFieldEvent
 
+data class TileTemplate(
+        val skin: String,
+        val maxStackSize: Int
+)
+
 data class TileViewModel(
         val id: Int,
         val skin: String,
         val stackSize: Int,
-        val background: String?,
-        val backgroundIndex: Int?,
-        val fractionForeground: String?
+        val maxStackSize: Int
 )
 
 sealed class BattleEvent {

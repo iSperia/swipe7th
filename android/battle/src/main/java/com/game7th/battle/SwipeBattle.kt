@@ -284,20 +284,6 @@ fun SwipeTile.toViewModel(): TileViewModel {
             id,
             type.skin,
             stackSize,
-            tileBackground(),
-            tileBackgroundIndex(),
-            foreground()
+            type.maxStackSize
     )
-}
-
-fun SwipeTile.tileBackground() = if (type.background) "tile_bg" else null
-
-fun SwipeTile.tileBackgroundIndex() =
-        if (!type.background) 0
-        else if (tier1()) 1
-        else 0
-
-fun SwipeTile.foreground(): String? = when {
-    type.background && tier2() -> type.fraction.id
-    else -> null
 }
