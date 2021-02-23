@@ -25,23 +25,28 @@ class MovePunchOrchestrator(
 
     init {
         battle.lock(1)
+        if (sourceFigure == targetFigure) {
+            timePassed = timeStampMove
+        }
     }
 
     override fun render(batch: SpriteBatch, delta: Float) {
         timePassed += delta
 
-        if (timePassed < timeStampMove) {
+        if (timePassed < timeStampMove && sourceFigure != targetFigure) {
             sourceFigure.x = sourceFigure.originX + (timePassed / timeStampMove) * (targetX - sourceFigure.originX)
         } else if (!isPunchStarted) {
-            sourceFigure.x = targetX
+            sourceFigure.x = if (sourceFigure != targetFigure) targetX else sourceFigure.originX
             sourceFigure.switchPose(FigurePose.POSE_ATTACK)
             isPunchStarted = true
-        } else if (timeStampBackMoveStart + timeStampMove > timePassed) {
-            sourceFigure.x = targetX + ((timePassed - timeStampBackMoveStart) / timeStampBackMove) * (sourceFigure.originX - targetX)
-        } else if (timeStampBackMoveStart > 0f && timeStampBackMoveStart + timeStampMove <= timePassed) {
-            sourceFigure.x = sourceFigure.originX
-            battle.removeController(this)
-            battle.unlock()
+        } else if (sourceFigure != targetFigure) {
+            if (timeStampBackMoveStart + timeStampMove > timePassed) {
+                sourceFigure.x = targetX + ((timePassed - timeStampBackMoveStart) / timeStampBackMove) * (sourceFigure.originX - targetX)
+            } else if (timeStampBackMoveStart > 0f && timeStampBackMoveStart + timeStampMove <= timePassed) {
+                sourceFigure.x = sourceFigure.originX
+                battle.removeController(this)
+                battle.unlock()
+            }
         }
     }
 
@@ -53,9 +58,14 @@ class MovePunchOrchestrator(
         when (event) {
             is BattleControllerEvent.FigurePoseFrameIndexEvent -> {
                 if (event.figureId == sourceFigure.id && timePassed > timeStampMove) {
-                    targetFigure.switchPose(FigurePose.POSE_DAMAGE)
+                    if (sourceFigure != targetFigure) {
+                        targetFigure.switchPose(FigurePose.POSE_DAMAGE)
 
-                    timeStampBackMoveStart = timePassed
+                        timeStampBackMoveStart = timePassed
+                    } else {
+                        battle.removeController(this)
+                        battle.unlock()
+                    }
                 }
             }
         }

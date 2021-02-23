@@ -51,6 +51,10 @@ data class BattleUnit(
     fun isNotStunned(): Boolean {
         return stats.ailments.firstOrNull { it.ailmentType == AilmentType.STUN } == null
     }
+
+    fun isAlive(): Boolean {
+        return stats.health.value > 0
+    }
 }
 
 enum class AilmentType {

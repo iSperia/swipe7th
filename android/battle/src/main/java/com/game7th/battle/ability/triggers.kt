@@ -12,14 +12,15 @@ class ConsumeTrigger : AbilityTrigger {
     lateinit var action: BattleAction
 
     override suspend fun process(event: InternalBattleEvent, unit: BattleUnit) {
-        if (event is InternalBattleEvent.TickEvent) {
+        if (event is InternalBattleEvent.TickEvent && unit.isAlive()) {
             event.battle.tileField.tiles.forEach { (index, tile) ->
                 if (tile.type.skin == template.skin && tile.stackSize >= template.maxStackSize) {
+                    event.battle.propagateInternalEvent(InternalBattleEvent.TileConsumedEvent(event.battle, tile, index))
                     //we are done for now, consume the tile
                     event.battle.tileField.removeById(tile.id)
                     event.battle.notifyTileRemoved(tile.id)
 
-                    action.processAction(event.battle, unit, tile.stackSize, tile.type.maxStackSize)
+                    action.processAction(event.battle, unit, tile)
                 }
             }
         }

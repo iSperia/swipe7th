@@ -1,11 +1,16 @@
 package com.game7th.battle.unit
 
 import com.game7th.battle.DamageVector
+import com.game7th.battle.ability.TickerEntry
 import com.game7th.battle.ability.ability
 import com.game7th.battle.action.AttackAction
+import com.game7th.battle.action.RegenerateParametrizedAmountAction
 import com.game7th.battle.balance.SwipeBalance
+import com.game7th.battle.event.BattleEvent
 import com.game7th.battle.event.TileTemplate
+import com.game7th.battle.tilefield.tile.SwipeTile
 import com.game7th.battle.tilefield.tile.TileNames
+import com.game7th.battle.toViewModel
 import com.game7th.metagame.unit.UnitType
 
 enum class UnitStatPriority {
@@ -44,6 +49,12 @@ object UnitFactory {
                             damage = { battle, unit, target, ss, ms -> (balance.gladiator.a1n * unit.stats.body * ss / ms).toInt().let { DamageVector(it, 0, 0) } }
                         }
                     }
+                    distancedConsumeOnAttackDamage {
+                        range = 1
+                        tileSkins.addAll(listOf(strikeTemplate.skin, waveTemplate.skin))
+                        sourceSkin = dropTemplate.skin
+                        action = RegenerateParametrizedAmountAction(balance.gladiator.a3n)
+                    }
                 }
             }
             UnitType.GREEN_SLIME -> {
@@ -51,8 +62,7 @@ object UnitFactory {
                 val slime = UnitStats(skin = "personage_slime", level = level, health = CappedStat(hp, hp))
                 slime += ability {
                     ticker {
-                        ticksToTrigger = 3
-                        body = { battle, unit ->
+                        bodies[TickerEntry(3, 3, "slime_attack")] = { battle, unit ->
                             val damage = balance.slime.damage.calculate(unit.stats.level)
                             if (damage > 0) {
                                 val target = battle.findClosestAliveEnemy(unit)
@@ -60,6 +70,14 @@ object UnitFactory {
                                     val damageResult = battle.processDamage(target, unit, DamageVector(damage, 0, 0))
                                     battle.notifyAttack(unit, listOf(Pair(target, damageResult)), 0)
                                 }
+                            }
+                        }
+                        bodies[TickerEntry(1, 2, "slime_splash")] = { battle, unit ->
+                            battle.tileField.calculateFreePosition()?.let { position ->
+                                val tile = SwipeTile(TileTemplate("slime_splash", balance.slime.a2l), battle.tileField.newTileId(), balance.slime.a2l, true)
+                                battle.tileField.tiles[position] = tile
+                                battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
+                                battle.notifyAttack(unit, emptyList(), 0)
                             }
                         }
                     }

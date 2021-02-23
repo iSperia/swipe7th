@@ -75,7 +75,8 @@ data class RangeBalance(
 
 data class SlimeBalance(
     val hp: PolinomBalance,
-    val damage: PolinomBalance
+    val damage: PolinomBalance,
+    val a2l: Int
 )
 
 data class CitadelWarlockBalance(

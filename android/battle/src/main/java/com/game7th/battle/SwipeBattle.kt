@@ -41,7 +41,7 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     val units = mutableListOf<BattleUnit>()
 
-    private suspend fun propagateInternalEvent(event: InternalBattleEvent) {
+    suspend fun propagateInternalEvent(event: InternalBattleEvent) {
         aliveUnits().forEach { battleUnit ->
             battleUnit.stats.abilities.flatMap { it.triggers }.forEach { trigger ->
                 trigger.process(event, battleUnit)
@@ -70,8 +70,24 @@ class SwipeBattle(val balance: SwipeBalance) {
     }
 
     private suspend fun processTick(preventTickers: Boolean) {
+        checkAutoTickTiles()
         produceGuaranteedTile()
         propagateInternalEvent(InternalBattleEvent.TickEvent(this, preventTickers))
+    }
+
+    private suspend fun checkAutoTickTiles() {
+        tileField.tiles.forEach {
+            if (it.value.autoDecrement) {
+                if (it.value.stackSize > 1) {
+                    val newTile = it.value.copy(stackSize = it.value.stackSize - 1)
+                    tileField.tiles[it.key] = newTile
+                    notifyTileUpdated(newTile)
+                } else {
+                    tileField.tiles.remove(it.key)
+                    notifyTileRemoved(it.value.id)
+                }
+            }
+        }
     }
 
     private suspend fun generateInitialPersonages(config: BattleConfig) = withContext(coroutineContext) {
@@ -225,6 +241,10 @@ class SwipeBattle(val balance: SwipeBalance) {
         events.send(BattleEvent.RemoveTileEvent(id))
     }
 
+    suspend fun notifyTileUpdated(tile: SwipeTile) {
+        events.send(BattleEvent.UpdateTileEvent(tile.id, tile.toViewModel()))
+    }
+
     suspend fun applyPoison(target: BattleUnit, poisonTicks: Int, poisonDmg: Int) {
         val currentPoison = target.stats.ailments.firstOrNull { it.ailmentType == AilmentType.POISON }
         if (currentPoison != null) {
@@ -265,6 +285,7 @@ class SwipeBattle(val balance: SwipeBalance) {
         if (hp > 0 && unit.stats.health.notCapped()) {
             val healAmount = min(unit.stats.health.maxValue - unit.stats.health.value, hp)
             unit.stats.health.value += healAmount
+            println("Battle: heal: $healAmount on ${unit.stats.skin}")
             events.send(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
         }
     }

@@ -1,5 +1,6 @@
 package com.game7th.battle.internal_event
 
+import com.game7th.battle.DamageProcessResult
 import com.game7th.battle.SwipeBattle
 import com.game7th.battle.tilefield.tile.SwipeTile
 
@@ -49,8 +50,16 @@ sealed class InternalBattleEvent(
             battle: SwipeBattle
     ) : InternalBattleEvent(battle)
 
-    class TickEndEvent(
-            battle: SwipeBattle
+    class AttackDamageEvent(
+            battle: SwipeBattle,
+            val damage: DamageProcessResult,
+            val tile: SwipeTile
+    ) : InternalBattleEvent(battle)
+
+    class TileConsumedEvent(
+            battle: SwipeBattle,
+            val tile: SwipeTile,
+            val position: Int
     ) : InternalBattleEvent(battle)
 
 }

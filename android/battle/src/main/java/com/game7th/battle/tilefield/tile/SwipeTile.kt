@@ -10,5 +10,7 @@ data class SwipeTile(
         val id: Int,
 
         //The size of the stack
-        val stackSize: Int
+        val stackSize: Int,
+
+        val autoDecrement: Boolean = false
 )

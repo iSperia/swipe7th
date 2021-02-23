@@ -115,6 +115,16 @@ class BattleController(
                             effects.add(orchestrator)
                         }
                     }
+                    if (targetPersonage == null) {
+                        val orchestrator = MovePunchOrchestrator(
+                                context,
+                                effectId++,
+                                this,
+                                figure,
+                                figure
+                        )
+                        effects.add(orchestrator)
+                    }
                 }
                 GdxAttackType.AOE_STEPPED_GENERATOR -> {
                     figure.figureModel.attacks[event.attackIndex].effect?.let { effect ->
@@ -129,6 +139,7 @@ class BattleController(
                     }
                 }
             }
+            Unit
         }
     }
 
