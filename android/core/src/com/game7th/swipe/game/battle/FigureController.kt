@@ -63,18 +63,30 @@ class FigureController(
                         y,
                         512f * scale * flipMultiplier,
                         512f * scale)
+            } else if (pose == FigurePose.POSE_DEATH) {
+                if (flipped) {
+                    battle.removeController(this)
+                } else {
+                    batch.draw(animation.keyFrames.last(),
+                            x - 256f * scale * flipMultiplier,
+                            y,
+                            512f * scale * flipMultiplier,
+                            512f * scale)
+                }
             }
 
             val index = animation.getKeyFrameIndex(timePassed - timePoseStarted)
             if (index != oldIndex) {
-                oldIndex = index
                 val pose = figureModel.poses.first { pose.poseName == it.name }
 
-                val hasTrigger = pose.triggers?.contains(index) == true
-                if (hasTrigger) {
-                    battle.propagate(BattleControllerEvent.FigurePoseFrameIndexEvent(id, index))
+                (oldIndex + 1..index).forEach {
+                    val hasTrigger = pose.triggers?.contains(it) == true
+                    if (hasTrigger) {
+                        battle.propagate(BattleControllerEvent.FigurePoseFrameIndexEvent(id, index))
+                    }
                 }
 
+                oldIndex = index
             }
             if (animation.isAnimationFinished(timePassed - timePoseStarted) && animation.playMode == Animation.PlayMode.NORMAL
                     && pose != FigurePose.POSE_DEATH) {
@@ -88,6 +100,7 @@ class FigureController(
     }
 
     fun switchPose(pose: FigurePose) {
+        if (isDead) return
         timePoseStarted = timePassed
         this.pose = pose
         val pose = figureModel.poses.firstOrNull { it.name == pose.poseName }

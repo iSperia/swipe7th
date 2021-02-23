@@ -46,6 +46,7 @@ class TickerTrigger : AbilityTrigger {
                         if (tick >= ticksToTrigger && unit.isNotStunned() && unit.stats.health.value > 0) {
                             tick = 0
                             body!!(event.battle, unit)
+                            body = null
                         }
                         unit.stats.tick = tick
                         event.battle.notifyEvent(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))

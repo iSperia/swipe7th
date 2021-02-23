@@ -40,6 +40,7 @@ class SwipeBattle(val balance: SwipeBalance) {
     var wave = 0
 
     val units = mutableListOf<BattleUnit>()
+    private val deadUnits = mutableListOf<BattleUnit>()
 
     suspend fun propagateInternalEvent(event: InternalBattleEvent) {
         aliveUnits().forEach { battleUnit ->
@@ -73,6 +74,8 @@ class SwipeBattle(val balance: SwipeBalance) {
         checkAutoTickTiles()
         produceGuaranteedTile()
         propagateInternalEvent(InternalBattleEvent.TickEvent(this, preventTickers))
+        deadUnits.forEach { events.send(BattleEvent.PersonageDeadEvent(it.toViewModel())) }
+        deadUnits.clear()
     }
 
     private suspend fun checkAutoTickTiles() {
@@ -226,6 +229,9 @@ class SwipeBattle(val balance: SwipeBalance) {
             target.stats.resist.value = max(0, target.stats.resist.value - damage.resistDeplete)
             println("${source.stats.skin} deals $damage to ${target.stats.skin}")
             events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
+            if (target.stats.health.value <= 0) {
+                deadUnits.add(target)
+            }
         } else if (damage.status == DamageProcessStatus.DAMAGE_EVADED) {
             events.send(BattleEvent.PersonageDamageEvadedEvent(target.toViewModel()))
         }

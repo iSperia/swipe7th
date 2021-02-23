@@ -81,17 +81,14 @@ class BattleController(
             is BattleEvent.PersonageDamageEvent -> {
                 val figure = figures.first { it.id == event.personage.id }
             }
+            is BattleEvent.PersonageDeadEvent -> {
+                val figure = figures.first { it.id == event.personage.id }
+                figure.switchPose(FigurePose.POSE_DEATH)
+                figure.isDead = true
+            }
             is BattleEvent.PersonageUpdateEvent -> {
                 val figure = figures.first { it.id == event.personage.id }
-                checkFigureDead(figure, event.personage)
             }
-        }
-    }
-
-    private fun checkFigureDead(figureController: FigureController, personage: PersonageViewModel) {
-        if (!figureController.isDead && personage.stats.health == 0) {
-            figureController.isDead = true
-            figureController.switchPose(FigurePose.POSE_DEATH)
         }
     }
 
