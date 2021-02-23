@@ -80,6 +80,15 @@ class BattleController(
             }
             is BattleEvent.PersonageDamageEvent -> {
                 val figure = figures.first { it.id == event.personage.id }
+                val controller = DamagePopupController(
+                        context,
+                        effectId++,
+                        this,
+                        figure.originX,
+                        figure.originY + figure.figureModel.height * scale + 10 * scale,
+                        event.damage
+                )
+                effects.add(controller)
             }
             is BattleEvent.PersonageDeadEvent -> {
                 val figure = figures.first { it.id == event.personage.id }

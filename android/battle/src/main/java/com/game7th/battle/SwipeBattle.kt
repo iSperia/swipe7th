@@ -40,7 +40,7 @@ class SwipeBattle(val balance: SwipeBalance) {
     var wave = 0
 
     val units = mutableListOf<BattleUnit>()
-    private val deadUnits = mutableListOf<BattleUnit>()
+    private val exportEventQueue = mutableListOf<BattleEvent>()
 
     suspend fun propagateInternalEvent(event: InternalBattleEvent) {
         aliveUnits().forEach { battleUnit ->
@@ -74,12 +74,12 @@ class SwipeBattle(val balance: SwipeBalance) {
         checkAutoTickTiles()
         produceGuaranteedTile()
         propagateInternalEvent(InternalBattleEvent.TickEvent(this, preventTickers))
-        sendDeadUnitsEvents()
+        sendDelayedEvents()
     }
 
-    suspend fun sendDeadUnitsEvents() {
-        deadUnits.forEach { events.send(BattleEvent.PersonageDeadEvent(it.toViewModel())) }
-        deadUnits.clear()
+    suspend fun sendDelayedEvents() {
+        exportEventQueue.forEach { events.send(it) }
+        exportEventQueue.clear()
     }
 
     private suspend fun checkAutoTickTiles() {
@@ -217,7 +217,7 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     suspend fun notifyAttack(source: BattleUnit, targets: List<Pair<BattleUnit, DamageProcessResult>>, attackIndex: Int) {
         events.send(BattleEvent.PersonageAttackEvent(source.toViewModel(), targets.map { Pair(it.first.toViewModel(), it.second) }, attackIndex))
-        sendDeadUnitsEvents()
+        sendDelayedEvents()
     }
 
     /*
@@ -233,9 +233,10 @@ class SwipeBattle(val balance: SwipeBalance) {
             target.stats.armor.value = max(0, target.stats.armor.value - damage.armorDeplete)
             target.stats.resist.value = max(0, target.stats.resist.value - damage.resistDeplete)
             println("${source.stats.skin} deals $damage to ${target.stats.skin}")
-            events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
+
+            exportEventQueue.add(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
             if (target.stats.health.value <= 0) {
-                deadUnits.add(target)
+                exportEventQueue.add(BattleEvent.PersonageDeadEvent(target.toViewModel()))
             }
         } else if (damage.status == DamageProcessStatus.DAMAGE_EVADED) {
             events.send(BattleEvent.PersonageDamageEvadedEvent(target.toViewModel()))

@@ -20,6 +20,7 @@ data class AttackGdxModel(
 data class FigureGdxModel(
     val name: String,
     val atlas: String,
+    val height: Int,
     val poses: List<PoseGdxModel>,
     val attacks: List<AttackGdxModel>
 )
