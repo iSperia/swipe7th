@@ -77,7 +77,7 @@ class SwipeBattle(val balance: SwipeBalance) {
         sendDeadUnitsEvents()
     }
 
-    private suspend fun sendDeadUnitsEvents() {
+    suspend fun sendDeadUnitsEvents() {
         deadUnits.forEach { events.send(BattleEvent.PersonageDeadEvent(it.toViewModel())) }
         deadUnits.clear()
     }
@@ -217,6 +217,7 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     suspend fun notifyAttack(source: BattleUnit, targets: List<Pair<BattleUnit, DamageProcessResult>>, attackIndex: Int) {
         events.send(BattleEvent.PersonageAttackEvent(source.toViewModel(), targets.map { Pair(it.first.toViewModel(), it.second) }, attackIndex))
+        sendDeadUnitsEvents()
     }
 
     /*
