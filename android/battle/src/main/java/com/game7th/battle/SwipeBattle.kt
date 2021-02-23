@@ -74,6 +74,10 @@ class SwipeBattle(val balance: SwipeBalance) {
         checkAutoTickTiles()
         produceGuaranteedTile()
         propagateInternalEvent(InternalBattleEvent.TickEvent(this, preventTickers))
+        sendDeadUnitsEvents()
+    }
+
+    private suspend fun sendDeadUnitsEvents() {
         deadUnits.forEach { events.send(BattleEvent.PersonageDeadEvent(it.toViewModel())) }
         deadUnits.clear()
     }
