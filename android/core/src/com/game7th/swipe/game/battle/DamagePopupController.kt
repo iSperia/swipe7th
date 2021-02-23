@@ -13,7 +13,8 @@ class DamagePopupController(
         private val battle: BattleController,
         val originX: Float,
         val originY: Float,
-        val value: Int
+        val value: Int,
+        val color: Color
 ) : ElementController(context, id) {
 
     var timePassed = 0f
@@ -22,16 +23,14 @@ class DamagePopupController(
     val showTime = 1.5f
     val disposeTime = 2f
 
-    val c = Color(1f, 0f, 0f, 1f)
-
     override fun render(batch: SpriteBatch, delta: Float) {
         timePassed += delta
 
         val progress = timePassed / showTime
-        c.a = max(1f, progress)
+        color.a = max(1f, progress)
 
         context.gameContext.font.apply {
-            color = c
+            color = this@DamagePopupController.color
             data.scaleX = 1f + 1f * progress
             data.scaleY = 1f + 1f * progress
         }

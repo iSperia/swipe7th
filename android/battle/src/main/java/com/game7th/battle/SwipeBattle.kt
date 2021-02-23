@@ -299,6 +299,7 @@ class SwipeBattle(val balance: SwipeBalance) {
             unit.stats.health.value += healAmount
             println("Battle: heal: $healAmount on ${unit.stats.skin}")
             events.send(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
+            exportEventQueue.add(BattleEvent.PersonageHealEvent(unit.toViewModel(), healAmount))
         }
     }
 }

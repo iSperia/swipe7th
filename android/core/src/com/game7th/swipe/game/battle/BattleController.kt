@@ -1,5 +1,6 @@
 package com.game7th.swipe.game.battle
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.game7th.battle.event.BattleEvent
 import com.game7th.battle.personage.PersonageViewModel
@@ -86,7 +87,8 @@ class BattleController(
                         this,
                         figure.originX,
                         figure.originY + figure.figureModel.height * scale + 10 * scale,
-                        event.damage
+                        event.damage,
+                        Color.RED
                 )
                 effects.add(controller)
             }
@@ -94,6 +96,19 @@ class BattleController(
                 val figure = figures.first { it.id == event.personage.id }
                 figure.switchPose(FigurePose.POSE_DEATH)
                 figure.isDead = true
+            }
+            is BattleEvent.PersonageHealEvent -> {
+                val figure = figures.first { it.id == event.personage.id }
+                val controller = DamagePopupController(
+                        context,
+                        effectId++,
+                        this,
+                        figure.originX,
+                        figure.originY + figure.figureModel.height * scale + 10 * scale,
+                        event.amount,
+                        Color.GREEN
+                )
+                effects.add(controller)
             }
             is BattleEvent.PersonageUpdateEvent -> {
                 val figure = figures.first { it.id == event.personage.id }
