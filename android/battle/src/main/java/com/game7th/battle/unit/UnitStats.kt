@@ -44,7 +44,8 @@ data class BattleUnit(
                     isStunned = !isNotStunned()
             ),
             skin = stats.skin,
-            id = id
+            id = id,
+            team = team.ordinal
     )
 
     fun isNotStunned(): Boolean {

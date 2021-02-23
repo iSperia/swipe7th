@@ -11,6 +11,7 @@ import com.game7th.battle.tilefield.tile.*
 import com.game7th.battle.unit.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlin.math.abs
 import kotlin.math.max
@@ -66,14 +67,6 @@ class SwipeBattle(val balance: SwipeBalance) {
     private suspend fun produceGuaranteedTile() {
         val event = InternalBattleEvent.ProduceGuaranteedTileEvent(this@SwipeBattle)
         propagateInternalEvent(event)
-        if (event.candidates.isEmpty()) return
-        event.candidates.random().let { tile ->
-            val position = tileField.calculateFreePosition()
-            position?.let { position ->
-                event.battle.tileField.tiles[position] = tile
-                event.battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
-            }
-        }
     }
 
     private suspend fun processTick(preventTickers: Boolean) {
@@ -97,13 +90,13 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     private suspend fun generateNpcs(config: BattleConfig) {
         events.send(BattleEvent.NewWaveEvent(wave))
-        val padding = if (config.waves[wave].size == 1) 2 else 0
         config.waves[wave].withIndex().forEach {
             val unitStats = UnitFactory.produce(it.value.name, balance, it.value.level)
+            val position = 4 - it.index
             unitStats?.let { stats ->
-                val unit = BattleUnit(newPersonageId(), 7 - it.index - padding, stats, Team.RIGHT)
+                val unit = BattleUnit(newPersonageId(), position, stats, Team.RIGHT)
                 units.add(unit)
-                events.send(BattleEvent.CreatePersonageEvent(unit.toViewModel(), 7 - it.index - padding))
+                events.send(BattleEvent.CreatePersonageEvent(unit.toViewModel(), position))
             }
         }
     }
@@ -142,13 +135,17 @@ class SwipeBattle(val balance: SwipeBalance) {
         if (!events.isClosedForSend) {
             var motionEvents = tileField.attemptSwipe(dx, dy)
             var hadAnyEvents = false
+            val eventCache = mutableListOf<BattleEvent>()
             while (motionEvents.isNotEmpty()) {
                 hadAnyEvents = true
-                events.send(BattleEvent.SwipeMotionEvent(motionEvents))
+                eventCache.add(BattleEvent.SwipeMotionEvent(motionEvents))
                 //TODO: post process stacks stages etc.
                 motionEvents = tileField.attemptSwipe(dx, dy)
             }
             if (hadAnyEvents) {
+                runBlocking {
+                    eventCache.forEach { events.send(it) }
+                }
                 processTick(false)
                 processTickUnits()
                 tick++
@@ -195,8 +192,8 @@ class SwipeBattle(val balance: SwipeBalance) {
         }
     }
 
-    suspend fun notifyAttack(source: BattleUnit, target: BattleUnit) {
-        events.send(BattleEvent.PersonageAttackEvent(source.toViewModel(), target.toViewModel()))
+    suspend fun notifyAttack(source: BattleUnit, targets: List<Pair<BattleUnit, DamageProcessResult>>, attackIndex: Int) {
+        events.send(BattleEvent.PersonageAttackEvent(source.toViewModel(), targets.map { Pair(it.first.toViewModel(), it.second) }, attackIndex))
     }
 
     /*
@@ -211,6 +208,7 @@ class SwipeBattle(val balance: SwipeBalance) {
             target.stats.health.value = max(0, target.stats.health.value - totalDamage)
             target.stats.armor.value = max(0, target.stats.armor.value - damage.armorDeplete)
             target.stats.resist.value = max(0, target.stats.resist.value - damage.resistDeplete)
+            println("${source.stats.skin} deals $damage to ${target.stats.skin}")
             events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
         } else if (damage.status == DamageProcessStatus.DAMAGE_EVADED) {
             events.send(BattleEvent.PersonageDamageEvadedEvent(target.toViewModel()))
@@ -225,14 +223,6 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     suspend fun notifyTileRemoved(id: Int) {
         events.send(BattleEvent.RemoveTileEvent(id))
-    }
-
-    suspend fun notifyAoeProjectile(skin: String, unit: BattleUnit, direction: Int) {
-        events.send(BattleEvent.ShowNpcAoeEffect(skin, unit.id, direction))
-    }
-
-    suspend fun notifyTargetedProjectile(skin: String, source: BattleUnit, target: BattleUnit) {
-        events.send(BattleEvent.ShowProjectile(skin, source.id, target.id))
     }
 
     suspend fun applyPoison(target: BattleUnit, poisonTicks: Int, poisonDmg: Int) {
@@ -285,20 +275,6 @@ fun SwipeTile.toViewModel(): TileViewModel {
             id,
             type.skin,
             stackSize,
-            tileBackground(),
-            tileBackgroundIndex(),
-            foreground()
+            type.maxStackSize
     )
-}
-
-fun SwipeTile.tileBackground() = if (type.background) "tile_bg" else null
-
-fun SwipeTile.tileBackgroundIndex() =
-        if (!type.background) 0
-        else if (tier1()) 1
-        else 0
-
-fun SwipeTile.foreground(): String? = when {
-    type.background && tier2() -> type.fraction.id
-    else -> null
 }

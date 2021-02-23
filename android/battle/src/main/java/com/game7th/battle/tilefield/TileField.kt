@@ -70,7 +70,7 @@ class TileField(private val merger: TileFieldMerger) {
     }
 
     fun calculateFreePosition(): Int? {
-        return (0..35).filter { !tiles.containsKey(it) }.let {
+        return (0 until WIDTH * HEIGHT).filter { !tiles.containsKey(it) }.let {
             if (it.isEmpty()) null else it.random()
         }
     }
@@ -94,7 +94,7 @@ class TileField(private val merger: TileFieldMerger) {
     }
 
     companion object {
-        const val WIDTH = 6
-        const val HEIGHT = 6
+        const val WIDTH = 5
+        const val HEIGHT = 5
     }
 }

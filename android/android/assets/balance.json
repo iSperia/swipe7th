@@ -2,24 +2,24 @@
   "version": "1.0",
 
   "stats": {
-    "baseHealth":50,
-    "healthPerBody": 20,
-    "healthPerLevel": 10,
-    "armorPerBody": 20,
-    "resistPerMind": 10,
-    "regenerationPerSpirit": 1,
+    "baseHealth":15,
+    "healthPerBody": 2,
+    "healthPerLevel": 4,
+    "armorPerBody": 1,
+    "resistPerMind": 1,
+    "regenerationPerSpirit": 0.5,
     "wizdomMultiplier": 0.08,
     "evasionPerSpirit": 1,
     "evasion": { "k": 14, "p": 0.85 }
   },
 
-  "slime": {"damage": {"f": 30, "m":  0.3}, "hp":  {"f":  50, "k": 0.097, "m": 40}},
+  "slime": {"damage": {"k": 0.15, "a":  1.75, "f":  3, "c":  2}, "hp":  {"k": 0.5, "a":  2, "f":  3, "c":  5}},
   "fire_element":  {"damage": {"k": 0.09, "f": 40, "m":  20, "o": 0.5}, "hp":  {"f":  100, "k": 0.097, "m": 100}, "scorch_k": 0.9, "scorch_duration": 3},
   "earth_element": {"damage": {"k": 0.09, "f": 40, "m":  20, "o": 0.5}, "hp":  {"f":  120, "k": 0.097, "m": 120}, "stun_duration":  {"min": 2, "max":  3}},
   "citadel_warlock": {"damage": {"k": 0.09, "f":  35, "m":  17.5, "o": 0.5 }, "healPercentage": 0.5, "hp":  {"f":  50, "k": 0.097, "m": 40}},
   "boss_blood_knight": {"damage": {"k": 0.0075, "f": 20, "m":  20, "o": 0.5}, "hp":  {"f":  100, "k": 0.099, "m": 100}, "heal_k":  1.5},
 
-  "gladiator": {"c":  8, "k":  0.05, "str_k":  0.05, "tile_k": 0.2},
+  "gladiator": { "c":  8, "k":  0.05, "t1":  3, "t2" :  4, "a1n":  3, "a2n": 2, "a3n":  0.05 },
   "poison_archer": {"c":  20, "k":  0.05, "spi_k":  0.05, "tile_k": 0.05, "dot_k":  0.25, "tile_m":  0.25, "d":  10},
   "gunner": {"c":  2, "k":  0.05, "mind_k":  0.05, "tile_k": 0.1, "bullets":  24}
 }

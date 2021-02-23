@@ -49,7 +49,7 @@ class SwipeGameGdx(private val storage: PersistentStorage) : Game() {
         val balanceFile = Gdx.files.internal("balance.json")
         val balanceText = balanceFile.readString()
         val balance = Gson().fromJson<SwipeBalance>(balanceText, SwipeBalance::class.java)
-        context = GdxGameContext(atlas, font, balance)
+        context = GdxGameContext(atlas, font, balance, scale)
 
         Gdx.input.inputProcessor = multiplexer
 

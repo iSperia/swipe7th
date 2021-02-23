@@ -34,6 +34,15 @@ data class LinearDamageBalance(
         val m: Float    //scale
 )
 
+data class PolinomBalance(
+        val k: Float,
+        val a: Float,
+        val f: Float,
+        val c: Float
+) {
+    fun calculate(x: Int) = (k * Math.pow(x.toDouble(), a.toDouble()).toFloat() + f * x + c).toInt()
+}
+
 /**
  * DMG = F + LVL * ( 2 * LVL - 1 ) * M
  */
@@ -65,8 +74,8 @@ data class RangeBalance(
 }
 
 data class SlimeBalance(
-    val hp: HpBalance,
-    val damage: SquareDamageBalance
+    val hp: PolinomBalance,
+    val damage: PolinomBalance
 )
 
 data class CitadelWarlockBalance(
@@ -97,8 +106,11 @@ data class BossBloodKnightBalance(
 data class GladiatorBalance(
         val c: Int,
         val k: Float,
-        val str_k: Float,
-        val tile_k: Float
+        val a1n: Float,
+        val a2n: Float,
+        val a3n: Float,
+        val t1: Int,
+        val t2: Int
 )
 
 data class PoisonArcherBalance(

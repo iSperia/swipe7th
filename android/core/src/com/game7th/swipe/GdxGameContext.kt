@@ -7,5 +7,6 @@ import com.game7th.battle.balance.SwipeBalance
 data class GdxGameContext(
         val atlas: TextureAtlas,
         val font: BitmapFont,
-        val balance: SwipeBalance
+        val balance: SwipeBalance,
+        val scale: Float
 )

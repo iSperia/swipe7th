@@ -13,9 +13,7 @@ sealed class InternalBattleEvent(
      */
     class ProduceGuaranteedTileEvent(
             battle: SwipeBattle
-    ) : InternalBattleEvent(battle) {
-        val candidates = mutableListOf<SwipeTile>()
-    }
+    ) : InternalBattleEvent(battle)
 
     /**
      * Event is sent each tick happens
@@ -48,6 +46,10 @@ sealed class InternalBattleEvent(
      * Launched once battle started
      */
     class BattleStartedEvent(
+            battle: SwipeBattle
+    ) : InternalBattleEvent(battle)
+
+    class TickEndEvent(
             battle: SwipeBattle
     ) : InternalBattleEvent(battle)
 

@@ -1,0 +1,619 @@
+
+personage_gladiator.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+body_gladiator0002
+  rotate: false
+  xy: 512, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0007
+  rotate: false
+  xy: 1536, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0012
+  rotate: false
+  xy: 1536, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0015
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0025
+  rotate: false
+  xy: 1024, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0028
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0001
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0020
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0053
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0033
+  rotate: false
+  xy: 512, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0038
+  rotate: false
+  xy: 1024, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0041
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0046
+  rotate: false
+  xy: 512, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0049
+  rotate: false
+  xy: 0, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0051
+  rotate: false
+  xy: 1536, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0054
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0059
+  rotate: false
+  xy: 1024, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0062
+  rotate: false
+  xy: 0, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0064
+  rotate: false
+  xy: 1536, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+
+personage_gladiator2.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+body_gladiator0004
+  rotate: false
+  xy: 0, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0006
+  rotate: false
+  xy: 1024, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0009
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0014
+  rotate: false
+  xy: 1024, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0017
+  rotate: false
+  xy: 0, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0019
+  rotate: false
+  xy: 1536, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0022
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0027
+  rotate: false
+  xy: 1024, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0030
+  rotate: false
+  xy: 512, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0032
+  rotate: false
+  xy: 1536, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0035
+  rotate: false
+  xy: 1536, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0040
+  rotate: false
+  xy: 1536, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0043
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0048
+  rotate: false
+  xy: 512, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0056
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0061
+  rotate: false
+  xy: 512, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+
+personage_gladiator3.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+body_gladiator0003
+  rotate: false
+  xy: 1536, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0008
+  rotate: false
+  xy: 1024, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0011
+  rotate: false
+  xy: 512, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0016
+  rotate: false
+  xy: 512, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0021
+  rotate: false
+  xy: 1024, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0024
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0029
+  rotate: false
+  xy: 1024, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0034
+  rotate: false
+  xy: 1536, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0037
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0042
+  rotate: false
+  xy: 512, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0045
+  rotate: false
+  xy: 0, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0047
+  rotate: false
+  xy: 1536, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0050
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0055
+  rotate: false
+  xy: 1536, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0058
+  rotate: false
+  xy: 0, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0063
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+
+personage_gladiator4.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+body_gladiator0005
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0010
+  rotate: false
+  xy: 1536, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0013
+  rotate: false
+  xy: 0, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0018
+  rotate: false
+  xy: 512, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0023
+  rotate: false
+  xy: 1024, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0026
+  rotate: false
+  xy: 512, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0031
+  rotate: false
+  xy: 1536, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0036
+  rotate: false
+  xy: 1024, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0039
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0044
+  rotate: false
+  xy: 512, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0052
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0057
+  rotate: false
+  xy: 1024, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0060
+  rotate: false
+  xy: 0, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+body_gladiator0065
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gladiator_wave0001
+  rotate: false
+  xy: 1600, 384
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0002
+  rotate: false
+  xy: 1664, 768
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0003
+  rotate: false
+  xy: 1536, 768
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0004
+  rotate: false
+  xy: 1728, 768
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0005
+  rotate: false
+  xy: 1664, 896
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0006
+  rotate: false
+  xy: 1728, 640
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0007
+  rotate: false
+  xy: 1600, 512
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0008
+  rotate: false
+  xy: 1536, 640
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0009
+  rotate: false
+  xy: 1536, 256
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0010
+  rotate: false
+  xy: 1600, 640
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0011
+  rotate: false
+  xy: 1536, 896
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0012
+  rotate: false
+  xy: 1664, 640
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0013
+  rotate: false
+  xy: 1600, 768
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0014
+  rotate: false
+  xy: 1664, 512
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0015
+  rotate: false
+  xy: 1728, 896
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0016
+  rotate: false
+  xy: 1600, 896
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0017
+  rotate: false
+  xy: 1792, 896
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0018
+  rotate: false
+  xy: 1536, 512
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0019
+  rotate: false
+  xy: 1792, 768
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0020
+  rotate: false
+  xy: 1536, 384
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1

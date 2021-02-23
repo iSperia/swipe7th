@@ -35,7 +35,6 @@ class BattleView(private val gameContext: GdxGameContext) : Group() {
     }
 
     fun processAction(event: BattleEvent) {
-        println("Processing action ${event.javaClass.name}")
         when (event) {
             is BattleEvent.CreatePersonageEvent -> {
                 val personage = PersonageActor(gameContext, event.personage)
@@ -43,25 +42,25 @@ class BattleView(private val gameContext: GdxGameContext) : Group() {
                 personage.name = "${event.personage.id}"
                 personages.addActor(personage)
             }
-            is BattleEvent.PersonageAttackEvent -> {
-                val source = personages.findActor<PersonageActor>("${event.source.id}")
-                val target = personages.findActor<PersonageActor>("${event.target.id}")
-                val animationDistance = if (source.x > target.x) target.x + 15 else target.x - 15
-
-                val sx = source.x
-                val sy = source.y
-
-                source.addAction(SequenceAction(
-                        MoveToAction().apply {
-                            setPosition(target.x + animationDistance, target.y)
-                            duration = 0.15f
-                        },
-                        MoveToAction().apply {
-                            setPosition(sx, sy)
-                            duration = 0.1f
-                        }
-                ))
-            }
+//            is BattleEvent.PersonageAttackEvent -> {
+//                val source = personages.findActor<PersonageActor>("${event.source.id}")
+//                val target = personages.findActor<PersonageActor>("${event.?target.id}")
+//                val animationDistance = if (source.x > target.x) target.x + 15 else target.x - 15
+//
+//                val sx = source.x
+//                val sy = source.y
+//
+//                source.addAction(SequenceAction(
+//                        MoveToAction().apply {
+//                            setPosition(target.x + animationDistance, target.y)
+//                            duration = 0.15f
+//                        },
+//                        MoveToAction().apply {
+//                            setPosition(sx, sy)
+//                            duration = 0.1f
+//                        }
+//                ))
+//            }
             is BattleEvent.PersonageDamageEvent -> {
                 //TODO: add animated numbers
                 val personageId = event.personage.id
