@@ -26,7 +26,7 @@ class AttackAction : BattleAction {
         tile ?: return
         val targets = target(battle, unit)
         val damages = targets.map { target ->
-            val damage = damage(battle, unit, target, tile.type.maxStackSize, tile.stackSize)
+            val damage = damage(battle, unit, target, tile.stackSize, tile.type.maxStackSize)
             val damageResult = battle.processDamage(target, unit, damage)
             Pair(target, damageResult)
         }
