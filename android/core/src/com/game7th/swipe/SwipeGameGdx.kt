@@ -3,6 +3,7 @@ package com.game7th.swipe
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
@@ -45,7 +46,9 @@ class SwipeGameGdx(private val storage: PersistentStorage) : Game() {
         scale = Gdx.graphics.width / 480f
 
         val atlas = TextureAtlas(Gdx.files.internal("pack_0.atlas"))
-        val font = BitmapFont()
+        val font = BitmapFont(Gdx.files.internal("atarian.fnt"), Gdx.files.internal("atarian_0.png"), false).apply {
+            color = Color.WHITE
+        }
         val balanceFile = Gdx.files.internal("balance.json")
         val balanceText = balanceFile.readString()
         val balance = Gson().fromJson<SwipeBalance>(balanceText, SwipeBalance::class.java)
