@@ -207,6 +207,7 @@ class SwipeBattle(val balance: SwipeBalance) {
             target.stats.health.value = max(0, target.stats.health.value - totalDamage)
             target.stats.armor.value = max(0, target.stats.armor.value - damage.armorDeplete)
             target.stats.resist.value = max(0, target.stats.resist.value - damage.resistDeplete)
+            println("${source.stats.skin} deals $damage to ${target.stats.skin}")
             events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
         } else if (damage.status == DamageProcessStatus.DAMAGE_EVADED) {
             events.send(BattleEvent.PersonageDamageEvadedEvent(target.toViewModel()))

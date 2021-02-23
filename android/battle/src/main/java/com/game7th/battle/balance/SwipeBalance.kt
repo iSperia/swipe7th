@@ -33,6 +33,15 @@ data class LinearDamageBalance(
         val m: Float    //scale
 )
 
+data class PolinomBalance(
+        val k: Float,
+        val a: Float,
+        val f: Float,
+        val c: Float
+) {
+    fun calculate(x: Int) = (k * Math.pow(x.toDouble(), a.toDouble()).toFloat() + f * x + c).toInt()
+}
+
 /**
  * DMG = F + LVL * ( 2 * LVL - 1 ) * M
  */
@@ -60,8 +69,8 @@ data class RangeBalance(
 }
 
 data class SlimeBalance(
-    val hp: HpBalance,
-    val damage: SquareDamageBalance
+    val hp: PolinomBalance,
+    val damage: PolinomBalance
 )
 
 data class CitadelWarlockBalance(

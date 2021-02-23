@@ -87,7 +87,7 @@ class GameScreen(private val game: SwipeGameGdx,
                         PersonageConfig(UnitType.GLADIATOR, personageSquadId + 1)
                 ),
                 waves = actService.getActConfig(actId).findNode(locationId)?.waves?.map {
-                    it.map { PersonageConfig(it.unitType, it.level) }
+                    it.map { PersonageConfig(it.unitType, it.level + (difficulty-1) * 3) }
                 } ?: emptyList()
         )
 

@@ -7,7 +7,6 @@ import com.game7th.battle.balance.SwipeBalance
 import com.game7th.battle.event.TileTemplate
 import com.game7th.battle.tilefield.tile.TileNames
 import com.game7th.metagame.unit.UnitType
-import kotlin.math.exp
 
 enum class UnitStatPriority {
     PRIMARY, SECONDARY, TERTIARY;
@@ -48,17 +47,17 @@ object UnitFactory {
                 }
             }
             UnitType.GREEN_SLIME -> {
-                val hp = balance.slime.hp.let { it.f + it.m * level + exp(it.k * level) }.toInt()
+                val hp = balance.slime.hp.calculate(level)
                 val slime = UnitStats(skin = "personage_slime", level = level, health = CappedStat(hp, hp))
                 slime += ability {
                     ticker {
-                        ticksToTrigger = 4
+                        ticksToTrigger = 3
                         body = { battle, unit ->
-                            val damage = (battle.balance.slime.damage.f + (unit.stats.level * (2 * unit.stats.level - 1)) * battle.balance.slime.damage.m).toInt()
+                            val damage = balance.slime.damage.calculate(unit.stats.level)
                             if (damage > 0) {
                                 val target = battle.findClosestAliveEnemy(unit)
                                 target?.let { target ->
-                                    val damageResult = battle.processDamage(target, unit, DamageVector(1, 0, 0))
+                                    val damageResult = battle.processDamage(target, unit, DamageVector(damage, 0, 0))
                                     battle.notifyAttack(unit, listOf(Pair(target, damageResult)), 0)
                                 }
                             }
@@ -92,16 +91,16 @@ object UnitFactory {
             mindPriority: UnitStatPriority,
             processor: (UnitStats) -> Unit
     ): UnitStats {
-        val totalStats = (level - 1) * (level) / 2
-        val tertiaryStat = totalStats / 6 + 2
-        val secondaryStat = totalStats / 3 + 4
-        val primaryStat = totalStats - secondaryStat - tertiaryStat + 12
+        val totalStats = (level + 1) * (level) / 2
+        val tertiaryStat = totalStats / 6 + 1
+        val secondaryStat = totalStats / 3 + 2
+        val primaryStat = totalStats - secondaryStat - tertiaryStat + 6
 
         val body = bodyPriority.selectStat(primaryStat, secondaryStat, tertiaryStat)
         val spirit = spiritPriority.selectStat(primaryStat, secondaryStat, tertiaryStat)
         val mind = mindPriority.selectStat(primaryStat, secondaryStat, tertiaryStat)
 
-        val health = b.stats.baseHealth + b.stats.healthPerBody * body + b.stats.healthPerLevel * (level - 1)
+        val health = b.stats.baseHealth + b.stats.healthPerBody * body + b.stats.healthPerLevel * level
         val armor = body * b.stats.armorPerBody
         val resist = mind * b.stats.resistPerMind
 

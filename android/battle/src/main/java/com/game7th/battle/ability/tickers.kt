@@ -26,12 +26,6 @@ class TickerTrigger : AbilityTrigger {
                     event.battle.notifyEvent(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
                 }
             }
-            is InternalBattleEvent.BattleStartedEvent -> {
-                tick = Random.nextInt(min(3, ticksToTrigger))
-                unit.stats.maxTick = ticksToTrigger
-                unit.stats.tick = tick
-                event.battle.notifyEvent(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
-            }
         }
     }
 }

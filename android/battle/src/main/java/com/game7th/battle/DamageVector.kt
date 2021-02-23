@@ -5,6 +5,8 @@ data class DamageVector(
         val magical: Int,
         val chaos: Int
 ) {
+    override fun toString(): String = "($physical, $magical, $chaos)"
+
     fun totalDamage() = physical + magical + chaos
 }
 
@@ -18,4 +20,6 @@ data class DamageProcessResult(
         val armorDeplete: Int,
         val resistDeplete: Int,
         val status: DamageProcessStatus
-)
+) {
+    override fun toString(): String = "$damage {$armorDeplete/$resistDeplete} status=$status"
+}
