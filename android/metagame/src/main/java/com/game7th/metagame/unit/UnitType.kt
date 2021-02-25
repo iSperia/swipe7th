@@ -24,4 +24,10 @@ enum class UnitType {
         BOSS_BLOOD_KNIGHT -> "personage_boss_blood_knight"
         else -> "personage_dead"
     }
+
+    fun getPortrait() : String = when (this) {
+        GLADIATOR -> "portrait_gladiator"
+        GREEN_SLIME -> "portrait_slime"
+        else -> "portrait_unknown"
+    }
 }

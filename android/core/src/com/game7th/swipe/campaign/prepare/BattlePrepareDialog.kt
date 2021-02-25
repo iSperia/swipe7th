@@ -96,7 +96,7 @@ class BattlePrepareDialog(
 
     init {
         w = scale * 336
-        h = scale * 177
+        h = scale * 330f
         width = w
         height = h
         x = (game.width - this.width) / 2f
@@ -121,10 +121,10 @@ class BattlePrepareDialog(
 
         labelDifficulty = Label("Chose difficulty:", Label.LabelStyle(context.font, Color.WHITE)).apply {
             x = 94 * game.scale
-            y = h - 22 * game.scale
+            y = 300f * game.scale
             width = 71 * game.scale
-            height = 12 * game.scale
-            setFontScale(12 * game.scale / 15f)
+            height = 30 * game.scale
+            setFontScale(1f)
         }
         labelDifficulty.touchable = Touchable.disabled
         addActor(labelDifficulty)
@@ -135,7 +135,7 @@ class BattlePrepareDialog(
                 width = 24 * game.scale
                 height = 24 * game.scale
                 x = (168 + i * 26) * game.scale
-                y = h - 28 * game.scale
+                y = 303f * game.scale
             }
             starImages.addActor(image)
             image.onClick {
@@ -151,11 +151,11 @@ class BattlePrepareDialog(
                 null,
                 context.font
         )).apply {
-            label.setFontScale(12f * game.scale / 15)
+            label.setFontScale(1f)
             x = 240 * game.scale
-            y = h - game.scale * 173
+            y = 5f * game.scale
             width = game.scale * 90
-            height = game.scale * 14
+            height = 20 * game.scale
         }
         addActor(buttonStart)
         buttonStart.onClick {
@@ -164,13 +164,13 @@ class BattlePrepareDialog(
 
         personageSquadBrowser = SquadBrowserActor(context, personageAdapter).apply {
             x = 6 * context.scale
-            y = h - 153 * context.scale
+            y = 30 * context.scale
         }
         addActor(personageSquadBrowser)
 
         npcSquadBrowser = SquadBrowserActor(context, npcAdapter).apply {
             x = 170 * context.scale
-            y = h - 153 * context.scale
+            y = 30 * context.scale
         }
         addActor(npcSquadBrowser)
     }

@@ -28,8 +28,8 @@ class SquadBrowserActor(
 
     init {
         background = Image(context.uiAtlas.createPatch("panel_blue")).apply {
-            width = 160 * context.scale
-            height = 105 * context.scale
+            width = 168f * context.scale
+            height = 270f * context.scale
         }
         background.touchable = Touchable.disabled
         addActorAt(0, background)
@@ -37,14 +37,13 @@ class SquadBrowserActor(
         btnPrev = Button(Button.ButtonStyle(TextureRegionDrawable(context.uiAtlas.findRegion("arrowBlue_left")), null, null)).apply {
             width = context.scale * 24
             height = context.scale * 24
-            x = 2 * context.scale
-            y = 40 * context.scale
+            y = 113f * context.scale
         }
         btnNext = Button(Button.ButtonStyle(TextureRegionDrawable(context.uiAtlas.findRegion("arrowBlue_right")), null, null)).apply {
             width = context.scale * 24
             height = context.scale * 24
-            x = 134 * context.scale
-            y = 40 * context.scale
+            x = 144f * context.scale
+            y = 113f * context.scale
         }
         addActor(btnPrev)
         addActor(btnNext)
@@ -67,7 +66,7 @@ class SquadBrowserActor(
             it.remove()
         }
         activeSquad = SquadPreviewActor(context, adapter.getSquad(index)).apply {
-            x = context.scale * 12
+            x = 24 * context.scale
         }
         addActorAt(1, activeSquad)
         activeSquad?.touchable = Touchable.disabled

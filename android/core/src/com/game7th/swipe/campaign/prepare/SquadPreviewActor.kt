@@ -20,19 +20,20 @@ class SquadPreviewActor(
 
     init {
         addActor(unitsGroup)
+        val size = config.units.size
         config.units.withIndex().forEach { (index, unit) ->
             val unitActor = SmallUnitPreviewActor(context, unit).apply {
-                x = context.scale * 30 * index
+                y = ( 180f - 60f * index ) * context.scale
             }
             unitsGroup.addActor(unitActor)
         }
 
         squadNameLabel = Label(config.name, Label.LabelStyle(context.font, Color.WHITE)).apply {
-            y = 80f * context.scale
-            x = 15f * context.scale
-            width = 90f * context.scale
-            height = 12f * context.scale
-            setFontScale(12f / 15 * context.scale)
+            y = 240f * context.scale
+            x = 0f
+            width = 120f * context.scale
+            height = 30f * context.scale
+            setFontScale(32f / 30f)
             setAlignment(Align.center)
         }
         addActor(squadNameLabel)
