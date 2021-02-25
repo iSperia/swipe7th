@@ -40,10 +40,12 @@ data class BattleUnit(
                     magicDefense = stats.resist.value,
                     maxMagicDefense = stats.resist.maxValue,
                     tick = stats.tick,
+                    tickAbility = stats.tickAbility,
                     maxTick = stats.maxTick,
                     isStunned = !isNotStunned()
             ),
             skin = stats.skin,
+            portrait = stats.portrait,
             id = id,
             team = team.ordinal
     )
@@ -72,6 +74,7 @@ data class UnitAilment(
  */
 data class UnitStats(
         val skin: String,
+        val portrait: String = "portrait_unknown",
 
         val level: Int,
         val body: Int = 0,
@@ -87,6 +90,7 @@ data class UnitStats(
 
         var tick: Int = 0,
         var maxTick: Int = 0,
+        var tickAbility: String? = null,
 
         var ailments: MutableList<UnitAilment> = mutableListOf()
 ) {

@@ -9,5 +9,6 @@ data class GameContextWrapper(
         val gdxModel: GdxModel,
         val width: Float,
         val height: Float,
-        val atlases: Map<String, TextureAtlas>
+        val atlases: Map<String, TextureAtlas>,
+        val scale: Float
 )

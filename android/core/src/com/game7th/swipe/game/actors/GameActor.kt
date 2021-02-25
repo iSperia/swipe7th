@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.game7th.battle.event.BattleEvent
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.game.actors.ui.GameFinishedDialog
+import com.game7th.swipe.game.battle.hud.HudGroup
 import kotlinx.coroutines.launch
 import ktx.actors.onClick
 import ktx.async.KtxAsync
@@ -23,6 +24,7 @@ class GameActor(
     lateinit var font: BitmapFont
     val tileField: TileFieldView
     val battleField: BattleView
+    val hudGroup: HudGroup
 
     var buttonConcede: Label
 
@@ -33,6 +35,11 @@ class GameActor(
             y = 0f
         }
         addActor(tileField)
+
+        hudGroup = HudGroup(context).apply {
+            y = TILE_FIELD_SCALE * 5.5f * 36f
+        }
+        addActor(hudGroup)
 
         battleField = BattleView(context)
         addActor(battleField)
@@ -71,6 +78,12 @@ class GameActor(
         when (event) {
             is BattleEvent.VictoryEvent -> debugShowBigText(true, "Victory")
             is BattleEvent.DefeatEvent -> debugShowBigText(false, "Defeat")
+            is BattleEvent.CreatePersonageEvent -> {
+                hudGroup.showHud(event.position, event.personage)
+            }
+            is BattleEvent.PersonageUpdateEvent -> {
+                hudGroup.updateHud(event.personage)
+            }
         }
     }
 

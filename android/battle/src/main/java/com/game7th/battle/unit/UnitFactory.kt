@@ -26,7 +26,7 @@ enum class UnitStatPriority {
 object UnitFactory {
     fun produce(type: UnitType, balance: SwipeBalance, level: Int): UnitStats? {
         return when (type) {
-            UnitType.GLADIATOR -> producePersonage(balance, "personage_gladiator", level, UnitStatPriority.PRIMARY, UnitStatPriority.SECONDARY, UnitStatPriority.TERTIARY) {
+            UnitType.GLADIATOR -> producePersonage(balance, "personage_gladiator", "portrait_gladiator", level, UnitStatPriority.PRIMARY, UnitStatPriority.SECONDARY, UnitStatPriority.TERTIARY) {
                 val strikeTemplate = TileTemplate(TileNames.GLADIATOR_STRIKE, balance.gladiator.t1)
                 val waveTemplate = TileTemplate(TileNames.GLADIATOR_WAVE, balance.gladiator.t2)
                 val dropTemplate = TileTemplate(TileNames.GLADIATOR_DROP, 0)
@@ -59,10 +59,10 @@ object UnitFactory {
             }
             UnitType.GREEN_SLIME -> {
                 val hp = balance.slime.hp.calculate(level)
-                val slime = UnitStats(skin = "personage_slime", level = level, health = CappedStat(hp, hp))
+                val slime = UnitStats(skin = "personage_slime", portrait = "portrait_slime", level = level, health = CappedStat(hp, hp))
                 slime += ability {
                     ticker {
-                        bodies[TickerEntry(3, 3, "slime_attack")] = { battle, unit ->
+                        bodies[TickerEntry(3, 3, "attack")] = { battle, unit ->
                             val damage = balance.slime.damage.calculate(unit.stats.level)
                             if (damage > 0) {
                                 val target = battle.findClosestAliveEnemy(unit)
@@ -72,7 +72,7 @@ object UnitFactory {
                                 }
                             }
                         }
-                        bodies[TickerEntry(1, 2, "slime_splash")] = { battle, unit ->
+                        bodies[TickerEntry(1, 2, "impact")] = { battle, unit ->
                             battle.tileField.calculateFreePosition()?.let { position ->
                                 val tile = SwipeTile(TileTemplate("slime_splash", balance.slime.a2l), battle.tileField.newTileId(), balance.slime.a2l, true)
                                 battle.tileField.tiles[position] = tile
@@ -103,6 +103,7 @@ object UnitFactory {
     private fun producePersonage(
             b: SwipeBalance,
             skin: String,
+            portrait: String,
             level: Int,
             bodyPriority: UnitStatPriority,
             spiritPriority: UnitStatPriority,
@@ -124,6 +125,7 @@ object UnitFactory {
 
         return UnitStats(
                 skin = skin,
+                portrait = portrait,
                 level = level,
                 body = body,
                 spirit = spirit,

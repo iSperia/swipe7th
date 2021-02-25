@@ -20,6 +20,7 @@ data class PersonageStats(
 
         val tick: Int,
         val maxTick: Int,
+        val tickAbility: String?,
 
         val isStunned: Boolean
 )

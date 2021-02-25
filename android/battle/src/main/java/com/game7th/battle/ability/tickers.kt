@@ -26,6 +26,18 @@ class TickerTrigger : AbilityTrigger {
     override suspend fun process(event: InternalBattleEvent, unit: BattleUnit) {
         when (event) {
             is InternalBattleEvent.TickEvent -> {
+                if (body != null) {
+                    if (!event.preventTickers) {
+                        tick++
+                        if (tick >= ticksToTrigger && unit.isNotStunned() && unit.stats.health.value > 0) {
+                            tick = 0
+                            body!!(event.battle, unit)
+                            body = null
+                        }
+                        unit.stats.tick = tick
+                        event.battle.notifyEvent(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
+                    }
+                }
                 if (body == null) {
                     //check out the ticker
                     val sumWeight = bodies.keys.sumBy { it.weight }
@@ -39,17 +51,10 @@ class TickerTrigger : AbilityTrigger {
                         body = it.value
                         tick = 0
                         ticksToTrigger = it.key.ticksToTrigger
-                    }
-                } else {
-                    if (!event.preventTickers) {
-                        tick++
-                        if (tick >= ticksToTrigger && unit.isNotStunned() && unit.stats.health.value > 0) {
-                            tick = 0
-                            body!!(event.battle, unit)
-                            body = null
-                        }
-                        unit.stats.tick = tick
-                        event.battle.notifyEvent(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
+                        unit.stats.tickAbility = it.key.name
+                        unit.stats.maxTick = ticksToTrigger
+                        unit.stats.tick = 0
+                        event.battle.notifyPersonageUpdated(unit)
                     }
                 }
             }

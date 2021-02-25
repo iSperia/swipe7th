@@ -6,42 +6,42 @@ filter: Nearest, Nearest
 repeat: none
 armor_bar_black
   rotate: false
-  xy: 257, 80
+  xy: 480, 147
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
   index: -1
 armor_bar_grey
   rotate: false
-  xy: 944, 322
-  size: 5, 1
-  orig: 5, 1
+  xy: 96, 24
+  size: 20, 20
+  orig: 20, 20
   offset: 0, 0
   index: -1
 battle_bg
   rotate: false
-  xy: 0, 375
+  xy: 0, 382
   size: 960, 640
   orig: 960, 640
   offset: 0, 0
   index: 1
 battle_bg
   rotate: false
-  xy: 0, 133
+  xy: 0, 140
   size: 480, 240
   orig: 480, 240
   offset: 0, 0
   index: 0
 dialog
   rotate: false
-  xy: 0, 39
+  xy: 0, 46
   size: 137, 92
   orig: 137, 92
   offset: 0, 0
   index: -1
 ui_dialog
   rotate: false
-  xy: 0, 39
+  xy: 0, 46
   size: 137, 92
   split: 10, 8, 9, 8
   orig: 137, 92
@@ -49,182 +49,196 @@ ui_dialog
   index: -1
 effect_poison
   rotate: false
-  xy: 960, 895
+  xy: 960, 902
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 effect_scorch
   rotate: false
-  xy: 960, 773
+  xy: 960, 780
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 effect_stun
   rotate: false
-  xy: 744, 107
+  xy: 960, 658
   size: 60, 120
   orig: 60, 120
   offset: 0, 0
   index: -1
 gladiator_drop
   rotate: false
-  xy: 624, 229
+  xy: 820, 236
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 gladiator_strike
   rotate: false
-  xy: 480, 83
+  xy: 820, 90
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 gladiator_wave
   rotate: false
-  xy: 480, 229
+  xy: 676, 236
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 health_bar_green
   rotate: false
-  xy: 912, 288
-  size: 5, 1
-  orig: 5, 1
+  xy: 960, 418
+  size: 20, 20
+  orig: 20, 20
   offset: 0, 0
   index: -1
 health_bar_red
   rotate: false
-  xy: 0, 2
+  xy: 1008, 655
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
   index: -1
 icon_armor
   rotate: false
-  xy: 257, 83
+  xy: 960, 508
   size: 48, 48
   orig: 48, 48
+  offset: 0, 0
+  index: -1
+icon_attack
+  rotate: false
+  xy: 512, 150
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
 icon_health
   rotate: false
-  xy: 960, 723
+  xy: 960, 558
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
+icon_impact
+  rotate: false
+  xy: 480, 184
+  size: 196, 196
+  orig: 196, 196
+  offset: 0, 0
+  index: -1
 icon_resist
   rotate: false
-  xy: 912, 325
+  xy: 960, 608
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 kn_shield
   rotate: false
-  xy: 912, 291
+  xy: 960, 474
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 portrait_gladiator
   rotate: false
-  xy: 137, 71
+  xy: 257, 78
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
 portrait_slime
   rotate: false
-  xy: 624, 105
+  xy: 377, 78
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
 portrait_unknown
   rotate: false
-  xy: 624, 167
+  xy: 137, 78
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
 resist_bar_black
   rotate: false
-  xy: 624, 83
+  xy: 544, 162
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 resist_bar_blue
   rotate: false
-  xy: 836, 207
+  xy: 96, 2
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 skill_tile_gun
   rotate: false
-  xy: 992, 689
+  xy: 32, 12
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 skill_tile_holy_strike
   rotate: false
-  xy: 0, 5
+  xy: 0, 12
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 skill_tile_poison_arrow
   rotate: false
-  xy: 32, 5
+  xy: 992, 440
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 slime_splash
   rotate: false
-  xy: 768, 229
+  xy: 676, 90
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 tile_bg
   rotate: false
-  xy: 804, 195
+  xy: 480, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 tile_bg
   rotate: false
-  xy: 305, 99
+  xy: 960, 440
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 tile_bg_grey
   rotate: false
-  xy: 804, 161
+  xy: 64, 12
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 tile_fg_empire
   rotate: false
-  xy: 960, 689
+  xy: 992, 474
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ui_button
   rotate: false
-  xy: 137, 54
+  xy: 137, 61
   size: 30, 15
   split: 4, 4, 4, 4
   orig: 30, 15

@@ -3,7 +3,6 @@ package com.game7th.swipe.game.battle
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.game7th.battle.event.BattleEvent
-import com.game7th.battle.personage.PersonageViewModel
 import com.game7th.swipe.game.GameContextWrapper
 import com.game7th.swipe.game.battle.model.BattleControllerEvent
 import com.game7th.swipe.game.battle.model.GdxAttackType
@@ -33,7 +32,7 @@ class BattleController(
     private val backgroundTexture = context.gameContext.atlas.findRegion("battle_bg", 1)
 
     var effectId = 0
-    val scale = 0.85f * context.gameContext.scale
+    val scale = 0.85f * context.scale
 
     val controllersToRemove = mutableListOf<ElementController>()
 
@@ -66,11 +65,12 @@ class BattleController(
     private fun processEvent(event: BattleEvent) {
         when (event) {
             is BattleEvent.CreatePersonageEvent -> {
+                val x = paddingSide + (context.width - 2 * paddingSide) * 0.2f * (0.5f + event.position)
                 val figure = FigureController(context,
                         event.personage.id,
                         this@BattleController,
                         context.gdxModel.figure(event.personage.skin) ?: context.gdxModel.figure("personage_slime")!!,
-                        paddingSide + (context.width - 2 * paddingSide) * 0.2f * (0.5f + event.position),
+                        x,
                         y,
                         scale,
                         event.personage.team > 0)

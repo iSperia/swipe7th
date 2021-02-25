@@ -109,8 +109,10 @@ class GameScreen(private val game: SwipeGameGdx,
 
         val gdxModel = Gson().fromJson<GdxModel>(Gdx.files.internal("figures.json").readString(), GdxModel::class.java)
 
+        val scale = game.context.scale
         battleController = BattleController(GameContextWrapper(
                 gameContext = game.context,
+                scale = scale,
                 gdxModel = gdxModel,
                 width = Gdx.graphics.width.toFloat(),
                 height = Gdx.graphics.height.toFloat(),

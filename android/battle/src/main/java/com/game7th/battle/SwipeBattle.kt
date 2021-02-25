@@ -302,6 +302,10 @@ class SwipeBattle(val balance: SwipeBalance) {
             exportEventQueue.add(BattleEvent.PersonageHealEvent(unit.toViewModel(), healAmount))
         }
     }
+
+    fun notifyPersonageUpdated(unit: BattleUnit) {
+        exportEventQueue.add(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
+    }
 }
 
 fun SwipeTile.toViewModel(): TileViewModel {
