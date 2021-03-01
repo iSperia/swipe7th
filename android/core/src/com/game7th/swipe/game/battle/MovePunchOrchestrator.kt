@@ -9,7 +9,8 @@ class MovePunchOrchestrator(
         id: Int,
         private val battle: BattleController,
         private val sourceFigure: FigureController,
-        private val targetFigure: FigureController
+        private val targetFigure: FigureController?,
+        private val targetExactPosition: Float?
 ) : ElementController(context, id) {
 
     var timePassed = 0f
@@ -21,7 +22,7 @@ class MovePunchOrchestrator(
 
     var direction = if (sourceFigure.flipped) -1 else 1
 
-    var targetX = targetFigure.x - direction * battle.scale * 70f
+    val targetX = targetFigure?.let { it.x - direction * battle.scale * 70f } ?: (targetExactPosition!! - direction * battle.scale * 70f)
 
     init {
         battle.lock(1)
@@ -59,7 +60,7 @@ class MovePunchOrchestrator(
             is BattleControllerEvent.FigurePoseFrameIndexEvent -> {
                 if (event.figureId == sourceFigure.id && timePassed > timeStampMove) {
                     if (sourceFigure != targetFigure) {
-                        targetFigure.switchPose(FigurePose.POSE_DAMAGE)
+                        targetFigure?.switchPose(FigurePose.POSE_DAMAGE)
 
                         timeStampBackMoveStart = timePassed
                     } else {

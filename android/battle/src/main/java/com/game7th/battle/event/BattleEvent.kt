@@ -47,6 +47,12 @@ sealed class BattleEvent {
             val attackIndex: Int
     ) : BattleEvent()
 
+    data class PersonagePositionedAbilityEvent(
+            val source: PersonageViewModel,
+            val target: Int,
+            val attackIndex: Int
+    ) : BattleEvent()
+
     data class PersonageDamageEvent(
             val personage: PersonageViewModel,
             val damage: Int

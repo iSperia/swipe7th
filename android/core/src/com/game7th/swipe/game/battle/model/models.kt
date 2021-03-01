@@ -48,6 +48,8 @@ internal fun String.mapNameToFigure(): String {
     return when (this) {
         "personage_gladiator" -> "body_gladiator"
         "personage_slime" -> "slime_body"
+        "personage_red_slime" -> "slime_red_body"
+        "personage_slime_mother" -> "slime_mother_body"
         else -> "slime_body"
     }
 }

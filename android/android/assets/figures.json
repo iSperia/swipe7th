@@ -36,6 +36,34 @@
       "attacks": [
         {"attackType": "MOVE_AND_PUNCH"}
       ]
+    },
+    {
+      "name": "personage_red_slime",
+      "atlas": "slime_red",
+      "height": 94,
+      "poses": [
+        {"name":  "attack", "start":  1, "end":  35, "triggers": [23]},
+        {"name":  "damage", "start":  54, "end":  65},
+        {"name":  "idle", "start":  36, "end":  53},
+        {"name":  "death", "start":  66, "end":  87}
+      ],
+      "attacks": [
+        {"attackType": "MOVE_AND_PUNCH"}
+      ]
+    },
+    {
+      "name": "personage_slime_mother",
+      "atlas": "slime_mother",
+      "height": 210,
+      "poses": [
+        {"name":  "attack", "start":  1, "end":  34, "triggers": [27]},
+        {"name":  "damage", "start":  51, "end":  65},
+        {"name":  "idle", "start":  35, "end":  50},
+        {"name":  "death", "start":  66, "end":  81}
+      ],
+      "attacks": [
+        {"attackType": "MOVE_AND_PUNCH"}
+      ]
     }
   ]
 }

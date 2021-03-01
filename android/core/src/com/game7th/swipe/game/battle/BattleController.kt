@@ -80,6 +80,19 @@ class BattleController(
             is BattleEvent.PersonageAttackEvent -> {
                 handleAttack(event)
             }
+            is BattleEvent.PersonagePositionedAbilityEvent -> {
+                val figure = figures.first { it.id == event.source.id }
+                val targetPosition = paddingSide + (context.width - 2 * paddingSide) * 0.2f * (0.5f + event.target)
+                val orchestrator = MovePunchOrchestrator(
+                        context,
+                        effectId++,
+                        this,
+                        figure,
+                        null,
+                        targetPosition
+                )
+                effects.add(orchestrator)
+            }
             is BattleEvent.PersonageDamageEvent -> {
                 val figure = figures.first { it.id == event.personage.id }
                 val controller = DamagePopupController(
@@ -138,7 +151,8 @@ class BattleController(
                                     effectId++,
                                     this,
                                     figure,
-                                    targetFigure
+                                    targetFigure,
+                                    null
                             )
                             effects.add(orchestrator)
                         }
@@ -149,7 +163,8 @@ class BattleController(
                                 effectId++,
                                 this,
                                 figure,
-                                figure
+                                figure,
+                                null
                         )
                         effects.add(orchestrator)
                     }

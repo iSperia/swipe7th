@@ -307,6 +307,10 @@ class SwipeBattle(val balance: SwipeBalance) {
     fun notifyPersonageUpdated(unit: BattleUnit) {
         exportEventQueue.add(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
     }
+
+    fun calculateFreeNpcPosition(): Int {
+        return (4 downTo 1).firstOrNull { index -> aliveUnits().firstOrNull { it.position == index } == null}?.let { it } ?: -1
+    }
 }
 
 fun SwipeTile.toViewModel(): TileViewModel {

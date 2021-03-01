@@ -85,6 +85,62 @@ object UnitFactory {
                 }
                 slime
             }
+            UnitType.RED_SLIME -> {
+                val hp = balance.red_slime.hp.calculate(level)
+                val slime = UnitStats(skin = "personage_red_slime", portrait = "portrait_slime_red", level = level, health = CappedStat(hp, hp))
+                slime += ability {
+                    ticker {
+                        bodies[TickerEntry(3, 3, "attack")] = { battle, unit ->
+                            val damage = balance.red_slime.damage.calculate(unit.stats.level)
+                            if (damage > 0) {
+                                val target = battle.findClosestAliveEnemy(unit)
+                                target?.let { target ->
+                                    val damageResult = battle.processDamage(target, unit, DamageVector(damage, 0, 0))
+                                    battle.notifyAttack(unit, listOf(Pair(target, damageResult)), 0)
+                                }
+                            }
+                        }
+                        bodies[TickerEntry(1, 2, "impact")] = { battle, unit ->
+                            battle.tileField.calculateFreePosition()?.let { position ->
+                                val tile = SwipeTile(TileTemplate("slime_splash", balance.red_slime.a2l), battle.tileField.newTileId(), balance.red_slime.a2l, true)
+                                battle.tileField.tiles[position] = tile
+                                battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
+                                battle.notifyAttack(unit, emptyList(), 0)
+                            }
+                        }
+                    }
+                }
+                slime
+            }
+            UnitType.MOTHER_SLIME -> {
+                val hp = balance.mother_slime.hp.calculate(level)
+                val slime = UnitStats(skin = "personage_slime_mother", portrait = "portrait_slime_mother", level = level, health = CappedStat(hp, hp))
+                slime += ability {
+                    ticker {
+                        bodies[TickerEntry(1, 3, "attack")] = { battle, unit ->
+                            val damage = balance.mother_slime.damage.calculate(unit.stats.level)
+                            if (damage > 0) {
+                                val target = battle.findClosestAliveEnemy(unit)
+                                target?.let { target ->
+                                    val damageResult = battle.processDamage(target, unit, DamageVector(damage, 0, 0))
+                                    battle.notifyAttack(unit, listOf(Pair(target, damageResult)), 0)
+                                }
+                            }
+                        }
+                        bodies[TickerEntry(2, 2, "impact")] = { battle, unit ->
+                            val position = battle.calculateFreeNpcPosition()
+                            if (position > 0) {
+                                val producedUnit = produce(UnitType.GREEN_SLIME, balance, unit.stats.level, PersonageAttributeStats(0,0,0))
+                                val battleUnit = BattleUnit(battle.personageId++, position, producedUnit!!, Team.RIGHT)
+                                battle.units.add(battleUnit)
+                                battle.notifyEvent(BattleEvent.PersonagePositionedAbilityEvent(unit.toViewModel(), position, 0))
+                                battle.notifyEvent(BattleEvent.CreatePersonageEvent(battleUnit.toViewModel(), battleUnit.position))
+                            }
+                        }
+                    }
+                }
+                slime
+            }
             else -> null
         }
     }
