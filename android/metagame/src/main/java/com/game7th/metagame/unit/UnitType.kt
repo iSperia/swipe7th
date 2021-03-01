@@ -1,17 +1,17 @@
 package com.game7th.metagame.unit
 
-enum class UnitType {
-    GLADIATOR,
-    POISON_ARCHER,
-    MACHINE_GUNNER,
+enum class UnitType(val bodyWeight: Int, val spiritWeight: Int, val mindWeight: Int) {
+    GLADIATOR(3,2,1),
+    POISON_ARCHER(1,3,2),
+    MACHINE_GUNNER(2, 1, 3),
 
-    GREEN_SLIME,
-    CITADEL_WARLOCK,
-    FLAME_ELEMENT,
-    EARTH_ELEMENT,
-    BOSS_BLOOD_KNIGHT,
+    GREEN_SLIME(0,0,0),
+    CITADEL_WARLOCK(0,0,0),
+    FLAME_ELEMENT(0,0,0),
+    EARTH_ELEMENT(0,0,0),
+    BOSS_BLOOD_KNIGHT(0,0,0),
 
-    UNKNOWN;
+    UNKNOWN(0,0,0);
 
     fun getSkin(): String = when (this) {
         GLADIATOR -> "p_gladiator"
