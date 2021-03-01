@@ -12,7 +12,8 @@ import com.game7th.swipe.game.battle.model.GdxAttackType
  */
 class BattleController(
         private val context: GameContextWrapper,
-        private val y: Float
+        private val y: Float,
+        private val endEventHandler: (event: BattleEvent) -> Unit
 ) {
 
     /**
@@ -112,6 +113,12 @@ class BattleController(
             }
             is BattleEvent.PersonageUpdateEvent -> {
                 val figure = figures.first { it.id == event.personage.id }
+            }
+            is BattleEvent.VictoryEvent -> {
+                endEventHandler(event)
+            }
+            is BattleEvent.DefeatEvent -> {
+                endEventHandler(event)
             }
         }
     }

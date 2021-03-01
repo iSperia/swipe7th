@@ -50,35 +50,14 @@ class BattlePrepareDialog(
 
     var difficulty = 1
 
-    private val squadsName = listOf("Armed Smashers",
-            "Odd Daggers",
-            "Hissing Clowns",
-            "Gigantic Vampires",
-            "Solar Flares",
-            "Third Conjurers",
-            "The Vulgar Daemons",
-            "The Broad Swines",
-            "The Smelly Tridents",
-            "The Spectacular Shamans",
-            "Anxious Owls",
-            "Captain Molten Volunteers",
-            "Agent Lying Jesters",
-            "Poor Killers",
-            "Soul Slayers",
-            "Molly Qules",
-            "The Last Knuckles",
-            "The Handy Spider",
-            "The Alien Daemons",
-            "The Quantum Soldiers")
+    private val personages = game.accountService.getPersonages()
 
     val personageAdapter = object : SquadBrowserAdapter {
-        override fun count() = 20
+        override fun count() = personages.size
 
         override fun getSquad(index: Int): SquadConfig {
-            return SquadConfig(squadsName[index % squadsName.size], listOf(
-                    UnitConfig(UnitType.GLADIATOR, index + 1),
-                    UnitConfig(UnitType.MACHINE_GUNNER, index + 1),
-                    UnitConfig(UnitType.POISON_ARCHER, index + 1)
+            return SquadConfig(personages[index].unit.toString(), listOf(
+                    UnitConfig(personages[index].unit, personages[index].level)
             ))
         }
     }
@@ -181,7 +160,7 @@ class BattlePrepareDialog(
                 actId,
                 locationId,
                 difficulty,
-                personageSquadBrowser.index,
+                personages[personageSquadBrowser.index],
                 actsService
         )
     }

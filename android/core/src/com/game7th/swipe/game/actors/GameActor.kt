@@ -72,12 +72,17 @@ class GameActor(
         }
     }
 
+    fun processEndAction(event: BattleEvent) {
+        when (event) {
+            is BattleEvent.VictoryEvent -> debugShowBigText(true, "Victory")
+            is BattleEvent.DefeatEvent -> debugShowBigText(false, "Defeat")
+        }
+    }
+
     suspend fun processAction(event: BattleEvent) {
 //        battleField.processAction(event)
         tileField.processAction(event)
         when (event) {
-            is BattleEvent.VictoryEvent -> debugShowBigText(true, "Victory")
-            is BattleEvent.DefeatEvent -> debugShowBigText(false, "Defeat")
             is BattleEvent.CreatePersonageEvent -> {
                 hudGroup.showHud(event.position, event.personage)
             }

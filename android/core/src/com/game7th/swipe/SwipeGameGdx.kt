@@ -11,6 +11,8 @@ import com.game7th.battle.balance.SwipeBalance
 import com.game7th.metagame.FileProvider
 import com.game7th.metagame.GameService
 import com.game7th.metagame.PersistentStorage
+import com.game7th.metagame.account.AccountService
+import com.game7th.metagame.account.AccountServiceImpl
 import com.game7th.metagame.campaign.ActConfig
 import com.game7th.metagame.campaign.ActsService
 import com.game7th.metagame.campaign.ActsServiceImpl
@@ -26,6 +28,7 @@ class SwipeGameGdx(private val storage: PersistentStorage) : Game() {
 
     lateinit var context: GdxGameContext
     lateinit var actService: ActsService
+    lateinit var accountService: AccountService
     lateinit var service: GameService
     lateinit var screenContext: ScreenContext
 
@@ -39,6 +42,7 @@ class SwipeGameGdx(private val storage: PersistentStorage) : Game() {
         KtxAsync.initiate()
 
         initializeActService()
+        initializeAccountService()
         service = GameService(actService)
 
         width = Gdx.graphics.width.toFloat()
@@ -67,6 +71,10 @@ class SwipeGameGdx(private val storage: PersistentStorage) : Game() {
                 return Gdx.files.internal(name).readString()
             }
         })
+    }
+
+    private fun initializeAccountService() {
+        accountService = AccountServiceImpl(gson, storage)
     }
 
     override fun render() {

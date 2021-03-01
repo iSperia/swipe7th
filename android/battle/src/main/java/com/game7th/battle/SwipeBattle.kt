@@ -9,6 +9,7 @@ import com.game7th.battle.tilefield.TileField
 import com.game7th.battle.tilefield.TileFieldMerger
 import com.game7th.battle.tilefield.tile.*
 import com.game7th.battle.unit.*
+import com.game7th.metagame.account.PersonageAttributeStats
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
@@ -99,7 +100,7 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     private suspend fun generateInitialPersonages(config: BattleConfig) = withContext(coroutineContext) {
         config.personages.withIndex().forEach {
-            val unitStats = UnitFactory.produce(it.value.name, balance, it.value.level)
+            val unitStats = UnitFactory.produce(it.value.name, balance, it.value.level, it.value.stats)
             unitStats?.let { stats ->
                 val unit = BattleUnit(newPersonageId(), it.index, stats, Team.LEFT)
                 units.add(unit)
@@ -114,7 +115,7 @@ class SwipeBattle(val balance: SwipeBalance) {
     private suspend fun generateNpcs(config: BattleConfig) {
         events.send(BattleEvent.NewWaveEvent(wave))
         config.waves[wave].withIndex().forEach {
-            val unitStats = UnitFactory.produce(it.value.name, balance, it.value.level)
+            val unitStats = UnitFactory.produce(it.value.name, balance, it.value.level, PersonageAttributeStats(0, 0, 0))
             val position = 4 - it.index
             unitStats?.let { stats ->
                 val unit = BattleUnit(newPersonageId(), position, stats, Team.RIGHT)

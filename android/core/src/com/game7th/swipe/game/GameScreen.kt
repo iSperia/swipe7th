@@ -10,6 +10,9 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import com.game7th.battle.BattleConfig
 import com.game7th.battle.PersonageConfig
 import com.game7th.battle.SwipeBattle
+import com.game7th.battle.event.BattleEvent
+import com.game7th.metagame.account.PersonageAttributeStats
+import com.game7th.metagame.account.PersonageData
 import com.game7th.metagame.campaign.ActsService
 import com.game7th.metagame.unit.UnitType
 import com.game7th.swipe.SwipeGameGdx
@@ -27,7 +30,7 @@ class GameScreen(private val game: SwipeGameGdx,
                  private val actId: Int,
                  private val locationId: Int,
                  private val difficulty: Int,
-                 private val personageSquadId: Int,
+                 private val personage: PersonageData,
                  private val actService: ActsService
 ) : Screen {
 
@@ -82,12 +85,10 @@ class GameScreen(private val game: SwipeGameGdx,
 
         config = BattleConfig(
                 personages = listOf(
-//                        PersonageConfig(UnitType.POISON_ARCHER, personageSquadId + 1),
-//                        PersonageConfig(UnitType.MACHINE_GUNNER, personageSquadId + 1),
-                        PersonageConfig(UnitType.GLADIATOR, personageSquadId + 1)
+                        PersonageConfig(personage.unit, personage.level, personage.stats)
                 ),
                 waves = actService.getActConfig(actId).findNode(locationId)?.waves?.map {
-                    it.map { PersonageConfig(it.unitType, it.level + (difficulty-1) * 3) }
+                    it.map { PersonageConfig(it.unitType, it.level + (difficulty-1) * 3,  PersonageAttributeStats(0,0,0)) }
                 } ?: emptyList()
         )
 
@@ -118,7 +119,15 @@ class GameScreen(private val game: SwipeGameGdx,
                 height = Gdx.graphics.height.toFloat(),
                 atlases = mapOf("personage_gladiator" to TextureAtlas(Gdx.files.internal("personage_gladiator.atlas")),
                     "slime" to TextureAtlas(Gdx.files.internal("slime.atlas")))
-        ), Gdx.graphics.width.toFloat())
+        ), Gdx.graphics.width.toFloat()) {
+            gameActor.processEndAction(it)
+            if (it is BattleEvent.VictoryEvent) {
+                val experience = config.waves.sumBy {
+                    it.sumBy { it.level * 50 }
+                }
+                game.accountService.addPersonageExperience(personage.id, experience)
+            }
+        }
     }
 
     private fun processTileDoubleTap(id: Int) {

@@ -21,7 +21,7 @@ class AccountServiceImpl(
                             unit = UnitType.GLADIATOR,
                             level = 1,
                             experience = 0,
-                            stats = PersonageStats(4, 2, 1),
+                            stats = PersonageAttributeStats(4, 2, 1),
                             id = 0
                     )),
                     nextPersonageId = 1
@@ -62,7 +62,7 @@ class AccountServiceImpl(
                         mindBonus++
                     }
                 }
-                personageUpdateResult = PersonageExperienceResult(true, personage.level + 1, PersonageStats(bodyBonus, spiritBonus, mindBonus), personage.experience, nextLevelExp, nextLevelExp)
+                personageUpdateResult = PersonageExperienceResult(true, personage.level + 1, PersonageAttributeStats(bodyBonus, spiritBonus, mindBonus), personage.experience, nextLevelExp, nextLevelExp)
 
                 personage.copy(level = personage.level + 1, stats = personage.stats.copy(
                         personage.stats.body + bodyBonus,
@@ -84,7 +84,7 @@ class AccountServiceImpl(
             pool = pool.copy(personages = updatedData)
 
             personageUpdateResult
-        } ?: PersonageExperienceResult(false, 0, null)
+        } ?: PersonageExperienceResult(false, 0, null, 0, 0, 0)
     }
 
     companion object {

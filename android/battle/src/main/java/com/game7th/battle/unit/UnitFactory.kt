@@ -11,6 +11,7 @@ import com.game7th.battle.event.TileTemplate
 import com.game7th.battle.tilefield.tile.SwipeTile
 import com.game7th.battle.tilefield.tile.TileNames
 import com.game7th.battle.toViewModel
+import com.game7th.metagame.account.PersonageAttributeStats
 import com.game7th.metagame.unit.UnitType
 
 enum class UnitStatPriority {
@@ -24,9 +25,9 @@ enum class UnitStatPriority {
 }
 
 object UnitFactory {
-    fun produce(type: UnitType, balance: SwipeBalance, level: Int): UnitStats? {
+    fun produce(type: UnitType, balance: SwipeBalance, level: Int, stats: PersonageAttributeStats): UnitStats? {
         return when (type) {
-            UnitType.GLADIATOR -> producePersonage(balance, "personage_gladiator", "portrait_gladiator", level, UnitStatPriority.PRIMARY, UnitStatPriority.SECONDARY, UnitStatPriority.TERTIARY) {
+            UnitType.GLADIATOR -> producePersonage(balance, "personage_gladiator", "portrait_gladiator", level, stats) {
                 val strikeTemplate = TileTemplate(TileNames.GLADIATOR_STRIKE, balance.gladiator.t1)
                 val waveTemplate = TileTemplate(TileNames.GLADIATOR_WAVE, balance.gladiator.t2)
                 val dropTemplate = TileTemplate(TileNames.GLADIATOR_DROP, 0)
@@ -105,19 +106,12 @@ object UnitFactory {
             skin: String,
             portrait: String,
             level: Int,
-            bodyPriority: UnitStatPriority,
-            spiritPriority: UnitStatPriority,
-            mindPriority: UnitStatPriority,
+            stats: PersonageAttributeStats,
             processor: (UnitStats) -> Unit
     ): UnitStats {
-        val totalStats = (level + 1) * (level) / 2
-        val tertiaryStat = totalStats / 6 + 1
-        val secondaryStat = totalStats / 3 + 2
-        val primaryStat = totalStats - secondaryStat - tertiaryStat + 6
-
-        val body = bodyPriority.selectStat(primaryStat, secondaryStat, tertiaryStat)
-        val spirit = spiritPriority.selectStat(primaryStat, secondaryStat, tertiaryStat)
-        val mind = mindPriority.selectStat(primaryStat, secondaryStat, tertiaryStat)
+        val body = stats.body
+        val spirit = stats.spirit
+        val mind = stats.mind
 
         val health = b.stats.baseHealth + b.stats.healthPerBody * body + b.stats.healthPerLevel * level
         val armor = body * b.stats.armorPerBody
