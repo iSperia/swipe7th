@@ -85,7 +85,7 @@ data class UnitStats(
         val armor: CappedStat = CappedStat(0, 0),
         val resist: CappedStat = CappedStat(0, 0),
         val evasion: Int = 0,
-        val regeneration: Int = 0,
+        val regeneration: Float = 0f,
         val wisdom: Int = 0,
 
         var tick: Int = 0,

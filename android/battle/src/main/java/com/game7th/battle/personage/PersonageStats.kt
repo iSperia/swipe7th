@@ -8,7 +8,7 @@ data class PersonageStats(
         var maxArmor: Int,
 
         var spirit: Int,
-        var regeneration: Int,
+        var regeneration: Float,
         var evasion: Int,
 
         var mind: Int,

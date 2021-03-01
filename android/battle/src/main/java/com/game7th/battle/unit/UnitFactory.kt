@@ -114,7 +114,7 @@ object UnitFactory {
             }
             UnitType.MOTHER_SLIME -> {
                 val hp = balance.mother_slime.hp.calculate(level)
-                val slime = UnitStats(skin = "personage_slime_mother", portrait = "portrait_slime_mother", level = level, health = CappedStat(hp, hp))
+                val slime = UnitStats(skin = "personage_slime_mother", portrait = "portrait_slime_mother", level = level, health = CappedStat(hp, hp), regeneration = balance.mother_slime.regen.toFloat())
                 slime += ability {
                     ticker {
                         bodies[TickerEntry(1, 3, "attack")] = { battle, unit ->
@@ -183,7 +183,7 @@ object UnitFactory {
                 health = CappedStat(health, health),
                 armor = CappedStat(armor, armor),
                 resist = CappedStat(resist, resist),
-                regeneration = (b.stats.regenerationPerSpirit * spirit).toInt(),
+                regeneration = b.stats.regenerationPerSpirit * spirit,
                 evasion = b.stats.evasionPerSpirit * spirit,
                 wisdom = mind
         ).apply { processor(this) }

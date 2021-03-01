@@ -88,7 +88,8 @@ data class RedSlimeBalance(
 data class MotherSlimeBalance(
         val hp: PolinomBalance,
         val damage: PolinomBalance,
-        val a2l: Int
+        val a2l: Int,
+        val regen: Int
 )
 
 data class CitadelWarlockBalance(
