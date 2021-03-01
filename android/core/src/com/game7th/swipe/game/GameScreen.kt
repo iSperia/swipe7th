@@ -120,12 +120,14 @@ class GameScreen(private val game: SwipeGameGdx,
                 atlases = mapOf("personage_gladiator" to TextureAtlas(Gdx.files.internal("personage_gladiator.atlas")),
                     "slime" to TextureAtlas(Gdx.files.internal("slime.atlas")))
         ), Gdx.graphics.width.toFloat()) {
-            gameActor.processEndAction(it)
             if (it is BattleEvent.VictoryEvent) {
                 val experience = config.waves.sumBy {
                     it.sumBy { it.level * 50 }
                 }
-                game.accountService.addPersonageExperience(personage.id, experience)
+                val expResult = game.accountService.addPersonageExperience(personage.id, experience)
+                gameActor.showVictory(expResult)
+            } else {
+                gameActor.showDefeat()
             }
         }
     }

@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.game7th.battle.event.BattleEvent
+import com.game7th.metagame.account.PersonageExperienceResult
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.game.actors.ui.GameFinishedDialog
 import com.game7th.swipe.game.battle.hud.HudGroup
@@ -56,7 +57,7 @@ class GameActor(
     private fun debugShowBigText(victory: Boolean, text: String) {
         tileField.touchable = Touchable.disabled
 
-        GameFinishedDialog(context, text) {
+        GameFinishedDialog(context, text, null) {
             println("Closing scene")
             finishCallback(victory)
         }.apply {
@@ -72,10 +73,18 @@ class GameActor(
         }
     }
 
-    fun processEndAction(event: BattleEvent) {
-        when (event) {
-            is BattleEvent.VictoryEvent -> debugShowBigText(true, "Victory")
-            is BattleEvent.DefeatEvent -> debugShowBigText(false, "Defeat")
+    fun showDefeat() {
+        debugShowBigText(false, "Defeat")
+    }
+
+    fun showVictory(expResult: PersonageExperienceResult) {
+        GameFinishedDialog(context, "Victory", expResult) {
+            println("Closing scene")
+            finishCallback(true)
+        }.apply {
+            x = 40f
+            y = 220f
+            this@GameActor.addActor(this)
         }
     }
 

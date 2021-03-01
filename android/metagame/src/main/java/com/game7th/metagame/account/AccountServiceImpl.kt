@@ -82,6 +82,7 @@ class AccountServiceImpl(
                 }
             }
             pool = pool.copy(personages = updatedData)
+            savePersonagePool(pool)
 
             personageUpdateResult
         } ?: PersonageExperienceResult(false, 0, null, 0, 0, 0)
