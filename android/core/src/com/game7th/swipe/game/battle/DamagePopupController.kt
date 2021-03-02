@@ -24,7 +24,7 @@ class DamagePopupController(
     val disposeTime = 2f
 
     override fun render(batch: SpriteBatch, delta: Float) {
-        timePassed += delta
+        timePassed += delta * battle.timeScale()
 
         val progress = timePassed / showTime
         color.a = max(1f, progress)

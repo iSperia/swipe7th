@@ -32,7 +32,7 @@ class MovePunchOrchestrator(
     }
 
     override fun render(batch: SpriteBatch, delta: Float) {
-        timePassed += delta
+        timePassed += delta * battle.timeScale()
 
         if (timePassed < timeStampMove && sourceFigure != targetFigure) {
             sourceFigure.x = sourceFigure.originX + (timePassed / timeStampMove) * (targetX - sourceFigure.originX)

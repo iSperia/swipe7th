@@ -31,7 +31,7 @@ class SteppedGeneratorEffectController(
     var nextTriggerIndex = 0
 
     override fun render(batch: SpriteBatch, delta: Float) {
-        passedTime += delta
+        passedTime += delta * battle.timeScale()
         val index = (passedTime / model.time).toInt() + 1
         if (animations.size < index) {
             val nextX = x + index * model.step!! * battle.scale

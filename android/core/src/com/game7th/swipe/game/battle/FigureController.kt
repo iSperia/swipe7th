@@ -54,7 +54,7 @@ class FigureController(
     }
 
     override fun render(batch: SpriteBatch, delta: Float) {
-        timePassed += delta
+        timePassed += delta * battle.timeScale()
 
         animation?.let { animation ->
             if (pose != FigurePose.POSE_DEATH || !animation.isAnimationFinished(timePassed - timePoseStarted)) {

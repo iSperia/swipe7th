@@ -127,7 +127,7 @@ object UnitFactory {
                                 }
                             }
                         }
-                        bodies[TickerEntry(2, 3, "impact")] = { battle, unit ->
+                        bodies[TickerEntry(2, 4, "impact")] = { battle, unit ->
                             val position = battle.calculateFreeNpcPosition()
                             if (position > 0) {
                                 val producedUnit = produce(UnitType.GREEN_SLIME, balance, unit.stats.level, PersonageAttributeStats(0,0,0))

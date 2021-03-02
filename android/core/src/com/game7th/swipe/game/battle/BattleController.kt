@@ -205,6 +205,10 @@ class BattleController(
         }
     }
 
+    fun timeScale(): Float {
+        return 1f + (eventQueue.size / 6) * 0.33f
+    }
+
     fun addEffect(effect: SteppedGeneratorEffectController) {
         effects.add(effect)
     }

@@ -22,7 +22,7 @@ class AoeSteppedGeneratorOrchestrator(
     }
 
     override fun render(batch: SpriteBatch, delta: Float) {
-        timePassed += delta
+        timePassed += delta * battle.timeScale()
 
         if (!isStarted) {
             isStarted = true
