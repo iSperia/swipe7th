@@ -13,6 +13,7 @@ import com.game7th.battle.tilefield.tile.TileNames
 import com.game7th.battle.toViewModel
 import com.game7th.metagame.account.PersonageAttributeStats
 import com.game7th.metagame.unit.UnitType
+import kotlin.math.min
 
 enum class UnitStatPriority {
     PRIMARY, SECONDARY, TERTIARY;
@@ -27,12 +28,12 @@ enum class UnitStatPriority {
 object UnitFactory {
     fun produce(type: UnitType, balance: SwipeBalance, level: Int, stats: PersonageAttributeStats): UnitStats? {
         return when (type) {
-            UnitType.GLADIATOR -> producePersonage(balance, "personage_gladiator", "portrait_gladiator", level, stats) {
+            UnitType.GLADIATOR -> producePersonage(balance, "personage_gladiator", "portrait_gladiator", level, stats) { stats ->
                 val strikeTemplate = TileTemplate(TileNames.GLADIATOR_STRIKE, balance.gladiator.t1)
                 val waveTemplate = TileTemplate(TileNames.GLADIATOR_WAVE, balance.gladiator.t2)
                 val dropTemplate = TileTemplate(TileNames.GLADIATOR_DROP, 0)
-                it.addAbility {
-                    defaultEmitter { skills.addAll(listOf(it.body to strikeTemplate, it.spirit to waveTemplate, it.mind to dropTemplate)) }
+                stats.addAbility {
+                    defaultEmitter { skills.addAll(listOf(stats.body to strikeTemplate, stats.spirit to waveTemplate, stats.mind to dropTemplate)) }
                     defaultMerger { tileType = strikeTemplate.skin }
                     defaultMerger { tileType = waveTemplate.skin }
                     consume {
@@ -54,7 +55,8 @@ object UnitFactory {
                         range = 1
                         tileSkins.addAll(listOf(strikeTemplate.skin, waveTemplate.skin))
                         sourceSkin = dropTemplate.skin
-                        action = RegenerateParametrizedAmountAction(balance.gladiator.a3n)
+                        action = RegenerateParametrizedAmountAction(
+                                Math.pow(stats.body.toDouble(), balance.gladiator.a3p.toDouble()).toFloat() * balance.gladiator.a3n)
                     }
                 }
             }

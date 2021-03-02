@@ -22,7 +22,7 @@
   "citadel_warlock": {"damage": {"k": 0.09, "f":  35, "m":  17.5, "o": 0.5 }, "healPercentage": 0.5, "hp":  {"f":  50, "k": 0.097, "m": 40}},
   "boss_blood_knight": {"damage": {"k": 0.0075, "f": 20, "m":  20, "o": 0.5}, "hp":  {"f":  100, "k": 0.099, "m": 100}, "heal_k":  1.5},
 
-  "gladiator": { "c":  8, "k":  0.05, "t1":  3, "t2" :  4, "a1n":  3, "a2n": 2, "a3n":  0.2 },
+  "gladiator": { "c":  8, "k":  0.05, "t1":  3, "t2" :  4, "a1n":  3, "a2n": 2, "a3n":  0.3, "a3p": 0.1 },
   "poison_archer": {"c":  20, "k":  0.05, "spi_k":  0.05, "tile_k": 0.05, "dot_k":  0.25, "tile_m":  0.25, "d":  10},
   "gunner": {"c":  2, "k":  0.05, "mind_k":  0.05, "tile_k": 0.1, "bullets":  24}
 }

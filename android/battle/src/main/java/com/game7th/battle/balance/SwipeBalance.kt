@@ -130,7 +130,8 @@ data class GladiatorBalance(
         val a2n: Float,
         val a3n: Float,
         val t1: Int,
-        val t2: Int
+        val t2: Int,
+        val a3p: Float
 )
 
 data class PoisonArcherBalance(
