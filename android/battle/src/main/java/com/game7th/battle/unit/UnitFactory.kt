@@ -85,7 +85,7 @@ object UnitFactory {
                 }
                 slime
             }
-            UnitType.RED_SLIME -> {
+            UnitType.PURPLE_SLIME -> {
                 val hp = balance.red_slime.hp.calculate(level)
                 val slime = UnitStats(skin = "personage_red_slime", portrait = "portrait_slime_red", level = level, health = CappedStat(hp, hp))
                 slime += ability {
@@ -112,7 +112,7 @@ object UnitFactory {
                 }
                 slime
             }
-            UnitType.MOTHER_SLIME -> {
+            UnitType.SLIME_MOTHER -> {
                 val hp = balance.mother_slime.hp.calculate(level)
                 val slime = UnitStats(skin = "personage_slime_mother", portrait = "portrait_slime_mother", level = level, health = CappedStat(hp, hp), regeneration = balance.mother_slime.regen * hp / 100f)
                 slime += ability {
@@ -135,6 +135,35 @@ object UnitFactory {
                                 battle.units.add(battleUnit)
                                 battle.notifyEvent(BattleEvent.PersonagePositionedAbilityEvent(unit.toViewModel(), position, 0))
                                 battle.notifyEvent(BattleEvent.CreatePersonageEvent(battleUnit.toViewModel(), battleUnit.position))
+                            }
+                        }
+                    }
+                }
+                slime
+            }
+            UnitType.SLIME_FATHER -> {
+                val hp = balance.father_slime.hp.calculate(level)
+                val slime = UnitStats(UnitType.SLIME_FATHER.getSkin(), UnitType.SLIME_FATHER.getPortrait(), level = level, health = CappedStat(hp, hp))
+                slime += ability {
+                    ticker {
+                        bodies[TickerEntry(2, 3, "attack")] = { battle, unit ->
+                            val damage = balance.father_slime.damage.calculate(unit.stats.level)
+                            if (damage > 0) {
+                                val target = battle.findClosestAliveEnemy(unit)
+                                target?.let { target ->
+                                    val damageResult = battle.processDamage(target, unit, DamageVector(damage, 0, 0))
+                                    battle.notifyAttack(unit, listOf(Pair(target, damageResult)), 0)
+                                }
+                            }
+                        }
+                        bodies[TickerEntry(1, 3, "impact")] = { battle, unit ->
+                            val allies = battle.aliveAllies(unit)
+                            val armor = balance.father_slime.a2.calculate(unit.stats.level)
+                            battle.notifyAttack(unit, emptyList(), 0)
+                            allies.forEach {
+                                val newArmor = it.stats.armor.value + armor
+                                it.stats.armor = CappedStat(newArmor, newArmor)
+                                battle.notifyPersonageUpdated(it)
                             }
                         }
                     }

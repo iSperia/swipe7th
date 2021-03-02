@@ -82,7 +82,7 @@ data class UnitStats(
         val spirit: Int = 0,
 
         val health: CappedStat,
-        val armor: CappedStat = CappedStat(0, 0),
+        var armor: CappedStat = CappedStat(0, 0),
         val resist: CappedStat = CappedStat(0, 0),
         val evasion: Int = 0,
         val regeneration: Float = 0f,

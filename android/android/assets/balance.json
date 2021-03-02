@@ -16,6 +16,7 @@
   "slime": {"damage": {"k": 0.75, "a":  1.9, "f":  1, "c":  2}, "hp":  {"k": 0.5, "a":  2, "f":  2, "c":  5}, "a2l":  5},
   "red_slime": {"damage": {"k": 0.2, "a":  2, "f":  4, "c":  3}, "hp":  {"k": 0.6, "a":  2.1, "f":  4, "c":  6}, "a2l":  8},
   "mother_slime": {"damage": {"k": 0.75, "a":  2, "f":  1, "c":  2}, "hp":  {"k": 2, "a":  2, "f":  6, "c":  10}, "a2l":  8, "regen":  0.5},
+  "father_slime": {"damage": {"k": 0.5, "a":  1.9, "f":  1, "c":  2}, "hp":  {"k": 1.2, "a":  2.4, "f":  10, "c":  10}, "a2":  {"k":  0.5, "a":  2, "f": 10, "c":  10}},
   "fire_element":  {"damage": {"k": 0.09, "f": 40, "m":  20, "o": 0.5}, "hp":  {"f":  100, "k": 0.097, "m": 100}, "scorch_k": 0.9, "scorch_duration": 3},
   "earth_element": {"damage": {"k": 0.09, "f": 40, "m":  20, "o": 0.5}, "hp":  {"f":  120, "k": 0.097, "m": 120}, "stun_duration":  {"min": 2, "max":  3}},
   "citadel_warlock": {"damage": {"k": 0.09, "f":  35, "m":  17.5, "o": 0.5 }, "healPercentage": 0.5, "hp":  {"f":  50, "k": 0.097, "m": 40}},

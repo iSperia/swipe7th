@@ -50,6 +50,7 @@ internal fun String.mapNameToFigure(): String {
         "personage_slime" -> "slime_body"
         "personage_red_slime" -> "slime_red_body"
         "personage_slime_mother" -> "slime_mother_body"
+        "personage_slime_father" -> "slime_father_body"
         else -> "slime_body"
     }
 }

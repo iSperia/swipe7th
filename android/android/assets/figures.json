@@ -64,6 +64,20 @@
       "attacks": [
         {"attackType": "MOVE_AND_PUNCH"}
       ]
+    },
+    {
+      "name": "personage_slime_father",
+      "atlas": "slime_father",
+      "height": 210,
+      "poses": [
+        {"name":  "attack", "start":  1, "end":  34, "triggers": [27]},
+        {"name":  "damage", "start":  51, "end":  65},
+        {"name":  "idle", "start":  35, "end":  50},
+        {"name":  "death", "start":  66, "end":  81}
+      ],
+      "attacks": [
+        {"attackType": "MOVE_AND_PUNCH"}
+      ]
     }
   ]
 }

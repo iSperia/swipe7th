@@ -17,30 +17,34 @@ class AccountServiceImpl(
         val dataString = storage.get(KEY_PERSONAGES)
         pool = if (dataString == null) {
             val initialData = PersonagePool(
-                    listOf(PersonageData(
+                    listOf(
+                            PersonageData(
                             unit = UnitType.GLADIATOR,
                             level = 1,
                             experience = 0,
                             stats = PersonageAttributeStats(4, 2, 1),
-                            id = 0
-                    ),
+                            id = 0),
+                            PersonageData(
+                                    unit = UnitType.GLADIATOR,
+                                    level = 7,
+                                    experience = 0,
+                                    stats = PersonageAttributeStats(26, 17, 8),
+                                    id = 1),
                             PersonageData(
                                     unit = UnitType.GLADIATOR,
                                     level = 10,
                                     experience = 0,
-                                    stats = PersonageAttributeStats(26	,17	,8),
-                                    id = 1
-                            ),
+                                    stats = PersonageAttributeStats(2529, 1685, 842),
+                                    id = 2),
                             PersonageData(
                                     unit = UnitType.GLADIATOR,
                                     level = 100,
                                     experience = 0,
-                                    stats = PersonageAttributeStats(2529	,1685	,842),
-                                    id = 2
-                            )
+                                    stats = PersonageAttributeStats(2529, 1685, 842),
+                                    id = 3)
                     ),
 
-                    nextPersonageId = 3
+                    nextPersonageId = 4
             )
             savePersonagePool(initialData)
             initialData
@@ -84,7 +88,7 @@ class AccountServiceImpl(
                         personage.stats.body + bodyBonus,
                         personage.stats.spirit + spiritBonus,
                         personage.stats.mind + spiritBonus),
-                experience = 0)
+                        experience = 0)
             } else {
                 personageUpdateResult = PersonageExperienceResult(false, 0, null, personage.experience, newExp, nextLevelExp)
                 personage.copy(experience = newExp)

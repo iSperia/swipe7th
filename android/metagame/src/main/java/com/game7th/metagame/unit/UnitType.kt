@@ -6,8 +6,9 @@ enum class UnitType(val bodyWeight: Int, val spiritWeight: Int, val mindWeight: 
     MACHINE_GUNNER(2, 1, 3),
 
     GREEN_SLIME(0,0,0),
-    RED_SLIME(0,0,0),
-    MOTHER_SLIME(0,0,0),
+    PURPLE_SLIME(0,0,0),
+    SLIME_MOTHER(0,0,0),
+    SLIME_FATHER(0,0,0),
     CITADEL_WARLOCK(0,0,0),
     FLAME_ELEMENT(0,0,0),
     EARTH_ELEMENT(0,0,0),
@@ -19,8 +20,9 @@ enum class UnitType(val bodyWeight: Int, val spiritWeight: Int, val mindWeight: 
         GLADIATOR -> "p_gladiator"
         POISON_ARCHER -> "personage_ranger"
         GREEN_SLIME -> "personage_slime"
-        MOTHER_SLIME -> "personage_mother_slime"
-        RED_SLIME -> "personage_red_slime"
+        SLIME_MOTHER -> "personage_mother_slime"
+        SLIME_FATHER -> "personage_slime_father"
+        PURPLE_SLIME -> "personage_red_slime"
         MACHINE_GUNNER -> "personage_gunner"
         CITADEL_WARLOCK -> "personage_citadel_warlock"
         FLAME_ELEMENT -> "personage_fire_element"
@@ -32,8 +34,9 @@ enum class UnitType(val bodyWeight: Int, val spiritWeight: Int, val mindWeight: 
     fun getPortrait() : String = when (this) {
         GLADIATOR -> "portrait_gladiator"
         GREEN_SLIME -> "portrait_slime"
-        RED_SLIME -> "portrait_slime_red"
-        MOTHER_SLIME -> "portrait_slime_mother"
+        PURPLE_SLIME -> "portrait_slime_red"
+        SLIME_MOTHER -> "portrait_slime_mother"
+        SLIME_FATHER -> "portrait_slime_father"
         else -> "portrait_unknown"
     }
 }

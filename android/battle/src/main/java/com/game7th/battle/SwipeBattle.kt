@@ -311,6 +311,10 @@ class SwipeBattle(val balance: SwipeBalance) {
     fun calculateFreeNpcPosition(): Int {
         return (4 downTo 1).firstOrNull { index -> aliveUnits().firstOrNull { it.position == index } == null}?.let { it } ?: -1
     }
+
+    fun aliveAllies(unit: BattleUnit): List<BattleUnit> {
+        return units.filter { it.isAlive() && it.team == unit.team && it.id != unit.id }
+    }
 }
 
 fun SwipeTile.toViewModel(): TileViewModel {

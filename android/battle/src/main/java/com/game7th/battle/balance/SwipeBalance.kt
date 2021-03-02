@@ -92,6 +92,12 @@ data class MotherSlimeBalance(
         val regen: Float
 )
 
+data class FatherSlimeBalance(
+        val hp: PolinomBalance,
+        val damage: PolinomBalance,
+        val a2: PolinomBalance
+)
+
 data class CitadelWarlockBalance(
         val damage: ExponentialDamageBalance,
         val hp: HpBalance,
@@ -152,6 +158,7 @@ data class SwipeBalance(
         val slime: SlimeBalance,
         val red_slime: RedSlimeBalance,
         val mother_slime: MotherSlimeBalance,
+        val father_slime: FatherSlimeBalance,
         val citadel_warlock: CitadelWarlockBalance,
         val fire_element: FireElementBalance,
         val earth_element: EarthElementBalance,
