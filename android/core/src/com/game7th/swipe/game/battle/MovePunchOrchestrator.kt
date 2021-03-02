@@ -60,7 +60,7 @@ class MovePunchOrchestrator(
             is BattleControllerEvent.FigurePoseFrameIndexEvent -> {
                 if (event.figureId == sourceFigure.id && timePassed > timeStampMove) {
                     if (sourceFigure != targetFigure) {
-//                        targetFigure?.switchPose(FigurePose.POSE_DAMAGE)
+                        targetFigure?.switchPose(FigurePose.POSE_DAMAGE)
 
                         timeStampBackMoveStart = timePassed
                     } else {
