@@ -64,7 +64,7 @@ object UnitFactory {
                         template = strikeTemplate
                         action = AttackAction().apply {
                             attackIndex = 0
-                            target = { battle, unit -> listOf(battle.aliveEnemies(unit).random()) }
+                            target = { battle, unit -> battle.aliveEnemies(unit).let { if (it.isEmpty()) emptyList() else listOf(it.random()) } }
                             damage = { battle, unit, target, ss, ms -> (balance.poison_archer.a1n * unit.stats.spirit * ss / ms).toInt().let { DamageVector(it, 0, 0) }}
                         }
                     }

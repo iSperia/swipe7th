@@ -35,14 +35,8 @@ class DefaultSkillTileEmitter : AbilityTrigger {
                 sum += it.first
                 sum >= roll
             }
-            if (skill == null) {
-                println("No skill found: weight=$totalWeight roll=$roll")
-            }
             skill?.let { skill ->
                 val position: Int? = event.battle.tileField.calculateFreePosition()
-                if (position == null) {
-                    println("No position found")
-                }
                 position?.let { position ->
 
                     val tile = SwipeTile(

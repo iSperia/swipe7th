@@ -84,7 +84,6 @@ class TileFieldView(
                 tile.updateFrom(action.tile)
             }
             is BattleEvent.RemoveTileEvent -> {
-                println("remove tileEvent ${action.id}")
                 val tile = tileGroup.findActor<TileView>("${action.id}")
                 tile?.addAction(SequenceAction(
                         AlphaAction().apply {

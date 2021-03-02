@@ -50,7 +50,6 @@ class FigureController(
 
     init {
         switchPose(FigurePose.POSE_IDLE)
-        println("$flipMultiplier FLIP")
     }
 
     override fun render(batch: SpriteBatch, delta: Float) {

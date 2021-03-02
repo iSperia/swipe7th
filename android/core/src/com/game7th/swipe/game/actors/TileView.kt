@@ -36,7 +36,6 @@ class TileView(
 
             override fun clicked(event: InputEvent?, x: Float, y: Float) {
                 if (tapCount >= 2) {
-                    println("Double clicked")
                     doubleTapCallback.processDoubleTapped(vm?.id ?: -1)
                     tapCount = 0
                 }

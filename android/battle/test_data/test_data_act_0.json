@@ -1,0 +1,36 @@
+{
+  "personages": [
+    "GLADIATOR",
+    "POISON_ARCHER"
+  ],
+  "encounters": [
+    {
+      "name": "Single slime same level",
+      "waves": [
+        [{"unitType": "GREEN_SLIME", "level": 0}]
+      ],
+      "wrmin": 1
+    },
+    {
+      "name": "Two slimes same level",
+      "waves": [
+        [{"unitType": "GREEN_SLIME", "level": 0}, {"unitType": "GREEN_SLIME", "level": 0}]
+      ],
+      "wrmin": 1
+    },
+    {
+      "name": "Three slimes same level",
+      "waves": [
+        [{"unitType": "GREEN_SLIME", "level": 0}, {"unitType": "GREEN_SLIME", "level": 0}, {"unitType": "GREEN_SLIME", "level": 0}]
+      ],
+      "wrmin": 0.64
+    },
+    {
+      "name": "Slime and mother same level",
+      "waves": [
+        [{"unitType": "SLIME_MOTHER", "level": 0}, {"unitType": "GREEN_SLIME", "level": 0}]
+      ],
+      "wrmin": 0
+    }
+  ]
+}

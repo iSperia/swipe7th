@@ -58,7 +58,6 @@ class GameActor(
         tileField.touchable = Touchable.disabled
 
         GameFinishedDialog(context, text, null) {
-            println("Closing scene")
             finishCallback(victory)
         }.apply {
             x = 40f
@@ -79,7 +78,6 @@ class GameActor(
 
     fun showVictory(expResult: PersonageExperienceResult) {
         GameFinishedDialog(context, "Victory", expResult) {
-            println("Closing scene")
             finishCallback(true)
         }.apply {
             x = 40f

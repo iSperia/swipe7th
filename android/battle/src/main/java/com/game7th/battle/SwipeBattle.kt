@@ -157,14 +157,14 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     suspend fun processSwipe(dx: Int, dy: Int) = withContext(coroutineContext) {
         if (!events.isClosedForSend) {
-            var motionEvents = tileField.attemptSwipe(dx, dy)
+            var motionEvents = tileField.attemptSwipe(dx, dy, true)
             var hadAnyEvents = false
             val eventCache = mutableListOf<BattleEvent>()
             while (motionEvents.isNotEmpty()) {
                 hadAnyEvents = true
                 eventCache.add(BattleEvent.SwipeMotionEvent(motionEvents))
                 //TODO: post process stacks stages etc.
-                motionEvents = tileField.attemptSwipe(dx, dy)
+                motionEvents = tileField.attemptSwipe(dx, dy, true)
             }
             if (hadAnyEvents) {
                 runBlocking {
@@ -176,6 +176,17 @@ class SwipeBattle(val balance: SwipeBalance) {
 
                 sendDelayedEvents()
                 checkDeadPersonages()
+
+                if (tileField.attemptSwipe(-1, 0, false).isEmpty() &&
+                        tileField.attemptSwipe(1, 0, false).isEmpty() &&
+                        tileField.attemptSwipe(0,-1, false).isEmpty() &&
+                        tileField.attemptSwipe(0, 1, false).isEmpty()) {
+                        //we have no moves
+                        if (!events.isClosedForSend) {
+                            events.send(BattleEvent.DefeatEvent)
+                            events.close()
+                        }
+                }
             }
         }
     }
@@ -227,13 +238,11 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     suspend fun processDamage(target: BattleUnit, source: BattleUnit, damage: DamageVector): DamageProcessResult {
         val damage = DamageCalculator.calculateDamage(balance, source.stats, target.stats, damage)
-        println("Damage to ${target.stats.skin}: ${damage.damage.totalDamage()} ${damage.status} Source: ${source.stats.skin}(${source.position})")
         val totalDamage = damage.damage.totalDamage()
         if (totalDamage > 0 || damage.armorDeplete > 0 || damage.resistDeplete > 0) {
             target.stats.health.value = max(0, target.stats.health.value - totalDamage)
             target.stats.armor.value = max(0, target.stats.armor.value - damage.armorDeplete)
             target.stats.resist.value = max(0, target.stats.resist.value - damage.resistDeplete)
-            println("${source.stats.skin} deals $damage to ${target.stats.skin}")
 
             exportEventQueue.add(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
             if (target.stats.health.value <= 0) {
@@ -293,7 +302,9 @@ class SwipeBattle(val balance: SwipeBalance) {
     }
 
     suspend fun notifyEvent(event: BattleEvent) {
-        events.send(event)
+        if (!events.isClosedForSend) {
+            events.send(event)
+        }
     }
 
     fun findClosestAliveEnemy(unit: BattleUnit): BattleUnit? {
@@ -309,7 +320,6 @@ class SwipeBattle(val balance: SwipeBalance) {
         if (hp > 0 && unit.stats.health.notCapped()) {
             val healAmount = min(unit.stats.health.maxValue - unit.stats.health.value, hp)
             unit.stats.health.value += healAmount
-            println("Battle: heal: $healAmount on ${unit.stats.skin}")
             events.send(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
             exportEventQueue.add(BattleEvent.PersonageHealEvent(unit.toViewModel(), healAmount))
         }

@@ -11,7 +11,7 @@ class TileField(private val merger: TileFieldMerger) {
 
     var tileId = 0
 
-    suspend fun attemptSwipe(dx: Int, dy: Int): List<TileFieldEvent> {
+    suspend fun attemptSwipe(dx: Int, dy: Int, reality: Boolean): List<TileFieldEvent> {
         val result = mutableListOf<TileFieldEvent>()
 
         val orderedPositions = tiles.keys.toList().sortedWith(Comparator { p1, p2 ->
@@ -63,8 +63,10 @@ class TileField(private val merger: TileFieldMerger) {
             }
         }
 
-        tiles.clear()
-        tiles.putAll(freshGeneration)
+        if (reality) {
+            tiles.clear()
+            tiles.putAll(freshGeneration)
+        }
 
         return result
     }

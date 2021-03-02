@@ -16,7 +16,6 @@ object DamageCalculator {
             damage: DamageVector): DamageProcessResult {
 
         val evadeProb = (1 - (source.level * balance.stats.evasion.k / (source.level * balance.stats.evasion.k + target.evasion.toDouble().pow(balance.stats.evasion.p.toDouble())))).toFloat()
-        println("EVADE PROB = $evadeProb")
         val evasionRoll = Random.nextDouble(1.0).toFloat()
 
         return if (evasionRoll < evadeProb) {
