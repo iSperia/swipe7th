@@ -1,5 +1,6 @@
 package com.game7th.battle.action
 
+import com.game7th.battle.DamageProcessStatus
 import com.game7th.battle.DamageVector
 import com.game7th.battle.SwipeBattle
 import com.game7th.battle.event.BattleEvent

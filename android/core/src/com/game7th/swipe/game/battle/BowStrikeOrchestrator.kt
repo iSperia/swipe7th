@@ -51,8 +51,6 @@ class BowStrikeOrchestrator(
             is BattleControllerEvent.EffectTriggerEvent -> {
                 if (effectId.contains(event.effectId)) {
                     effectsDone++
-                    val figure = effectId[event.effectId]
-                    figure?.switchPose(FigurePose.POSE_DAMAGE)
                 }
                 if (effectsDone == targets.size) {
                     battle.unlock()

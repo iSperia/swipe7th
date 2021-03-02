@@ -71,10 +71,6 @@ sealed class BattleEvent {
             val amount: Int
     ) : BattleEvent()
 
-    data class PersonageDamageEvadedEvent(
-            val personage: PersonageViewModel
-    ) : BattleEvent()
-
     data class ShowNpcAoeEffect(
             val skin: String,
             val personageId: Int,

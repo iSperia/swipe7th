@@ -240,7 +240,7 @@ class SwipeBattle(val balance: SwipeBalance) {
                 exportEventQueue.add(BattleEvent.PersonageDeadEvent(target.toViewModel()))
             }
         } else if (damage.status == DamageProcessStatus.DAMAGE_EVADED) {
-            events.send(BattleEvent.PersonageDamageEvadedEvent(target.toViewModel()))
+            exportEventQueue.add(BattleEvent.ShowAilmentEffect(target.id, "ailment_evade"))
         }
         return damage
     }
@@ -288,9 +288,12 @@ class SwipeBattle(val balance: SwipeBalance) {
         events.send(BattleEvent.PersonageUpdateEvent(target.toViewModel()))
     }
 
+    suspend fun enqueueEvent(event: BattleEvent) {
+        exportEventQueue.add(event)
+    }
+
     suspend fun notifyEvent(event: BattleEvent) {
         events.send(event)
-
     }
 
     fun findClosestAliveEnemy(unit: BattleUnit): BattleUnit? {

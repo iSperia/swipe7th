@@ -114,6 +114,13 @@
       "trigger": 10,
       "height": 144,
       "width": 144
+    },
+    {
+      "name": "ailment_evade",
+      "atlas": "ailments",
+      "trigger": 10,
+      "height": 144,
+      "width": 144
     }
   ]
 }
