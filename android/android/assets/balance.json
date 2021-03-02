@@ -9,7 +9,7 @@
     "resistPerMind": 1,
     "regenerationPerSpirit": 0.5,
     "wizdomMultiplier": 0.08,
-    "evasionPerSpirit": 10,
+    "evasionPerSpirit": 1,
     "evasion": { "k": 14, "p": 0.85 }
   },
 
