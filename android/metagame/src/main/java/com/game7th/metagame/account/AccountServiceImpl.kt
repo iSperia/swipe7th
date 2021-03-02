@@ -25,6 +25,12 @@ class AccountServiceImpl(
                             stats = PersonageAttributeStats(4, 2, 1),
                             id = 0),
                             PersonageData(
+                                    unit = UnitType.POISON_ARCHER,
+                                    level = 1,
+                                    experience = 0,
+                                    stats = PersonageAttributeStats(1, 4, 2),
+                                    id = 4),
+                            PersonageData(
                                     unit = UnitType.GLADIATOR,
                                     level = 7,
                                     experience = 0,
@@ -44,7 +50,7 @@ class AccountServiceImpl(
                                     id = 3)
                     ),
 
-                    nextPersonageId = 4
+                    nextPersonageId = 5
             )
             savePersonagePool(initialData)
             initialData

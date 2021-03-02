@@ -18,7 +18,7 @@ enum class UnitType(val bodyWeight: Int, val spiritWeight: Int, val mindWeight: 
 
     fun getSkin(): String = when (this) {
         GLADIATOR -> "p_gladiator"
-        POISON_ARCHER -> "personage_ranger"
+        POISON_ARCHER -> "personage_poison_archer"
         GREEN_SLIME -> "personage_slime"
         SLIME_MOTHER -> "personage_mother_slime"
         SLIME_FATHER -> "personage_slime_father"
@@ -37,6 +37,7 @@ enum class UnitType(val bodyWeight: Int, val spiritWeight: Int, val mindWeight: 
         PURPLE_SLIME -> "portrait_slime_red"
         SLIME_MOTHER -> "portrait_slime_mother"
         SLIME_FATHER -> "portrait_slime_father"
+        POISON_ARCHER -> "portrait_poison_archer"
         else -> "portrait_unknown"
     }
 }

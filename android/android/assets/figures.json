@@ -24,6 +24,26 @@
       ]
     },
     {
+      "name": "personage_poison_archer",
+      "atlas": "personage_poison_archer",
+      "height": 205,
+      "poses": [
+        {"name": "attack", "start":  1, "end": 44, "triggers": [34]},
+        {"name": "damage", "start":  67, "end": 82},
+        {"name": "idle", "start":  45, "end": 66},
+        {"name": "death", "start": 83, "end": 93}
+      ],
+      "attacks": [
+        {"attackType": "BOW_STRIKE", "effect": {
+          "name": "poison_archer_arrow",
+          "atlas": "personage_poison_archer",
+          "trigger": 15,
+          "height": 144,
+          "width": 96
+        }}
+      ]
+    },
+    {
       "name": "personage_slime",
       "atlas": "slime",
       "height": 94,
@@ -78,6 +98,22 @@
       "attacks": [
         {"attackType": "MOVE_AND_PUNCH"}
       ]
+    }
+  ],
+  "ailments": [
+    {
+      "name": "ailment_poison",
+      "atlas": "ailments",
+      "trigger": 15,
+      "height": 144,
+      "width": 144
+    },
+    {
+      "name": "ailment_paralize",
+      "atlas": "ailments",
+      "trigger": 10,
+      "height": 144,
+      "width": 144
     }
   ]
 }

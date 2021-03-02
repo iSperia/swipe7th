@@ -3,6 +3,8 @@ package com.game7th.battle.unit
 import com.game7th.battle.DamageVector
 import com.game7th.battle.ability.TickerEntry
 import com.game7th.battle.ability.ability
+import com.game7th.battle.action.ApplyParalizeAction
+import com.game7th.battle.action.ApplyPoisonAction
 import com.game7th.battle.action.AttackAction
 import com.game7th.battle.action.RegenerateParametrizedAmountAction
 import com.game7th.battle.balance.SwipeBalance
@@ -13,17 +15,6 @@ import com.game7th.battle.tilefield.tile.TileNames
 import com.game7th.battle.toViewModel
 import com.game7th.metagame.account.PersonageAttributeStats
 import com.game7th.metagame.unit.UnitType
-import kotlin.math.min
-
-enum class UnitStatPriority {
-    PRIMARY, SECONDARY, TERTIARY;
-
-    fun selectStat(s1: Int, s2: Int, s3: Int) = when (ordinal) {
-        0 -> s1
-        1 -> s2
-        else -> s3
-    }
-}
 
 object UnitFactory {
     fun produce(type: UnitType, balance: SwipeBalance, level: Int, stats: PersonageAttributeStats): UnitStats? {
@@ -31,7 +22,7 @@ object UnitFactory {
             UnitType.GLADIATOR -> producePersonage(balance, "personage_gladiator", "portrait_gladiator", level, stats) { stats ->
                 val strikeTemplate = TileTemplate(TileNames.GLADIATOR_STRIKE, balance.gladiator.t1)
                 val waveTemplate = TileTemplate(TileNames.GLADIATOR_WAVE, balance.gladiator.t2)
-                val dropTemplate = TileTemplate(TileNames.GLADIATOR_DROP, 0)
+                val dropTemplate = TileTemplate(TileNames.GLADIATOR_DROP, 1)
                 stats.addAbility {
                     defaultEmitter { skills.addAll(listOf(stats.body to strikeTemplate, stats.spirit to waveTemplate, stats.mind to dropTemplate)) }
                     defaultMerger { tileType = strikeTemplate.skin }
@@ -57,6 +48,37 @@ object UnitFactory {
                         sourceSkin = dropTemplate.skin
                         action = RegenerateParametrizedAmountAction(
                                 Math.pow(stats.mind.toDouble(), balance.gladiator.a3p.toDouble()).toFloat() * balance.gladiator.a3n)
+                    }
+                }
+            }
+            UnitType.POISON_ARCHER -> producePersonage(balance, "personage_poison_archer", "portrait_poison_archer", level, stats) { stats ->
+                val strikeTemplate = TileTemplate(TileNames.POISON_ARCHER_STRIKE, balance.poison_archer.t1)
+                val poisonTemplate = TileTemplate(TileNames.POISON_ARCHER_POISON, balance.poison_archer.t2)
+                val paralizeTemplate = TileTemplate(TileNames.POISON_ARCHER_PARALIZE, balance.poison_archer.t3)
+                stats.addAbility {
+                    defaultEmitter { skills.addAll(listOf(stats.body to paralizeTemplate, stats.spirit to strikeTemplate, stats.mind to poisonTemplate)) }
+                    defaultMerger { tileType = strikeTemplate.skin }
+                    defaultMerger { tileType = poisonTemplate.skin; autoCut = true }
+                    defaultMerger { tileType = paralizeTemplate.skin; autoCut = true }
+                    consume {
+                        template = strikeTemplate
+                        action = AttackAction().apply {
+                            attackIndex = 0
+                            target = { battle, unit -> listOf(battle.aliveEnemies(unit).random()) }
+                            damage = { battle, unit, target, ss, ms -> (balance.poison_archer.a1n * unit.stats.spirit * ss / ms).toInt().let { DamageVector(it, 0, 0) }}
+                        }
+                    }
+                    distancedConsumeOnAttackDamage {
+                        range = 100
+                        tileSkins.add(strikeTemplate.skin)
+                        sourceSkin = poisonTemplate.skin
+                        action = ApplyPoisonAction(balance.poison_archer.a2l, balance.poison_archer.a2ds * stats.mind)
+                    }
+                    distancedConsumeOnAttackDamage {
+                        range = 100
+                        tileSkins.add(strikeTemplate.skin)
+                        sourceSkin = paralizeTemplate.skin
+                        action = ApplyParalizeAction(balance.poison_archer.a3d)
                     }
                 }
             }

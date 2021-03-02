@@ -20,7 +20,7 @@ class ConsumeTrigger : AbilityTrigger {
                     event.battle.tileField.removeById(tile.id)
                     event.battle.notifyTileRemoved(tile.id)
 
-                    action.processAction(event.battle, unit, tile)
+                    action.processAction(event.battle, unit, unit, unit, tile)
                 }
             }
         }

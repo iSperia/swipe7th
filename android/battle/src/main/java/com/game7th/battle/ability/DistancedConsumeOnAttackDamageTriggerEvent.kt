@@ -30,7 +30,7 @@ class DistancedConsumeOnAttackDamageTriggerEvent: AbilityTrigger {
                         val dx = abs((it.key % 5) - (event.position % 5))
                         val dy = abs((it.key / 5) - (event.position / 5))
                         val skin = it.value.type.skin
-                        dx <= range && dy <= range && skin == this.sourceSkin
+                        dx <= range && dy <= range && skin == this.sourceSkin && it.value.stackSize == it.value.type.maxStackSize
                     }.forEach { (position, tile) ->
                         tilesToRemove.add(position)
                         count++
@@ -43,7 +43,12 @@ class DistancedConsumeOnAttackDamageTriggerEvent: AbilityTrigger {
             is InternalBattleEvent.AttackDamageEvent -> {
                 if (event.damage.status == DamageProcessStatus.DAMAGE_DEALT) {
                     tilesToAction.firstOrNull { it.first.id == event.tile.id }?.let { actionTile ->
-                        action.processAction(event.battle, unit, ParametrizedMeta(actionTile.second.toFloat() * event.damage.totalDamage()))
+                        action.processAction(
+                                event.battle,
+                                unit,
+                                event.source,
+                                event.target,
+                                ParametrizedMeta(actionTile.second.toFloat() * event.damage.totalDamage()))
                     }
                 }
             }

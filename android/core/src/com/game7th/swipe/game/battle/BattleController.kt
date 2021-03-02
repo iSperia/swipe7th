@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.game7th.battle.event.BattleEvent
 import com.game7th.swipe.game.GameContextWrapper
 import com.game7th.swipe.game.battle.model.BattleControllerEvent
+import com.game7th.swipe.game.battle.model.EffectGdxModel
 import com.game7th.swipe.game.battle.model.GdxAttackType
 
 /**
@@ -133,6 +134,15 @@ class BattleController(
             is BattleEvent.DefeatEvent -> {
                 endEventHandler(event)
             }
+            is BattleEvent.ShowAilmentEffect -> {
+                val effect = context.gdxModel.ailments.firstOrNull { it.name == event.effectSkin }
+                effect?.let { effect ->
+                    val figure = figures.firstOrNull { it.id == event.target }
+                    figure?.let { figure ->
+                        showEffectOverFigure(figure, effect)
+                    }
+                }
+            }
         }
     }
 
@@ -181,6 +191,19 @@ class BattleController(
                         effects.add(orchestrator)
                     }
                 }
+                GdxAttackType.BOW_STRIKE -> {
+                    figure.figureModel.attacks[event.attackIndex].effect?.let { effect ->
+                        val orchestrator = BowStrikeOrchestrator(
+                                context,
+                                effectId++,
+                                this@BattleController,
+                                figure,
+                                event.targets.map { figures.first { figure -> figure.id == it.first.id } },
+                                effect
+                        )
+                        effects.add(orchestrator)
+                    }
+                }
             }
             Unit
         }
@@ -211,5 +234,12 @@ class BattleController(
 
     fun addEffect(effect: SteppedGeneratorEffectController) {
         effects.add(effect)
+    }
+
+    fun showEffectOverFigure(figure: FigureController, effect: EffectGdxModel): Int {
+        val effectId = effectId++
+        val controller = EffectController(context, effectId, this, figure, effect)
+        effects.add(controller)
+        return effectId
     }
 }

@@ -11,12 +11,20 @@ class DefaultStackMerger : AbilityTrigger {
 
     lateinit var tileType: String
 
+    var autoCut = false
+
     override suspend fun process(event: InternalBattleEvent, unit: BattleUnit) {
         when (event) {
             is InternalBattleEvent.TileMergeEvent -> {
-                if (event.result == null && event.tile1.type.skin == tileType && event.tile2.type.skin == tileType) {
+                if (
+                        event.result == null &&
+                        event.tile1.type.skin == tileType &&
+                        event.tile2.type.skin == tileType &&
+                        (!autoCut || event.tile1.stackSize < event.tile1.type.maxStackSize) &&
+                        (!autoCut || event.tile2.stackSize < event.tile2.type.maxStackSize)) {
                     val stackSize = event.tile1.stackSize + event.tile2.stackSize
-                    event.result = SwipeTile(event.tile1.type, event.tile2.id, stackSize)
+                    val finalStackSize = if (autoCut && stackSize > event.tile2.type.maxStackSize) event.tile2.type.maxStackSize else stackSize
+                    event.result = SwipeTile(event.tile1.type, event.tile2.id, finalStackSize)
                 }
             }
         }

@@ -59,6 +59,11 @@ class TileView(
         if (isStackSizeChanged) {
             removeStackSizeLabel()
             addStackSizeLabel()
+            if (viewModel.stackSize >= viewModel.maxStackSize && viewModel.maxStackSize > 1) {
+                skillImage?.color = Color.BLUE
+            } else {
+                skillImage?.color = Color.WHITE
+            }
         }
     }
 

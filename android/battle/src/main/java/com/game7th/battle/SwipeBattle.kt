@@ -174,6 +174,7 @@ class SwipeBattle(val balance: SwipeBalance) {
                 processTickUnits()
                 tick++
 
+                sendDelayedEvents()
                 checkDeadPersonages()
             }
         }
@@ -197,15 +198,15 @@ class SwipeBattle(val balance: SwipeBalance) {
                 when (ailment.ailmentType) {
                     AilmentType.POISON -> {
                         processAilmentDamage(unit, DamageVector(0, 0, ailment.value.toInt()))
-                        events.send(BattleEvent.ShowAilmentEffect(unit.id, "effect_poison"))
+                        exportEventQueue.add(BattleEvent.ShowAilmentEffect(unit.id, "ailment_poison"))
                     }
                     AilmentType.SCORCH -> {
                         processAilmentDamage(unit, DamageVector(0, ailment.value.toInt(), 0))
-                        events.send(BattleEvent.ShowAilmentEffect(unit.id, "effect_scorch"))
+                        exportEventQueue.add(BattleEvent.ShowAilmentEffect(unit.id, "effect_scorch"))
                     }
                     AilmentType.STUN -> {
                         needPersonageUpdate = true
-                        events.send(BattleEvent.ShowAilmentEffect(unit.id, "effect_stun"))
+                        exportEventQueue.add(BattleEvent.ShowAilmentEffect(unit.id, "ailment_paralize"))
                     }
                 }
                 ailment.ticks--
@@ -218,7 +219,6 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     suspend fun notifyAttack(source: BattleUnit, targets: List<Pair<BattleUnit, DamageProcessResult>>, attackIndex: Int) {
         events.send(BattleEvent.PersonageAttackEvent(source.toViewModel(), targets.map { Pair(it.first.toViewModel(), it.second) }, attackIndex))
-        sendDelayedEvents()
     }
 
     /*
@@ -248,6 +248,9 @@ class SwipeBattle(val balance: SwipeBalance) {
     suspend fun processAilmentDamage(target: BattleUnit, damage: DamageVector) {
         target.stats.health.value = max(0, target.stats.health.value - damage.totalDamage())
         events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.totalDamage()))
+        if (target.stats.health.value <= 0) {
+            exportEventQueue.add(BattleEvent.PersonageDeadEvent(target.toViewModel()))
+        }
     }
 
     suspend fun notifyTileRemoved(id: Int) {
@@ -266,7 +269,7 @@ class SwipeBattle(val balance: SwipeBalance) {
         } else {
             target.stats.ailments.add(UnitAilment(AilmentType.POISON, poisonTicks, poisonDmg.toFloat()))
         }
-        events.send(BattleEvent.ShowAilmentEffect(target.id, "effect_poison"))
+        exportEventQueue.add(BattleEvent.ShowAilmentEffect(target.id, "ailment_poison"))
     }
 
     suspend fun applyScorch(target: BattleUnit, ticks: Int, dmg: Int) {
@@ -275,8 +278,13 @@ class SwipeBattle(val balance: SwipeBalance) {
     }
 
     suspend fun applyStun(target: BattleUnit, ticks: Int) {
-        target.stats.ailments.add(UnitAilment(AilmentType.STUN, ticks, 0f))
-        events.send(BattleEvent.ShowAilmentEffect(target.id, "effect_stun"))
+        val existingStun = target.stats.ailments.firstOrNull { it.ailmentType == AilmentType.STUN }
+        if (existingStun != null) {
+            existingStun.ticks += ticks
+        } else {
+            target.stats.ailments.add(UnitAilment(AilmentType.STUN, ticks, 0f))
+        }
+        exportEventQueue.add(BattleEvent.ShowAilmentEffect(target.id, "ailment_paralize"))
         events.send(BattleEvent.PersonageUpdateEvent(target.toViewModel()))
     }
 

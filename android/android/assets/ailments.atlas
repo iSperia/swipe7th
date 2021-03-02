@@ -1,0 +1,286 @@
+
+ailments.png
+size: 2048, 512
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+ailment_paralize0001
+  rotate: false
+  xy: 576, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_paralize0002
+  rotate: false
+  xy: 1728, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_paralize0003
+  rotate: false
+  xy: 1008, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_paralize0004
+  rotate: false
+  xy: 144, 144
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_paralize0005
+  rotate: false
+  xy: 1440, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_paralize0006
+  rotate: false
+  xy: 576, 0
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_paralize0007
+  rotate: false
+  xy: 1728, 0
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_paralize0008
+  rotate: false
+  xy: 1008, 0
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_paralize0009
+  rotate: false
+  xy: 432, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_paralize0010
+  rotate: false
+  xy: 1584, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_paralize0011
+  rotate: false
+  xy: 720, 0
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_paralize0012
+  rotate: false
+  xy: 144, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_paralize0013
+  rotate: false
+  xy: 1152, 0
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_paralize0014
+  rotate: false
+  xy: 432, 0
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_paralize0015
+  rotate: false
+  xy: 1584, 0
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_paralize0016
+  rotate: false
+  xy: 864, 0
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_paralize0017
+  rotate: false
+  xy: 288, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0001
+  rotate: false
+  xy: 576, 144
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0002
+  rotate: false
+  xy: 1728, 144
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0003
+  rotate: false
+  xy: 1008, 144
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0004
+  rotate: false
+  xy: 144, 0
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0005
+  rotate: false
+  xy: 1296, 0
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0006
+  rotate: false
+  xy: 720, 144
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0007
+  rotate: false
+  xy: 0, 144
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0008
+  rotate: false
+  xy: 1152, 144
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0009
+  rotate: false
+  xy: 432, 144
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0010
+  rotate: false
+  xy: 1440, 0
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0011
+  rotate: false
+  xy: 864, 144
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0012
+  rotate: false
+  xy: 0, 0
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0013
+  rotate: false
+  xy: 1296, 144
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0014
+  rotate: false
+  xy: 720, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0015
+  rotate: false
+  xy: 1872, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0016
+  rotate: false
+  xy: 1152, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0017
+  rotate: false
+  xy: 288, 144
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0018
+  rotate: false
+  xy: 1440, 144
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0019
+  rotate: false
+  xy: 864, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0020
+  rotate: false
+  xy: 0, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0021
+  rotate: false
+  xy: 1296, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0022
+  rotate: false
+  xy: 288, 0
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ailment_poison0023
+  rotate: false
+  xy: 1584, 144
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1

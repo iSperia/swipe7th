@@ -12,6 +12,8 @@ interface BattleAction {
     suspend fun processAction(
             battle: SwipeBattle,
             unit: BattleUnit,
+            source: BattleUnit,
+            target: BattleUnit,
             meta: Any) {}
 }
 
@@ -21,7 +23,7 @@ class AttackAction : BattleAction {
     lateinit var damage: (SwipeBattle, BattleUnit, BattleUnit, Int, Int) -> DamageVector
     var attackIndex = 0
 
-    override suspend fun processAction(battle: SwipeBattle, unit: BattleUnit, meta: Any) {
+    override suspend fun processAction(battle: SwipeBattle, unit: BattleUnit, source: BattleUnit, target: BattleUnit, meta: Any) {
         val tile = meta as? SwipeTile
         tile ?: return
         val targets = target(battle, unit)
@@ -32,7 +34,7 @@ class AttackAction : BattleAction {
         }
 
         damages.forEach {
-            battle.propagateInternalEvent(InternalBattleEvent.AttackDamageEvent(battle, it.second, tile))
+            battle.propagateInternalEvent(InternalBattleEvent.AttackDamageEvent(battle, it.second, tile, source, it.first))
         }
         battle.notifyAttack(unit, damages, attackIndex)
         targets.forEach {
@@ -49,10 +51,31 @@ class RegenerateParametrizedAmountAction(
         val perParameter: Float
 ) : BattleAction {
 
-    override suspend fun processAction(battle: SwipeBattle, unit: BattleUnit, meta: Any) {
+    override suspend fun processAction(battle: SwipeBattle, unit: BattleUnit, source: BattleUnit, target: BattleUnit, meta: Any) {
         val regen = meta as? ParametrizedMeta
         regen ?: return
         val amount = regen.parameter * perParameter
         battle.processHeal(unit, amount)
     }
 }
+
+class ApplyPoisonAction(
+        private val duration: Int,
+        private val damage: Float
+) : BattleAction {
+
+    override suspend fun processAction(battle: SwipeBattle, unit: BattleUnit, source: BattleUnit, target: BattleUnit, meta: Any) {
+        battle.applyPoison(target, duration, damage.toInt())
+    }
+}
+
+class ApplyParalizeAction(
+        val duration: Int
+) : BattleAction {
+
+    override suspend fun processAction(battle: SwipeBattle, unit: BattleUnit, source: BattleUnit, target: BattleUnit, meta: Any) {
+        battle.applyStun(target, duration)
+    }
+}
+
+
