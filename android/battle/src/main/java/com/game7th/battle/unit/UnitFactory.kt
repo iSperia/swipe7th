@@ -114,7 +114,7 @@ object UnitFactory {
             }
             UnitType.MOTHER_SLIME -> {
                 val hp = balance.mother_slime.hp.calculate(level)
-                val slime = UnitStats(skin = "personage_slime_mother", portrait = "portrait_slime_mother", level = level, health = CappedStat(hp, hp), regeneration = balance.mother_slime.regen.toFloat())
+                val slime = UnitStats(skin = "personage_slime_mother", portrait = "portrait_slime_mother", level = level, health = CappedStat(hp, hp), regeneration = balance.mother_slime.regen * hp / 100f)
                 slime += ability {
                     ticker {
                         bodies[TickerEntry(1, 3, "attack")] = { battle, unit ->
@@ -127,7 +127,7 @@ object UnitFactory {
                                 }
                             }
                         }
-                        bodies[TickerEntry(2, 2, "impact")] = { battle, unit ->
+                        bodies[TickerEntry(2, 3, "impact")] = { battle, unit ->
                             val position = battle.calculateFreeNpcPosition()
                             if (position > 0) {
                                 val producedUnit = produce(UnitType.GREEN_SLIME, balance, unit.stats.level, PersonageAttributeStats(0,0,0))

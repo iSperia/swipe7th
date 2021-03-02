@@ -23,8 +23,24 @@ class AccountServiceImpl(
                             experience = 0,
                             stats = PersonageAttributeStats(4, 2, 1),
                             id = 0
-                    )),
-                    nextPersonageId = 1
+                    ),
+                            PersonageData(
+                                    unit = UnitType.GLADIATOR,
+                                    level = 10,
+                                    experience = 0,
+                                    stats = PersonageAttributeStats(26	,17	,8),
+                                    id = 1
+                            ),
+                            PersonageData(
+                                    unit = UnitType.GLADIATOR,
+                                    level = 100,
+                                    experience = 0,
+                                    stats = PersonageAttributeStats(2529	,1685	,842),
+                                    id = 2
+                            )
+                    ),
+
+                    nextPersonageId = 3
             )
             savePersonagePool(initialData)
             initialData

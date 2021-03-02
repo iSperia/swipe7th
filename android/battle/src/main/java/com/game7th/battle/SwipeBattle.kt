@@ -190,7 +190,7 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     private suspend fun processTickUnits() {
         aliveUnits().forEach { unit ->
-            processHeal(unit, unit.stats.regeneration / 100f * unit.stats.health.maxValue)
+            processHeal(unit, unit.stats.regeneration)
             var needPersonageUpdate = false
 
             unit.stats.ailments.forEach { ailment ->
