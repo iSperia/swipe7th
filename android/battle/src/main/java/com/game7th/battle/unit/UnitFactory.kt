@@ -56,7 +56,7 @@ object UnitFactory {
                         tileSkins.addAll(listOf(strikeTemplate.skin, waveTemplate.skin))
                         sourceSkin = dropTemplate.skin
                         action = RegenerateParametrizedAmountAction(
-                                Math.pow(stats.body.toDouble(), balance.gladiator.a3p.toDouble()).toFloat() * balance.gladiator.a3n)
+                                Math.pow(stats.mind.toDouble(), balance.gladiator.a3p.toDouble()).toFloat() * balance.gladiator.a3n)
                     }
                 }
             }
