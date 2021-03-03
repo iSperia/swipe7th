@@ -24,7 +24,6 @@ class GameActor(
     lateinit var atlas: TextureAtlas
     lateinit var font: BitmapFont
     val tileField: TileFieldView
-    val battleField: BattleView
     val hudGroup: HudGroup
 
     var buttonConcede: Label
@@ -41,10 +40,6 @@ class GameActor(
             y = TILE_FIELD_SCALE * 5.5f * 36f
         }
         addActor(hudGroup)
-
-        battleField = BattleView(context)
-        addActor(battleField)
-        battleField.isVisible = false
 
         buttonConcede = Label("Concede", Label.LabelStyle(context.font, Color.YELLOW))
         buttonConcede.onClick {

@@ -1,8 +1,5 @@
 package com.game7th.battle.balance
 
-import kotlin.math.exp
-import kotlin.random.Random
-
 data class StatBalance(
         val baseHealth: Int,
         val healthPerBody: Int,
@@ -10,159 +7,35 @@ data class StatBalance(
         val armorPerBody: Int,
         val resistPerMind: Int,
         val regenerationPerSpirit: Float,
-        val wizdomMultiplier: Float,
-        val evasionPerSpirit: Int,
-        val evasion: EvasionBalance
+        val wizdomMultiplier: Int,
+        val evasionPerSpirit: Int
 )
 
-data class EvasionBalance(
-        val k: Int,
-        val p: Float
-)
-
-data class HpBalance(
-    val f: Int,
-    val k: Float,
-    val m: Int
-)
-
-/**
- * DMG = F + (LVL-1) * S
- */
-data class LinearDamageBalance(
-        val f: Float,     //flat
-        val m: Float    //scale
-)
-
-data class PolinomBalance(
-        val k: Float,
-        val a: Float,
-        val f: Float,
-        val c: Float
-) {
-    fun calculate(x: Int) = (k * Math.pow(x.toDouble(), a.toDouble()).toFloat() + f * x + c).toInt()
-}
-
-/**
- * DMG = F + LVL * ( 2 * LVL - 1 ) * M
- */
-data class SquareDamageBalance(
-        val f: Float,
-        val m: Float
-)
-
-/**
- * DMG = O * ( EXP(K*LVL) + F + M * LVL )
- * O - overall koef
- */
-data class ExponentialDamageBalance(
-        val k: Float,
-        val f: Float,
-        val m: Float,
-        val o: Float
-) {
-    fun calculate(level: Int): Int {
-        return (o * (exp(k * level) + f + m * level)).toInt()
-    }
-}
-
-data class RangeBalance(
-        val min: Int,
-        val max: Int
-) {
-    fun calculate() = Random.nextInt(min, max + 1)
-}
-
-data class SlimeBalance(
-    val hp: PolinomBalance,
-    val damage: PolinomBalance,
-    val a2l: Int
-)
-
-data class RedSlimeBalance(
-        val hp: PolinomBalance,
-        val damage: PolinomBalance,
-        val a2l: Int
-)
-
-data class MotherSlimeBalance(
-        val hp: PolinomBalance,
-        val damage: PolinomBalance,
-        val a2l: Int,
-        val regen: Float
-)
-
-data class FatherSlimeBalance(
-        val hp: PolinomBalance,
-        val damage: PolinomBalance,
-        val a2: PolinomBalance
-)
-
-data class CitadelWarlockBalance(
-        val damage: ExponentialDamageBalance,
-        val hp: HpBalance,
-        val healPercentage: Float
-)
-
-data class FireElementBalance(
-        val damage: ExponentialDamageBalance,
-        val hp: HpBalance,
-        val scorch_k: Float,
-        val scorch_duration: Int
-)
-
-data class EarthElementBalance(
-        val damage: ExponentialDamageBalance,
-        val hp: HpBalance,
-        val stun_duration: RangeBalance
-)
-
-data class BossBloodKnightBalance(
-        val damage: ExponentialDamageBalance,
-        val hp: HpBalance,
-        val heal_k: Float
-)
-
-data class GladiatorBalance(
-        val a1n: Float,
-        val a2n: Float,
-        val a3n: Float,
-        val t1: Int,
-        val t2: Int,
-        val a3p: Float
-)
-
-data class PoisonArcherBalance(
-        val a1n: Float,
-        val t1: Int,
-        val t2: Int,
-        val t3: Int,
-        val a2l: Int,
-        val a2ds: Float,
-        val a3d: Int
-)
-
-data class GunnerBalance(
-    val c: Int,
-    val k: Float,
-    val mind_k: Float,
-    val tile_k: Float,
-    val bullets: Int
+data class PersonageBalance(
+        val hp: Int = 1,
+        val k1: Float = 0f,
+        val k2: Float = 0f,
+        val k3: Float = 0f,
+        val t1: Int = 0,
+        val t2: Int = 0,
+        val t3: Int = 0,
+        val w1: Int = 0,
+        val w2: Int = 0,
+        val w3: Int = 0,
+        val d1: Int = 0,
+        val d2: Int = 0,
+        val d3: Int = 0
 )
 
 data class SwipeBalance(
         val version: String,
 
         val stats: StatBalance,
-        val slime: SlimeBalance,
-        val red_slime: RedSlimeBalance,
-        val mother_slime: MotherSlimeBalance,
-        val father_slime: FatherSlimeBalance,
-        val citadel_warlock: CitadelWarlockBalance,
-        val fire_element: FireElementBalance,
-        val earth_element: EarthElementBalance,
-        val boss_blood_knight: BossBloodKnightBalance,
-        val gladiator: GladiatorBalance,
-        val poison_archer: PoisonArcherBalance,
-        val gunner: GunnerBalance
+
+        val slime: PersonageBalance,
+        val red_slime: PersonageBalance,
+        val mother_slime: PersonageBalance,
+        val father_slime: PersonageBalance,
+        val gladiator: PersonageBalance,
+        val poison_archer: PersonageBalance
 )

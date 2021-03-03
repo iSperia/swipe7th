@@ -6,8 +6,8 @@ import kotlin.random.Random
 object EfficencyCalculator {
 
     fun calculateStackSize(balance: SwipeBalance, level: Int, efficency: Int): Int {
-        val efficencyValue = balance.stats.wizdomMultiplier * efficency.toFloat() / level
-        val extraProb = efficencyValue % 1
-        return efficencyValue.toInt() + if (Random.nextFloat() < extraProb) 1 else 0
+        val rollProb = efficency.toFloat() / (level + efficency)
+        val rollCount = 1 + efficency / balance.stats.wizdomMultiplier
+        return (1..rollCount).count { Random.nextFloat() < rollProb }
     }
 }

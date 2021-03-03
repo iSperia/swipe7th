@@ -23,29 +23,34 @@ class DefaultSkillTileEmitter : AbilityTrigger {
             is InternalBattleEvent.TickEvent -> EfficencyCalculator.calculateStackSize(
                     event.battle.balance,
                     unit.stats.level,
-                    unit.stats.wisdom)
+                    unit.stats.intelligence)
             else -> 0
         }
 
         if (amount > 0) {
             val totalWeight = skills.sumBy { it.first }
-            val roll = Random.nextInt(1, totalWeight + 1)
-            var sum = 0
-            val skill = skills.firstOrNull {
-                sum += it.first
-                sum >= roll
-            }
-            skill?.let { skill ->
-                val position: Int? = event.battle.tileField.calculateFreePosition()
-                position?.let { position ->
 
-                    val tile = SwipeTile(
-                            skill.second,
-                            event.battle.tileField.newTileId(),
-                            amount)
+            (1..amount).forEach {
 
-                    event.battle.tileField.tiles[position] = tile
-                    event.battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
+                val roll = Random.nextInt(1, totalWeight + 1)
+                var sum = 0
+                val skill = skills.firstOrNull {
+                    sum += it.first
+                    sum >= roll
+                }
+
+                skill?.let { skill ->
+                    val position: Int? = event.battle.tileField.calculateFreePosition()
+                    position?.let { position ->
+
+                        val tile = SwipeTile(
+                                skill.second,
+                                event.battle.tileField.newTileId(),
+                                1)
+
+                        event.battle.tileField.tiles[position] = tile
+                        event.battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
+                    }
                 }
             }
         }

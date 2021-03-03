@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
+import com.badlogic.gdx.utils.Align
 import com.game7th.battle.personage.PersonageViewModel
 import com.game7th.swipe.GdxGameContext
 import ktx.actors.alpha
@@ -36,31 +37,29 @@ class PersonageHud(
         x = tw / 2
         y = 0f
     }
-
-    val armorBarBg = Image(context.atlas.findRegion("resist_bar_black")).apply {
+    val healthLabel = Label("", Label.LabelStyle(context.font, Color.WHITE)).apply {
         width = tw / 2
         height = tw / 12
-        x = tw / 2
-        y = tw / 12
-    }
-    val armorBarFg = Image(context.atlas.findRegion("armor_bar_grey")).apply {
-        width = tw / 2
-        height = tw / 12
-        x = tw / 2
-        y = tw / 12
+        setAlignment(Align.bottomLeft)
+        x = tw / 2 + 10
+        setFontScale(0.6f/context.scale)
     }
 
-    val resistBarBg = Image(context.atlas.findRegion("resist_bar_black")).apply {
+    val armorLabel = Label("", Label.LabelStyle(context.font, Color.WHITE)).apply {
         width = tw / 2
         height = tw / 12
-        x = tw / 2
-        y = tw / 6
+        setAlignment(Align.bottomLeft)
+        x = tw / 2 + 10
+        y = tw / 12
+        setFontScale(0.6f/context.scale)
     }
-    val resistBarFg = Image(context.atlas.findRegion("resist_bar_blue")).apply {
+    val resistLabel = Label("", Label.LabelStyle(context.font, Color.BLUE)).apply {
         width = tw / 2
         height = tw / 12
-        x = tw / 2
+        setAlignment(Align.bottomLeft)
+        x = tw / 2 + 10
         y = tw / 6
+        setFontScale(0.6f/context.scale)
     }
 
     val iconTick = Image(context.atlas.findRegion("icon_attack")).apply {
@@ -77,8 +76,10 @@ class PersonageHud(
     }
 
     fun updateSelf(personage: PersonageViewModel) {
-        resistBarFg.scaleX = if (personage.stats.maxMagicDefense > 0) personage.stats.magicDefense.toFloat() / personage.stats.maxMagicDefense else 0f
-        armorBarFg.scaleX = if (personage.stats.maxArmor > 0) personage.stats.armor.toFloat() / personage.stats.maxArmor else 0f
+        armorLabel.setText(if (personage.stats.armor > 0) personage.stats.armor.toString() else "")
+        resistLabel.setText(if (personage.stats.resist > 0) personage.stats.resist.toString() else "")
+        healthLabel.setText(personage.stats.health.toString())
+
         healthBarFg.scaleX = personage.stats.health.toFloat() / personage.stats.maxHealth
 
         portrait.alpha = if (personage.stats.health > 0) 1f else 0.2f
@@ -93,10 +94,9 @@ class PersonageHud(
         addActor(portrait)
         addActor(healthBarBg)
         addActor(healthBarFg)
-        addActor(armorBarBg)
-        addActor(armorBarFg)
-        addActor(resistBarBg)
-        addActor(resistBarFg)
+        addActor(healthLabel)
+        addActor(armorLabel)
+        addActor(resistLabel)
 
         addActor(iconTick)
         addActor(labelTick)

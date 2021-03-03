@@ -32,22 +32,21 @@ object UnitFactory {
                         action = AttackAction().apply {
                             attackIndex = 1
                             target = { battle, unit -> battle.aliveEnemies(unit)}
-                            damage = { battle, unit, target, ss, ms -> (balance.gladiator.a2n * unit.stats.spirit * ss / ms).toInt().let { DamageVector(it, 0, 0) }}
+                            damage = { battle, unit, target, ss, ms -> (balance.gladiator.k2 * unit.stats.spirit * ss / ms).toInt().let { DamageVector(it, 0, 0) }}
                         }
                     }
                     consume {
                         template = strikeTemplate
                         action = AttackAction().apply {
                             target = { battle, unit -> battle.findClosestAliveEnemy(unit)?.let { listOf(it) } ?: emptyList() }
-                            damage = { battle, unit, target, ss, ms -> (balance.gladiator.a1n * unit.stats.body * ss / ms).toInt().let { DamageVector(it, 0, 0) } }
+                            damage = { battle, unit, target, ss, ms -> (balance.gladiator.k1 * unit.stats.body * ss / ms).toInt().let { DamageVector(it, 0, 0) } }
                         }
                     }
                     distancedConsumeOnAttackDamage {
                         range = 1
                         tileSkins.addAll(listOf(strikeTemplate.skin, waveTemplate.skin))
                         sourceSkin = dropTemplate.skin
-                        action = RegenerateParametrizedAmountAction(
-                                Math.pow(stats.mind.toDouble(), balance.gladiator.a3p.toDouble()).toFloat() * balance.gladiator.a3n)
+                        action = RegenerateParametrizedAmountAction(stats.mind * balance.gladiator.k3 / 100)
                     }
                 }
             }
@@ -65,30 +64,30 @@ object UnitFactory {
                         action = AttackAction().apply {
                             attackIndex = 0
                             target = { battle, unit -> battle.aliveEnemies(unit).let { if (it.isEmpty()) emptyList() else listOf(it.random()) } }
-                            damage = { battle, unit, target, ss, ms -> (balance.poison_archer.a1n * unit.stats.spirit * ss / ms).toInt().let { DamageVector(it, 0, 0) }}
+                            damage = { battle, unit, target, ss, ms -> (balance.poison_archer.k1 * unit.stats.spirit * ss / ms).toInt().let { DamageVector(it, 0, 0) }}
                         }
                     }
                     distancedConsumeOnAttackDamage {
                         range = 100
                         tileSkins.add(strikeTemplate.skin)
                         sourceSkin = poisonTemplate.skin
-                        action = ApplyPoisonAction(balance.poison_archer.a2l, balance.poison_archer.a2ds * stats.mind)
+                        action = ApplyPoisonAction(balance.poison_archer.d2, balance.poison_archer.k2 * stats.mind)
                     }
                     distancedConsumeOnAttackDamage {
                         range = 100
                         tileSkins.add(strikeTemplate.skin)
                         sourceSkin = paralizeTemplate.skin
-                        action = ApplyParalizeAction(balance.poison_archer.a3d)
+                        action = ApplyParalizeAction((balance.poison_archer.k3 + stats.body / balance.poison_archer.d3).toInt())
                     }
                 }
             }
             UnitType.GREEN_SLIME -> {
-                val hp = balance.slime.hp.calculate(level)
+                val hp = balance.slime.hp * level
                 val slime = UnitStats(skin = "personage_slime", portrait = "portrait_slime", level = level, health = CappedStat(hp, hp))
                 slime += ability {
                     ticker {
-                        bodies[TickerEntry(3, 3, "attack")] = { battle, unit ->
-                            val damage = balance.slime.damage.calculate(unit.stats.level)
+                        bodies[TickerEntry(balance.slime.w1, balance.slime.t1, "attack")] = { battle, unit ->
+                            val damage = (unit.stats.level * balance.slime.k1).toInt()
                             if (damage > 0) {
                                 val target = battle.findClosestAliveEnemy(unit)
                                 target?.let { target ->
@@ -97,9 +96,9 @@ object UnitFactory {
                                 }
                             }
                         }
-                        bodies[TickerEntry(1, 2, "impact")] = { battle, unit ->
+                        bodies[TickerEntry(balance.slime.w2, balance.slime.t2, "impact")] = { battle, unit ->
                             battle.tileField.calculateFreePosition()?.let { position ->
-                                val tile = SwipeTile(TileTemplate("slime_splash", balance.slime.a2l), battle.tileField.newTileId(), balance.slime.a2l, true)
+                                val tile = SwipeTile(TileTemplate("slime_splash", balance.slime.d2 + 1), battle.tileField.newTileId(), balance.slime.d2, true)
                                 battle.tileField.tiles[position] = tile
                                 battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
                                 battle.notifyAttack(unit, emptyList(), 0)
@@ -110,12 +109,12 @@ object UnitFactory {
                 slime
             }
             UnitType.PURPLE_SLIME -> {
-                val hp = balance.red_slime.hp.calculate(level)
+                val hp = balance.red_slime.hp * level
                 val slime = UnitStats(skin = "personage_red_slime", portrait = "portrait_slime_red", level = level, health = CappedStat(hp, hp))
                 slime += ability {
                     ticker {
-                        bodies[TickerEntry(3, 3, "attack")] = { battle, unit ->
-                            val damage = balance.red_slime.damage.calculate(unit.stats.level)
+                        bodies[TickerEntry(balance.red_slime.w1, balance.red_slime.t1, "attack")] = { battle, unit ->
+                            val damage = (unit.stats.level * balance.red_slime.k1).toInt()
                             if (damage > 0) {
                                 val target = battle.findClosestAliveEnemy(unit)
                                 target?.let { target ->
@@ -124,9 +123,9 @@ object UnitFactory {
                                 }
                             }
                         }
-                        bodies[TickerEntry(1, 2, "impact")] = { battle, unit ->
+                        bodies[TickerEntry(balance.red_slime.w2, balance.red_slime.t2, "impact")] = { battle, unit ->
                             battle.tileField.calculateFreePosition()?.let { position ->
-                                val tile = SwipeTile(TileTemplate("slime_splash", balance.red_slime.a2l), battle.tileField.newTileId(), balance.red_slime.a2l, true)
+                                val tile = SwipeTile(TileTemplate("slime_splash", balance.red_slime.d2 + 1), battle.tileField.newTileId(), balance.red_slime.d2, true)
                                 battle.tileField.tiles[position] = tile
                                 battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
                                 battle.notifyAttack(unit, emptyList(), 0)
@@ -137,12 +136,12 @@ object UnitFactory {
                 slime
             }
             UnitType.SLIME_MOTHER -> {
-                val hp = balance.mother_slime.hp.calculate(level)
-                val slime = UnitStats(skin = "personage_slime_mother", portrait = "portrait_slime_mother", level = level, health = CappedStat(hp, hp), regeneration = balance.mother_slime.regen * hp / 100f)
+                val hp = level * balance.mother_slime.hp
+                val slime = UnitStats(skin = "personage_slime_mother", portrait = "portrait_slime_mother", level = level, health = CappedStat(hp, hp), regeneration = balance.mother_slime.k3.toInt() * level)
                 slime += ability {
                     ticker {
-                        bodies[TickerEntry(1, 3, "attack")] = { battle, unit ->
-                            val damage = balance.mother_slime.damage.calculate(unit.stats.level)
+                        bodies[TickerEntry(balance.mother_slime.w1, balance.mother_slime.t1, "attack")] = { battle, unit ->
+                            val damage = (unit.stats.level * balance.mother_slime.k1).toInt()
                             if (damage > 0) {
                                 val target = battle.findClosestAliveEnemy(unit)
                                 target?.let { target ->
@@ -151,7 +150,7 @@ object UnitFactory {
                                 }
                             }
                         }
-                        bodies[TickerEntry(2, 4, "impact")] = { battle, unit ->
+                        bodies[TickerEntry(balance.mother_slime.w2, balance.mother_slime.t2, "impact")] = { battle, unit ->
                             val position = battle.calculateFreeNpcPosition()
                             if (position > 0) {
                                 val producedUnit = produce(UnitType.GREEN_SLIME, balance, unit.stats.level, PersonageAttributeStats(0,0,0))
@@ -166,12 +165,12 @@ object UnitFactory {
                 slime
             }
             UnitType.SLIME_FATHER -> {
-                val hp = balance.father_slime.hp.calculate(level)
-                val slime = UnitStats(UnitType.SLIME_FATHER.getSkin(), UnitType.SLIME_FATHER.getPortrait(), level = level, health = CappedStat(hp, hp))
+                val hp = level * balance.father_slime.hp
+                val slime = UnitStats(UnitType.SLIME_FATHER.getSkin(), UnitType.SLIME_FATHER.getPortrait(), level = level, health = CappedStat(hp, hp), armor = level * balance.father_slime.k3.toInt())
                 slime += ability {
                     ticker {
-                        bodies[TickerEntry(2, 3, "attack")] = { battle, unit ->
-                            val damage = balance.father_slime.damage.calculate(unit.stats.level)
+                        bodies[TickerEntry(balance.father_slime.w1, balance.father_slime.t1, "attack")] = { battle, unit ->
+                            val damage = (unit.stats.level * balance.father_slime.k1).toInt()
                             if (damage > 0) {
                                 val target = battle.findClosestAliveEnemy(unit)
                                 target?.let { target ->
@@ -180,13 +179,12 @@ object UnitFactory {
                                 }
                             }
                         }
-                        bodies[TickerEntry(1, 3, "impact")] = { battle, unit ->
+                        bodies[TickerEntry(balance.father_slime.w2, balance.father_slime.t2, "impact")] = { battle, unit ->
                             val allies = battle.aliveAllies(unit)
-                            val armor = balance.father_slime.a2.calculate(unit.stats.level)
+                            val armor = (unit.stats.level * balance.father_slime.k2).toInt()
                             battle.notifyAttack(unit, emptyList(), 0)
                             allies.forEach {
-                                val newArmor = it.stats.armor.value + armor
-                                it.stats.armor = CappedStat(newArmor, newArmor)
+                                it.stats.armor = it.stats.armor + armor
                                 battle.notifyPersonageUpdated(it)
                             }
                         }
@@ -234,11 +232,11 @@ object UnitFactory {
                 spirit = spirit,
                 mind = mind,
                 health = CappedStat(health, health),
-                armor = CappedStat(armor, armor),
-                resist = CappedStat(resist, resist),
-                regeneration = b.stats.regenerationPerSpirit * spirit,
+                armor = armor,
+                resist = resist,
+                regeneration = (b.stats.regenerationPerSpirit * spirit).toInt(),
                 evasion = b.stats.evasionPerSpirit * spirit,
-                wisdom = mind
+                intelligence = mind
         ).apply { processor(this) }
     }
 }

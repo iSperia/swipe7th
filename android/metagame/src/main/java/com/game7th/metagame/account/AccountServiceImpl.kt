@@ -22,35 +22,17 @@ class AccountServiceImpl(
                             unit = UnitType.GLADIATOR,
                             level = 1,
                             experience = 0,
-                            stats = PersonageAttributeStats(4, 2, 1),
+                            stats = PersonageAttributeStats(3, 2, 1),
                             id = 0),
                             PersonageData(
                                     unit = UnitType.POISON_ARCHER,
                                     level = 1,
                                     experience = 0,
-                                    stats = PersonageAttributeStats(1, 4, 2),
-                                    id = 4),
-                            PersonageData(
-                                    unit = UnitType.GLADIATOR,
-                                    level = 7,
-                                    experience = 0,
-                                    stats = PersonageAttributeStats(26, 17, 8),
-                                    id = 1),
-                            PersonageData(
-                                    unit = UnitType.GLADIATOR,
-                                    level = 10,
-                                    experience = 0,
-                                    stats = PersonageAttributeStats(2529, 1685, 842),
-                                    id = 2),
-                            PersonageData(
-                                    unit = UnitType.GLADIATOR,
-                                    level = 100,
-                                    experience = 0,
-                                    stats = PersonageAttributeStats(2529, 1685, 842),
-                                    id = 3)
+                                    stats = PersonageAttributeStats(1, 3, 2),
+                                    id = 1)
                     ),
 
-                    nextPersonageId = 5
+                    nextPersonageId = 2
             )
             savePersonagePool(initialData)
             initialData
@@ -74,7 +56,7 @@ class AccountServiceImpl(
             val nextLevelExp = ((personage.level - 1) + exp(personage.level * 0.1f)).toInt() * personage.level * 50
             val personageUpdateResult: PersonageExperienceResult
             val updatedPersonage = if (newExp >= nextLevelExp) {
-                val rolls = personage.level + 1
+                val rolls = 1
                 var bodyBonus = 0
                 var spiritBonus = 0
                 var mindBonus = 0

@@ -240,8 +240,6 @@ class SwipeBattle(val balance: SwipeBalance) {
         val totalDamage = damage.damage.totalDamage()
         if (totalDamage > 0 || damage.armorDeplete > 0 || damage.resistDeplete > 0) {
             target.stats.health.value = max(0, target.stats.health.value - totalDamage)
-            target.stats.armor.value = max(0, target.stats.armor.value - damage.armorDeplete)
-            target.stats.resist.value = max(0, target.stats.resist.value - damage.resistDeplete)
 
             exportEventQueue.add(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
             if (target.stats.health.value <= 0) {
@@ -270,13 +268,7 @@ class SwipeBattle(val balance: SwipeBalance) {
     }
 
     suspend fun applyPoison(target: BattleUnit, poisonTicks: Int, poisonDmg: Int) {
-        val currentPoison = target.stats.ailments.firstOrNull { it.ailmentType == AilmentType.POISON }
-        if (currentPoison != null) {
-            currentPoison.value += poisonDmg
-            currentPoison.ticks += poisonTicks
-        } else {
-            target.stats.ailments.add(UnitAilment(AilmentType.POISON, poisonTicks, poisonDmg.toFloat()))
-        }
+        target.stats.ailments.add(UnitAilment(AilmentType.POISON, poisonTicks, poisonDmg.toFloat()))
         exportEventQueue.add(BattleEvent.ShowAilmentEffect(target.id, "ailment_poison"))
     }
 
@@ -314,10 +306,9 @@ class SwipeBattle(val balance: SwipeBalance) {
         return aliveUnits().filter { it.team != unit.team }
     }
 
-    suspend fun processHeal(unit: BattleUnit, amount: Float) {
-        val hp = amount.toInt()
-        if (hp > 0 && unit.stats.health.notCapped()) {
-            val healAmount = min(unit.stats.health.maxValue - unit.stats.health.value, hp)
+    suspend fun processHeal(unit: BattleUnit, amount: Int) {
+        if (amount > 0 && unit.stats.health.notCapped()) {
+            val healAmount = min(unit.stats.health.maxValue - unit.stats.health.value, amount)
             unit.stats.health.value += healAmount
             events.send(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
             exportEventQueue.add(BattleEvent.PersonageHealEvent(unit.toViewModel(), healAmount))
