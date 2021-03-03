@@ -174,7 +174,6 @@ class SwipeBattle(val balance: SwipeBalance) {
                 processTickUnits()
                 tick++
 
-                sendDelayedEvents()
                 checkDeadPersonages()
 
                 if (tileField.attemptSwipe(-1, 0, false).isEmpty() &&
