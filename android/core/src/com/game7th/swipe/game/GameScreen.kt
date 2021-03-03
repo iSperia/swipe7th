@@ -117,14 +117,7 @@ class GameScreen(private val game: SwipeGameGdx,
                 gdxModel = gdxModel,
                 width = Gdx.graphics.width.toFloat(),
                 height = Gdx.graphics.height.toFloat(),
-                atlases = mapOf(
-                        "ailments" to TextureAtlas(Gdx.files.internal("ailments.atlas")),
-                        "personage_gladiator" to TextureAtlas(Gdx.files.internal("personage_gladiator.atlas")),
-                        "personage_poison_archer" to TextureAtlas(Gdx.files.internal("poison_archer.atlas")),
-                        "slime" to TextureAtlas(Gdx.files.internal("slime.atlas")),
-                        "slime_red" to TextureAtlas(Gdx.files.internal("slime_red")),
-                        "slime_mother" to TextureAtlas(Gdx.files.internal("slime_mother.atlas")),
-                        "slime_father" to TextureAtlas(Gdx.files.internal("slime_father.atlas")))
+                atlases = game.context.atlases
         ), Gdx.graphics.width.toFloat()) {
             if (it is BattleEvent.VictoryEvent) {
                 val experience = config.waves.sumBy {
