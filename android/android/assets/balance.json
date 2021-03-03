@@ -2,14 +2,14 @@
   "version": "1.0",
 
   "stats": {
-    "baseHealth":15,
-    "healthPerBody": 8,
-    "healthPerLevel": 10,
-    "armorPerBody": 1,
-    "resistPerMind": 1,
+    "baseHealth":20,
+    "healthPerBody": 10,
+    "healthPerLevel": 20,
+    "armorPerBody": 2,
+    "resistPerMind": 2,
     "regenerationPerSpirit": 0.5,
     "wizdomMultiplier": 0.08,
-    "evasionPerSpirit": 3,
+    "evasionPerSpirit": 8,
     "evasion": { "k": 14, "p": 0.85 }
   },
 
@@ -23,6 +23,6 @@
   "boss_blood_knight": {"damage": {"k": 0.0075, "f": 20, "m":  20, "o": 0.5}, "hp":  {"f":  100, "k": 0.099, "m": 100}, "heal_k":  1.5},
 
   "gladiator": { "t1":  3, "t2" :  4, "a1n":  3, "a2n": 2, "a3n":  0.3, "a3p": 0.1 },
-  "poison_archer": { "a1n": 2.5, "t1": 3, "t2":  3, "t3":  2, "a2l":  4, "a2ds": 0.5, "a3d": 3 },
+  "poison_archer": { "a1n": 2.75, "t1": 3, "t2":  2, "t3":  2, "a2l":  5, "a2ds": 4, "a3d": 5 },
   "gunner": {"c":  2, "k":  0.05, "mind_k":  0.05, "tile_k": 0.1, "bullets":  24}
 }
