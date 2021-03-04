@@ -22,13 +22,13 @@ class AccountServiceImpl(
                             unit = UnitType.GLADIATOR,
                             level = 1,
                             experience = 0,
-                            stats = PersonageAttributeStats(3, 2, 1),
+                            stats = PersonageAttributeStats(1, 0, 0),
                             id = 0),
                             PersonageData(
                                     unit = UnitType.POISON_ARCHER,
                                     level = 1,
                                     experience = 0,
-                                    stats = PersonageAttributeStats(1, 3, 2),
+                                    stats = PersonageAttributeStats(0, 1, 0),
                                     id = 1)
                     ),
 
@@ -61,10 +61,10 @@ class AccountServiceImpl(
                 var spiritBonus = 0
                 var mindBonus = 0
                 (1..rolls).forEach {
-                    val roll = Random.nextInt(personage.unit.bodyWeight + personage.unit.mindWeight + personage.unit.spiritWeight) + 1
-                    if (roll <= personage.unit.bodyWeight) {
+                    val roll = Random.nextInt(personage.unit.bodyWeight + personage.unit.mindWeight + personage.unit.spiritWeight)
+                    if (roll < personage.unit.bodyWeight) {
                         bodyBonus++
-                    } else if (roll <= personage.unit.bodyWeight + personage.unit.spiritWeight) {
+                    } else if (roll < personage.unit.bodyWeight + personage.unit.spiritWeight) {
                         spiritBonus++
                     } else {
                         mindBonus++
@@ -75,7 +75,7 @@ class AccountServiceImpl(
                 personage.copy(level = personage.level + 1, stats = personage.stats.copy(
                         personage.stats.body + bodyBonus,
                         personage.stats.spirit + spiritBonus,
-                        personage.stats.mind + spiritBonus),
+                        personage.stats.mind + mindBonus),
                         experience = 0)
             } else {
                 personageUpdateResult = PersonageExperienceResult(false, 0, null, personage.experience, newExp, nextLevelExp)
