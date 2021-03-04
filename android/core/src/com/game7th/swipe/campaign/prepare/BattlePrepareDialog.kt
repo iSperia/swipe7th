@@ -88,7 +88,7 @@ class BattlePrepareDialog(
                 ScaleToAction().apply { setScale(1f); duration = 0.3f }
         ))
 
-        background = Image(context.uiAtlas.createPatch("ui_dialog_bg.fw")).apply {
+        background = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
             width = this@BattlePrepareDialog.width + 28
             height = this@BattlePrepareDialog.height + 28
             x = -14f
@@ -97,7 +97,7 @@ class BattlePrepareDialog(
         background.onClick { }
         addActor(background)
 
-        labelDifficulty = Label("Chose difficulty:", Label.LabelStyle(context.font, Color.WHITE)).apply {
+        labelDifficulty = Label("Chose difficulty:", Label.LabelStyle(context.font, Color.BLACK)).apply {
             x = 94 * game.scale
             y = 300f * game.scale
             width = 71 * game.scale
@@ -124,12 +124,13 @@ class BattlePrepareDialog(
         applyDifficulty()
 
         buttonStart = TextButton("Start", TextButton.TextButtonStyle(
-                TextureRegionDrawable(context.uiAtlas.findRegion("ui_button.fw")),
-                TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_dn.fw")),
+                TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_simple")),
+                TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_pressed")),
                 null,
                 context.font
         )).apply {
             label.setFontScale(1f)
+            label.color = Color.BLACK
             x = 240 * game.scale
             y = 5f * game.scale
             width = game.scale * 90

@@ -11,7 +11,7 @@ class PersonageSelector(
         callback: (Int) -> Unit
 ) : Group() {
 
-    val bg = Image(context.atlas.createPatch("ui_dialog")).apply {
+    val bg = Image(context.atlas.findRegion("ui_dialog")).apply {
         width = 370f
         height = 370f
     }

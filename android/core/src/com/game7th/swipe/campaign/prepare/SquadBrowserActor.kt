@@ -27,7 +27,7 @@ class SquadBrowserActor(
     var index = 0
 
     init {
-        background = Image(context.uiAtlas.createPatch("panel_blue")).apply {
+        background = Image(context.uiAtlas.findRegion("panel_blue")).apply {
             width = 168f * context.scale
             height = 270f * context.scale
         }

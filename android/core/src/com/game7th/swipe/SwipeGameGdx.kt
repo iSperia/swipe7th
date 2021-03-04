@@ -48,11 +48,7 @@ class SwipeGameGdx(private val storage: PersistentStorage) : Game() {
         height = Gdx.graphics.height.toFloat()
         scale = Gdx.graphics.width / 480f
 
-
-
-
-
-
+        val uiAtlas = TextureAtlas(Gdx.files.internal("ui.atlas"))
         val atlas = TextureAtlas(Gdx.files.internal("pack_0.atlas"))
         val font = BitmapFont(Gdx.files.internal("atarian.fnt"), Gdx.files.internal("atarian_0.png"), false).apply {
             color = Color.WHITE
@@ -60,11 +56,10 @@ class SwipeGameGdx(private val storage: PersistentStorage) : Game() {
         val balanceFile = Gdx.files.internal("balance.json")
         val balanceText = balanceFile.readString()
         val balance = Gson().fromJson<SwipeBalance>(balanceText, SwipeBalance::class.java)
-        context = GdxGameContext(atlas, font, balance, scale)
+        context = GdxGameContext(atlas, uiAtlas, font, balance, scale)
 
         Gdx.input.inputProcessor = multiplexer
 
-        uiAtlas = TextureAtlas(Gdx.files.internal("ui.atlas"))
         screenContext = ScreenContext(uiAtlas, font, atlas, scale)
         setScreen(ActScreen(this, actService, 0, screenContext))
     }

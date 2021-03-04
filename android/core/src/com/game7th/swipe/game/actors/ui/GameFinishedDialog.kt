@@ -19,14 +19,14 @@ class GameFinishedDialog(
         callback: () -> Unit
         ) : Group() {
 
-    val background = Image(context.atlas.createPatch("ui_dialog")).apply {
+    val background = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
         width = 400f
         height = 300f
         zIndex = 5
         addActor(this)
     }
 
-    val buttonClose = Image(context.atlas.createPatch("ui_button")).apply {
+    val buttonClose = Image(context.uiAtlas.findRegion("ui_button_simple")).apply {
         width = 120f
         height = 20f
         zIndex = 6
@@ -42,12 +42,13 @@ class GameFinishedDialog(
         })
     }
 
-    val buttonCloseLabel = Label("CLOSE", Label.LabelStyle(context.font, Color.WHITE)).apply {
+    val buttonCloseLabel = Label("CLOSE", Label.LabelStyle(context.font, Color.BLACK)).apply {
         width = 120f
         height = 20f
         zIndex = 7
         x = 140f
         y = 20f
+        setFontScale(0.5f)
         setAlignment(Align.center)
         addActor(this)
         touchable = Touchable.disabled
@@ -59,7 +60,7 @@ class GameFinishedDialog(
         height = 25f
         setFontScale(1f)
         x = 0f
-        y = 270f
+        y = 265f
         zIndex = 10
         addActor(this)
     }
