@@ -27,6 +27,7 @@ class AttackAction : BattleAction {
         val tile = meta as? SwipeTile
         tile ?: return
         val targets = target(battle, unit)
+        battle.notifyAttack(unit, targets, attackIndex)
         val damages = targets.map { target ->
             val damage = damage(battle, unit, target, tile.stackSize, tile.type.maxStackSize)
             val damageResult = battle.processDamage(target, unit, damage)
@@ -36,7 +37,6 @@ class AttackAction : BattleAction {
         damages.forEach {
             battle.propagateInternalEvent(InternalBattleEvent.AttackDamageEvent(battle, it.second, tile, source, it.first))
         }
-        battle.notifyAttack(unit, damages, attackIndex)
         targets.forEach {
             battle.notifyEvent(BattleEvent.PersonageUpdateEvent(it.toViewModel()))
         }

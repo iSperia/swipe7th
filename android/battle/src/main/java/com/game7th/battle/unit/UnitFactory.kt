@@ -83,7 +83,7 @@ object UnitFactory {
             }
             UnitType.GREEN_SLIME -> {
                 val hp = balance.slime.hp * level
-                val slime = UnitStats(skin = "personage_slime", portrait = "portrait_slime", level = level, health = CappedStat(hp, hp))
+                val slime = UnitStats(skin = "personage_slime", portrait = "portrait_slime", level = level, health = CappedStat(hp, hp), evasion = 1000)
                 slime += ability {
                     ticker {
                         bodies[TickerEntry(balance.slime.w1, balance.slime.t1, "attack")] = { battle, unit ->
@@ -91,8 +91,8 @@ object UnitFactory {
                             if (damage > 0) {
                                 val target = battle.findClosestAliveEnemy(unit)
                                 target?.let { target ->
-                                    val damageResult = battle.processDamage(target, unit, DamageVector(damage, 0, 0))
-                                    battle.notifyAttack(unit, listOf(Pair(target, damageResult)), 0)
+                                    battle.notifyAttack(unit, listOf(target), 0)
+                                    battle.processDamage(target, unit, DamageVector(damage, 0, 0))
                                 }
                             }
                         }
@@ -100,8 +100,8 @@ object UnitFactory {
                             battle.tileField.calculateFreePosition()?.let { position ->
                                 val tile = SwipeTile(TileTemplate("slime_splash", balance.slime.d2 + 1), battle.tileField.newTileId(), balance.slime.d2, true)
                                 battle.tileField.tiles[position] = tile
-                                battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
                                 battle.notifyAttack(unit, emptyList(), 0)
+                                battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
                             }
                         }
                     }
@@ -118,8 +118,8 @@ object UnitFactory {
                             if (damage > 0) {
                                 val target = battle.findClosestAliveEnemy(unit)
                                 target?.let { target ->
-                                    val damageResult = battle.processDamage(target, unit, DamageVector(damage, 0, 0))
-                                    battle.notifyAttack(unit, listOf(Pair(target, damageResult)), 0)
+                                    battle.notifyAttack(unit, listOf(target), 0)
+                                    battle.processDamage(target, unit, DamageVector(damage, 0, 0))
                                 }
                             }
                         }
@@ -145,8 +145,8 @@ object UnitFactory {
                             if (damage > 0) {
                                 val target = battle.findClosestAliveEnemy(unit)
                                 target?.let { target ->
-                                    val damageResult = battle.processDamage(target, unit, DamageVector(damage, 0, 0))
-                                    battle.notifyAttack(unit, listOf(Pair(target, damageResult)), 0)
+                                    battle.notifyAttack(unit, listOf(target), 0)
+                                    battle.processDamage(target, unit, DamageVector(damage, 0, 0))
                                 }
                             }
                         }
@@ -174,8 +174,8 @@ object UnitFactory {
                             if (damage > 0) {
                                 val target = battle.findClosestAliveEnemy(unit)
                                 target?.let { target ->
-                                    val damageResult = battle.processDamage(target, unit, DamageVector(damage, 0, 0))
-                                    battle.notifyAttack(unit, listOf(Pair(target, damageResult)), 0)
+                                    battle.notifyAttack(unit, listOf(target), 0)
+                                    battle.processDamage(target, unit, DamageVector(damage, 0, 0))
                                 }
                             }
                         }

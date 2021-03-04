@@ -43,7 +43,7 @@ sealed class BattleEvent {
 
     data class PersonageAttackEvent(
             val source: PersonageViewModel,
-            val targets: List<Pair<PersonageViewModel, DamageProcessResult>>,
+            val targets: List<PersonageViewModel>,
             val attackIndex: Int
     ) : BattleEvent()
 

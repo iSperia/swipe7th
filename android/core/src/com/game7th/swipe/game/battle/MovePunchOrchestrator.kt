@@ -45,7 +45,7 @@ class MovePunchOrchestrator(
                 sourceFigure.x = targetX + ((timePassed - timeStampBackMoveStart) / timeStampBackMove) * (sourceFigure.originX - targetX)
             } else if (timeStampBackMoveStart > 0f && timeStampBackMoveStart + timeStampMove <= timePassed) {
                 sourceFigure.x = sourceFigure.originX
-                battle.unlock()
+//                battle.unlock()
                 battle.removeController(this)
             }
         }
@@ -60,7 +60,8 @@ class MovePunchOrchestrator(
             is BattleControllerEvent.FigurePoseFrameIndexEvent -> {
                 if (event.figureId == sourceFigure.id && timePassed > timeStampMove) {
                     if (sourceFigure != targetFigure) {
-                        targetFigure?.switchPose(FigurePose.POSE_DAMAGE)
+//                        targetFigure?.switchPose(FigurePose.POSE_DAMAGE)
+                        battle.unlock()
 
                         timeStampBackMoveStart = timePassed
                     } else {

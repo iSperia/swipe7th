@@ -105,6 +105,7 @@ class BattleController(
                         event.damage,
                         Color.RED
                 )
+                figure.switchPose(FigurePose.POSE_DAMAGE)
                 effects.add(controller)
             }
             is BattleEvent.PersonageDeadEvent -> {
@@ -154,7 +155,7 @@ class BattleController(
                 GdxAttackType.MOVE_AND_PUNCH -> {
                     val targetPersonage = event.targets.firstOrNull()
                     targetPersonage?.let { targetPersonage ->
-                        val targetFigure = figures.firstOrNull { it.id == targetPersonage.first.id }
+                        val targetFigure = figures.firstOrNull { it.id == targetPersonage.id }
                         targetFigure?.let { targetFigure ->
                             val orchestrator = MovePunchOrchestrator(
                                     context,
@@ -186,7 +187,7 @@ class BattleController(
                                 effectId++,
                                 this@BattleController,
                                 figure,
-                                event.targets.map { target -> figures.first { it.id == target.first.id } }.sortedBy { it.x },
+                                event.targets.map { target -> figures.first { it.id == target.id } }.sortedBy { it.x },
                                 effect)
                         effects.add(orchestrator)
                     }
@@ -198,7 +199,7 @@ class BattleController(
                                 effectId++,
                                 this@BattleController,
                                 figure,
-                                event.targets.map { figures.first { figure -> figure.id == it.first.id } },
+                                event.targets.map { figures.first { figure -> figure.id == it.id } },
                                 effect
                         )
                         effects.add(orchestrator)

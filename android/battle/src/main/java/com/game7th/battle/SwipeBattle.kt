@@ -41,7 +41,6 @@ class SwipeBattle(val balance: SwipeBalance) {
     var wave = 0
 
     val units = mutableListOf<BattleUnit>()
-    private val exportEventQueue = mutableListOf<BattleEvent>()
 
     suspend fun propagateInternalEvent(event: InternalBattleEvent) {
         aliveUnits().forEach { battleUnit ->
@@ -75,12 +74,6 @@ class SwipeBattle(val balance: SwipeBalance) {
         checkAutoTickTiles()
         produceGuaranteedTile()
         propagateInternalEvent(InternalBattleEvent.TickEvent(this, preventTickers))
-        sendDelayedEvents()
-    }
-
-    suspend fun sendDelayedEvents() {
-        exportEventQueue.forEach { events.send(it) }
-        exportEventQueue.clear()
     }
 
     private suspend fun checkAutoTickTiles() {
@@ -227,8 +220,8 @@ class SwipeBattle(val balance: SwipeBalance) {
         }
     }
 
-    suspend fun notifyAttack(source: BattleUnit, targets: List<Pair<BattleUnit, DamageProcessResult>>, attackIndex: Int) {
-        events.send(BattleEvent.PersonageAttackEvent(source.toViewModel(), targets.map { Pair(it.first.toViewModel(), it.second) }, attackIndex))
+    suspend fun notifyAttack(source: BattleUnit, targets: List<BattleUnit>, attackIndex: Int) {
+        events.send(BattleEvent.PersonageAttackEvent(source.toViewModel(), targets.map { it.toViewModel() }, attackIndex))
     }
 
     /*
@@ -241,12 +234,12 @@ class SwipeBattle(val balance: SwipeBalance) {
         if (totalDamage > 0 || damage.armorDeplete > 0 || damage.resistDeplete > 0) {
             target.stats.health.value = max(0, target.stats.health.value - totalDamage)
 
-            exportEventQueue.add(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
+            notifyEvent(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
             if (target.stats.health.value <= 0) {
-                exportEventQueue.add(BattleEvent.PersonageDeadEvent(target.toViewModel()))
+                notifyEvent(BattleEvent.PersonageDeadEvent(target.toViewModel()))
             }
         } else if (damage.status == DamageProcessStatus.DAMAGE_EVADED) {
-            exportEventQueue.add(BattleEvent.ShowAilmentEffect(target.id, "ailment_evade"))
+            notifyEvent(BattleEvent.ShowAilmentEffect(target.id, "ailment_evade"))
         }
         return damage
     }
@@ -255,7 +248,7 @@ class SwipeBattle(val balance: SwipeBalance) {
         target.stats.health.value = max(0, target.stats.health.value - damage.totalDamage())
         events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.totalDamage()))
         if (target.stats.health.value <= 0) {
-            exportEventQueue.add(BattleEvent.PersonageDeadEvent(target.toViewModel()))
+            notifyEvent(BattleEvent.PersonageDeadEvent(target.toViewModel()))
         }
     }
 
@@ -269,7 +262,7 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     suspend fun applyPoison(target: BattleUnit, poisonTicks: Int, poisonDmg: Int) {
         target.stats.ailments.add(UnitAilment(AilmentType.POISON, poisonTicks, poisonDmg.toFloat()))
-        exportEventQueue.add(BattleEvent.ShowAilmentEffect(target.id, "ailment_poison"))
+        notifyEvent(BattleEvent.ShowAilmentEffect(target.id, "ailment_poison"))
     }
 
     suspend fun applyScorch(target: BattleUnit, ticks: Int, dmg: Int) {
@@ -286,10 +279,6 @@ class SwipeBattle(val balance: SwipeBalance) {
         }
         events.send(BattleEvent.ShowAilmentEffect(target.id, "ailment_paralize"))
         events.send(BattleEvent.PersonageUpdateEvent(target.toViewModel()))
-    }
-
-    suspend fun enqueueEvent(event: BattleEvent) {
-        exportEventQueue.add(event)
     }
 
     suspend fun notifyEvent(event: BattleEvent) {
@@ -311,12 +300,12 @@ class SwipeBattle(val balance: SwipeBalance) {
             val healAmount = min(unit.stats.health.maxValue - unit.stats.health.value, amount)
             unit.stats.health.value += healAmount
             events.send(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
-            exportEventQueue.add(BattleEvent.PersonageHealEvent(unit.toViewModel(), healAmount))
+            notifyEvent(BattleEvent.PersonageHealEvent(unit.toViewModel(), healAmount))
         }
     }
 
-    fun notifyPersonageUpdated(unit: BattleUnit) {
-        exportEventQueue.add(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
+    suspend fun notifyPersonageUpdated(unit: BattleUnit) {
+        notifyEvent(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
     }
 
     fun calculateFreeNpcPosition(): Int {
