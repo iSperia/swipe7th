@@ -208,15 +208,15 @@ class SwipeBattle(val balance: SwipeBalance) {
                 when (ailment.ailmentType) {
                     AilmentType.POISON -> {
                         processAilmentDamage(unit, DamageVector(0, 0, ailment.value.toInt()))
-                        exportEventQueue.add(BattleEvent.ShowAilmentEffect(unit.id, "ailment_poison"))
+                        events.send(BattleEvent.ShowAilmentEffect(unit.id, "ailment_poison"))
                     }
                     AilmentType.SCORCH -> {
                         processAilmentDamage(unit, DamageVector(0, ailment.value.toInt(), 0))
-                        exportEventQueue.add(BattleEvent.ShowAilmentEffect(unit.id, "effect_scorch"))
+                        events.send(BattleEvent.ShowAilmentEffect(unit.id, "effect_scorch"))
                     }
                     AilmentType.STUN -> {
                         needPersonageUpdate = true
-                        exportEventQueue.add(BattleEvent.ShowAilmentEffect(unit.id, "ailment_paralize"))
+                        events.send(BattleEvent.ShowAilmentEffect(unit.id, "ailment_paralize"))
                     }
                 }
                 ailment.ticks--
@@ -284,7 +284,7 @@ class SwipeBattle(val balance: SwipeBalance) {
         } else {
             target.stats.ailments.add(UnitAilment(AilmentType.STUN, ticks, 0f))
         }
-        exportEventQueue.add(BattleEvent.ShowAilmentEffect(target.id, "ailment_paralize"))
+        events.send(BattleEvent.ShowAilmentEffect(target.id, "ailment_paralize"))
         events.send(BattleEvent.PersonageUpdateEvent(target.toViewModel()))
     }
 
