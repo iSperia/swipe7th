@@ -127,7 +127,6 @@ class BattleController(
                 effects.add(controller)
             }
             is BattleEvent.PersonageUpdateEvent -> {
-                val figure = figures.first { it.id == event.personage.id }
             }
             is BattleEvent.VictoryEvent -> {
                 endEventHandler(event)
@@ -136,10 +135,8 @@ class BattleController(
                 endEventHandler(event)
             }
             is BattleEvent.ShowAilmentEffect -> {
-                val effect = context.gdxModel.ailments.firstOrNull { it.name == event.effectSkin }
-                effect?.let { effect ->
-                    val figure = figures.firstOrNull { it.id == event.target }
-                    figure?.let { figure ->
+                context.gdxModel.ailments.firstOrNull { it.name == event.effectSkin }?.let { effect ->
+                    figures.firstOrNull { it.id == event.target }?.let { figure ->
                         showEffectOverFigure(figure, effect)
                     }
                 }
@@ -148,15 +145,13 @@ class BattleController(
     }
 
     private fun handleAttack(event: BattleEvent.PersonageAttackEvent) {
-        val figure = figures.firstOrNull { it.id == event.source.id }
-        figure?.let { figure ->
+        figures.firstOrNull { it.id == event.source.id }?.let { figure ->
             val attack = figure.figureModel.attacks[event.attackIndex]
             when (attack.attackType) {
                 GdxAttackType.MOVE_AND_PUNCH -> {
                     val targetPersonage = event.targets.firstOrNull()
                     targetPersonage?.let { targetPersonage ->
-                        val targetFigure = figures.firstOrNull { it.id == targetPersonage.id }
-                        targetFigure?.let { targetFigure ->
+                        figures.firstOrNull { it.id == targetPersonage.id }?.let { targetFigure ->
                             val orchestrator = MovePunchOrchestrator(
                                     context,
                                     effectId++,

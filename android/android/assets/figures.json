@@ -4,6 +4,7 @@
       "name": "personage_gladiator",
       "atlas": "personage_gladiator",
       "height": 205,
+      "body": "body_gladiator",
       "poses": [
         {"name": "attack", "start":  1, "end": 19, "triggers": [14]},
         {"name": "damage", "start":  20, "end": 27},
@@ -24,9 +25,10 @@
       ]
     },
     {
-      "name": "personage_poison_archer",
-      "atlas": "personage_poison_archer",
+      "name": "poison_archer",
+      "atlas": "poison_archer",
       "height": 205,
+      "body": "poison_archer_body",
       "poses": [
         {"name": "attack", "start":  1, "end": 44, "triggers": [34]},
         {"name": "damage", "start":  67, "end": 82},
@@ -36,7 +38,7 @@
       "attacks": [
         {"attackType": "BOW_STRIKE", "effect": {
           "name": "poison_archer_arrow",
-          "atlas": "personage_poison_archer",
+          "atlas": "poison_archer",
           "trigger": 15,
           "height": 144,
           "width": 96
@@ -44,9 +46,10 @@
       ]
     },
     {
-      "name": "personage_slime",
+      "name": "slime",
       "atlas": "slime",
       "height": 94,
+      "body": "slime_body",
       "poses": [
         {"name":  "attack", "start":  1, "end":  35, "triggers": [23]},
         {"name":  "damage", "start":  54, "end":  65},
@@ -58,9 +61,10 @@
       ]
     },
     {
-      "name": "personage_red_slime",
+      "name": "slime_red",
       "atlas": "slime_red",
       "height": 94,
+      "body": "slime_red_body",
       "poses": [
         {"name":  "attack", "start":  1, "end":  35, "triggers": [23]},
         {"name":  "damage", "start":  54, "end":  65},
@@ -72,9 +76,10 @@
       ]
     },
     {
-      "name": "personage_slime_mother",
+      "name": "slime_mother",
       "atlas": "slime_mother",
       "height": 210,
+      "body": "slime_mother_body",
       "poses": [
         {"name":  "attack", "start":  1, "end":  34, "triggers": [27]},
         {"name":  "damage", "start":  51, "end":  65},
@@ -86,9 +91,10 @@
       ]
     },
     {
-      "name": "personage_slime_father",
+      "name": "slime_father",
       "atlas": "slime_father",
       "height": 210,
+      "body": "slime_father_body",
       "poses": [
         {"name":  "attack", "start":  1, "end":  34, "triggers": [27]},
         {"name":  "damage", "start":  51, "end":  65},

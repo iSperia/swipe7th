@@ -22,6 +22,7 @@ data class FigureGdxModel(
     val name: String,
     val atlas: String,
     val height: Int,
+    val body: String,
     val poses: List<PoseGdxModel>,
     val attacks: List<AttackGdxModel>
 )
@@ -41,18 +42,6 @@ data class GdxModel(
         val ailments: List<EffectGdxModel>
 ) {
     fun figure(name: String) = figures.firstOrNull { it.name == name }
-}
-
-internal fun String.mapNameToFigure(): String {
-    return when (this) {
-        "personage_gladiator" -> "body_gladiator"
-        "personage_slime" -> "slime_body"
-        "personage_red_slime" -> "slime_red_body"
-        "personage_slime_mother" -> "slime_mother_body"
-        "personage_slime_father" -> "slime_father_body"
-        "personage_poison_archer" -> "poison_archer_body"
-        else -> "slime_body"
-    }
 }
 
 sealed abstract class BattleControllerEvent {

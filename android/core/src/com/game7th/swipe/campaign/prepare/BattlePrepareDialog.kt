@@ -154,14 +154,14 @@ class BattlePrepareDialog(
     }
 
     private fun showGameScreen() {
-        game.screen = GameScreen(
+        game.switchScreen(GameScreen(
                 game,
                 actId,
                 locationId,
                 difficulty,
                 personages[personageSquadBrowser.index],
                 actsService
-        )
+        ))
     }
 
     private fun changeDifficulty(i: Int) {

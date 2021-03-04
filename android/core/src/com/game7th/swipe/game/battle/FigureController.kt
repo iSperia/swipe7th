@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.Array
 import com.game7th.swipe.game.GameContextWrapper
 import com.game7th.swipe.game.battle.model.BattleControllerEvent
 import com.game7th.swipe.game.battle.model.FigureGdxModel
-import com.game7th.swipe.game.battle.model.mapNameToFigure
 
 enum class FigurePose(val poseName: String) {
     POSE_IDLE("idle"),
@@ -38,7 +37,7 @@ class FigureController(
     var timePoseStarted = 0f
 
     var atlas: TextureAtlas = context.atlases[figureModel.atlas]!!
-    val allTextures = filterAtlas(atlas, figureModel.name.mapNameToFigure()).toList()
+    val allTextures = filterAtlas(atlas, figureModel.body).toList()
     var animation: Animation<TextureRegion>? = null
 
     var isDead = false

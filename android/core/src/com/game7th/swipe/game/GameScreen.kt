@@ -14,7 +14,6 @@ import com.game7th.battle.event.BattleEvent
 import com.game7th.metagame.account.PersonageAttributeStats
 import com.game7th.metagame.account.PersonageData
 import com.game7th.metagame.campaign.ActsService
-import com.game7th.metagame.unit.UnitType
 import com.game7th.swipe.SwipeGameGdx
 import com.game7th.swipe.campaign.ActScreen
 import com.game7th.swipe.game.actors.GameActor
@@ -49,6 +48,7 @@ class GameScreen(private val game: SwipeGameGdx,
     lateinit var config: BattleConfig
 
     lateinit var gameActor: GameActor
+    val atlases = mutableMapOf<String, TextureAtlas>()
 
     override fun show() {
         viewport = ExtendViewport(480f, 720f, 480f, 2000f)
@@ -101,7 +101,7 @@ class GameScreen(private val game: SwipeGameGdx,
             if (victory) {
                 actService.markLocationComplete(actId, locationId, difficulty)
             }
-            game.screen = ActScreen(game, game.actService, actId, game.screenContext)
+            game.switchScreen(ActScreen(game, game.actService, actId, game.screenContext))
         }
 
         stage.addActor(gameActor)
@@ -110,6 +110,16 @@ class GameScreen(private val game: SwipeGameGdx,
 
         val gdxModel = Gson().fromJson<GdxModel>(Gdx.files.internal("figures.json").readString(), GdxModel::class.java)
 
+        atlases["ailments"] = TextureAtlas(Gdx.files.internal("ailments.atlas"))
+        config.personages.forEach { personageConfig ->
+            atlases[personageConfig.name.getSkin()] = TextureAtlas(Gdx.files.internal("${personageConfig.name.getSkin()}.atlas"))
+        }
+        config.waves.forEach { it.forEach { npc ->
+            if (!atlases.containsKey(npc.name.getSkin())) {
+                atlases[npc.name.getSkin()] = TextureAtlas(Gdx.files.internal("${npc.name.getSkin()}.atlas"))
+            }
+        }}
+
         val scale = game.context.scale
         battleController = BattleController(GameContextWrapper(
                 gameContext = game.context,
@@ -117,7 +127,7 @@ class GameScreen(private val game: SwipeGameGdx,
                 gdxModel = gdxModel,
                 width = Gdx.graphics.width.toFloat(),
                 height = Gdx.graphics.height.toFloat(),
-                atlases = game.context.atlases
+                atlases = atlases
         ), Gdx.graphics.width.toFloat()) {
             if (it is BattleEvent.VictoryEvent) {
                 val experience = config.waves.sumBy {
@@ -176,5 +186,8 @@ class GameScreen(private val game: SwipeGameGdx,
 
     override fun dispose() {
         game.multiplexer.removeProcessor(processor)
+        atlases.forEach { (_, atlas) ->
+            atlas.dispose()
+        }
     }
 }

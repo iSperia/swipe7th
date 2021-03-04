@@ -9,25 +9,16 @@ enum class UnitType(val bodyWeight: Int, val spiritWeight: Int, val mindWeight: 
     PURPLE_SLIME(0,0,0),
     SLIME_MOTHER(0,0,0),
     SLIME_FATHER(0,0,0),
-    CITADEL_WARLOCK(0,0,0),
-    FLAME_ELEMENT(0,0,0),
-    EARTH_ELEMENT(0,0,0),
-    BOSS_BLOOD_KNIGHT(0,0,0),
 
     UNKNOWN(0,0,0);
 
     fun getSkin(): String = when (this) {
         GLADIATOR -> "personage_gladiator"
-        POISON_ARCHER -> "personage_poison_archer"
-        GREEN_SLIME -> "personage_slime"
-        SLIME_MOTHER -> "personage_mother_slime"
-        SLIME_FATHER -> "personage_slime_father"
-        PURPLE_SLIME -> "personage_red_slime"
-        MACHINE_GUNNER -> "personage_gunner"
-        CITADEL_WARLOCK -> "personage_citadel_warlock"
-        FLAME_ELEMENT -> "personage_fire_element"
-        EARTH_ELEMENT -> "personage_earth_element"
-        BOSS_BLOOD_KNIGHT -> "personage_boss_blood_knight"
+        POISON_ARCHER -> "poison_archer"
+        GREEN_SLIME -> "slime"
+        SLIME_MOTHER -> "slime_mother"
+        SLIME_FATHER -> "slime_father"
+        PURPLE_SLIME -> "slime_red"
         else -> "personage_dead"
     }
 
