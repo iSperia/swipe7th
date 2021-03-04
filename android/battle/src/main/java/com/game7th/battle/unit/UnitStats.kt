@@ -3,6 +3,7 @@ package com.game7th.battle.unit
 import com.game7th.battle.ability.UnitAbility
 import com.game7th.battle.personage.PersonageStats
 import com.game7th.battle.personage.PersonageViewModel
+import com.game7th.metagame.unit.UnitType
 
 enum class Team {
     LEFT, RIGHT
@@ -42,8 +43,8 @@ data class BattleUnit(
                     maxTick = stats.maxTick,
                     isStunned = !isNotStunned()
             ),
-            skin = stats.skin,
-            portrait = stats.portrait,
+            skin = stats.unitType.getSkin(),
+            portrait = stats.unitType.getPortrait(),
             id = id,
             team = team.ordinal
     )
@@ -71,8 +72,7 @@ data class UnitAilment(
  * Generic unit information
  */
 data class UnitStats(
-        val skin: String,
-        val portrait: String = "portrait_unknown",
+        val unitType: UnitType,
 
         val level: Int,
         val body: Int = 0,

@@ -17,7 +17,7 @@ enum class UnitType(val bodyWeight: Int, val spiritWeight: Int, val mindWeight: 
     UNKNOWN(0,0,0);
 
     fun getSkin(): String = when (this) {
-        GLADIATOR -> "p_gladiator"
+        GLADIATOR -> "personage_gladiator"
         POISON_ARCHER -> "personage_poison_archer"
         GREEN_SLIME -> "personage_slime"
         SLIME_MOTHER -> "personage_mother_slime"
