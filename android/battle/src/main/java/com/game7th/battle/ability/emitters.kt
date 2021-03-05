@@ -20,11 +20,18 @@ class DefaultSkillTileEmitter : AbilityTrigger {
 
         val amount = when (event) {
             is InternalBattleEvent.ProduceGuaranteedTileEvent -> 1
-            is InternalBattleEvent.TickEvent -> EfficencyCalculator.calculateStackSize(
+            is InternalBattleEvent.TileConsumedEvent -> EfficencyCalculator.calculateStackSize(
                     event.battle.balance,
-                    unit.stats.level,
-                    unit.stats.intelligence)
+                    unit.stats.intelligence,
+                    event.tile.stackSize,
+                    event.battle.combo
+            )
             else -> 0
+        }
+
+        var sourcePosition = when (event) {
+            is InternalBattleEvent.TileConsumedEvent -> event.position
+            else -> -1
         }
 
         if (amount > 0) {
@@ -49,7 +56,7 @@ class DefaultSkillTileEmitter : AbilityTrigger {
                                 1)
 
                         event.battle.tileField.tiles[position] = tile
-                        event.battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
+                        event.battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position, sourcePosition))
                     }
                 }
             }

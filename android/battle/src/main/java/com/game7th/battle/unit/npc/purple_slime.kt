@@ -30,7 +30,7 @@ fun producePurpleSlime(balance: SwipeBalance, level: Int): UnitStats {
                 battle.tileField.calculateFreePosition()?.let { position ->
                     val tile = SwipeTile(TileTemplate("slime_splash", balance.red_slime.d2 + 1), battle.tileField.newTileId(), balance.red_slime.d2, true)
                     battle.tileField.tiles[position] = tile
-                    battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position))
+                    battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position, -1))
                     battle.notifyAttack(unit, emptyList(), 0)
                 }
             }

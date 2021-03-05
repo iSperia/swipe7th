@@ -20,7 +20,8 @@ sealed class BattleEvent {
 
     data class CreateTileEvent(
         val tile: TileViewModel,
-        val position: Int
+        val position: Int,
+        val sourcePosition: Int
     ) : BattleEvent()
 
     data class SwipeMotionEvent(

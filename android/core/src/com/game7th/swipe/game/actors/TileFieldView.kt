@@ -42,12 +42,22 @@ class TileFieldView(
     suspend fun processAction(action: BattleEvent) {
         when (action) {
             is BattleEvent.CreateTileEvent -> {
-                val x = action.position % FIELD_WIDTH
-                val y = action.position / FIELD_WIDTH
+                val tx = action.position % FIELD_WIDTH
+                val ty = action.position / FIELD_WIDTH
+                val fx = if (action.sourcePosition >= 0) action.sourcePosition % FIELD_WIDTH else tx
+                val fy = if (action.sourcePosition >= 0) action.sourcePosition / FIELD_WIDTH else ty
+
                 val view = TileView(gameContext, action.tile, this)
-                view.applyPosition(x, y)
+                view.applyPosition(fx, fy)
                 view.name = "${action.tile.id}"
                 tileGroup.addActor(view)
+
+                if (action.sourcePosition >= 0) {
+                    view.addAction(MoveToAction().apply {
+                        setPosition(36f * tx + 18f, 36f * (FIELD_WIDTH - 1 - ty))
+                        duration = 0.2f
+                    })
+                }
 
                 view.alpha = 0f
                 view.setScale(1.5f)

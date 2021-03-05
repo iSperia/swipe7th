@@ -38,6 +38,8 @@ class SwipeBattle(val balance: SwipeBalance) {
     var personageId = 0
     var tick = 0
 
+    var combo = 0
+
     var wave = 0
 
     val units = mutableListOf<BattleUnit>()

@@ -15,10 +15,11 @@ class ConsumeTrigger : AbilityTrigger {
         if (event is InternalBattleEvent.TickEvent && unit.isAlive()) {
             event.battle.tileField.tiles.forEach { (index, tile) ->
                 if (tile.type.skin == template.skin && tile.stackSize >= template.maxStackSize) {
-                    event.battle.propagateInternalEvent(InternalBattleEvent.TileConsumedEvent(event.battle, tile, index))
                     //we are done for now, consume the tile
                     event.battle.tileField.removeById(tile.id)
                     event.battle.notifyTileRemoved(tile.id)
+
+                    event.battle.propagateInternalEvent(InternalBattleEvent.TileConsumedEvent(event.battle, tile, index))
 
                     action.processAction(event.battle, unit, unit, unit, tile)
                 }
