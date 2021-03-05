@@ -17,6 +17,7 @@ import com.game7th.metagame.state.ActProgressState
 import com.game7th.metagame.state.LocationProgressState
 import com.game7th.swipe.ScreenContext
 import com.game7th.swipe.SwipeGameGdx
+import com.game7th.swipe.campaign.bottom_menu.BottomMenu
 import com.game7th.swipe.campaign.prepare.BattlePrepareDialog
 import kotlin.math.*
 
@@ -50,11 +51,13 @@ class ActScreen(
 
     private val atlas = TextureAtlas(Gdx.files.internal("metagame"))
 
+    private var mapBottomOffset = 0f
     private var scroll = 0f
     private var scrollImpulse = 0f
     lateinit var gestureDetector: GestureDetector
 
     lateinit var stage: Stage
+    lateinit var bottomMenu: BottomMenu
     var showingOverlay: Boolean = false
 
     private val locationCache = mutableMapOf<Int, LocationProgressState>()
@@ -118,6 +121,10 @@ class ActScreen(
 
         stage = Stage(ScreenViewport())
         game.multiplexer.addProcessor(0, stage)
+
+        bottomMenu = BottomMenu(context)
+        stage.addActor(bottomMenu)
+        mapBottomOffset = context.scale * 48f
     }
 
     private fun updateLocationProgressCache(progressState: ActProgressState) {
@@ -148,7 +155,7 @@ class ActScreen(
             }
         }
         batch.begin()
-        batch.draw(backgroundTexture, 0f, -scroll, backgroundTexture.width * game.scale, backgroundTexture.height * game.scale)
+        batch.draw(backgroundTexture, 0f, -scroll + mapBottomOffset, backgroundTexture.width * game.scale, backgroundTexture.height * game.scale)
         batch.end()
 
         Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -195,8 +202,8 @@ class ActScreen(
             actConfig.findNode(index)?.let { targetNode ->
                 val x1 = x * game.scale
                 val x2 = targetNode.x * game.scale
-                val y1 = y * game.scale - scroll
-                val y2 = targetNode.y * game.scale - scroll
+                val y1 = y * game.scale - scroll + mapBottomOffset
+                val y2 = targetNode.y * game.scale - scroll + mapBottomOffset
                 linkRenderer.color = linkSubColor
                 linkRenderer.rectLine(x1, y1, x2, y2, game.width * 6f / 480f)
                 linkRenderer.color = linkMainColor
@@ -209,7 +216,7 @@ class ActScreen(
         val texture = getTextureForCircle(type)
         batch.draw(texture,
                 game.scale * x - circleOffset,
-                game.scale * y - circleOffset - scroll,
+                game.scale * y - circleOffset - scroll + mapBottomOffset,
                 0f,
                 0f,
                 texture.regionWidth.toFloat(),
@@ -227,7 +234,7 @@ class ActScreen(
                 val texture = if (i <= stars - 1) yellowStarTexture else greyStarTexture
                 batch.draw(texture,
                         game.scale * x - circleOffset * sin(alpha) - starOffset,
-                        game.scale * y - circleOffset * cos(alpha) - starOffset - scroll,
+                        game.scale * y - circleOffset * cos(alpha) - starOffset - scroll + mapBottomOffset,
                         0f,
                         0f,
                         texture.regionWidth.toFloat(),
@@ -242,7 +249,7 @@ class ActScreen(
             val texture = atlas.findRegion("lock")
             batch.draw(texture,
                     game.scale * x - lockOffset,
-                    game.scale * y - lockOffset - scroll,
+                    game.scale * y - lockOffset - scroll + mapBottomOffset,
                     0f,
                     0f,
                     texture.regionWidth.toFloat(),
