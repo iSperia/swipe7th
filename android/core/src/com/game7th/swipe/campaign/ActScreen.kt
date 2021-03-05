@@ -87,7 +87,7 @@ class ActScreen(
 
             override fun tap(x: Float, y: Float, count: Int, button: Int): Boolean {
                 closeOverlay()
-                val wy = (game.height - y + scroll) / game.scale
+                val wy = (game.height - y + scroll - mapBottomOffset) / game.scale
                 val wx = x / game.scale
                 actConfig.nodes.forEach { node ->
                     val rect = Rectangle(node.x - 30, node.y - 30, 60f, 60f)
@@ -133,14 +133,14 @@ class ActScreen(
     }
 
     private fun normalizeScroll() {
-        scroll = max(0f, min(scroll, game.scale * backgroundTexture.height - game.height))
+        scroll = max(0f, min(scroll, game.scale * backgroundTexture.height - game.height + mapBottomOffset))
     }
 
     private fun closeOverlay() {
         if (showingOverlay) {
             showingOverlay = false
-            stage.actors.toList().forEach {
-                it.remove()
+            stage.actors.toList().forEachIndexed { index, actor ->
+                if (index > 0) actor.remove()
             }
         }
     }

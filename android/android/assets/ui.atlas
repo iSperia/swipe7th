@@ -6,84 +6,105 @@ filter: Nearest, Nearest
 repeat: none
 arrowBlue_left
   rotate: false
-  xy: 1452, 176
+  xy: 1160, 42
   size: 22, 21
   orig: 22, 21
   offset: 0, 0
   index: -1
 arrowBlue_right
   rotate: false
-  xy: 2, 18
+  xy: 1452, 188
   size: 22, 21
   orig: 22, 21
   offset: 0, 0
   index: -1
 btn_blue_dn
   rotate: false
-  xy: 385, 59
+  xy: 385, 89
   size: 381, 138
   orig: 381, 138
   offset: 0, 0
   index: -1
 btn_blue_up
   rotate: false
-  xy: 2, 59
+  xy: 2, 89
   size: 381, 138
   orig: 381, 138
   offset: 0, 0
   index: -1
 iconCircle_blue
   rotate: false
-  xy: 1452, 157
+  xy: 52, 52
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
   index: -1
 iconCircle_grey
   rotate: false
-  xy: 1160, 16
+  xy: 2, 2
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
   index: -1
+icon_squads
+  rotate: false
+  xy: 2, 39
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 panel_blue
   rotate: false
-  xy: 1306, 53
+  xy: 1306, 83
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 star_grey
   rotate: false
-  xy: 768, 4
+  xy: 768, 34
   size: 194, 193
   orig: 194, 193
   offset: 0, 0
   index: -1
 star_yellow
   rotate: false
-  xy: 964, 2
+  xy: 964, 32
   size: 194, 195
   orig: 194, 195
   offset: 0, 0
   index: -1
 ui_button_pressed
   rotate: false
-  xy: 2, 41
+  xy: 2, 21
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_simple
   rotate: false
-  xy: 1160, 35
+  xy: 52, 71
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: -1
+ui_button_trans_pressed
+  rotate: false
+  xy: 1160, 65
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: -1
+ui_button_trans_simple
+  rotate: false
+  xy: 1452, 211
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_dialog
   rotate: false
-  xy: 1160, 53
+  xy: 1160, 83
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
