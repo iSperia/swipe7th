@@ -1,5 +1,8 @@
 package com.game7th.battle.balance
 
+import com.game7th.metagame.account.PersonageAttributeStats
+import com.game7th.metagame.account.PersonageData
+
 data class StatBalance(
         val baseHealth: Int,
         val healthPerBody: Int,
@@ -39,4 +42,11 @@ data class SwipeBalance(
         val father_slime: PersonageBalance,
         val gladiator: PersonageBalance,
         val poison_archer: PersonageBalance
-)
+) {
+    fun calculateHealth(p: PersonageData) = p.level * stats.healthPerLevel + p.stats.body * stats.healthPerBody
+    fun calculateArmor(p: PersonageData) = p.stats.body * stats.armorPerBody
+    fun calculateRegeneration(p: PersonageData) = (p.stats.spirit * stats.regenerationPerSpirit).toInt()
+    fun calculateEvasion(p: PersonageData) = p.stats.spirit * stats.evasionPerSpirit
+    fun calculateResist(p: PersonageData) = p.stats.mind * stats.resistPerMind
+    fun calculateWisdom(p: PersonageData) = p.stats.mind * stats.wizdomMultiplier
+}

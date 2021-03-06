@@ -18,7 +18,10 @@ class PartyView(
 ) : Group() {
 
     val browserHeight = context.scale * 150f
-    val personagesView = PersonageScrollActor(context, service.getPersonages().map { UnitConfig(it.unit, it.level) }, browserHeight, true, -1)
+    val personagesView = PersonageScrollActor(context, service.getPersonages().map { UnitConfig(it.unit, it.level) }, browserHeight, true, -1).apply {
+        y = 10f * context.scale
+        x = 10f * context.scale
+    }
     val personagesScroll = ScrollPane(personagesView).apply {
         y = 10f * context.scale
         x = 10f * context.scale
@@ -55,7 +58,7 @@ class PartyView(
                         amountY = 200f * context.scale
                         duration = 0.25f
                     })
-                    personagesScroll.y = 0f
+                    personagesScroll.y = 10f * context.scale
                     personagesBg.y = 0f
                     personagesScroll.addAction(MoveByAction().apply {
                         amountY = 200f * context.scale

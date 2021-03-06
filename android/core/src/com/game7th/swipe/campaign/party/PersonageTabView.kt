@@ -35,6 +35,8 @@ class PersonageTabView(
         height = 160f * context.scale
     }
 
+    val sh = attrsBg.height / 3f
+
     val ah = 0.08f * attrsBg.height
     val aw = 0.13f * attrsBg.height
 
@@ -65,6 +67,33 @@ class PersonageTabView(
         setFontScale(ah / 36f)
     }
 
+    val secondAttrsBody = Label("Health: ${context.balance.calculateHealth(personage)}\nArmor: ${context.balance.calculateArmor(personage)}", Label.LabelStyle(context.font, Color.RED)).apply {
+        y = attrsBg.y + 2 * sh
+        x = attrsBg.x + attrsBg.width + context.scale * 0.1f
+        width = 140f * context.scale
+        height = sh
+        setFontScale(sh / 2.3f / 36f)
+        setAlignment(Align.left)
+    }
+
+    val secondAttrsSpirit = Label("Evasion: ${context.balance.calculateEvasion(personage)}\nRegeneration: ${context.balance.calculateRegeneration(personage)}", Label.LabelStyle(context.font, Color.FOREST)).apply {
+        y = attrsBg.y + sh
+        x = attrsBg.x + attrsBg.width + context.scale * 0.1f
+        width = 140f * context.scale
+        height = sh
+        setFontScale(sh / 2.3f / 36f)
+        setAlignment(Align.left)
+    }
+
+    val secondAttrsMind = Label("Resist: ${context.balance.calculateResist(personage)}\nWisdom: ${context.balance.calculateWisdom(personage)}", Label.LabelStyle(context.font, Color.BLUE)).apply {
+        y = attrsBg.y
+        x = attrsBg.x + attrsBg.width + context.scale * 0.1f
+        width = 140f * context.scale
+        height = sh
+        setFontScale(sh / 2.3f / 36f)
+        setAlignment(Align.left)
+    }
+
     init {
         addActor(bg)
         addActor(portrait)
@@ -73,5 +102,9 @@ class PersonageTabView(
         addActor(bodyLabel)
         addActor(spiritLabel)
         addActor(mindLabel)
+
+        addActor(secondAttrsBody)
+        addActor(secondAttrsSpirit)
+        addActor(secondAttrsMind)
     }
 }

@@ -15,8 +15,6 @@ class PersonageScrollActor(
 
     private val ratio = 1 / 1.5f
     private val elementWidth = h * ratio
-    private val lvlSize = elementWidth * 0.25f
-    private val lvlPadding = lvlSize * 0.25f
 
     var selectionCallback: ((Int) -> Unit)? = null
 

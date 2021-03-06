@@ -60,7 +60,7 @@ class SwipeGameGdx(private val storage: PersistentStorage) : Game() {
 
         Gdx.input.inputProcessor = multiplexer
 
-        screenContext = ScreenContext(uiAtlas, font, atlas, scale)
+        screenContext = ScreenContext(uiAtlas, font, atlas, scale, balance)
         setScreen(ActScreen(this, actService, 0, screenContext))
     }
 
