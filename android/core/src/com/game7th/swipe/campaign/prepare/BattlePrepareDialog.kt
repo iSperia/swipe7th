@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
@@ -20,6 +21,7 @@ import com.game7th.metagame.campaign.LocationConfig
 import com.game7th.metagame.unit.SquadConfig
 import com.game7th.metagame.unit.UnitConfig
 import com.game7th.swipe.ScreenContext
+import com.game7th.swipe.campaign.plist.PersonageScrollActor
 import com.game7th.swipe.game.GameScreen
 
 /**
@@ -41,8 +43,13 @@ class BattlePrepareDialog(
     val background: Image
     val labelDifficulty: Label
     val buttonStart: TextButton
-    val personageSquadBrowser: SquadBrowserActor
-    val npcSquadBrowser: SquadBrowserActor
+    val vsIcon: Image
+
+    val scrollPersonages: ScrollPane
+    val personagesGroup: PersonageScrollActor
+
+    val npcPersonages: ScrollPane
+    val npcGroup: PersonageScrollActor
 
     val w: Float
     val h: Float
@@ -51,30 +58,9 @@ class BattlePrepareDialog(
 
     private val personages = game.accountService.getPersonages()
 
-    val personageAdapter = object : SquadBrowserAdapter {
-        override fun count() = personages.size
-
-        override fun getSquad(index: Int): SquadConfig {
-            return SquadConfig(personages[index].unit.toString(), listOf(
-                    UnitConfig(personages[index].unit, personages[index].level)
-            ))
-        }
-    }
-
-    val npcAdapter = object : SquadBrowserAdapter {
-        override fun count() = config.waves.size
-
-        override fun getSquad(index: Int): SquadConfig {
-            val bonus = (difficulty - 1) * 3
-            return SquadConfig("Wave ${index + 1}", config.waves[index].map {
-                it.copy(level = it.level + bonus)
-            })
-        }
-    }
-
     init {
-        w = scale * 336
-        h = scale * 330f
+        w = scale * 420f
+        h = scale * 420f
         width = w
         height = h
         x = (game.width - this.width) / 2f
@@ -89,39 +75,11 @@ class BattlePrepareDialog(
         ))
 
         background = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
-            width = this@BattlePrepareDialog.width + 28
-            height = this@BattlePrepareDialog.height + 28
-            x = -14f
-            y = -14f
+            width = this@BattlePrepareDialog.width
+            height = this@BattlePrepareDialog.height
         }
         background.onClick { }
         addActor(background)
-
-        labelDifficulty = Label("Chose difficulty:", Label.LabelStyle(context.font, Color.BLACK)).apply {
-            x = 94 * game.scale
-            y = 300f * game.scale
-            width = 71 * game.scale
-            height = 30 * game.scale
-            setFontScale(1f)
-        }
-        labelDifficulty.touchable = Touchable.disabled
-        addActor(labelDifficulty)
-
-        addActor(starImages)
-        (1..5).forEach { i ->
-            val image = Image(context.uiAtlas.findRegion("star_grey")).apply {
-                width = 24 * game.scale
-                height = 24 * game.scale
-                x = (168 + i * 26) * game.scale
-                y = 303f * game.scale
-            }
-            starImages.addActor(image)
-            image.onClick {
-                changeDifficulty(i)
-            }
-
-        }
-        applyDifficulty()
 
         buttonStart = TextButton("Start", TextButton.TextButtonStyle(
                 TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_simple")),
@@ -131,8 +89,8 @@ class BattlePrepareDialog(
         )).apply {
             label.setFontScale(1f)
             label.color = Color.BLACK
-            x = 240 * game.scale
-            y = 5f * game.scale
+            x = 165 * game.scale
+            y = 10f * game.scale
             width = game.scale * 90
             height = 20 * game.scale
         }
@@ -141,17 +99,61 @@ class BattlePrepareDialog(
             showGameScreen()
         }
 
-        personageSquadBrowser = SquadBrowserActor(context, personageAdapter).apply {
-            x = 6 * context.scale
-            y = 30 * context.scale
-        }
-        addActor(personageSquadBrowser)
+        val scrollHeight = 150f * context.scale
 
-        npcSquadBrowser = SquadBrowserActor(context, npcAdapter).apply {
-            x = 170 * context.scale
-            y = 30 * context.scale
+        personagesGroup = PersonageScrollActor(context, personages.map { UnitConfig(it.unit, it.level) }, scrollHeight, true)
+        scrollPersonages = ScrollPane(personagesGroup).apply {
+            x = 20f * context.scale
+            width = 380f * context.scale
+            y = 220f * context.scale
+            height = scrollHeight
         }
-        addActor(npcSquadBrowser)
+        addActor(scrollPersonages)
+
+        npcGroup = PersonageScrollActor(context, config.waves.flatMap { it }.map { it }, scrollHeight, false)
+        npcPersonages = ScrollPane(npcGroup).apply {
+            x = 20f * context.scale
+            width = 380 * context.scale
+            y = 50f * context.scale
+            height = scrollHeight
+        }
+        addActor(npcPersonages)
+
+        vsIcon = Image(context.uiAtlas.findRegion("ui_icon_vs")).apply {
+            x = 190f * game.scale
+            y = 190f * game.scale
+            width = 40f * game.scale
+            height = 40f * game.scale
+            touchable = Touchable.disabled
+        }
+        addActor(vsIcon)
+
+        labelDifficulty = Label("Select difficulty:", Label.LabelStyle(context.font, Color.BLACK)).apply {
+            x = 0f
+            y = 380f * game.scale
+            width = 210f * game.scale
+            height = 30f * game.scale
+            setFontScale(1f)
+            setAlignment(Align.right)
+        }
+        labelDifficulty.touchable = Touchable.disabled
+        addActor(labelDifficulty)
+
+        addActor(starImages)
+        (1..5).forEach { i ->
+            val image = Image(context.uiAtlas.findRegion("star_grey")).apply {
+                width = 30f * game.scale
+                height = 30f * game.scale
+                x = (230 + 35f * (i - 1)) * game.scale
+                y = 380f * game.scale
+            }
+            starImages.addActor(image)
+            image.onClick {
+                changeDifficulty(i)
+            }
+
+        }
+        applyDifficulty()
     }
 
     private fun showGameScreen() {
@@ -160,7 +162,7 @@ class BattlePrepareDialog(
                 actId,
                 locationId,
                 difficulty,
-                personages[personageSquadBrowser.index],
+                personages[personagesGroup.selectedIndex % personages.size],
                 actsService
         ))
     }
@@ -168,7 +170,6 @@ class BattlePrepareDialog(
     private fun changeDifficulty(i: Int) {
         difficulty = i
         applyDifficulty()
-        npcSquadBrowser.update()
     }
 
     private fun applyDifficulty() {

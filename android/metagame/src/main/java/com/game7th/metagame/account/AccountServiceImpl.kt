@@ -17,22 +17,22 @@ class AccountServiceImpl(
         val dataString = storage.get(KEY_PERSONAGES)
         pool = if (dataString == null) {
             val initialData = PersonagePool(
-                    listOf(
-                            PersonageData(
-                            unit = UnitType.GLADIATOR,
-                            level = 1,
-                            experience = 0,
-                            stats = PersonageAttributeStats(1, 0, 0),
-                            id = 0),
-                            PersonageData(
-                                    unit = UnitType.POISON_ARCHER,
-                                    level = 1,
-                                    experience = 0,
-                                    stats = PersonageAttributeStats(0, 1, 0),
-                                    id = 1)
-                    ),
-
-                    nextPersonageId = 2
+                    ((1..10).map {
+                        PersonageData(
+                                unit = UnitType.GLADIATOR,
+                                level = it * 2 - 1,
+                                experience = 0,
+                                stats = PersonageAttributeStats(it / 2, it / 3, it - it / 2 - it / 3),
+                                id = it)
+                    } + (1..10).map {
+                        PersonageData(
+                                unit = UnitType.POISON_ARCHER,
+                                level = it * 2 - 1,
+                                experience = 0,
+                                stats = PersonageAttributeStats(it - it / 2 - it / 3, it / 2, it / 3),
+                                id = 100 + it)
+                    }).sortedBy { it.level },
+                    nextPersonageId = 200
             )
             savePersonagePool(initialData)
             initialData

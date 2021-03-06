@@ -6,35 +6,35 @@ filter: Nearest, Nearest
 repeat: none
 arrowBlue_left
   rotate: false
-  xy: 1160, 42
+  xy: 76, 40
   size: 22, 21
   orig: 22, 21
   offset: 0, 0
   index: -1
 arrowBlue_right
   rotate: false
-  xy: 1452, 188
+  xy: 126, 90
   size: 22, 21
   orig: 22, 21
   offset: 0, 0
   index: -1
 btn_blue_dn
   rotate: false
-  xy: 385, 89
+  xy: 385, 113
   size: 381, 138
   orig: 381, 138
   offset: 0, 0
   index: -1
 btn_blue_up
   rotate: false
-  xy: 2, 89
+  xy: 2, 113
   size: 381, 138
   orig: 381, 138
   offset: 0, 0
   index: -1
 iconCircle_blue
   rotate: false
-  xy: 52, 52
+  xy: 1696, 166
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
@@ -48,64 +48,92 @@ iconCircle_grey
   index: -1
 icon_squads
   rotate: false
-  xy: 2, 39
+  xy: 1696, 203
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 panel_blue
   rotate: false
-  xy: 1306, 83
+  xy: 1550, 107
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 star_grey
   rotate: false
-  xy: 768, 34
+  xy: 768, 58
   size: 194, 193
   orig: 194, 193
   offset: 0, 0
   index: -1
 star_yellow
   rotate: false
-  xy: 964, 32
+  xy: 964, 56
   size: 194, 195
   orig: 194, 195
   offset: 0, 0
   index: -1
 ui_button_pressed
   rotate: false
-  xy: 2, 21
+  xy: 1696, 185
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_simple
   rotate: false
-  xy: 52, 71
+  xy: 1746, 235
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_trans_pressed
   rotate: false
-  xy: 1160, 65
+  xy: 1404, 89
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_trans_simple
   rotate: false
-  xy: 1452, 211
+  xy: 2, 21
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_dialog
   rotate: false
-  xy: 1160, 83
+  xy: 1404, 107
   size: 144, 144
   orig: 144, 144
+  offset: 0, 0
+  index: -1
+ui_icon_vs
+  rotate: false
+  xy: 2, 39
+  size: 72, 72
+  orig: 72, 72
+  offset: 0, 0
+  index: -1
+ui_level_bg
+  rotate: false
+  xy: 76, 63
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ui_portrait_fg
+  rotate: false
+  xy: 1160, 71
+  size: 120, 180
+  orig: 120, 180
+  offset: 0, 0
+  index: -1
+ui_portrait_fg_focused
+  rotate: false
+  xy: 1282, 71
+  size: 120, 180
+  orig: 120, 180
   offset: 0, 0
   index: -1
