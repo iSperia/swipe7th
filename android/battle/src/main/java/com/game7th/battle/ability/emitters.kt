@@ -22,7 +22,7 @@ class DefaultSkillTileEmitter : AbilityTrigger {
             is InternalBattleEvent.ProduceGuaranteedTileEvent -> 1
             is InternalBattleEvent.TileConsumedEvent -> EfficencyCalculator.calculateStackSize(
                     event.battle.balance,
-                    unit.stats.intelligence,
+                    unit.stats.wisdom,
                     event.tile.stackSize,
                     event.battle.combo
             )

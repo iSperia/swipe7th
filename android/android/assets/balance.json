@@ -8,7 +8,7 @@
     "armorPerBody": 20,
     "resistPerMind": 20,
     "regenerationPerSpirit": 3,
-    "wizdomMultiplier": 10,
+    "wizdomMultiplier": 2,
     "evasionPerSpirit": 2,
     "comboMultiplier": 0.05
   },

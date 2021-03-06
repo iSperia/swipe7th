@@ -49,7 +49,7 @@ object UnitFactory {
                 resist = resist,
                 regeneration = (b.stats.regenerationPerSpirit * spirit).toInt(),
                 evasion = b.stats.evasionPerSpirit * spirit,
-                intelligence = mind
+                wisdom = mind * b.stats.wizdomMultiplier
         ).apply { processor(this) }
     }
 }

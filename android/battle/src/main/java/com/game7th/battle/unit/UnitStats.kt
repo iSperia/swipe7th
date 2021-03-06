@@ -36,7 +36,7 @@ data class BattleUnit(
                     regeneration = stats.regeneration,
                     evasion = stats.evasion,
                     mind = stats.mind,
-                    effectiveness = stats.intelligence,
+                    effectiveness = stats.wisdom,
                     resist = stats.resist,
                     tick = stats.tick,
                     tickAbility = stats.tickAbility,
@@ -84,7 +84,7 @@ data class UnitStats(
         var resist: Int = 0,
         val evasion: Int = 0,
         val regeneration: Int = 0,
-        val intelligence: Int = 0,
+        val wisdom: Int = 0,
 
         var tick: Int = 0,
         var maxTick: Int = 0,

@@ -7,11 +7,11 @@ object EfficencyCalculator {
 
     fun calculateStackSize(
             balance: SwipeBalance,
-            efficency: Int,
+            wisdom: Int,
             stackSize: Int,
             combo: Int): Int {
 
-        val chance = (efficency + combo) / 100f
+        val chance = (wisdom + combo) / 100f
         return (1..stackSize).count {
             val roll = Random.nextFloat()
             roll <= chance

@@ -58,6 +58,7 @@ class DistancedConsumeOnAttackDamageTriggerEvent: AbilityTrigger {
                     tile?.let { tile ->
                         event.battle.tileField.tiles.remove(it)
                         event.battle.notifyTileRemoved(tile.id)
+                        event.battle.propagateInternalEvent(InternalBattleEvent.TileConsumedEvent(event.battle, tile, it))
                     }
                 }
                 tilesToRemove.clear()
