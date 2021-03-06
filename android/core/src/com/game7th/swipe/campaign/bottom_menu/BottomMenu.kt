@@ -10,8 +10,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.game7th.swipe.ScreenContext
+import ktx.actors.onClick
 
-class BottomMenu(context: ScreenContext) : Group() {
+class BottomMenu(
+        context: ScreenContext
+) : Group() {
+
+    var onPartyButtonPressed: (() -> Unit)? = null
 
     val bg = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
         x = 0f
@@ -53,5 +58,9 @@ class BottomMenu(context: ScreenContext) : Group() {
         addActor(btnSquads)
         addActor(iconSquads)
         addActor(labelSquads)
+
+        btnSquads.onClick {
+            onPartyButtonPressed?.invoke()
+        }
     }
 }

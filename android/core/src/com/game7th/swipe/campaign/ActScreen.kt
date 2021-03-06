@@ -18,8 +18,17 @@ import com.game7th.metagame.state.LocationProgressState
 import com.game7th.swipe.ScreenContext
 import com.game7th.swipe.SwipeGameGdx
 import com.game7th.swipe.campaign.bottom_menu.BottomMenu
+import com.game7th.swipe.campaign.party.PartyView
 import com.game7th.swipe.campaign.prepare.BattlePrepareDialog
 import kotlin.math.*
+
+sealed class UiState {
+    object Hidden : UiState()
+    object PartyUi : UiState()
+    data class BattlePreparation(
+            val dialog: BattlePrepareDialog
+    ) : UiState()
+}
 
 /**
  * The screen for single campaign
@@ -58,9 +67,13 @@ class ActScreen(
 
     lateinit var stage: Stage
     lateinit var bottomMenu: BottomMenu
-    var showingOverlay: Boolean = false
+
+    private var uiState: UiState = UiState.Hidden
 
     private val locationCache = mutableMapOf<Int, LocationProgressState>()
+
+    private var battlePrepareDialog: BattlePrepareDialog? = null
+    private var partyUi: PartyView? = null
 
     override fun show() {
         config = actsService.getActConfig(actId)
@@ -92,14 +105,15 @@ class ActScreen(
                 actConfig.nodes.forEach { node ->
                     val rect = Rectangle(node.x - 30, node.y - 30, 60f, 60f)
                     if (rect.contains(wx, wy) && locationCache.containsKey(node.id)) {
-                        stage.addActor(BattlePrepareDialog(
-                                game = game,
-                                context = context,
-                                actId = this@ActScreen.actId,
-                                locationId = node.id,
-                                config = node,
-                                actsService = actsService))
-                        showingOverlay = true
+                        transiteUiState(UiState.BattlePreparation(
+                                BattlePrepareDialog(
+                                        game = game,
+                                        context = context,
+                                        actId = this@ActScreen.actId,
+                                        locationId = node.id,
+                                        config = node,
+                                        actsService = actsService)
+                        ))
                     }
                 }
                 return super.tap(x, y, count, button)
@@ -122,8 +136,11 @@ class ActScreen(
         stage = Stage(ScreenViewport())
         game.multiplexer.addProcessor(0, stage)
 
-        bottomMenu = BottomMenu(context)
+        bottomMenu = BottomMenu(context).apply {
+            onPartyButtonPressed = this@ActScreen::onPartyButtonPressed
+        }
         stage.addActor(bottomMenu)
+        bottomMenu.zIndex = 100
         mapBottomOffset = context.scale * 48f
     }
 
@@ -136,13 +153,13 @@ class ActScreen(
         scroll = max(0f, min(scroll, game.scale * backgroundTexture.height - game.height + mapBottomOffset))
     }
 
+    private fun onPartyButtonPressed() {
+        if (uiState == UiState.PartyUi) return
+        transiteUiState(UiState.PartyUi)
+    }
+
     private fun closeOverlay() {
-        if (showingOverlay) {
-            showingOverlay = false
-            stage.actors.toList().forEachIndexed { index, actor ->
-                if (index > 0) actor.remove()
-            }
-        }
+        transiteUiState(UiState.Hidden)
     }
 
     override fun render(delta: Float) {
@@ -274,4 +291,46 @@ class ActScreen(
         CampaignNodeType.FARM -> atlas.findRegion("circle_orange")
         CampaignNodeType.REGULAR -> atlas.findRegion("circle_blue")
     }
+
+    private fun transiteUiState(state: UiState) {
+        //First of all, hide previous
+        when(this.uiState) {
+            is UiState.PartyUi -> hidePartyUi()
+            is UiState.BattlePreparation -> hideBattlePreparation()
+        }
+
+        uiState = state
+
+        //Now, show stuff
+        when (state) {
+            is UiState.BattlePreparation -> showBattlePreparation(state.dialog)
+            is UiState.PartyUi -> showPartyUi()
+        }
+    }
+
+    private fun hidePartyUi() {
+        partyUi?.animateHide()
+    }
+
+    private fun showPartyUi() {
+        partyUi = PartyView(context, game.accountService).apply {
+            y = context.scale * 48f
+        }
+        stage.addActor(partyUi)
+        partyUi?.zIndex = 0
+    }
+
+    private fun showBattlePreparation(dialog: BattlePrepareDialog) {
+        battlePrepareDialog = dialog
+        stage.addActor(battlePrepareDialog)
+    }
+
+    private fun hideBattlePreparation() {
+        battlePrepareDialog?.let { dialog ->
+            dialog.remove()
+            battlePrepareDialog = null
+        }
+    }
+
+
 }

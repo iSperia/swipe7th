@@ -18,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.campaign.ActsService
 import com.game7th.metagame.campaign.LocationConfig
-import com.game7th.metagame.unit.SquadConfig
 import com.game7th.metagame.unit.UnitConfig
 import com.game7th.swipe.ScreenContext
 import com.game7th.swipe.campaign.plist.PersonageScrollActor
