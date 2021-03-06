@@ -34,7 +34,7 @@ btn_blue_up
   index: -1
 iconCircle_blue
   rotate: false
-  xy: 50, 6
+  xy: 847, 298
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
@@ -46,9 +46,16 @@ iconCircle_grey
   orig: 17, 17
   offset: 0, 0
   index: -1
+icon_gear
+  rotate: false
+  xy: 320, 10
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 icon_squads
   rotate: false
-  xy: 612, 182
+  xy: 612, 132
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -83,28 +90,28 @@ ui_attrs_tree
   index: -1
 ui_button_pressed
   rotate: false
-  xy: 749, 249
+  xy: 50, 7
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_simple
   rotate: false
-  xy: 799, 299
+  xy: 568, 50
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_trans_pressed
   rotate: false
-  xy: 320, 68
+  xy: 568, 68
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_trans_simple
   rotate: false
-  xy: 612, 164
+  xy: 370, 42
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
@@ -116,6 +123,20 @@ ui_dialog
   orig: 144, 144
   offset: 0, 0
   index: -1
+ui_exp_bar_bg
+  rotate: false
+  xy: 320, 60
+  size: 96, 24
+  orig: 96, 24
+  offset: 0, 0
+  index: -1
+ui_exp_bar_fg
+  rotate: false
+  xy: 749, 291
+  size: 96, 24
+  orig: 96, 24
+  offset: 0, 0
+  index: -1
 ui_icon_vs
   rotate: false
   xy: 675, 243
@@ -123,9 +144,51 @@ ui_icon_vs
   orig: 72, 72
   offset: 0, 0
   index: -1
+ui_item_bg
+  rotate: false
+  xy: 468, 36
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ui_item_bg_body
+  rotate: false
+  xy: 799, 241
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ui_item_bg_boots
+  rotate: false
+  xy: 749, 241
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ui_item_bg_hand
+  rotate: false
+  xy: 612, 182
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ui_item_bg_hat
+  rotate: false
+  xy: 612, 82
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ui_item_bg_ring
+  rotate: false
+  xy: 518, 36
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 ui_level_bg
   rotate: false
-  xy: 749, 267
+  xy: 418, 36
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

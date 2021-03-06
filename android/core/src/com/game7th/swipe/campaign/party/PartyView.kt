@@ -53,19 +53,19 @@ class PartyView(
 
             detailView?.let { detailView ->
                 if (needAnimation) {
-                    detailView.y = -200f * context.scale
+                    detailView.y = -240f * context.scale
                     detailView.addAction(MoveByAction().apply {
-                        amountY = 200f * context.scale
+                        amountY = 240f * context.scale
                         duration = 0.25f
                     })
                     personagesScroll.y = 10f * context.scale
                     personagesBg.y = 0f
                     personagesScroll.addAction(MoveByAction().apply {
-                        amountY = 200f * context.scale
+                        amountY = 240f * context.scale
                         duration = 0.25f
                     })
                     personagesBg.addAction(MoveByAction().apply {
-                        amountY = 200f * context.scale
+                        amountY = 240f * context.scale
                         duration = 0.25f
                     })
                 }

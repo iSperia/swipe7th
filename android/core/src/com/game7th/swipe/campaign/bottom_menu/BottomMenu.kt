@@ -44,9 +44,9 @@ class BottomMenu(
     }
 
     val labelSquads = Label("Party", Label.LabelStyle(context.font, Color.BLACK)).apply {
-        x = btnSquads.x + context.scale * 48f
+        x = btnSquads.x + context.scale * 52f
         y = btnSquads.y + context.scale * 12f
-        setAlignment(Align.center)
+        setAlignment(Align.left)
         width = 96f * context.scale
         height = 24f * context.scale
         touchable = Touchable.disabled

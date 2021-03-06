@@ -9,6 +9,7 @@ import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.unit.UnitConfig
 import com.game7th.swipe.ScreenContext
 import com.game7th.swipe.campaign.plist.PersonageVerticalPortrait
+import kotlin.math.exp
 
 class PersonageTabView(
         private val context: ScreenContext,
@@ -20,12 +21,12 @@ class PersonageTabView(
 
     val bg = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
         width = 480f * context.scale
-        height = 200f * context.scale
+        height = 240f * context.scale
     }
 
     val portrait = PersonageVerticalPortrait(context, UnitConfig(personage.unit, personage.level), 180f * context.scale).apply {
         x = 10f * context.scale
-        y = 10f * context.scale
+        y = 50f * context.scale
     }
 
     val attrsBg = Image(context.uiAtlas.findRegion("ui_attrs_tree")).apply {
@@ -94,6 +95,13 @@ class PersonageTabView(
         setAlignment(Align.left)
     }
 
+    val nextLevelExp = ((personage.level - 1) + exp(personage.level * 0.1f)).toInt() * personage.level * 50
+
+    val experienceBar = ExperienceBar(context, 120f * context.scale, 30f * context.scale, personage.experience, nextLevelExp).apply {
+        x = 10f * context.scale
+        y = 10f * context.scale
+    }
+
     init {
         addActor(bg)
         addActor(portrait)
@@ -106,5 +114,7 @@ class PersonageTabView(
         addActor(secondAttrsBody)
         addActor(secondAttrsSpirit)
         addActor(secondAttrsMind)
+
+        addActor(experienceBar)
     }
 }
