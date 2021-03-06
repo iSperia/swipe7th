@@ -8,7 +8,8 @@ data class StatBalance(
         val resistPerMind: Int,
         val regenerationPerSpirit: Float,
         val wizdomMultiplier: Int,
-        val evasionPerSpirit: Int
+        val evasionPerSpirit: Int,
+        val comboMultiplier: Float
 )
 
 data class PersonageBalance(

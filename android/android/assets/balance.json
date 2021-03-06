@@ -9,7 +9,8 @@
     "resistPerMind": 20,
     "regenerationPerSpirit": 3,
     "wizdomMultiplier": 10,
-    "evasionPerSpirit": 2
+    "evasionPerSpirit": 2,
+    "comboMultiplier": 0.05
   },
 
   "slime": {"hp": 45, "k1": 20, "t1": 3, "w1": 3, "d2": 5, "t2": 3, "w2": 1},
@@ -18,5 +19,5 @@
   "mother_slime": {"hp": 150, "k1": 25, "t1": 5, "w1": 1, "t2": 12, "w2": 1, "k3": 1},
 
   "gladiator": {"k1": 25, "t1": 3, "k2": 10, "t2": 4, "k3": 10},
-  "poison_archer": {"k1": 25, "t1": 3, "k2": 10, "d2": 3, "t2": 2, "d3": 3, "k3": 5, "t3": 2}
+  "poison_archer": {"k1": 25, "t1": 3, "k2": 10, "d2": 3, "t2": 2, "d3": 2, "k3": 3, "t3": 2}
 }

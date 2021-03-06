@@ -28,6 +28,8 @@ class GameActor(
 
     var buttonConcede: Label
 
+    var buttonCombo: Label
+
     init {
         tileField = TileFieldView(context, this).apply {
             setScale(TILE_FIELD_SCALE)
@@ -41,12 +43,22 @@ class GameActor(
         }
         addActor(hudGroup)
 
-        buttonConcede = Label("Concede", Label.LabelStyle(context.font, Color.YELLOW))
+        buttonConcede = Label("Concede", Label.LabelStyle(context.font, Color.YELLOW)).apply {
+            x = 300f
+            y = 700f
+        }
         buttonConcede.onClick {
             debugShowBigText(false, "DEFEAT")
         }
-        buttonConcede.y = 700f
         addActor(buttonConcede)
+
+        buttonCombo = Label("COMBO", Label.LabelStyle(context.font, Color.WHITE)).apply {
+            y = 700f
+            x = 10f
+            setFontScale(1.2f)
+            isVisible = false
+        }
+        addActor(buttonCombo)
     }
 
     private fun debugShowBigText(victory: Boolean, text: String) {
@@ -90,6 +102,10 @@ class GameActor(
             }
             is BattleEvent.PersonageUpdateEvent -> {
                 hudGroup.updateHud(event.personage)
+            }
+            is BattleEvent.ComboUpdateEvent -> {
+                buttonCombo.isVisible = event.combo > 0
+                buttonCombo.setText("COMBO X${event.combo}")
             }
         }
     }

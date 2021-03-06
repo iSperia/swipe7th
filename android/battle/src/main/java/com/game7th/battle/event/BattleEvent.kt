@@ -28,6 +28,10 @@ sealed class BattleEvent {
             val events: List<TileFieldEvent>
     ) : BattleEvent()
 
+    data class ComboUpdateEvent(
+            val combo: Int
+    ) : BattleEvent()
+
     data class UpdateTileEvent(
             val id: Int,
             val tile: TileViewModel

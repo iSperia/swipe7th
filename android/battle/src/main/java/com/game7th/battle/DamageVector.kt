@@ -8,6 +8,11 @@ data class DamageVector(
     override fun toString(): String = "($physical, $magical, $chaos)"
 
     fun totalDamage() = physical + magical + chaos
+    fun multiply(koef: Float) = DamageVector(
+            (physical * koef).toInt(),
+            (magical * koef).toInt(),
+            (chaos * koef).toInt()
+    )
 }
 
 enum class DamageProcessStatus{

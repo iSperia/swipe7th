@@ -29,7 +29,7 @@ class AttackAction : BattleAction {
         val targets = target(battle, unit)
         battle.notifyAttack(unit, targets, attackIndex)
         val damages = targets.map { target ->
-            val damage = damage(battle, unit, target, tile.stackSize, tile.type.maxStackSize)
+            val damage = damage(battle, unit, target, tile.stackSize, tile.type.maxStackSize).multiply(1 + battle.balance.stats.comboMultiplier * battle.combo)
             val damageResult = battle.processDamage(target, unit, damage)
             Pair(target, damageResult)
         }
@@ -54,7 +54,7 @@ class RegenerateParametrizedAmountAction(
     override suspend fun processAction(battle: SwipeBattle, unit: BattleUnit, source: BattleUnit, target: BattleUnit, meta: Any) {
         val regen = meta as? ParametrizedMeta
         regen ?: return
-        val amount = regen.parameter * perParameter
+        val amount = regen.parameter * perParameter * (1 + 0.02f * battle.combo)
         battle.processHeal(unit, amount.toInt())
     }
 }
@@ -65,7 +65,7 @@ class ApplyPoisonAction(
 ) : BattleAction {
 
     override suspend fun processAction(battle: SwipeBattle, unit: BattleUnit, source: BattleUnit, target: BattleUnit, meta: Any) {
-        battle.applyPoison(target, duration, damage.toInt())
+        battle.applyPoison(target, duration, (damage * (1 + battle.balance.stats.comboMultiplier * battle.combo)).toInt())
     }
 }
 
@@ -74,7 +74,7 @@ class ApplyParalizeAction(
 ) : BattleAction {
 
     override suspend fun processAction(battle: SwipeBattle, unit: BattleUnit, source: BattleUnit, target: BattleUnit, meta: Any) {
-        battle.applyStun(target, duration)
+        battle.applyStun(target, battle.combo + duration)
     }
 }
 

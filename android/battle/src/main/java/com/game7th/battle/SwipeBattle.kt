@@ -6,6 +6,7 @@ import com.game7th.battle.event.TileViewModel
 import com.game7th.battle.internal_event.InternalBattleEvent
 import com.game7th.battle.personage.*
 import com.game7th.battle.tilefield.TileField
+import com.game7th.battle.tilefield.TileFieldEvent
 import com.game7th.battle.tilefield.TileFieldMerger
 import com.game7th.battle.tilefield.tile.*
 import com.game7th.battle.unit.*
@@ -161,6 +162,7 @@ class SwipeBattle(val balance: SwipeBalance) {
                 //TODO: post process stacks stages etc.
                 motionEvents = tileField.attemptSwipe(dx, dy, true)
             }
+            val totalMerges = eventCache.sumBy { be -> (be as? BattleEvent.SwipeMotionEvent)?.events?.count { it is TileFieldEvent.MergeTileEvent } ?: 0 }
             if (hadAnyEvents) {
                 runBlocking {
                     eventCache.forEach { events.send(it) }
@@ -182,6 +184,8 @@ class SwipeBattle(val balance: SwipeBalance) {
                         }
                 }
             }
+            combo = if (totalMerges > 0) combo + totalMerges else 0
+            notifyEvent(BattleEvent.ComboUpdateEvent(combo))
         }
     }
 
