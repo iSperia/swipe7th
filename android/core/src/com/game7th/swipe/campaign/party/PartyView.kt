@@ -31,6 +31,9 @@ class PartyView(
     }
 
     var firstShow = true
+    var isDetailsShown = false
+
+    var detailView: PersonageTabView? = null
 
     init {
         addActor(personagesBg)
@@ -38,6 +41,32 @@ class PartyView(
 
         personagesView.selectionCallback = { index ->
             //show details or hide details
+            //we are probably show detailView
+            val needAnimation = detailView == null
+            detailView?.remove()
+            detailView = PersonageTabView(context, service, service.getPersonages()[index].id)
+            addActor(detailView)
+            isDetailsShown = true
+
+            detailView?.let { detailView ->
+                if (needAnimation) {
+                    detailView.y = -200f * context.scale
+                    detailView.addAction(MoveByAction().apply {
+                        amountY = 200f * context.scale
+                        duration = 0.25f
+                    })
+                    personagesScroll.y = 0f
+                    personagesBg.y = 0f
+                    personagesScroll.addAction(MoveByAction().apply {
+                        amountY = 200f * context.scale
+                        duration = 0.25f
+                    })
+                    personagesBg.addAction(MoveByAction().apply {
+                        amountY = 200f * context.scale
+                        duration = 0.25f
+                    })
+                }
+            }
         }
     }
 
@@ -57,7 +86,7 @@ class PartyView(
     }
 
     fun animateHide() {
-        val shift = browserHeight + 2 * context.scale * 10f
+        val shift = browserHeight + 2 * context.scale * 10f + (if (isDetailsShown) 200f * context.scale else 0f)
         addAction(SequenceAction(
                 MoveByAction().apply {
                     amountY = -shift

@@ -4,6 +4,7 @@ import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.unit.UnitType
 import com.google.gson.Gson
 import kotlin.math.exp
+import kotlin.math.max
 import kotlin.random.Random
 
 class AccountServiceImpl(
@@ -16,20 +17,29 @@ class AccountServiceImpl(
     init {
         val dataString = storage.get(KEY_PERSONAGES)
         pool = if (dataString == null) {
+
             val initialData = PersonagePool(
                     ((1..10).map {
+                        val lvl = it * 2 - 1
+                        val primary = max(1, lvl / 2)
+                        val tertiary = (lvl - primary) / 3
+                        val secondary = lvl - primary - tertiary
                         PersonageData(
                                 unit = UnitType.GLADIATOR,
-                                level = it * 2 - 1,
+                                level = lvl,
                                 experience = 0,
-                                stats = PersonageAttributeStats(it / 2, it / 3, it - it / 2 - it / 3),
+                                stats = PersonageAttributeStats(primary, secondary, tertiary),
                                 id = it)
                     } + (1..10).map {
+                        val lvl = it * 2 - 1
+                        val primary = max(1, lvl / 2)
+                        val tertiary = (lvl - primary) / 3
+                        val secondary = lvl - primary - tertiary
                         PersonageData(
                                 unit = UnitType.POISON_ARCHER,
-                                level = it * 2 - 1,
+                                level = lvl,
                                 experience = 0,
-                                stats = PersonageAttributeStats(it - it / 2 - it / 3, it / 2, it / 3),
+                                stats = PersonageAttributeStats(tertiary, primary, secondary),
                                 id = 100 + it)
                     }).sortedBy { it.level },
                     nextPersonageId = 200

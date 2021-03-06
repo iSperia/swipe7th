@@ -37,6 +37,7 @@ class PersonageScrollActor(
                 if (indexSelectable) {
                     selectedIndex = index
                     applySelection()
+                    selectionCallback?.invoke(index)
                 }
             }
         }
