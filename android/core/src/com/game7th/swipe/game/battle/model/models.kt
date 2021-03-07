@@ -44,7 +44,7 @@ data class GdxModel(
     fun figure(name: String) = figures.firstOrNull { it.name == name }
 }
 
-sealed abstract class BattleControllerEvent {
+sealed class BattleControllerEvent {
     data class FigurePoseFrameIndexEvent(val figureId: Int, val frame: Int) : BattleControllerEvent()
     data class FigurePoseEndedEvent(val figureId: Int) : BattleControllerEvent()
     data class SteppedGeneratorEvent(val index: Int): BattleControllerEvent()

@@ -33,6 +33,7 @@ sealed class UiState {
 /**
  * The screen for single campaign
  */
+@Suppress("NAME_SHADOWING")
 class ActScreen(
         private val game: SwipeGameGdx,
         private val actsService: ActsService,

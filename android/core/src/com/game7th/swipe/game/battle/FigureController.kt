@@ -1,3 +1,5 @@
+@file:Suppress("NAME_SHADOWING")
+
 package com.game7th.swipe.game.battle
 
 import com.badlogic.gdx.graphics.g2d.Animation

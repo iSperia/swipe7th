@@ -20,7 +20,6 @@ class SquadPreviewActor(
 
     init {
         addActor(unitsGroup)
-        val size = config.units.size
         config.units.withIndex().forEach { (index, unit) ->
             val unitActor = SmallUnitPreviewActor(context, unit).apply {
                 y = ( 180f - 60f * index ) * context.scale
