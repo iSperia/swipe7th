@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: io.github.microutils:kotlin-logging:1.7.9">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.microutils/kotlin-logging/1.7.9/910dfb87d91a48f52d3afb4b0b09cff9d2f23f6b/kotlin-logging-1.7.9.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.microutils/kotlin-logging/1.7.9/d5db3a6b1a44db32d402b16b68e882e78bcd29cf/kotlin-logging-1.7.9-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

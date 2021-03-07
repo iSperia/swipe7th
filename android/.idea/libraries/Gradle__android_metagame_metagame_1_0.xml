@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: android.metagame.metagame-1.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/metagame/build/libs/metagame-1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

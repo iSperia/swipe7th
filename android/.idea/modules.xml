@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/android.iml" filepath="$PROJECT_DIR$/.idea/modules/android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/android/android.android.iml" filepath="$PROJECT_DIR$/.idea/modules/android/android.android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/balance-tool/android.balance-tool.iml" filepath="$PROJECT_DIR$/.idea/modules/balance-tool/android.balance-tool.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/battle/android.battle.iml" filepath="$PROJECT_DIR$/.idea/modules/battle/android.battle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/android.core.iml" filepath="$PROJECT_DIR$/.idea/modules/core/android.core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/desktop/android.desktop.iml" filepath="$PROJECT_DIR$/.idea/modules/desktop/android.desktop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ios/android.ios.iml" filepath="$PROJECT_DIR$/.idea/modules/ios/android.ios.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/metagame/android.metagame.iml" filepath="$PROJECT_DIR$/.idea/modules/metagame/android.metagame.iml" />
+    </modules>
+  </component>
+</project>
