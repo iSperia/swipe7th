@@ -2,9 +2,11 @@ package com.game7th.swipe.campaign.inventory
 
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.inventory.GearService
 import com.game7th.swipe.ScreenContext
+import kotlin.math.max
 
 class InventoryEditor(
         private val context: ScreenContext,
@@ -28,15 +30,18 @@ class InventoryEditor(
     val lx = 170f * context.scale
     val ly = 10f * context.scale
 
-    val panelItems = Group().apply {
+    val panelItems = Group()
+    val panelScroller = ScrollPane(panelItems).apply {
         x = lx
         y = ly
+        width = 300f * context.scale
+        height = 180f * context.scale
     }
 
     init {
         addActor(bg)
         addActor(personageBgs)
-        addActor(panelItems)
+        addActor(panelScroller)
 
         textures.forEachIndexed { index, texture ->
             val bg = Image(context.uiAtlas.findRegion(texture)).apply {
@@ -49,13 +54,15 @@ class InventoryEditor(
         }
 
         val items = gearService.listInventory()
-        val emptyItems = 15 - items.size
+        panelItems.width = context.scale * 60f * max((items.size - 1) / 3 + 1, 5)
+        panelItems.height = 180f * context.scale
+
+        val emptyItems = max(15 - items.size, items.size % 3)
+
         items.forEachIndexed { index, item ->
             val itemView = ItemView(context, item, true).apply {
                 x = (index / 3) * 60f * context.scale
                 y = (120f - (index % 3) * 60f) * context.scale
-                width = 60f
-                height = 60f
             }
             panelItems.addActor(itemView)
         }
@@ -64,8 +71,6 @@ class InventoryEditor(
                 val index = items.size + it - 1
                 x = (index / 3) * 60f * context.scale
                 y = (120f - (index % 3) * 60f) * context.scale
-                width = 60f
-                height = 60f
             }
             panelItems.addActor(itemView)
         }

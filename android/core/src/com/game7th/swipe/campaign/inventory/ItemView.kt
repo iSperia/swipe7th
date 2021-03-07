@@ -44,5 +44,8 @@ class ItemView(
         addActor(bg)
         image?.let { addActor(it) }
         addActor(lvlLabel)
+
+        width = 60f * context.scale
+        height = 60f * context.scale
     }
 }
