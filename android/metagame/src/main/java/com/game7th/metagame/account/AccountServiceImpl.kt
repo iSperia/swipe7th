@@ -65,7 +65,7 @@ class AccountServiceImpl(
         val inventoryString = storage.get(KEY_INVENTORY)
         inventory = if (inventoryString == null) {
             val initialData = InventoryPool(
-                    items = (1..100).map { InventoryItem(gbFlatBody = it, level = it, node = ItemNode.BODY, name = "TEST_ITEM") }.toMutableList()
+                    items = (1..10).map { InventoryItem(gbFlatBody = it, level = it, node = ItemNode.BODY, name = "TEST_ITEM") }.toMutableList()
             )
             initialData
         } else {
