@@ -48,14 +48,21 @@ iconCircle_grey
   index: -1
 icon_gear
   rotate: false
-  xy: 320, 10
+  xy: 871, 280
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+icon_gear_focused
+  rotate: false
+  xy: 612, 182
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 icon_squads
   rotate: false
-  xy: 612, 132
+  xy: 749, 241
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -97,7 +104,7 @@ ui_button_pressed
   index: -1
 ui_button_simple
   rotate: false
-  xy: 568, 50
+  xy: 921, 312
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
@@ -146,49 +153,49 @@ ui_icon_vs
   index: -1
 ui_item_bg
   rotate: false
-  xy: 468, 36
+  xy: 518, 36
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_body
   rotate: false
-  xy: 799, 241
+  xy: 612, 82
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_boots
   rotate: false
-  xy: 749, 241
+  xy: 799, 241
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_hand
   rotate: false
-  xy: 612, 182
+  xy: 612, 132
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_hat
   rotate: false
-  xy: 612, 82
+  xy: 418, 36
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_ring
   rotate: false
-  xy: 518, 36
+  xy: 320, 10
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_level_bg
   rotate: false
-  xy: 418, 36
+  xy: 468, 36
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

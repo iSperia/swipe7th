@@ -2,20 +2,30 @@ package com.game7th.swipe.campaign.party
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.unit.UnitConfig
 import com.game7th.swipe.ScreenContext
 import com.game7th.swipe.campaign.plist.PersonageVerticalPortrait
+import ktx.actors.onClick
 import kotlin.math.exp
+
+sealed class UiState {
+    object Initial : UiState()
+    object Gear: UiState()
+}
 
 class PersonageTabView(
         private val context: ScreenContext,
         private val service: AccountService,
         private val personageId: Int
 ) : Group() {
+
+    var state: UiState = UiState.Initial
 
     private val personage = service.getPersonages().first { it.id == personageId }
 
@@ -26,7 +36,7 @@ class PersonageTabView(
 
     val portrait = PersonageVerticalPortrait(context, UnitConfig(personage.unit, personage.level), 180f * context.scale).apply {
         x = 10f * context.scale
-        y = 50f * context.scale
+        y = 10f * context.scale
     }
 
     val attrsBg = Image(context.uiAtlas.findRegion("ui_attrs_tree")).apply {
@@ -99,7 +109,15 @@ class PersonageTabView(
 
     val experienceBar = ExperienceBar(context, 120f * context.scale, 30f * context.scale, personage.experience, nextLevelExp).apply {
         x = 10f * context.scale
-        y = 10f * context.scale
+        y = 200f * context.scale
+        touchable = Touchable.disabled
+    }
+
+    val buttonGear = Image(context.uiAtlas.findRegion("icon_gear")).apply {
+        x = attrsBg.x
+        y = 200f * context.scale
+        width = 30f * context.scale
+        height = 30f * context.scale
     }
 
     init {
@@ -116,5 +134,36 @@ class PersonageTabView(
         addActor(secondAttrsMind)
 
         addActor(experienceBar)
+
+        addActor(buttonGear)
+
+        bg.onClick {  }
+        buttonGear.onClick {
+            if (state == UiState.Gear) {
+                transiteUiState(UiState.Initial)
+            } else {
+                transiteUiState(UiState.Gear)
+            }
+        }
+    }
+
+    private fun transiteUiState(state: UiState) {
+        when (this.state) {
+            is UiState.Gear -> hideGear()
+        }
+
+        this.state = state
+
+        when (this.state) {
+            is UiState.Gear -> showGear()
+        }
+    }
+
+    private fun showGear() {
+        buttonGear.drawable = TextureRegionDrawable(context.uiAtlas.findRegion("icon_gear_focused"))
+    }
+
+    private fun hideGear() {
+        buttonGear.drawable = TextureRegionDrawable(context.uiAtlas.findRegion("icon_gear"))
     }
 }
