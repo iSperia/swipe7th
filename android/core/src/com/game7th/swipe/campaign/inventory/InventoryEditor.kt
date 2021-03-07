@@ -57,7 +57,7 @@ class InventoryEditor(
         panelItems.width = context.scale * 60f * max((items.size - 1) / 3 + 1, 5)
         panelItems.height = 180f * context.scale
 
-        val emptyItems = max(15 - items.size, items.size % 3)
+        val emptyItems = max(15 - items.size, 3 - items.size % 3)
 
         items.forEachIndexed { index, item ->
             val itemView = ItemView(context, item, true).apply {
