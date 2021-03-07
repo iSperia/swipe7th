@@ -97,10 +97,7 @@ class GameScreen(private val game: SwipeGameGdx,
         listenEvents()
 
         gameActor = GameActor(
-                game.context, ::processTileDoubleTap) { victory ->
-            if (victory) {
-                actService.markLocationComplete(actId, locationId, difficulty)
-            }
+                game.context, ::processTileDoubleTap, this::claimRewards) { victory ->
             game.switchScreen(ActScreen(game, game.actService, actId, game.screenContext))
         }
 
@@ -140,6 +137,8 @@ class GameScreen(private val game: SwipeGameGdx,
             }
         }
     }
+
+    private fun claimRewards() = actService.markLocationComplete(actId, locationId, difficulty)
 
     private fun processTileDoubleTap(id: Int) {
         KtxAsync.launch {

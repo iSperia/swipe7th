@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.game7th.battle.event.BattleEvent
 import com.game7th.metagame.account.PersonageExperienceResult
+import com.game7th.metagame.account.RewardData
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.game.actors.ui.GameFinishedDialog
 import com.game7th.swipe.game.battle.hud.HudGroup
@@ -18,6 +19,7 @@ import ktx.async.KtxAsync
 class GameActor(
         private val context: GdxGameContext,
         private val activateTile: (Int) -> Unit,
+        private val rewardCallback: () -> List<RewardData>,
         private val finishCallback: (Boolean) -> Unit
 ) : Group(), TileDoubleTapCallback {
 
@@ -48,7 +50,7 @@ class GameActor(
             y = 700f
         }
         buttonConcede.onClick {
-            debugShowBigText(false, "DEFEAT")
+            showDefeat()
         }
         addActor(buttonConcede)
 
@@ -61,11 +63,11 @@ class GameActor(
         addActor(buttonCombo)
     }
 
-    private fun debugShowBigText(victory: Boolean, text: String) {
+    internal fun showDefeat() {
         tileField.touchable = Touchable.disabled
 
-        GameFinishedDialog(context, text, null) {
-            finishCallback(victory)
+        GameFinishedDialog(context, "Defeat", null, emptyList()) {
+            finishCallback(false)
         }.apply {
             x = 40f
             y = 220f
@@ -79,12 +81,9 @@ class GameActor(
         }
     }
 
-    fun showDefeat() {
-        debugShowBigText(false, "Defeat")
-    }
-
     fun showVictory(expResult: PersonageExperienceResult) {
-        GameFinishedDialog(context, "Victory", expResult) {
+        val rewards = rewardCallback()
+        GameFinishedDialog(context, "Victory", expResult, rewards) {
             finishCallback(true)
         }.apply {
             x = 40f

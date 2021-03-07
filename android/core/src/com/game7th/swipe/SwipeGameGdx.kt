@@ -16,6 +16,8 @@ import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.account.AccountServiceImpl
 import com.game7th.metagame.campaign.ActsService
 import com.game7th.metagame.campaign.ActsServiceImpl
+import com.game7th.metagame.inventory.GearService
+import com.game7th.metagame.inventory.GearServiceImpl
 import com.game7th.swipe.campaign.ActScreen
 import com.google.gson.Gson
 import ktx.async.KtxAsync
@@ -26,6 +28,7 @@ class SwipeGameGdx(private val storage: PersistentStorage) : Game() {
     val gson = Gson()
 
     lateinit var context: GdxGameContext
+    lateinit var gearService: GearService
     lateinit var actService: ActsService
     lateinit var accountService: AccountService
     lateinit var service: GameService
@@ -46,6 +49,7 @@ class SwipeGameGdx(private val storage: PersistentStorage) : Game() {
     override fun create() {
         KtxAsync.initiate()
 
+        initializeGearService()
         initializeActService()
         initializeAccountService()
         service = GameService(actService)
@@ -70,8 +74,12 @@ class SwipeGameGdx(private val storage: PersistentStorage) : Game() {
         setScreen(ActScreen(this, actService, 0, screenContext))
     }
 
+    private fun initializeGearService() {
+        gearService = GearServiceImpl(gson, storage, fileProvider)
+    }
+
     private fun initializeActService() {
-        actService = ActsServiceImpl(gson, storage, fileProvider)
+        actService = ActsServiceImpl(gson, storage, fileProvider, gearService)
     }
 
     private fun initializeAccountService() {

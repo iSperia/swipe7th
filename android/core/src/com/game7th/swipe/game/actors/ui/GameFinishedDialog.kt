@@ -17,6 +17,7 @@ class GameFinishedDialog(
         private val context: GdxGameContext,
         private val text: String,
         private val expResult: PersonageExperienceResult?,
+        private val rewards: List<RewardData>,
         callback: () -> Unit
         ) : Group() {
 
@@ -169,7 +170,7 @@ class GameFinishedDialog(
                     )
 
                     rewardsText.isVisible = true
-                    val txt = expResult.rewards.map {
+                    val txt = rewards.map {
                         when (it) {
                             is RewardData.ArtifactRewardData -> "${it.item.name} LVL ${it.item.level}"
                             else -> "?"

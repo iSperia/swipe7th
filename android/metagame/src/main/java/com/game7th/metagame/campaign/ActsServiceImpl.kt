@@ -2,12 +2,16 @@ package com.game7th.metagame.campaign
 
 import com.game7th.metagame.FileProvider
 import com.game7th.metagame.PersistentStorage
+import com.game7th.metagame.account.AccountService
+import com.game7th.metagame.account.RewardData
+import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.state.ActProgressState
 import com.game7th.metagame.state.LocationProgressState
 import com.game7th.metagame.unit.UnitConfig
 import com.game7th.metagame.unit.UnitType
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.gson.Gson
+import kotlin.random.Random
 
 /**
  * View model for campaign stuff
@@ -15,12 +19,15 @@ import com.google.gson.Gson
 class ActsServiceImpl(
         private val gson: Gson,
         private val storage: PersistentStorage,
-        private val fileProvider: FileProvider
+        private val fileProvider: FileProvider,
+        private val gearService: GearService
 ) : ActsService {
 
     val csvReader = csvReader()
 
     val progressCache = mutableMapOf<Int, ActProgressState>()
+
+    val actCache = mutableMapOf<Int, ActConfig>()
 
     private data class NpcEntry(
             val level: Int,
@@ -31,6 +38,8 @@ class ActsServiceImpl(
     )
 
     override fun getActConfig(id: Int): ActConfig {
+        if (actCache.containsKey(id)) return actCache[id]!!
+
         val actConfig = gson.fromJson<ActConfig>(
                 fileProvider.getFileContent("campaign_$id.json"),
                 ActConfig::class.java)
@@ -62,6 +71,7 @@ class ActsServiceImpl(
                                 })
                     } else locationConfig
                 })
+        actCache[id] = config
         return config
     }
 
@@ -76,10 +86,10 @@ class ActsServiceImpl(
         return result
     }
 
-    override fun markLocationComplete(actId: Int, locationId: Int, starCount: Int): Boolean {
+    override fun markLocationComplete(actId: Int, locationId: Int, starCount: Int): List<RewardData> {
         val currentState = getActProgress(actId)
         val prevStars = currentState.locations.firstOrNull { it.id == locationId }?.stars
-        if ((prevStars ?: 0) > starCount) return false
+        if ((prevStars ?: 0) > starCount) return emptyList()
 
         var actProgressState = currentState.locations
                 .asSequence()
@@ -97,8 +107,31 @@ class ActsServiceImpl(
         progressCache[actId] = actProgressState
         storage.put("$STATE_ACT-$actId", gson.toJson(actProgressState))
 
-        return true
+        //ok, we have some rewards
+        val config = getActConfig(actId)
+        val location = config.nodes.firstOrNull { it.id == locationId }
+        location?.let {
+            val totalPoints = it.waves.flatten().sumBy { it.level + (starCount-1)*3  }
+            val rewards = mutableListOf<RewardData>()
+            val r1 = Random.nextInt(totalPoints)
+            gearService.getArtifactReward(r1 + 1)?.let { rewards.add(it) }
+            if (Random.nextBoolean()) {
+                val r2 = Random.nextInt(totalPoints - r1)
+                gearService.getArtifactReward(r2 + 1)?.let { rewards.add(it) }
+                if (Random.nextBoolean()) {
+                    val r3 = Random.nextInt(totalPoints - r1 - r2)
+                    gearService.getArtifactReward(r3 + 1)?.let { rewards.add(it) }
+                }
+            }
+
+            gearService.addRewards(rewards)
+            return rewards
+        }
+
+        return emptyList()
     }
+
+
 
     override fun unlockLocation(currentState: ActProgressState, actId: Int, locationId: Int): ActProgressState {
         val isLocked = currentState.locations.count { it.id == locationId } == 0

@@ -24,8 +24,7 @@ data class PersonageExperienceResult(
         val gainedStats: PersonageAttributeStats?,
         val oldExp: Int,
         val newExp: Int,
-        val maxExp: Int,
-        val rewards: List<RewardData>
+        val maxExp: Int
 )
 
 data class PersonagePool(
