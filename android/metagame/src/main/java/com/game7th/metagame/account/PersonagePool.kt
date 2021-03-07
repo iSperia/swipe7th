@@ -1,5 +1,6 @@
 package com.game7th.metagame.account
 
+import com.game7th.metagame.inventory.InventoryItem
 import com.game7th.metagame.unit.UnitType
 
 data class PersonageAttributeStats(
@@ -13,7 +14,8 @@ data class PersonageData(
         val level: Int,
         val experience: Int,
         val stats: PersonageAttributeStats,
-        val id: Int
+        val id: Int,
+        val items: List<InventoryItem>
 )
 
 data class PersonageExperienceResult(
@@ -22,7 +24,8 @@ data class PersonageExperienceResult(
         val gainedStats: PersonageAttributeStats?,
         val oldExp: Int,
         val newExp: Int,
-        val maxExp: Int
+        val maxExp: Int,
+        val rewards: List<RewardData>
 )
 
 data class PersonagePool(

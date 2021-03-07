@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.account.PersonageExperienceResult
+import com.game7th.metagame.account.RewardData
 import com.game7th.swipe.GdxGameContext
 
 class GameFinishedDialog(
@@ -118,6 +119,18 @@ class GameFinishedDialog(
         isVisible = false
     }
 
+    val rewardsText = Label("", Label.LabelStyle(context.font, Color.BLACK)).apply {
+        width = 380f
+        height = 75f
+        setFontScale(0.75f)
+        x = 10f
+        y = 75f
+        zIndex = 16
+        setAlignment(Align.left)
+        addActor(this)
+        isVisible = false
+    }
+
     var timePassed = 0f
     var newLevelShown = false
 
@@ -154,6 +167,15 @@ class GameFinishedDialog(
                                     (if (expResult.gainedStats?.spirit ?: 0 > 0) "SPIRIT +${expResult.gainedStats?.spirit} " else "") +
                                     (if (expResult.gainedStats?.mind ?: 0 > 0) "MIND +${expResult.gainedStats?.mind} " else "")
                     )
+
+                    rewardsText.isVisible = true
+                    val txt = expResult.rewards.map {
+                        when (it) {
+                            is RewardData.ArtifactRewardData -> "${it.item.name} LVL ${it.item.level}"
+                            else -> "?"
+                        }
+                    }.joinToString("\n")
+                    rewardsText.setText(txt)
                 }
             }
         }

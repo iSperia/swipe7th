@@ -37,6 +37,12 @@ class SwipeGameGdx(private val storage: PersistentStorage) : Game() {
     var height = 0f
     var scale = 0f
 
+    private val fileProvider = object : FileProvider {
+        override fun getFileContent(name: String): String? {
+            return Gdx.files.internal(name).readString()
+        }
+    }
+
     override fun create() {
         KtxAsync.initiate()
 
@@ -65,15 +71,11 @@ class SwipeGameGdx(private val storage: PersistentStorage) : Game() {
     }
 
     private fun initializeActService() {
-        actService = ActsServiceImpl(gson, storage, object : FileProvider {
-            override fun getFileContent(name: String): String? {
-                return Gdx.files.internal(name).readString()
-            }
-        })
+        actService = ActsServiceImpl(gson, storage, fileProvider)
     }
 
     private fun initializeAccountService() {
-        accountService = AccountServiceImpl(gson, storage)
+        accountService = AccountServiceImpl(gson, storage, fileProvider)
     }
 
     override fun render() {
