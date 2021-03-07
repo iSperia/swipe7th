@@ -83,7 +83,7 @@ class SwipeGameGdx(private val storage: PersistentStorage) : Game() {
     }
 
     private fun initializeAccountService() {
-        accountService = AccountServiceImpl(gson, storage, fileProvider)
+        accountService = AccountServiceImpl(gson, storage, fileProvider, gearService)
     }
 
     override fun render() {

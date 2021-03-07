@@ -10,7 +10,7 @@ import com.game7th.swipe.ScreenContext
 
 class ItemView(
         private val context: ScreenContext,
-        private val item: InventoryItem?,
+        val item: InventoryItem?,
         backgroundShown: Boolean
 ) : Group() {
 

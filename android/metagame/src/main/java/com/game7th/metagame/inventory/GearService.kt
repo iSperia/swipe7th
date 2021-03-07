@@ -6,4 +6,6 @@ interface GearService {
     fun getArtifactReward(level: Int): RewardData.ArtifactRewardData?
     fun addRewards(rewards: List<RewardData>)
     fun listInventory(): List<InventoryItem>
+    fun equipItem(personageId: Int, item: InventoryItem)
+    fun removeItem(item: InventoryItem)
 }

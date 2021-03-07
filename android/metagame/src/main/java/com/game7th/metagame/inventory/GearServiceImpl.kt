@@ -20,7 +20,7 @@ class GearServiceImpl(
         val inventoryString = storage.get(KEY_INVENTORY)
         inventory = if (inventoryString == null) {
             val initialData = InventoryPool(
-                    items = (1..10).map { InventoryItem(gbFlatArmor = it, level = it, node = ItemNode.BODY, name = "SHIELD") }.toMutableList()
+                    items = (1..10).map { InventoryItem(gbFlatArmor = it, level = it, node = ItemNode.HEAD, name = "HELMET") }.toMutableList()
             )
             initialData
         } else {
@@ -55,6 +55,15 @@ class GearServiceImpl(
     }
 
     override fun listInventory() = inventory.items
+
+    override fun equipItem(personageId: Int, item: InventoryItem) {
+
+    }
+
+    override fun removeItem(item: InventoryItem) {
+        inventory.items.remove(item)
+        storage.put(KEY_INVENTORY, gson.toJson(inventory))
+    }
 
     companion object {
         const val KEY_INVENTORY = "account.inventory"

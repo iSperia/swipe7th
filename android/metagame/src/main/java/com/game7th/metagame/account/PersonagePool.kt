@@ -15,7 +15,7 @@ data class PersonageData(
         val experience: Int,
         val stats: PersonageAttributeStats,
         val id: Int,
-        val items: List<InventoryItem>
+        val items: MutableList<InventoryItem>
 )
 
 data class PersonageExperienceResult(
