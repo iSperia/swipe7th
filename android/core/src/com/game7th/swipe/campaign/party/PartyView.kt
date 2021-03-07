@@ -1,6 +1,5 @@
 package com.game7th.swipe.campaign.party
 
-import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction
@@ -8,17 +7,19 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.game7th.metagame.account.AccountService
+import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.unit.UnitConfig
 import com.game7th.swipe.ScreenContext
 import com.game7th.swipe.campaign.plist.PersonageScrollActor
 
 class PartyView(
         private val context: ScreenContext,
-        private val service: AccountService
+        private val accountService: AccountService,
+        private val gearService: GearService
 ) : Group() {
 
     val browserHeight = context.scale * 150f
-    val personagesView = PersonageScrollActor(context, service.getPersonages().map { UnitConfig(it.unit, it.level) }, browserHeight, true, -1).apply {
+    val personagesView = PersonageScrollActor(context, accountService.getPersonages().map { UnitConfig(it.unit, it.level) }, browserHeight, true, -1).apply {
         y = 10f * context.scale
         x = 10f * context.scale
     }
@@ -47,7 +48,7 @@ class PartyView(
             //we are probably show detailView
             val needAnimation = detailView == null
             detailView?.remove()
-            detailView = PersonageTabView(context, service, service.getPersonages()[index].id)
+            detailView = PersonageTabView(context, accountService, gearService, accountService.getPersonages()[index].id)
             addActor(detailView)
             isDetailsShown = true
 
@@ -90,6 +91,7 @@ class PartyView(
 
     fun animateHide() {
         val shift = browserHeight + 2 * context.scale * 10f + (if (isDetailsShown) 200f * context.scale else 0f)
+        detailView?.hide()
         addAction(SequenceAction(
                 MoveByAction().apply {
                     amountY = -shift

@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.game7th.metagame.campaign.*
+import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.state.ActProgressState
 import com.game7th.metagame.state.LocationProgressState
 import com.game7th.swipe.ScreenContext
@@ -314,7 +315,7 @@ class ActScreen(
     }
 
     private fun showPartyUi() {
-        partyUi = PartyView(context, game.accountService).apply {
+        partyUi = PartyView(context, game.accountService, game.gearService).apply {
             y = context.scale * 48f
         }
         stage.addActor(partyUi)

@@ -6,315 +6,441 @@ filter: Nearest, Nearest
 repeat: none
 armor_bar_black
   rotate: false
-  xy: 1110, 809
+  xy: 1306, 819
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
   index: -1
 armor_bar_grey
   rotate: false
-  xy: 424, 104
+  xy: 1110, 584
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
+art_BOOK_OF_BODY
+  rotate: false
+  xy: 672, 78
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+art_BOOTS
+  rotate: false
+  xy: 1882, 928
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+art_BOOK_OF_REGENERATION
+  rotate: false
+  xy: 1882, 928
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+art_BOOK_OF_WISDOM
+  rotate: false
+  xy: 1882, 928
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+art_CLOAK
+  rotate: false
+  xy: 1882, 928
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+art_CONE_HAT
+  rotate: false
+  xy: 1882, 928
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+art_HOOD
+  rotate: false
+  xy: 1882, 928
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+art_LUTE
+  rotate: false
+  xy: 1882, 928
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+art_MANTLE
+  rotate: false
+  xy: 1882, 928
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+art_RING_OF_MIND
+  rotate: false
+  xy: 1882, 928
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+art_RING_OF_SPIRIT
+  rotate: false
+  xy: 1882, 928
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+art_SHOES
+  rotate: false
+  xy: 1882, 928
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+art_STAFF
+  rotate: false
+  xy: 1882, 928
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+art_BREASTPLATE
+  rotate: false
+  xy: 576, 78
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+art_HELMET
+  rotate: false
+  xy: 864, 78
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+art_LEGGINGS
+  rotate: false
+  xy: 1882, 836
+  size: 92, 92
+  orig: 92, 92
+  offset: 0, 0
+  index: -1
+art_RING_OF_HEALTH
+  rotate: false
+  xy: 768, 78
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+art_SHIELD
+  rotate: false
+  xy: 1786, 784
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
 bar_black
   rotate: false
-  xy: 240, 4
+  xy: 480, 150
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 bar_purple
   rotate: false
-  xy: 930, 342
+  xy: 960, 384
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 battle_bg
   rotate: false
-  xy: 0, 368
+  xy: 0, 384
   size: 960, 640
   orig: 960, 640
   offset: 0, 0
   index: 1
 battle_bg
   rotate: false
-  xy: 0, 126
+  xy: 0, 144
   size: 480, 240
   orig: 480, 240
   offset: 0, 0
   index: 0
 gladiator_drop
   rotate: false
-  xy: 1738, 864
+  xy: 432, 0
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 gladiator_strike
   rotate: false
-  xy: 1110, 506
+  xy: 1594, 880
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 gladiator_wave
   rotate: false
-  xy: 1306, 864
+  xy: 0, 0
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 health_bar_green
   rotate: false
-  xy: 360, 70
+  xy: 2026, 1004
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 health_bar_red
   rotate: false
-  xy: 1306, 799
+  xy: 1882, 787
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
   index: -1
 icon_attack
   rotate: false
-  xy: 392, 92
+  xy: 1110, 732
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 icon_health
   rotate: false
-  xy: 1546, 814
+  xy: 1882, 788
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 icon_impact
   rotate: false
-  xy: 960, 812
+  xy: 960, 828
   size: 196, 196
   orig: 196, 196
   offset: 0, 0
   index: -1
 icon_resist
   rotate: false
-  xy: 1254, 748
+  xy: 1978, 976
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 kn_shield
   rotate: false
-  xy: 1254, 714
+  xy: 1930, 804
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 poison_archer_paralize
   rotate: false
-  xy: 1110, 360
+  xy: 1738, 880
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 poison_archer_poison
   rotate: false
-  xy: 1450, 864
+  xy: 288, 0
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 poison_archer_strike
   rotate: false
-  xy: 1882, 864
+  xy: 1306, 880
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 portrait_gladiator
   rotate: false
-  xy: 0, 2
+  xy: 1546, 820
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
 portrait_poison_archer
   rotate: false
-  xy: 120, 2
+  xy: 696, 18
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
 portrait_slime
   rotate: false
-  xy: 1426, 802
+  xy: 576, 18
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
 portrait_slime_father
   rotate: false
-  xy: 0, 64
+  xy: 1306, 820
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
 portrait_slime_mother
   rotate: false
-  xy: 240, 64
+  xy: 816, 18
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
 portrait_slime_red
   rotate: false
-  xy: 120, 64
+  xy: 1666, 820
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
 portrait_unknown
   rotate: false
-  xy: 1306, 802
+  xy: 1426, 820
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
 resist_bar_black
   rotate: false
-  xy: 2026, 988
+  xy: 936, 58
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 resist_bar_blue
   rotate: false
-  xy: 1254, 658
+  xy: 984, 388
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 skill_tile_gun
   rotate: false
-  xy: 272, 30
+  xy: 1110, 700
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 skill_tile_holy_strike
   rotate: false
-  xy: 240, 30
+  xy: 1110, 796
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 skill_tile_poison_arrow
   rotate: false
-  xy: 1626, 830
+  xy: 1110, 636
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 slime_splash
   rotate: false
-  xy: 1110, 652
+  xy: 1450, 880
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 tile_bg
   rotate: false
-  xy: 360, 92
+  xy: 1978, 944
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 tile_bg
   rotate: false
-  xy: 1254, 680
+  xy: 1110, 668
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 tile_bg_grey
   rotate: false
-  xy: 304, 30
+  xy: 1110, 604
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 tile_fg_empire
   rotate: false
-  xy: 1594, 830
+  xy: 1110, 764
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ui_button_pressed
   rotate: false
-  xy: 480, 138
+  xy: 576, 2
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_simple
   rotate: false
-  xy: 960, 370
+  xy: 930, 368
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_dialog
   rotate: false
-  xy: 1594, 864
+  xy: 144, 0
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 vp_personage_gladiator
   rotate: false
-  xy: 1156, 798
+  xy: 1156, 814
   size: 150, 210
   orig: 150, 210
   offset: 0, 0
   index: -1
 vp_poison_archer
   rotate: false
-  xy: 960, 388
+  xy: 960, 408
   size: 150, 210
   orig: 150, 210
   offset: 0, 0
   index: -1
 vp_slime
   rotate: false
-  xy: 630, 156
+  xy: 630, 174
   size: 150, 210
   orig: 150, 210
   offset: 0, 0
   index: -1
 vp_slime_father
   rotate: false
-  xy: 960, 600
+  xy: 960, 618
   size: 150, 210
   orig: 150, 210
   offset: 0, 0
   index: -1
 vp_slime_mother
   rotate: false
-  xy: 480, 156
+  xy: 480, 174
   size: 150, 210
   orig: 150, 210
   offset: 0, 0
   index: -1
 vp_slime_red
   rotate: false
-  xy: 780, 156
+  xy: 780, 174
   size: 150, 210
   orig: 150, 210
   offset: 0, 0

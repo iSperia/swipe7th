@@ -5,4 +5,5 @@ import com.game7th.metagame.account.RewardData
 interface GearService {
     fun getArtifactReward(level: Int): RewardData.ArtifactRewardData?
     fun addRewards(rewards: List<RewardData>)
+    fun listInventory(): List<InventoryItem>
 }

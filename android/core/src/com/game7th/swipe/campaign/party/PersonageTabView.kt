@@ -3,13 +3,18 @@ package com.game7th.swipe.campaign.party
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Touchable
+import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.account.AccountService
+import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.unit.UnitConfig
 import com.game7th.swipe.ScreenContext
+import com.game7th.swipe.campaign.inventory.InventoryEditor
 import com.game7th.swipe.campaign.plist.PersonageVerticalPortrait
 import ktx.actors.onClick
 import kotlin.math.exp
@@ -21,13 +26,14 @@ sealed class UiState {
 
 class PersonageTabView(
         private val context: ScreenContext,
-        private val service: AccountService,
+        private val accountService: AccountService,
+        private val gearService: GearService,
         private val personageId: Int
 ) : Group() {
 
     var state: UiState = UiState.Initial
 
-    private val personage = service.getPersonages().first { it.id == personageId }
+    private val personage = accountService.getPersonages().first { it.id == personageId }
 
     val bg = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
         width = 480f * context.scale
@@ -120,6 +126,8 @@ class PersonageTabView(
         height = 30f * context.scale
     }
 
+    var inventoryView: InventoryEditor? = null
+
     init {
         addActor(bg)
         addActor(portrait)
@@ -147,6 +155,10 @@ class PersonageTabView(
         }
     }
 
+    fun hide() {
+        transiteUiState(UiState.Initial)
+    }
+
     private fun transiteUiState(state: UiState) {
         when (this.state) {
             is UiState.Gear -> hideGear()
@@ -161,9 +173,20 @@ class PersonageTabView(
 
     private fun showGear() {
         buttonGear.drawable = TextureRegionDrawable(context.uiAtlas.findRegion("icon_gear_focused"))
+        inventoryView = InventoryEditor(context, accountService, gearService, personageId).apply {
+            y = (240f - 200f) * context.scale
+            addAction(MoveByAction().apply { amountY = 200f * context.scale; duration = 0.2f })
+        }
+        addActor(inventoryView)
+        inventoryView?.zIndex = 0
     }
 
     private fun hideGear() {
         buttonGear.drawable = TextureRegionDrawable(context.uiAtlas.findRegion("icon_gear"))
+        inventoryView?.let { inventory ->
+             inventory.addAction(SequenceAction(
+                MoveByAction().apply { amountY = -200f * context.scale; duration = 0.2f },
+                RunnableAction().apply { setRunnable { inventory.remove() } }
+        )) }
     }
 }
