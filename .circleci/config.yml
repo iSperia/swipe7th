@@ -10,4 +10,4 @@ jobs:
     steps:
       - checkout
       - run:
-          command: ./android/gradlew android:assembleDebug
+          command: ./gradlew android:assembleDebug
