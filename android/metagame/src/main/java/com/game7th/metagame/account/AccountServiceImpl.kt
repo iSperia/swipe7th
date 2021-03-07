@@ -22,35 +22,41 @@ class AccountServiceImpl(
     init {
         val dataString = storage.get(KEY_PERSONAGES)
         pool = if (dataString == null) {
-
             val initialData = PersonagePool(
-                    ((1..10).map {
-                        val lvl = it * 2 - 1
-                        val primary = max(1, lvl / 2)
-                        val tertiary = (lvl - primary) / 3
-                        val secondary = lvl - primary - tertiary
-                        PersonageData(
-                                unit = UnitType.GLADIATOR,
-                                level = lvl,
-                                experience = 0,
-                                stats = PersonageAttributeStats(primary, secondary, tertiary),
-                                id = it,
-                                items = mutableListOf())
-                    } + (1..10).map {
-                        val lvl = it * 2 - 1
-                        val primary = max(1, lvl / 2)
-                        val tertiary = (lvl - primary) / 3
-                        val secondary = lvl - primary - tertiary
-                        PersonageData(
-                                unit = UnitType.POISON_ARCHER,
-                                level = lvl,
-                                experience = 0,
-                                stats = PersonageAttributeStats(tertiary, primary, secondary),
-                                id = 100 + it,
-                                items = mutableListOf())
-                    }).sortedBy { it.level },
-                    nextPersonageId = 200
+                    mutableListOf(
+                            PersonageData(
+                                    unit = UnitType.GLADIATOR,
+                                    level = 1,
+                                    experience = 0,
+                                    stats = PersonageAttributeStats(1, 0, 0),
+                                    id = 0,
+                                    items = mutableListOf()),
+                            PersonageData(
+                                    unit = UnitType.POISON_ARCHER,
+                                    level = 1,
+                                    experience = 0,
+                                    stats = PersonageAttributeStats(0, 1, 0),
+                                    id = 1,
+                                    items = mutableListOf())
+                    ),
+                    nextPersonageId = 2
             )
+//            val initialData = PersonagePool(
+//                    ((1..10).map {
+//                        val lvl = it * 2 - 1
+//                        val primary = max(1, lvl / 2)
+//                        val tertiary = (lvl - primary) / 3
+//                        val secondary = lvl - primary - tertiary
+//
+//                    } + (1..10).map {
+//                        val lvl = it * 2 - 1
+//                        val primary = max(1, lvl / 2)
+//                        val tertiary = (lvl - primary) / 3
+//                        val secondary = lvl - primary - tertiary
+//
+//                    }).sortedBy { it.level },
+//                    nextPersonageId = 200
+//            )
             savePersonagePool(initialData)
             initialData
         } else {
@@ -79,15 +85,21 @@ class AccountServiceImpl(
                 var bodyBonus = 0
                 var spiritBonus = 0
                 var mindBonus = 0
-                (1..rolls).forEach {
-                    val roll = Random.nextInt(personage.unit.bodyWeight + personage.unit.mindWeight + personage.unit.spiritWeight)
-                    if (roll < personage.unit.bodyWeight) {
-                        bodyBonus++
-                    } else if (roll < personage.unit.bodyWeight + personage.unit.spiritWeight) {
-                        spiritBonus++
-                    } else {
-                        mindBonus++
+                if (personage.level > 5) {
+                    (1..rolls).forEach {
+                        val roll = Random.nextInt(personage.unit.bodyWeight + personage.unit.mindWeight + personage.unit.spiritWeight)
+                        if (roll < personage.unit.bodyWeight) {
+                            bodyBonus++
+                        } else if (roll < personage.unit.bodyWeight + personage.unit.spiritWeight) {
+                            spiritBonus++
+                        } else {
+                            mindBonus++
+                        }
                     }
+                } else {
+                    bodyBonus = scriptedBonuses.count { it.level == personage.level && it.weight == personage.unit.bodyWeight }
+                    mindBonus = scriptedBonuses.count { it.level == personage.level && it.weight == personage.unit.mindWeight }
+                    spiritBonus = scriptedBonuses.count { it.level == personage.level && it.weight == personage.unit.spiritWeight }
                 }
 
                 personageUpdateResult = PersonageExperienceResult(true, personage.level + 1, PersonageAttributeStats(bodyBonus, spiritBonus, mindBonus), personage.experience, nextLevelExp, nextLevelExp)
@@ -140,5 +152,18 @@ class AccountServiceImpl(
 
     companion object {
         const val KEY_PERSONAGES = "account.personages"
+        val scriptedBonuses = listOf(
+            ScriptedAttrBonusSetup(1, 3),
+                ScriptedAttrBonusSetup(2,2),
+                ScriptedAttrBonusSetup(3, 3),
+                ScriptedAttrBonusSetup(4,2),
+                ScriptedAttrBonusSetup(5, 1)
+        )
     }
+
+    data class ScriptedAttrBonusSetup(
+            val level: Int,
+            val weight: Int
+    )
 }
+

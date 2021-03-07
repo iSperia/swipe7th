@@ -20,7 +20,8 @@ class GearServiceImpl(
         val inventoryString = storage.get(KEY_INVENTORY)
         inventory = if (inventoryString == null) {
             val initialData = InventoryPool(
-                    items = (1..10).map { InventoryItem(gbFlatArmor = it, level = it, node = ItemNode.HEAD, name = "HELMET") }.toMutableList()
+                    items = mutableListOf()
+//                    items = (1..10).map { InventoryItem(gbFlatArmor = it, level = it, node = ItemNode.HEAD, name = "HELMET") }.toMutableList()
             )
             initialData
         } else {
