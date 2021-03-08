@@ -1,6 +1,10 @@
 package com.game7th.swipe.campaign.inventory
 
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction
+import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.game7th.metagame.account.AccountService
@@ -52,11 +56,15 @@ class InventoryEditor(
 
     var detailPanel: InventoryDetailPanel? = null
 
+    var dirty = false
+
     init {
         addActor(bg)
         addActor(personageBgs)
         addActor(panelScroller)
         addActor(equippedGroup)
+
+        bg.onClick { dismissDetailPanel() }
 
         textures.forEachIndexed { index, texture ->
             val bg = Image(context.uiAtlas.findRegion(texture)).apply {
@@ -72,14 +80,15 @@ class InventoryEditor(
     }
 
     private fun reloadData() {
+        val items = gearService.listInventory()
+        panelItems.width = context.scale * 60f * max((items.size - 1) / 3 + 1, 5)
+        panelItems.height = 180f * context.scale
+        panelScroller.actor = panelItems
+
         panelItems.children.forEach { it.remove() }
         equippedGroup.children.forEach { it.remove() }
 
         dismissDetailPanel()
-
-        val items = gearService.listInventory()
-        panelItems.width = context.scale * 60f * max((items.size - 1) / 3 + 1, 5)
-        panelItems.height = 180f * context.scale
 
         val emptyItems = max(15 - items.size, 3 - items.size % 3)
 
@@ -143,14 +152,22 @@ class InventoryEditor(
     private fun equipFromDetailPanel(item: InventoryItem) {
         accountService.equipItem(personageId, item)
         dismissDetailPanel()
-        reloadData()
+        dirty = true
         refresher()
     }
 
     private fun dequipFromEquipped(item: InventoryItem) {
         accountService.dequipItem(personageId, item)
         dismissDetailPanel()
-        reloadData()
+        dirty = true
         refresher()
+    }
+
+    override fun act(delta: Float) {
+        if (dirty) {
+            dirty = false
+            reloadData()
+        }
+        super.act(delta)
     }
 }

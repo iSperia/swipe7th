@@ -7,7 +7,6 @@ import com.game7th.metagame.inventory.InventoryItem
 import com.game7th.metagame.unit.UnitType
 import com.google.gson.Gson
 import kotlin.math.exp
-import kotlin.math.max
 import kotlin.random.Random
 
 class AccountServiceImpl(
@@ -62,8 +61,6 @@ class AccountServiceImpl(
         } else {
             gson.fromJson<PersonagePool>(dataString, PersonagePool::class.java)
         }
-
-
     }
 
     override fun getPersonages(): List<PersonageData> {
@@ -144,9 +141,10 @@ class AccountServiceImpl(
 
     override fun dequipItem(personageId: Int, item: InventoryItem) {
         pool.personages.firstOrNull { it.id == personageId }?.let { personage ->
-            personage.items.remove(item)
-            gearService.addRewards(listOf(RewardData.ArtifactRewardData(item)))
-            savePersonagePool(pool)
+            if (personage.items.remove(item)) {
+                gearService.addRewards(listOf(RewardData.ArtifactRewardData(item)))
+                savePersonagePool(pool)
+            }
         }
     }
 
