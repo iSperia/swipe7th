@@ -1,10 +1,6 @@
 package com.game7th.swipe.campaign.inventory
 
 import com.badlogic.gdx.scenes.scene2d.Group
-import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction
-import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction
-import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.game7th.metagame.account.AccountService
@@ -40,8 +36,8 @@ class InventoryEditor(
     }
 
     private val textures = listOf("ui_item_bg_book", "ui_item_bg_boots", "ui_item_bg_ring", "ui_item_bg_body", "ui_item_bg_hand", "ui_item_bg_hat")
-    private val xs = mapOf<ItemNode, Int>(ItemNode.BODY to 1, ItemNode.BOOK to 0, ItemNode.FOOT to 1, ItemNode.HAND to 0, ItemNode.RING to 0, ItemNode.HEAD to 1)
-    private val ys = mapOf<ItemNode, Int>(ItemNode.BODY to 1, ItemNode.BOOK to 0, ItemNode.FOOT to 0, ItemNode.HAND to 2, ItemNode.RING to 1, ItemNode.HEAD to 2)
+    private val xs = mapOf(ItemNode.BODY to 1, ItemNode.BOOK to 0, ItemNode.FOOT to 1, ItemNode.HAND to 0, ItemNode.RING to 0, ItemNode.HEAD to 1)
+    private val ys = mapOf(ItemNode.BODY to 1, ItemNode.BOOK to 0, ItemNode.FOOT to 0, ItemNode.HAND to 2, ItemNode.RING to 1, ItemNode.HEAD to 2)
 
     val lx = 170f * context.scale
     val ly = 10f * context.scale
@@ -122,6 +118,7 @@ class InventoryEditor(
         }
 
         accountService.getPersonages().firstOrNull { it.id == personageId }?.let { personage ->
+            println(personage.items)
             personage.items.forEach { item ->
                 val itemView = ItemView(context, item, false)
                 itemView.x = context.scale * 60f * xs[item.node]!!
@@ -164,10 +161,10 @@ class InventoryEditor(
     }
 
     override fun act(delta: Float) {
+        super.act(delta)
         if (dirty) {
             dirty = false
             reloadData()
         }
-        super.act(delta)
     }
 }

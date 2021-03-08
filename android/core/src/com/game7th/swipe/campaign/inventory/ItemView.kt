@@ -14,10 +14,6 @@ class ItemView(
         backgroundShown: Boolean
 ) : Group() {
 
-    init {
-        println(item?.name)
-    }
-
     val bg = Image(context.uiAtlas.findRegion("ui_item_bg")).apply {
         width = 60f * context.scale
         height = 60f * context.scale
