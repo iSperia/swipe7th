@@ -89,7 +89,7 @@ class ActsServiceImpl(
     override fun markLocationComplete(actId: Int, locationId: Int, starCount: Int): List<RewardData> {
         val currentState = getActProgress(actId)
         val prevStars = currentState.locations.firstOrNull { it.id == locationId }?.stars
-        if ((prevStars ?: 0) > starCount) return emptyList()
+        if ((prevStars ?: 0) >= starCount) return emptyList()
 
         var actProgressState = currentState.locations
                 .asSequence()
@@ -111,7 +111,7 @@ class ActsServiceImpl(
         val config = getActConfig(actId)
         val location = config.nodes.firstOrNull { it.id == locationId }
         location?.let {
-            val totalPoints = it.waves.flatten().sumBy { it.level + (starCount-1)*3  }
+            val totalPoints = it.waves.flatten().sumBy { it.level + (starCount - 1)*3  }
             val rewards = mutableListOf<RewardData>()
             val r1 = Random.nextInt(totalPoints)
             gearService.getArtifactReward(r1 + 1)?.let { rewards.add(it) }

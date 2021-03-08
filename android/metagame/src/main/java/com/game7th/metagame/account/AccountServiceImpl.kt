@@ -135,8 +135,8 @@ class AccountServiceImpl(
             itemToReplace?.let {
                 personage.items.remove(it)
                 gearService.addRewards(listOf(RewardData.ArtifactRewardData(it)))
-                gearService.removeItem(item)
             }
+            gearService.removeItem(item)
             personage.items.add(item)
             savePersonagePool(pool)
         }

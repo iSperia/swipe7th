@@ -168,16 +168,15 @@ class GameFinishedDialog(
                                     (if (expResult.gainedStats?.spirit ?: 0 > 0) "SPIRIT +${expResult.gainedStats?.spirit} " else "") +
                                     (if (expResult.gainedStats?.mind ?: 0 > 0) "MIND +${expResult.gainedStats?.mind} " else "")
                     )
-
-                    rewardsText.isVisible = true
-                    val txt = rewards.map {
-                        when (it) {
-                            is RewardData.ArtifactRewardData -> "${it.item.name} LVL ${it.item.level}"
-                            else -> "?"
-                        }
-                    }.joinToString("\n")
-                    rewardsText.setText(txt)
                 }
+                rewardsText.isVisible = true
+                val txt = rewards.map {
+                    when (it) {
+                        is RewardData.ArtifactRewardData -> "${it.item.name} LVL ${it.item.level}"
+                        else -> "?"
+                    }
+                }.joinToString("\n")
+                rewardsText.setText(txt)
             }
         }
     }
