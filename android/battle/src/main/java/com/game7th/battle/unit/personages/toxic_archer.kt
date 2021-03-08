@@ -7,12 +7,10 @@ import com.game7th.battle.action.AttackAction
 import com.game7th.battle.balance.SwipeBalance
 import com.game7th.battle.event.TileTemplate
 import com.game7th.battle.tilefield.tile.TileNames
-import com.game7th.battle.unit.UnitFactory
-import com.game7th.metagame.account.PersonageAttributeStats
-import com.game7th.metagame.unit.UnitType
+import com.game7th.battle.unit.UnitStats
 
-fun produceToxicArcher(balance: SwipeBalance, level: Int, attrs: PersonageAttributeStats) =
-        UnitFactory.producePersonage(balance, UnitType.POISON_ARCHER, level, attrs) { stats ->
+fun produceToxicArcher(balance: SwipeBalance, unitStats: UnitStats) =
+        unitStats.let { stats ->
             val strikeTemplate = TileTemplate(TileNames.POISON_ARCHER_STRIKE, balance.poison_archer.t1)
             val poisonTemplate = TileTemplate(TileNames.POISON_ARCHER_POISON, balance.poison_archer.t2)
             val paralizeTemplate = TileTemplate(TileNames.POISON_ARCHER_PARALIZE, balance.poison_archer.t3)
@@ -42,4 +40,5 @@ fun produceToxicArcher(balance: SwipeBalance, level: Int, attrs: PersonageAttrib
                     action = ApplyParalizeAction((balance.poison_archer.k3 + stats.body / balance.poison_archer.d3).toInt())
                 }
             }
+            stats
         }

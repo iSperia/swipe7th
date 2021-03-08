@@ -54,8 +54,8 @@ fun main(args: Array<String>) {
                         listOf(PersonageConfig(personageType, personageLevel, PersonageAttributeStats(
                                 personageType.bodyWeight * totalStats / 6,
                                 personageType.spiritWeight * totalStats / 6,
-                                personageType.mindWeight * totalStats / 6))),
-                        encounter.waves.map { wave -> wave.map { PersonageConfig(it.unitType, it.level + personageLevel, zeroStats) } }
+                                personageType.mindWeight * totalStats / 6), null)),
+                        encounter.waves.map { wave -> wave.map { PersonageConfig(it.unitType, it.level + personageLevel, zeroStats, null) } }
                         )
                 val result = runBlocking { emulateBattle(balance, battleConfig) }
                 writer.append((result.winrate*100f).toInt().toString())

@@ -37,7 +37,7 @@ class PartyView(
     var firstShow = true
     var isDetailsShown = false
 
-    var detailView: PersonageTabView? = null
+    var detailView: PersonageDetailView? = null
 
     init {
         addActor(personagesBg)
@@ -48,7 +48,7 @@ class PartyView(
             //we are probably show detailView
             val needAnimation = detailView == null
             detailView?.remove()
-            detailView = PersonageTabView(context, accountService, gearService, accountService.getPersonages()[index].id)
+            detailView = PersonageDetailView(context, accountService, gearService, accountService.getPersonages()[index].id)
             addActor(detailView)
             isDetailsShown = true
 

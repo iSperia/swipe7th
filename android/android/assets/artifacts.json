@@ -7,7 +7,7 @@
       "weight": 10
     },
     {
-      "template": {"name": "SHIELD", "node": "HAND", "gbFlatArmor": 1},
+      "template": {"name": "SHIELD", "node": "HAND", "gbFlatArmor": 20},
       "minLevel": 1,
       "maxLevel": 10000,
       "weight": 20
@@ -31,7 +31,7 @@
       "weight": 20
     },
     {
-      "template": {"name": "HELMET", "node": "HEAD", "gbFlatHealth": 50},
+      "template": {"name": "HELMET", "node": "HEAD", "gbFlatHp": 50},
       "minLevel": 1,
       "maxLevel": 10000,
       "weight": 5
@@ -43,67 +43,67 @@
       "weight": 10
     },
     {
-      "template": {"name": "STAFF", "node": "HAND", "gcFlatWisdom": 2},
+      "template": {"name": "STAFF", "node": "HAND", "gbFlatWisdom": 2},
       "minLevel": 1,
       "maxLevel": 10000,
       "weight": 20
     },
     {
-      "template": {"name": "RING_OF_MIND", "node": "RING", "gcPercMind": 2},
+      "template": {"name": "RING_OF_MIND", "node": "RING", "gbPercMind": 2},
       "minLevel": 10,
       "maxLevel": 10000,
       "weight": 5
     },
     {
-      "template": {"name": "BOOK_OF_WISDOM", "node": "BOOK", "gcPercWisdom": 2},
+      "template": {"name": "BOOK_OF_WISDOM", "node": "BOOK", "gbPercWisdom": 2},
       "minLevel": 10,
       "maxLevel": 10000,
       "weight": 10
     },
     {
-      "template": {"name": "SHOES", "node": "FOOT", "gcFlatResist": 10},
+      "template": {"name": "SHOES", "node": "FOOT", "gbFlatResist": 10},
       "minLevel": 1,
       "maxLevel": 10000,
       "weight": 20
     },
     {
-      "template": {"name": "CONE_HAT", "node": "HEAD", "gcFlatMind": 1},
+      "template": {"name": "CONE_HAT", "node": "HEAD", "gbFlatMind": 1},
       "minLevel": 1,
       "maxLevel": 10000,
       "weight": 20
     },
     {
-      "template": {"name": "CLOAK", "node": "BODY", "gcPercEvasion": 2},
+      "template": {"name": "CLOAK", "node": "BODY", "gbPercEvasion": 2},
       "minLevel": 10,
       "maxLevel": 10000,
       "weight": 5
     },
     {
-      "template": {"name": "LUTE", "node": "HAND", "gcFlatSpirit": 1},
+      "template": {"name": "LUTE", "node": "HAND", "gbFlatSpirit": 1},
       "minLevel": 1,
       "maxLevel": 10000,
       "weight": 15
     },
     {
-      "template": {"name": "RING_OF_SPIRIT", "node": "RING", "gcPercSpirit": 2},
+      "template": {"name": "RING_OF_SPIRIT", "node": "RING", "gbPercSpirit": 2},
       "minLevel": 10,
       "maxLevel": 10000,
       "weight": 5
     },
     {
-      "template": {"name": "BOOK_OF_REGENERATION", "node": "BOOK", "gcPercRegeneration": 3},
+      "template": {"name": "BOOK_OF_REGENERATION", "node": "BOOK", "gbPercRegeneration": 3},
       "minLevel": 5,
       "maxLevel": 10000,
       "weight": 10
     },
     {
-      "template": {"name": "BOOTS", "node": "FOOT", "gcFlatEvasion": 2},
+      "template": {"name": "BOOTS", "node": "FOOT", "gbFlatEvasion": 2},
       "minLevel": 1,
       "maxLevel": 10000,
       "weight": 15
     },
     {
-      "template": {"name": "HOOD", "node": "HEAD", "gcFlatRegeneration": 1},
+      "template": {"name": "HOOD", "node": "HEAD", "gbFlatRegeneration": 1},
       "minLevel": 1,
       "maxLevel": 10000,
       "weight": 8

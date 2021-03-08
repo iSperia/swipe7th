@@ -96,7 +96,7 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     private suspend fun generateInitialPersonages(config: BattleConfig) = withContext(coroutineContext) {
         config.personages.withIndex().forEach {
-            val unitStats = UnitFactory.produce(it.value.name, balance, it.value.level, it.value.stats)
+            val unitStats = UnitFactory.produce(it.value.name, balance, it.value.level, it.value.unitStats)
             unitStats?.let { stats ->
                 val unit = BattleUnit(newPersonageId(), it.index, stats, Team.LEFT)
                 units.add(unit)
@@ -111,7 +111,7 @@ class SwipeBattle(val balance: SwipeBalance) {
     private suspend fun generateNpcs(config: BattleConfig) {
         events.send(BattleEvent.NewWaveEvent(wave))
         config.waves[wave].withIndex().forEach {
-            val unitStats = UnitFactory.produce(it.value.name, balance, it.value.level, PersonageAttributeStats(0, 0, 0))
+            val unitStats = UnitFactory.produce(it.value.name, balance, it.value.level, null)
             val position = 4 - it.index
             unitStats?.let { stats ->
                 val unit = BattleUnit(newPersonageId(), position, stats, Team.RIGHT)

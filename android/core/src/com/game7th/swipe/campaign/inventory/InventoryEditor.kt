@@ -16,7 +16,8 @@ class InventoryEditor(
         private val context: ScreenContext,
         private val accountService: AccountService,
         private val gearService: GearService,
-        private val personageId: Int
+        private val personageId: Int,
+        private val refresher: () -> Unit
 ) : Group() {
 
     private val bg = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
@@ -143,11 +144,13 @@ class InventoryEditor(
         accountService.equipItem(personageId, item)
         dismissDetailPanel()
         reloadData()
+        refresher()
     }
 
     private fun dequipFromEquipped(item: InventoryItem) {
         accountService.dequipItem(personageId, item)
         dismissDetailPanel()
         reloadData()
+        refresher()
     }
 }

@@ -85,10 +85,10 @@ class GameScreen(private val game: SwipeGameGdx,
 
         config = BattleConfig(
                 personages = listOf(
-                        PersonageConfig(personage.unit, personage.level, personage.stats)
+                        PersonageConfig(personage.unit, personage.level, personage.stats, game.context.balance.produceGearStats(personage))
                 ),
                 waves = actService.getActConfig(actId).findNode(locationId)?.waves?.map {
-                    it.map { PersonageConfig(it.unitType, it.level + (difficulty-1) * 3,  PersonageAttributeStats(0,0,0)) }
+                    it.map { PersonageConfig(it.unitType, it.level + (difficulty-1) * 3,  PersonageAttributeStats(0,0,0), null) }
                 } ?: emptyList()
         )
 

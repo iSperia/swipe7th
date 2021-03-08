@@ -24,7 +24,7 @@ sealed class UiState {
     object Gear: UiState()
 }
 
-class PersonageTabView(
+class PersonageDetailView(
         private val context: ScreenContext,
         private val accountService: AccountService,
         private val gearService: GearService,
@@ -57,7 +57,9 @@ class PersonageTabView(
     val ah = 0.08f * attrsBg.height
     val aw = 0.13f * attrsBg.height
 
-    val bodyLabel = Label(personage.stats.body.toString(), Label.LabelStyle(context.font, Color.WHITE)).apply {
+
+
+    val bodyLabel = Label("", Label.LabelStyle(context.font, Color.WHITE)).apply {
         x = attrsBg.x + 0.19f * attrsBg.width
         y = attrsBg.y + 0.04f * attrsBg.height
         width = aw
@@ -66,7 +68,7 @@ class PersonageTabView(
         setFontScale(ah / 36f)
     }
 
-    val spiritLabel = Label(personage.stats.spirit.toString(), Label.LabelStyle(context.font, Color.WHITE)).apply {
+    val spiritLabel = Label("", Label.LabelStyle(context.font, Color.WHITE)).apply {
         x = attrsBg.x + 0.45f * attrsBg.width
         y = attrsBg.y + 0.87f * attrsBg.height
         width = aw
@@ -75,7 +77,7 @@ class PersonageTabView(
         setFontScale(ah / 36f)
     }
 
-    val mindLabel = Label(personage.stats.mind.toString(), Label.LabelStyle(context.font, Color.WHITE)).apply {
+    val mindLabel = Label("", Label.LabelStyle(context.font, Color.WHITE)).apply {
         x = attrsBg.x + 0.7f * attrsBg.width
         y = attrsBg.y + 0.04f * attrsBg.height
         width = aw
@@ -84,7 +86,7 @@ class PersonageTabView(
         setFontScale(ah / 36f)
     }
 
-    val secondAttrsBody = Label("Health: ${context.balance.calculateHealth(personage)}\nArmor: ${context.balance.calculateArmor(personage)}", Label.LabelStyle(context.font, Color.RED)).apply {
+    val secondAttrsBody = Label("", Label.LabelStyle(context.font, Color.RED)).apply {
         y = attrsBg.y + 2 * sh
         x = attrsBg.x + attrsBg.width + context.scale * 0.1f
         width = 140f * context.scale
@@ -93,7 +95,7 @@ class PersonageTabView(
         setAlignment(Align.left)
     }
 
-    val secondAttrsSpirit = Label("Evasion: ${context.balance.calculateEvasion(personage)}\nRegeneration: ${context.balance.calculateRegeneration(personage)}", Label.LabelStyle(context.font, Color.FOREST)).apply {
+    val secondAttrsSpirit = Label("", Label.LabelStyle(context.font, Color.FOREST)).apply {
         y = attrsBg.y + sh
         x = attrsBg.x + attrsBg.width + context.scale * 0.1f
         width = 140f * context.scale
@@ -102,7 +104,7 @@ class PersonageTabView(
         setAlignment(Align.left)
     }
 
-    val secondAttrsMind = Label("Resist: ${context.balance.calculateResist(personage)}\nWisdom: ${context.balance.calculateWisdom(personage)}", Label.LabelStyle(context.font, Color.BLUE)).apply {
+    val secondAttrsMind = Label("", Label.LabelStyle(context.font, Color.BLUE)).apply {
         y = attrsBg.y
         x = attrsBg.x + attrsBg.width + context.scale * 0.1f
         width = 140f * context.scale
@@ -153,6 +155,7 @@ class PersonageTabView(
                 transiteUiState(UiState.Gear)
             }
         }
+        refreshStats()
     }
 
     fun hide() {
@@ -173,7 +176,7 @@ class PersonageTabView(
 
     private fun showGear() {
         buttonGear.drawable = TextureRegionDrawable(context.uiAtlas.findRegion("icon_gear_focused"))
-        inventoryView = InventoryEditor(context, accountService, gearService, personageId).apply {
+        inventoryView = InventoryEditor(context, accountService, gearService, personageId, this::refreshStats).apply {
             y = (240f - 200f) * context.scale
             addAction(MoveByAction().apply { amountY = 200f * context.scale; duration = 0.2f })
         }
@@ -188,5 +191,18 @@ class PersonageTabView(
                 MoveByAction().apply { amountY = -200f * context.scale; duration = 0.2f },
                 RunnableAction().apply { setRunnable { inventory.remove() } }
         )) }
+    }
+
+    private fun refreshStats() {
+        val baseStats = context.balance.produceBaseStats(personage)
+        val gearStats = context.balance.produceGearStats(personage)
+
+        gearStats.body.toString().let { bodyLabel.setText(it) }
+        gearStats.spirit.toString().let { spiritLabel.setText(it) }
+        gearStats.mind.toString().let { mindLabel.setText(it) }
+
+        secondAttrsBody.setText("Health: ${gearStats.health.value}(${baseStats.health.value})\nArmor: ${gearStats.armor}(${baseStats.armor})")
+        secondAttrsSpirit.setText("Evasion: ${gearStats.evasion}(${baseStats.evasion})\nRegeneration: ${gearStats.regeneration}(${baseStats.regeneration})")
+        secondAttrsMind.setText("Resist: ${gearStats.resist}(${baseStats.resist})\nWisdom: ${gearStats.wisdom}(${baseStats.wisdom})")
     }
 }

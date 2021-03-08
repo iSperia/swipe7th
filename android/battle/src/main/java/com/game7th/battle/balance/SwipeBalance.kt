@@ -1,5 +1,7 @@
 package com.game7th.battle.balance
 
+import com.game7th.battle.unit.CappedStat
+import com.game7th.battle.unit.UnitStats
 import com.game7th.metagame.account.PersonageAttributeStats
 import com.game7th.metagame.account.PersonageData
 
@@ -43,10 +45,56 @@ data class SwipeBalance(
         val gladiator: PersonageBalance,
         val poison_archer: PersonageBalance
 ) {
-    fun calculateHealth(p: PersonageData) = p.level * stats.healthPerLevel + p.stats.body * stats.healthPerBody
-    fun calculateArmor(p: PersonageData) = p.stats.body * stats.armorPerBody
-    fun calculateRegeneration(p: PersonageData) = (p.stats.spirit * stats.regenerationPerSpirit).toInt()
-    fun calculateEvasion(p: PersonageData) = p.stats.spirit * stats.evasionPerSpirit
-    fun calculateResist(p: PersonageData) = p.stats.mind * stats.resistPerMind
-    fun calculateWisdom(p: PersonageData) = p.stats.mind * stats.wizdomMultiplier
+    private fun calculateHealth(p: PersonageData) = p.level * stats.healthPerLevel + p.stats.body * stats.healthPerBody
+    private fun calculateArmor(p: PersonageData) = p.stats.body * stats.armorPerBody
+    private fun calculateRegeneration(p: PersonageData) = (p.stats.spirit * stats.regenerationPerSpirit).toInt()
+    private fun calculateEvasion(p: PersonageData) = p.stats.spirit * stats.evasionPerSpirit
+    private fun calculateResist(p: PersonageData) = p.stats.mind * stats.resistPerMind
+    private fun calculateWisdom(p: PersonageData) = p.stats.mind * stats.wizdomMultiplier
+
+    fun produceBaseStats(p: PersonageData): UnitStats {
+        return UnitStats(p.unit, p.level, p.stats.body, p.stats.spirit, p.stats.mind, calculateHealth(p).let { CappedStat(it, it) },
+            calculateArmor(p), calculateResist(p), calculateEvasion(p), calculateRegeneration(p), calculateWisdom(p))
+    }
+
+    fun produceGearStats(p: PersonageData): UnitStats {
+        val flatBody = p.items.sumBy { it.gbFlatBody * it.level }
+        val flatSpirit = p.items.sumBy { it.gbFlatSpirit * it.level }
+        val flatMind = p.items.sumBy { it.gbFlatMind * it.level }
+        val percBody = p.items.sumBy { it.gbPercBody * it.level }
+        val percSpirit = p.items.sumBy { it.gbPercSpirit * it.level }
+        val percMind = p.items.sumBy { it.gbPercMind * it.level }
+
+        val _body = updated(p.stats.body, flatBody, percBody)
+        val _spirit = updated(p.stats.spirit, flatSpirit, percSpirit)
+        val _mind = updated(p.stats.mind, flatMind, percMind)
+
+        val _p = p.copy(stats = PersonageAttributeStats(_body, _spirit, _mind))
+
+        val flatHp = p.items.sumBy { it.gbFlatHp * it.level }
+        val flatArmor = p.items.sumBy { it.gbFlatArmor * it.level }
+        val flatRegeneration = p.items.sumBy { it.gbFlatRegeneration * it.level }
+        val flatEvasion = p.items.sumBy { it.gbFlatEvasion * it.level }
+        val flatResist = p.items.sumBy { it.gbFlatResist * it.level }
+        val flatWisdom = p.items.sumBy { it.gbFlatWisdom * it.level }
+
+        val percHp = p.items.sumBy { it.gbPercHp * it.level }
+        val percArmor = p.items.sumBy { it.gbPercArmor * it.level }
+        val percRegeneration = p.items.sumBy { it.gbPercRegeneration * it.level }
+        val percEvasion = p.items.sumBy { it.gbPercEvasion * it.level }
+        val percResist = p.items.sumBy { it.gbPercResist * it.level }
+        val percWisdom = p.items.sumBy { it.gbPercWisdom * it.level }
+
+        return UnitStats(_p.unit, _p.level, _body, _mind, _spirit,
+            updated(calculateHealth(_p), flatHp, percHp).let { CappedStat(it, it) },
+            updated(calculateArmor(_p), flatArmor, percArmor),
+            updated(calculateResist(_p), flatResist, percResist),
+            updated(calculateEvasion(_p), flatEvasion, percEvasion),
+            updated(calculateRegeneration(_p), flatRegeneration, percRegeneration),
+            updated(calculateWisdom(_p), flatWisdom, percWisdom))
+    }
+
+    private fun updated(value: Int, flat: Int, percent: Int): Int {
+        return ((value+flat) * (1f + percent / 100f)).toInt()
+    }
 }

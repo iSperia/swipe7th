@@ -11,10 +11,10 @@ import com.game7th.metagame.account.PersonageAttributeStats
 import com.game7th.metagame.unit.UnitType
 
 object UnitFactory {
-    fun produce(type: UnitType, balance: SwipeBalance, level: Int, stats: PersonageAttributeStats): UnitStats? {
+    fun produce(type: UnitType, balance: SwipeBalance, level: Int, unitStats: UnitStats?): UnitStats? {
         return when (type) {
-            UnitType.GLADIATOR -> produceGladiator(balance, level, stats)
-            UnitType.POISON_ARCHER -> produceToxicArcher(balance, level, stats)
+            UnitType.GLADIATOR -> produceGladiator(balance, unitStats!!)
+            UnitType.POISON_ARCHER -> produceToxicArcher(balance, unitStats!!)
             UnitType.GREEN_SLIME -> produceGreenSlime(balance, level)
             UnitType.PURPLE_SLIME -> producePurpleSlime(balance, level)
             UnitType.SLIME_MOTHER -> produceSlimeMother(balance, level)

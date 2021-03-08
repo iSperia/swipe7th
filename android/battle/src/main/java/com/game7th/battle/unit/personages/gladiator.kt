@@ -6,12 +6,10 @@ import com.game7th.battle.action.RegenerateParametrizedAmountAction
 import com.game7th.battle.balance.SwipeBalance
 import com.game7th.battle.event.TileTemplate
 import com.game7th.battle.tilefield.tile.TileNames
-import com.game7th.battle.unit.UnitFactory
-import com.game7th.metagame.account.PersonageAttributeStats
-import com.game7th.metagame.unit.UnitType
+import com.game7th.battle.unit.UnitStats
 
-fun produceGladiator(balance: SwipeBalance, level: Int, attrs: PersonageAttributeStats) =
-        UnitFactory.producePersonage(balance, UnitType.GLADIATOR, level, attrs) { stats ->
+fun produceGladiator(balance: SwipeBalance, unitStats: UnitStats) =
+        unitStats.let { stats ->
             val strikeTemplate = TileTemplate(TileNames.GLADIATOR_STRIKE, balance.gladiator.t1)
             val waveTemplate = TileTemplate(TileNames.GLADIATOR_WAVE, balance.gladiator.t2)
             val dropTemplate = TileTemplate(TileNames.GLADIATOR_DROP, 1)
@@ -44,4 +42,5 @@ fun produceGladiator(balance: SwipeBalance, level: Int, attrs: PersonageAttribut
                     action = RegenerateParametrizedAmountAction(stats.mind * balance.gladiator.k3 / 100)
                 }
             }
+            stats
         }

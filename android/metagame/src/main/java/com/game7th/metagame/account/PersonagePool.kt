@@ -16,7 +16,9 @@ data class PersonageData(
         val stats: PersonageAttributeStats,
         val id: Int,
         val items: MutableList<InventoryItem>
-)
+) {
+
+}
 
 data class PersonageExperienceResult(
         val levelUp: Boolean,
