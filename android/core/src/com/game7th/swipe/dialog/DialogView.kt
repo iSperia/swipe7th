@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
@@ -56,11 +58,15 @@ class DialogView(
         addActor(textLabel)
 
         y = -200f * context.scale
-        addAction(MoveByAction().apply { duration = 0.8f; setAmount(0f, 200f * context.scale) })
+        addAction(MoveByAction().apply { duration = 0.3f; setAmount(0f, 200f * context.scale) })
     }
 
     private fun dismiss() {
-        dismisser()
-        remove()
+        addAction(SequenceAction(
+                MoveByAction().apply { duration = 0.3f; setAmount(0f, -200f * context.scale) },
+                RunnableAction().apply { setRunnable {
+                    dismisser()
+                    remove()
+                } }))
     }
 }
