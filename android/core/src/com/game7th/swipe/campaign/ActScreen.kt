@@ -361,7 +361,7 @@ class ActScreen(
                 actsService = actsService,
                 shownCallback = this@ActScreen::processBattlePrepareDialogShown) {}
         stage.addActor(battlePrepareDialog)
-        battlePrepareDialog?.zIndex = stage.actors.size - 3
+        battlePrepareDialog?.zIndex = max(0, stage.actors.size - 3)
     }
 
     private fun hideBattlePreparation() {
