@@ -2,6 +2,7 @@ package com.game7th.swipe.game
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
+import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Stage
@@ -49,6 +50,8 @@ class GameScreen(private val game: SwipeGameGdx,
 
     lateinit var gameActor: GameActor
     val atlases = mutableMapOf<String, TextureAtlas>()
+
+    lateinit var backgroundMusic: Music
 
     override fun show() {
         viewport = ExtendViewport(480f, 720f, 480f, 2000f)
@@ -136,6 +139,12 @@ class GameScreen(private val game: SwipeGameGdx,
                 gameActor.showDefeat()
             }
         }
+
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sb_chase.ogg")).apply {
+            volume = 0.5f
+            isLooping = true
+            play()
+        }
     }
 
     private fun claimRewards() = actService.markLocationComplete(actId, locationId, difficulty)
@@ -181,6 +190,8 @@ class GameScreen(private val game: SwipeGameGdx,
 
     override fun hide() {
         stage.dispose()
+        backgroundMusic.stop()
+        backgroundMusic.dispose()
     }
 
     override fun dispose() {

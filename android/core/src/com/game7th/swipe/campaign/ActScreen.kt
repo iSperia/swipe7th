@@ -2,6 +2,7 @@ package com.game7th.swipe.campaign
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
+import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.GL20.*
@@ -86,6 +87,8 @@ class ActScreen(
     private var isShowingFocus1 = false
     private var isShowingFocus2 = false
 
+    lateinit var backgroundMusic: Music
+
     override fun show() {
         config = actsService.getActConfig(actId)
         val progressState: ActProgressState = actsService.getActProgress(actId)
@@ -161,6 +164,12 @@ class ActScreen(
         if (actId == 0 && storage.get(KEY_ACT1_INTRO_SHOWN)?.toBoolean() != true) {
             showIntro()
         }
+
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sb_indreams.ogg")).apply {
+            volume = 0.5f
+            isLooping = true
+            play()
+        }
     }
 
     private fun processBattlePrepareDialogShown(dialog: BattlePrepareDialog) {
@@ -235,6 +244,8 @@ class ActScreen(
     }
 
     override fun hide() {
+        backgroundMusic.stop()
+        backgroundMusic.dispose()
         stage.dispose()
         game.multiplexer.removeProcessor(gestureDetector)
         game.multiplexer.removeProcessor(stage)
