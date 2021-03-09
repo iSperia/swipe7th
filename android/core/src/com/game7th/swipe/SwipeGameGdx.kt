@@ -20,9 +20,10 @@ import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.inventory.GearServiceImpl
 import com.game7th.swipe.campaign.ActScreen
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import ktx.async.KtxAsync
 
-class SwipeGameGdx(private val storage: PersistentStorage) : Game() {
+class SwipeGameGdx(val storage: PersistentStorage) : Game() {
 
     val multiplexer = InputMultiplexer()
     val gson = Gson()
@@ -66,12 +67,19 @@ class SwipeGameGdx(private val storage: PersistentStorage) : Game() {
         val balanceFile = Gdx.files.internal("balance.json")
         val balanceText = balanceFile.readString()
         val balance = Gson().fromJson<SwipeBalance>(balanceText, SwipeBalance::class.java)
-        context = GdxGameContext(atlas, uiAtlas, font, balance, scale)
+
+        val textsFile = Gdx.files.internal("strings.json")
+        val textsText = textsFile.readString()
+        val token = object : TypeToken<Map<String, String>>() {}.type
+        val texts = gson.fromJson<Map<String, String>>(textsText, token)
+
+        context = GdxGameContext(atlas, uiAtlas, font, balance, scale, texts)
+
 
         Gdx.input.inputProcessor = multiplexer
 
         screenContext = ScreenContext(uiAtlas, font, atlas, scale, balance)
-        setScreen(ActScreen(this, actService, 0, screenContext))
+        setScreen(ActScreen(this, actService, 0, screenContext, storage))
     }
 
     private fun initializeGearService() {

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.GL20.*
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
@@ -12,8 +13,8 @@ import com.badlogic.gdx.input.GestureDetector
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.ScreenViewport
+import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.campaign.*
-import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.state.ActProgressState
 import com.game7th.metagame.state.LocationProgressState
 import com.game7th.swipe.ScreenContext
@@ -21,13 +22,15 @@ import com.game7th.swipe.SwipeGameGdx
 import com.game7th.swipe.campaign.bottom_menu.BottomMenu
 import com.game7th.swipe.campaign.party.PartyView
 import com.game7th.swipe.campaign.prepare.BattlePrepareDialog
+import com.game7th.swipe.dialog.DialogView
+import com.game7th.swipe.dialog.FocusView
 import kotlin.math.*
 
 sealed class UiState {
     object Hidden : UiState()
     object PartyUi : UiState()
     data class BattlePreparation(
-            val dialog: BattlePrepareDialog
+            val node: LocationConfig
     ) : UiState()
 }
 
@@ -39,7 +42,8 @@ class ActScreen(
         private val game: SwipeGameGdx,
         private val actsService: ActsService,
         private val actId: Int,
-        private val context: ScreenContext
+        private val context: ScreenContext,
+        private val storage: PersistentStorage
 ) : Screen {
 
     private val batch = SpriteBatch()
@@ -77,6 +81,11 @@ class ActScreen(
     private var battlePrepareDialog: BattlePrepareDialog? = null
     private var partyUi: PartyView? = null
 
+    private var isScrollEnabled = true
+    private var focusView: FocusView? = null
+    private var isShowingFocus1 = false
+    private var isShowingFocus2 = false
+
     override fun show() {
         config = actsService.getActConfig(actId)
         val progressState: ActProgressState = actsService.getActProgress(actId)
@@ -87,35 +96,39 @@ class ActScreen(
 
         gestureDetector = GestureDetector(game.width / 12f, 0.4f, 1.1f, Float.MAX_VALUE, object : GestureDetector.GestureAdapter() {
             override fun pan(x: Float, y: Float, deltaX: Float, deltaY: Float): Boolean {
-                closeOverlay()
-                scrollImpulse = 0f
-                scroll += deltaY
-                normalizeScroll()
+                if (isScrollEnabled) {
+                    closeOverlay()
+                    scrollImpulse = 0f
+                    scroll += deltaY
+                    normalizeScroll()
+                }
                 return super.pan(x, y, deltaX, deltaY)
             }
 
             override fun fling(velocityX: Float, velocityY: Float, button: Int): Boolean {
-                closeOverlay()
-                scrollImpulse = velocityY
+                if (isScrollEnabled) {
+                    closeOverlay()
+                    scrollImpulse = velocityY
+                }
                 return super.fling(velocityX, velocityY, button)
             }
 
             override fun tap(x: Float, y: Float, count: Int, button: Int): Boolean {
-                closeOverlay()
+                if (isShowingFocus2) {
+                    isShowingFocus2 = false
+                    dismissFocusView()
+                    battlePrepareDialog?.startBattle()
+                    storage.put(KEY_ACT1_INTRO_SHOWN, true.toString())
+                } else {
+                    closeOverlay()
+                }
                 val wy = (game.height - y + scroll - mapBottomOffset) / game.scale
                 val wx = x / game.scale
                 actConfig.nodes.forEach { node ->
                     val rect = Rectangle(node.x - 30, node.y - 30, 60f, 60f)
                     if (rect.contains(wx, wy) && locationCache.containsKey(node.id)) {
-                        transiteUiState(UiState.BattlePreparation(
-                                BattlePrepareDialog(
-                                        game = game,
-                                        context = context,
-                                        actId = this@ActScreen.actId,
-                                        locationId = node.id,
-                                        config = node,
-                                        actsService = actsService)
-                        ))
+                        transiteUiState(UiState.BattlePreparation(node))
+                        return true
                     }
                 }
                 return super.tap(x, y, count, button)
@@ -144,6 +157,21 @@ class ActScreen(
         stage.addActor(bottomMenu)
         bottomMenu.zIndex = 100
         mapBottomOffset = context.scale * 48f
+
+        if (actId == 0 && storage.get(KEY_ACT1_INTRO_SHOWN)?.toBoolean() != true) {
+            showIntro()
+        }
+    }
+
+    private fun processBattlePrepareDialogShown(dialog: BattlePrepareDialog) {
+        if (isShowingFocus1) {
+            isShowingFocus1 = false
+            dismissFocusView()
+
+            val coords = dialog.getStartButtonBounds()
+            isShowingFocus2 = true
+            showFocusView(game.context.texts["ttr_intro_8"]!!, coords)
+        }
     }
 
     private fun updateLocationProgressCache(progressState: ActProgressState) {
@@ -173,6 +201,7 @@ class ActScreen(
                 scrollImpulse = 0f
             }
         }
+
         batch.begin()
         batch.draw(backgroundTexture, 0f, -scroll + mapBottomOffset, backgroundTexture.width * game.scale, backgroundTexture.height * game.scale)
         batch.end()
@@ -296,7 +325,7 @@ class ActScreen(
 
     private fun transiteUiState(state: UiState) {
         //First of all, hide previous
-        when(this.uiState) {
+        when (this.uiState) {
             is UiState.PartyUi -> hidePartyUi()
             is UiState.BattlePreparation -> hideBattlePreparation()
         }
@@ -305,7 +334,7 @@ class ActScreen(
 
         //Now, show stuff
         when (state) {
-            is UiState.BattlePreparation -> showBattlePreparation(state.dialog)
+            is UiState.BattlePreparation -> showBattlePreparation(state.node)
             is UiState.PartyUi -> showPartyUi()
         }
     }
@@ -322,8 +351,15 @@ class ActScreen(
         partyUi?.zIndex = 0
     }
 
-    private fun showBattlePreparation(dialog: BattlePrepareDialog) {
-        battlePrepareDialog = dialog
+    private fun showBattlePreparation(node: LocationConfig) {
+        battlePrepareDialog = BattlePrepareDialog(
+                game = game,
+                context = context,
+                actId = this@ActScreen.actId,
+                locationId = node.id,
+                config = node,
+                actsService = actsService,
+                shownCallback = this@ActScreen::processBattlePrepareDialogShown) {}
         stage.addActor(battlePrepareDialog)
     }
 
@@ -334,5 +370,49 @@ class ActScreen(
         }
     }
 
+    private fun showIntro() {
+        showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_intro_1"]!!) {
+            showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_intro_2"]!!) {
+                showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_intro_3"]!!) {
+                    showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_intro_4"]!!) {
+                        showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_intro_5"]!!) {
+                            showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_intro_6"]!!) {
+                                val rect = config.nodes[0].let { node ->
+                                    val txt = getTextureForCircle(CampaignNodeType.REGULAR)
+                                    Rectangle(node.x * game.scale - circleOffset - 5f * context.scale,
+                                            node.y * game.scale - circleOffset - scroll + mapBottomOffset - 5f * context.scale,
+                                            txt.regionWidth * circleScale + 10f * context.scale,
+                                            txt.regionHeight * circleScale + 10f * context.scale
+                                    )
+                                }
+                                isShowingFocus1 = true
+                                showFocusView(game.context.texts["ttr_intro_7"]!!, rect)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
+    private fun dismissFocusView() {
+        focusView?.let {
+            it.remove()
+        }
+        focusView = null
+    }
+
+    private fun showFocusView(text: String, rect: Rectangle) {
+        isScrollEnabled = false
+        focusView = FocusView(context, rect, text)
+        stage.addActor(focusView)
+    }
+
+    private fun showDialog(portrait: String, name: String, text: String, dismisser: () -> Unit) {
+        DialogView(context, name, text, portrait, dismisser).let { dialog -> stage.addActor(dialog) }
+    }
+
+    companion object {
+        const val KEY_ACT1_INTRO_SHOWN = "ttr.act1.intro"
+    }
 }

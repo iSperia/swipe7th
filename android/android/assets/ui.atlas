@@ -74,6 +74,20 @@ panel_blue
   orig: 144, 144
   offset: 0, 0
   index: -1
+panel_edge
+  rotate: false
+  xy: 370, 24
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+panel_modal
+  rotate: false
+  xy: 971, 312
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 star_grey
   rotate: false
   xy: 675, 317

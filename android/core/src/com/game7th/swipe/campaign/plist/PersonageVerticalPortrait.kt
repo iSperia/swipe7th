@@ -10,9 +10,19 @@ import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.unit.UnitConfig
 import com.game7th.swipe.ScreenContext
 
+data class PortraitConfig(
+        val name: String,
+        val textureName: String,
+        val level: Int
+)
+
+fun UnitConfig.toPortraitConfig(): PortraitConfig {
+    return PortraitConfig(this.unitType.name, "vp_${this.unitType.getSkin()}", -1)
+}
+
 class PersonageVerticalPortrait(
         private val context: ScreenContext,
-        private val unitConfig: UnitConfig,
+        private val unitConfig: PortraitConfig,
         private val h: Float
 ) : Group() {
 
@@ -21,7 +31,7 @@ class PersonageVerticalPortrait(
     private val lvlSize = elementWidth * 0.25f
     private val lvlPadding = lvlSize * 0.25f
 
-    val bg = Image(context.battleAtlas.findRegion("vp_${unitConfig.unitType.getSkin()}")).apply {
+    val bg = Image(context.battleAtlas.findRegion(unitConfig.textureName)).apply {
         width = elementWidth
         height = h
     }
@@ -35,6 +45,7 @@ class PersonageVerticalPortrait(
         width = lvlSize
         height = lvlSize
         touchable = Touchable.disabled
+        isVisible = unitConfig.level > 0
     }
     val lvlLabel = Label(unitConfig.level.toString(), Label.LabelStyle(context.font, Color.YELLOW)).apply {
         x = lvlPadding
@@ -44,8 +55,9 @@ class PersonageVerticalPortrait(
         setAlignment(Align.center)
         setFontScale(0.7f * lvlSize / 36f)
         touchable = Touchable.disabled
+        isVisible = unitConfig.level > 0
     }
-    val name = Label(unitConfig.unitType.toString(), Label.LabelStyle(context.font, Color.BLACK)).apply {
+    val name = Label(unitConfig.name, Label.LabelStyle(context.font, Color.BLACK)).apply {
         x = lvlPadding
         y = 0.03f * h
         width = elementWidth - 2 * lvlPadding

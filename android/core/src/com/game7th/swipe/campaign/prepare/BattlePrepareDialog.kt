@@ -1,16 +1,17 @@
 package com.game7th.swipe.campaign.prepare
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Touchable
+import com.badlogic.gdx.scenes.scene2d.actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.game7th.swipe.SwipeGameGdx
 import ktx.actors.alpha
 import ktx.actors.onClick
 import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
-import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction
-import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
-import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
@@ -22,6 +23,7 @@ import com.game7th.metagame.unit.UnitConfig
 import com.game7th.swipe.ScreenContext
 import com.game7th.swipe.campaign.plist.PersonageScrollActor
 import com.game7th.swipe.game.GameScreen
+import org.w3c.dom.css.Rect
 
 /**
  * Dialog is shown before battle is started after player clicked some unlocked location
@@ -32,7 +34,9 @@ class BattlePrepareDialog(
         private val actId: Int,
         private val locationId: Int,
         private val config: LocationConfig,
-        private val actsService: ActsService
+        private val actsService: ActsService,
+        private val shownCallback: (BattlePrepareDialog) -> Unit,
+        private val dismissCallback: () -> Unit
 ) : Group() {
 
     val scale = game.scale
@@ -68,10 +72,12 @@ class BattlePrepareDialog(
         alpha = 0f
         setScale(0f)
 
-        addAction(ParallelAction(
-                AlphaAction().apply { alpha = 1f; duration = 0.3f },
-                ScaleToAction().apply { setScale(1f); duration = 0.3f }
-        ))
+        addAction(
+                SequenceAction(
+                        ParallelAction(
+                                AlphaAction().apply { alpha = 1f; duration = 0.3f },
+                                ScaleToAction().apply { setScale(1f); duration = 0.3f }
+                        ), RunnableAction().apply { setRunnable { shownCallback(this@BattlePrepareDialog) } }))
 
         background = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
             width = this@BattlePrepareDialog.width
@@ -95,7 +101,7 @@ class BattlePrepareDialog(
         }
         addActor(buttonStart)
         buttonStart.onClick {
-            showGameScreen()
+           startBattle()
         }
 
         val scrollHeight = 150f * context.scale
@@ -179,5 +185,15 @@ class BattlePrepareDialog(
                 (star as Image).drawable = TextureRegionDrawable(context.uiAtlas.findRegion("star_grey"))
             }
         }
+    }
+
+    fun getStartButtonBounds(): Rectangle {
+        val coords = localToStageCoordinates(Vector2(buttonStart.x, buttonStart.y))
+        return Rectangle(coords.x, coords.y, buttonStart.width, buttonStart.height)
+    }
+
+    fun startBattle() {
+        dismissCallback()
+        showGameScreen()
     }
 }

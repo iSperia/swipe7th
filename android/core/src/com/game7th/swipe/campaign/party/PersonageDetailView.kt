@@ -16,6 +16,7 @@ import com.game7th.metagame.unit.UnitConfig
 import com.game7th.swipe.ScreenContext
 import com.game7th.swipe.campaign.inventory.InventoryEditor
 import com.game7th.swipe.campaign.plist.PersonageVerticalPortrait
+import com.game7th.swipe.campaign.plist.toPortraitConfig
 import ktx.actors.onClick
 import kotlin.math.exp
 
@@ -40,7 +41,7 @@ class PersonageDetailView(
         height = 240f * context.scale
     }
 
-    val portrait = PersonageVerticalPortrait(context, UnitConfig(personage.unit, personage.level), 180f * context.scale).apply {
+    val portrait = PersonageVerticalPortrait(context, UnitConfig(personage.unit, personage.level).toPortraitConfig(), 180f * context.scale).apply {
         x = 10f * context.scale
         y = 10f * context.scale
     }

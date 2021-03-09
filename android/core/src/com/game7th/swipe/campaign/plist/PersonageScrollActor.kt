@@ -26,7 +26,7 @@ class PersonageScrollActor(
 
         personages.forEachIndexed { index, unitConfig ->
             val groupX = index * elementWidth
-            val portrait = PersonageVerticalPortrait(context, unitConfig, h).apply {
+            val portrait = PersonageVerticalPortrait(context, unitConfig.toPortraitConfig(), h).apply {
                 x = groupX
             }
             addActor(portrait)

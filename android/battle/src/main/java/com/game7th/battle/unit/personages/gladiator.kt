@@ -14,7 +14,7 @@ fun produceGladiator(balance: SwipeBalance, unitStats: UnitStats) =
             val waveTemplate = TileTemplate(TileNames.GLADIATOR_WAVE, balance.gladiator.t2)
             val dropTemplate = TileTemplate(TileNames.GLADIATOR_DROP, 1)
             stats.addAbility {
-                defaultEmitter { skills.addAll(listOf(stats.body to strikeTemplate, stats.spirit to waveTemplate, stats.mind to dropTemplate)) }
+                defaultEmitter { skills.addAll(listOf(50 to strikeTemplate, 30 to waveTemplate, 20 to dropTemplate)) }
                 defaultMerger { tileType = strikeTemplate.skin }
                 defaultMerger { tileType = waveTemplate.skin }
                 consume {
