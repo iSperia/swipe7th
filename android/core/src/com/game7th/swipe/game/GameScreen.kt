@@ -24,6 +24,7 @@ import com.game7th.swipe.game.battle.model.GdxModel
 import com.game7th.swipe.gestures.SimpleDirectionGestureDetector
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ktx.async.KtxAsync
 
@@ -55,6 +56,8 @@ class GameScreen(private val game: SwipeGameGdx,
 
     lateinit var backgroundMusic: Music
 
+    var gameEnded = false
+
     override fun show() {
         viewport = ExtendViewport(480f, 720f, 480f, 2000f)
         stage = Stage(viewport)
@@ -64,25 +67,33 @@ class GameScreen(private val game: SwipeGameGdx,
         processor = SimpleDirectionGestureDetector(object : SimpleDirectionGestureDetector.DirectionListener {
             override fun onLeft() {
                 KtxAsync.launch {
-                    battle.processSwipe(-1, 0)
+                    if (!gameEnded) {
+                        battle.processSwipe(-1, 0)
+                    }
                 }
             }
 
             override fun onRight() {
                 KtxAsync.launch {
-                    battle.processSwipe(1, 0)
+                    if (!gameEnded) {
+                        battle.processSwipe(1, 0)
+                    }
                 }
             }
 
             override fun onUp() {
                 KtxAsync.launch {
-                    battle.processSwipe(0, -1)
+                    if (!gameEnded) {
+                        battle.processSwipe(0, -1)
+                    }
                 }
             }
 
             override fun onDown() {
                 KtxAsync.launch {
-                    battle.processSwipe(0, 1)
+                    if (!gameEnded) {
+                        battle.processSwipe(0, 1)
+                    }
                 }
             }
         })
@@ -102,7 +113,7 @@ class GameScreen(private val game: SwipeGameGdx,
         listenEvents()
 
         gameActor = GameActor(
-                game.context, ::processTileDoubleTap, this::claimRewards) { _ ->
+                game.context, this::claimRewards) { _ ->
             game.switchScreen(ActScreen(game, game.actService, actId, game.screenContext, game.storage))
         }
 
@@ -174,12 +185,6 @@ class GameScreen(private val game: SwipeGameGdx,
 
     private fun claimRewards() = actService.markLocationComplete(actId, locationId, difficulty)
 
-    private fun processTileDoubleTap(id: Int) {
-        KtxAsync.launch {
-            battle.attemptActivateTile(id)
-        }
-    }
-
     private fun initializeBattle() {
         KtxAsync.launch {
             battle.initialize(config)
@@ -188,9 +193,13 @@ class GameScreen(private val game: SwipeGameGdx,
 
     private fun listenEvents() {
         KtxAsync.launch(handler) {
-            for (event in battle.events) {
+            battle.events.collect { event ->
                 gameActor.processAction(event)
                 battleController.enqueueEvent(event)
+                when (event) {
+                    is BattleEvent.VictoryEvent -> gameEnded = true
+                    is BattleEvent.DefeatEvent -> gameEnded = true
+                }
             }
         }
     }

@@ -11,11 +11,9 @@ import com.game7th.battle.tilefield.TileFieldMerger
 import com.game7th.battle.tilefield.tile.*
 import com.game7th.battle.unit.*
 import com.game7th.metagame.account.PersonageAttributeStats
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.newSingleThreadContext
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -24,7 +22,7 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     private val coroutineContext = newSingleThreadContext("battle")
 
-    val events = Channel<BattleEvent>()
+    val events = MutableSharedFlow<BattleEvent>()
 
     private val tileFieldMerger: TileFieldMerger = object : TileFieldMerger {
         override suspend fun merge(tile1: SwipeTile, tile2: SwipeTile): SwipeTile? {
@@ -45,6 +43,8 @@ class SwipeBattle(val balance: SwipeBalance) {
     var wave = 0
 
     val units = mutableListOf<BattleUnit>()
+
+    var gameEnded = false
 
     suspend fun propagateInternalEvent(event: InternalBattleEvent) {
         aliveUnits().forEach { battleUnit ->
@@ -130,8 +130,8 @@ class SwipeBattle(val balance: SwipeBalance) {
         val leftTeamCount = aliveUnits().count { it.team == Team.LEFT }
         val rightTeamCount = aliveUnits().count { it.team == Team.RIGHT }
         if (leftTeamCount == 0) {
+            gameEnded = true
             notifyEvent(BattleEvent.DefeatEvent)
-            events.close()
         } else if (rightTeamCount == 0) {
             if (wave < config.waves.size - 1) {
                 wave++
@@ -140,8 +140,8 @@ class SwipeBattle(val balance: SwipeBalance) {
                 generateNpcs(config)
                 propagateInternalEvent(InternalBattleEvent.BattleStartedEvent(this@SwipeBattle))
             } else {
+                gameEnded = true
                 notifyEvent(BattleEvent.VictoryEvent)
-                events.close()
             }
         }
     }
@@ -153,52 +153,41 @@ class SwipeBattle(val balance: SwipeBalance) {
     }
 
     suspend fun processSwipe(dx: Int, dy: Int) = withContext(coroutineContext) {
-        async {
-            if (!events.isClosedForSend) {
-                var motionEvents = tileField.attemptSwipe(dx, dy, true)
-                var hadAnyEvents = false
-                val eventCache = mutableListOf<BattleEvent>()
-                while (motionEvents.isNotEmpty()) {
-                    hadAnyEvents = true
-                    eventCache.add(BattleEvent.SwipeMotionEvent(motionEvents))
-                    //TODO: post process stacks stages etc.
-                    motionEvents = tileField.attemptSwipe(dx, dy, true)
-                }
-                val totalMerges = eventCache.sumBy { be -> (be as? BattleEvent.SwipeMotionEvent)?.events?.count { it is TileFieldEvent.MergeTileEvent } ?: 0 }
-                if (hadAnyEvents) {
-                    runBlocking {
-                        eventCache.forEach { notifyEvent(it) }
-                    }
-                    processTick(false)
-                    processTickUnits()
-                    tick++
-
-                    checkDeadPersonages()
-
-                    if (tileField.attemptSwipe(-1, 0, false).isEmpty() &&
-                            tileField.attemptSwipe(1, 0, false).isEmpty() &&
-                            tileField.attemptSwipe(0,-1, false).isEmpty() &&
-                            tileField.attemptSwipe(0, 1, false).isEmpty()) {
-                        //we have no moves
-                        if (!events.isClosedForSend) {
-                            notifyEvent(BattleEvent.DefeatEvent)
-                            events.close()
-                        }
-                    }
-                }
-                combo = if (totalMerges > 0) combo + totalMerges else 0
-                notifyEvent(BattleEvent.ComboUpdateEvent(combo))
+        if (!gameEnded) {
+            var motionEvents = tileField.attemptSwipe(dx, dy, true)
+            var hadAnyEvents = false
+            val eventCache = mutableListOf<BattleEvent>()
+            while (motionEvents.isNotEmpty()) {
+                hadAnyEvents = true
+                eventCache.add(BattleEvent.SwipeMotionEvent(motionEvents))
+                //TODO: post process stacks stages etc.
+                motionEvents = tileField.attemptSwipe(dx, dy, true)
             }
-        }
+            val totalMerges = eventCache.sumBy { be ->
+                (be as? BattleEvent.SwipeMotionEvent)?.events?.count { it is TileFieldEvent.MergeTileEvent }
+                        ?: 0
+            }
+            if (hadAnyEvents) {
+                runBlocking {
+                    eventCache.forEach { notifyEvent(it) }
+                }
+                processTick(false)
+                processTickUnits()
+                tick++
 
-    }
-
-    suspend fun attemptActivateTile(id: Int) = withContext(coroutineContext) {
-        if (!events.isClosedForSend) {
-            tileField.tiles.values.firstOrNull { it.id == id }?.let { tile ->
-                propagateInternalEvent(InternalBattleEvent.AbilityUseEvent(this@SwipeBattle, tile))
                 checkDeadPersonages()
+
+                if (tileField.attemptSwipe(-1, 0, false).isEmpty() &&
+                        tileField.attemptSwipe(1, 0, false).isEmpty() &&
+                        tileField.attemptSwipe(0, -1, false).isEmpty() &&
+                        tileField.attemptSwipe(0, 1, false).isEmpty()) {
+                            gameEnded = true
+                    //we have no moves
+                    notifyEvent(BattleEvent.DefeatEvent)
+                }
             }
+            combo = if (totalMerges > 0) combo + totalMerges else 0
+            notifyEvent(BattleEvent.ComboUpdateEvent(combo))
         }
     }
 
@@ -292,9 +281,7 @@ class SwipeBattle(val balance: SwipeBalance) {
     }
 
     suspend fun notifyEvent(event: BattleEvent) {
-        if (!events.isClosedForSend) {
-            events.send(event)
-        }
+        events.emit(event)
     }
 
     fun findClosestAliveEnemy(unit: BattleUnit): BattleUnit? {

@@ -37,7 +37,8 @@ class DistancedConsumeOnAttackDamageTriggerEvent: AbilityTrigger {
     }
 
     private suspend fun processTick(event: InternalBattleEvent) {
-        tilesToRemove.forEach { tileId ->
+        val ttrCopy = tilesToRemove.toList()
+        ttrCopy.forEach { tileId ->
             val entry = event.battle.tileField.tiles.entries.firstOrNull { it.value.id == tileId }
             entry?.let { entry ->
                 event.battle.tileField.tiles.remove(entry.key)
@@ -45,7 +46,7 @@ class DistancedConsumeOnAttackDamageTriggerEvent: AbilityTrigger {
                 event.battle.propagateInternalEvent(InternalBattleEvent.TileConsumedEvent(event.battle, entry.value, entry.key))
             }
         }
-//        tilesToRemove.clear()
+        tilesToRemove.removeAll(ttrCopy)
         tilesToAction.clear()
     }
 

@@ -1,7 +1,5 @@
 package com.game7th.swipe.game.actors
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
@@ -14,16 +12,13 @@ import com.game7th.metagame.account.RewardData
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.game.actors.ui.GameFinishedDialog
 import com.game7th.swipe.game.battle.hud.HudGroup
-import kotlinx.coroutines.launch
 import ktx.actors.onClick
-import ktx.async.KtxAsync
 
 class GameActor(
         private val context: GdxGameContext,
-        private val activateTile: (Int) -> Unit,
         private val rewardCallback: () -> List<RewardData>,
         private val finishCallback: (Boolean) -> Unit
-) : Group(), TileDoubleTapCallback {
+) : Group() {
 
     lateinit var atlas: TextureAtlas
     lateinit var font: BitmapFont
@@ -35,7 +30,7 @@ class GameActor(
     var buttonCombo: Label
 
     init {
-        tileField = TileFieldView(context, this).apply {
+        tileField = TileFieldView(context).apply {
             setScale(TILE_FIELD_SCALE)
             x = 0f
             y = 0f
@@ -75,12 +70,6 @@ class GameActor(
             x = 40f
             y = 220f
             this@GameActor.addActor(this)
-        }
-    }
-
-    override fun processDoubleTapped(id: Int) {
-        KtxAsync.launch {
-            activateTile(id)
         }
     }
 

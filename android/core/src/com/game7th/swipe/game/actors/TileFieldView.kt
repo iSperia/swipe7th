@@ -11,9 +11,8 @@ import kotlinx.coroutines.delay
 import ktx.actors.alpha
 
 class TileFieldView(
-        private val gameContext: GdxGameContext,
-        private val tileDoubleTapCallback: TileDoubleTapCallback
-) : Group(), TileDoubleTapCallback by tileDoubleTapCallback {
+        private val gameContext: GdxGameContext
+) : Group() {
 
     private val backgroundGroup: Group
 
@@ -47,7 +46,7 @@ class TileFieldView(
                 val fx = if (action.sourcePosition >= 0) action.sourcePosition % FIELD_WIDTH else tx
                 val fy = if (action.sourcePosition >= 0) action.sourcePosition / FIELD_WIDTH else ty
 
-                val view = TileView(gameContext, action.tile, this)
+                val view = TileView(gameContext, action.tile)
                 view.applyPosition(fx, fy)
                 view.name = "${action.tile.id}"
                 tileGroup.addActor(view)

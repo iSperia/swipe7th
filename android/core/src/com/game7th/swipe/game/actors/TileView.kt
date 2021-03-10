@@ -2,10 +2,8 @@ package com.game7th.swipe.game.actors
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
-import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.game7th.battle.event.TileViewModel
 import com.game7th.swipe.GdxGameContext
 
@@ -15,8 +13,7 @@ interface TileDoubleTapCallback {
 
 class TileView(
         private val gameContext: GdxGameContext,
-        viewModel: TileViewModel,
-        doubleTapCallback: TileDoubleTapCallback
+        viewModel: TileViewModel
 ) : Group() {
 
     private var vm: TileViewModel? = null
@@ -31,16 +28,6 @@ class TileView(
         height = 36f
 
         updateFrom(viewModel)
-
-        addListener(object : ClickListener() {
-
-            override fun clicked(event: InputEvent?, x: Float, y: Float) {
-                if (tapCount >= 2) {
-                    doubleTapCallback.processDoubleTapped(vm?.id ?: -1)
-                    tapCount = 0
-                }
-            }
-        })
     }
 
     fun updateFrom(viewModel: TileViewModel) {

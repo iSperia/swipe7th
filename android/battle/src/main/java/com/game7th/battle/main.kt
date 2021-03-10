@@ -7,6 +7,7 @@ import com.game7th.metagame.unit.UnitConfig
 import com.game7th.metagame.unit.UnitType
 import com.google.gson.Gson
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 import java.io.FileInputStream
 import java.io.FileWriter
 import java.io.InputStreamReader
@@ -83,7 +84,7 @@ suspend fun emulateBattle(balance: SwipeBalance, config: BattleConfig): Emulatio
 
                 val victory: Deferred<Boolean> = async {
                     var result = false
-                    for (event in battle.events) {
+                    battle.events.collect { event ->
                         if (event is BattleEvent.VictoryEvent) {
                             result = true
                         } else if (event is BattleEvent.DefeatEvent) {
