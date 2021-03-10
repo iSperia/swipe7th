@@ -17,7 +17,7 @@ data class PortraitConfig(
 )
 
 fun UnitConfig.toPortraitConfig(): PortraitConfig {
-    return PortraitConfig(this.unitType.name, "vp_${this.unitType.getSkin()}", -1)
+    return PortraitConfig(this.unitType.name, "vp_${this.unitType.getSkin()}", level)
 }
 
 class PersonageVerticalPortrait(
