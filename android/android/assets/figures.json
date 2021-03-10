@@ -12,7 +12,7 @@
         {"name": "death", "start": 53, "end": 65}
       ],
       "attacks": [
-        {"attackType": "MOVE_AND_PUNCH"},
+        {"attackType": "MOVE_AND_PUNCH", "sound": "sword_strike"},
         {"attackType": "AOE_STEPPED_GENERATOR", "effect": {
           "name": "gladiator_wave",
           "atlas": "personage_gladiator",
@@ -20,7 +20,8 @@
           "step": 16,
           "time": 0.05,
           "width": 64,
-          "height": 128
+          "height": 128,
+          "sound": "phys_wave"
         }}
       ]
     },
@@ -41,7 +42,8 @@
           "atlas": "poison_archer",
           "trigger": 15,
           "height": 144,
-          "width": 96
+          "width": 96,
+          "sound": "arrow"
         }}
       ]
     },
@@ -57,7 +59,7 @@
         {"name":  "death", "start":  66, "end":  87}
       ],
       "attacks": [
-        {"attackType": "MOVE_AND_PUNCH"}
+        {"attackType": "MOVE_AND_PUNCH", "sound":  "monster_damage"}
       ]
     },
     {
@@ -67,12 +69,12 @@
       "body": "slime_red_body",
       "poses": [
         {"name":  "attack", "start":  1, "end":  35, "triggers": [23]},
-        {"name":  "damage", "start":  54, "end":  65},
+        {"name":  "damage", "start":  54, "end":  65, "sound":  "monster_damage"},
         {"name":  "idle", "start":  36, "end":  53},
         {"name":  "death", "start":  66, "end":  87}
       ],
       "attacks": [
-        {"attackType": "MOVE_AND_PUNCH"}
+        {"attackType": "MOVE_AND_PUNCH", "sound":  "monster_damage"}
       ]
     },
     {
@@ -82,12 +84,12 @@
       "body": "slime_mother_body",
       "poses": [
         {"name":  "attack", "start":  1, "end":  34, "triggers": [27]},
-        {"name":  "damage", "start":  51, "end":  65},
+        {"name":  "damage", "start":  51, "end":  65, "sound":  "monster_damage"},
         {"name":  "idle", "start":  35, "end":  50},
         {"name":  "death", "start":  66, "end":  81}
       ],
       "attacks": [
-        {"attackType": "MOVE_AND_PUNCH"}
+        {"attackType": "MOVE_AND_PUNCH", "sound":  "monster_damage"}
       ]
     },
     {
@@ -97,12 +99,12 @@
       "body": "slime_father_body",
       "poses": [
         {"name":  "attack", "start":  1, "end":  34, "triggers": [27]},
-        {"name":  "damage", "start":  51, "end":  65},
+        {"name":  "damage", "start":  51, "end":  65, "sound":  "monster_damage"},
         {"name":  "idle", "start":  35, "end":  50},
         {"name":  "death", "start":  66, "end":  81}
       ],
       "attacks": [
-        {"attackType": "MOVE_AND_PUNCH"}
+        {"attackType": "MOVE_AND_PUNCH", "sound":  "monster_damage"}
       ]
     }
   ],
@@ -124,6 +126,7 @@
     {
       "name": "ailment_evade",
       "atlas": "ailments",
+      "sound": "wind",
       "trigger": 10,
       "height": 144,
       "width": 144

@@ -2,6 +2,7 @@
 
 package com.game7th.swipe.game.battle
 
+import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.game7th.battle.event.BattleEvent
@@ -16,6 +17,7 @@ import com.game7th.swipe.game.battle.model.GdxAttackType
 class BattleController(
         private val context: GameContextWrapper,
         private val y: Float,
+        private val sounds: Map<String, Sound>,
         private val endEventHandler: (event: BattleEvent) -> Unit
 ) {
 
@@ -66,6 +68,10 @@ class BattleController(
 
     private val paddingSide = context.width * 0.05f
 
+    private fun playSound(sound: String) {
+        sounds[sound]?.play()
+    }
+
     private fun processEvent(event: BattleEvent) {
         when (event) {
             is BattleEvent.CreatePersonageEvent -> {
@@ -77,7 +83,8 @@ class BattleController(
                         x,
                         y,
                         scale,
-                        event.personage.team > 0)
+                        event.personage.team > 0,
+                        this::playSound)
                 figures.add(figure)
             }
             is BattleEvent.PersonageAttackEvent -> {
@@ -92,7 +99,9 @@ class BattleController(
                         this,
                         figure,
                         null,
-                        targetPosition
+                        targetPosition,
+                        this::playSound,
+                        figure.figureModel.attacks[event.attackIndex].sound
                 )
                 effects.add(orchestrator)
             }
@@ -138,6 +147,7 @@ class BattleController(
             }
             is BattleEvent.ShowAilmentEffect -> {
                 context.gdxModel.ailments.firstOrNull { it.name == event.effectSkin }?.let { effect ->
+                    effect.sound?.let { playSound(it) }
                     figures.firstOrNull { it.id == event.target }?.let { figure ->
                         showEffectOverFigure(figure, effect)
                     }
@@ -160,7 +170,9 @@ class BattleController(
                                     this,
                                     figure,
                                     targetFigure,
-                                    null
+                                    null,
+                                    this::playSound,
+                                    figure.figureModel.attacks[event.attackIndex].sound
                             )
                             effects.add(orchestrator)
                         }
@@ -172,7 +184,9 @@ class BattleController(
                                 this,
                                 figure,
                                 figure,
-                                null
+                                null,
+                                this::playSound,
+                                figure.figureModel.attacks[event.attackIndex].sound
                         )
                         effects.add(orchestrator)
                     }
@@ -185,7 +199,10 @@ class BattleController(
                                 this@BattleController,
                                 figure,
                                 event.targets.map { target -> figures.first { it.id == target.id } }.sortedBy { it.x },
-                                effect)
+                                effect,
+                                this::playSound,
+                                effect.sound
+                        )
                         effects.add(orchestrator)
                     }
                 }
@@ -197,7 +214,9 @@ class BattleController(
                                 this@BattleController,
                                 figure,
                                 event.targets.map { figures.first { figure -> figure.id == it.id } },
-                                effect
+                                effect,
+                                this::playSound,
+                                effect.sound
                         )
                         effects.add(orchestrator)
                     }

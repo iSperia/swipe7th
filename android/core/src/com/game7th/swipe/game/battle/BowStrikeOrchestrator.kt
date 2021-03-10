@@ -11,7 +11,9 @@ class BowStrikeOrchestrator(
         private val battle: BattleController,
         val sourceFigure: FigureController, //figure is launching projectiles
         val targets: List<FigureController>, //aims
-        val effect: EffectGdxModel
+        val effect: EffectGdxModel,
+        val player: (String) -> Unit,
+        val sound: String?
 ) : ElementController(context, id) {
 
     private var timePassed = 0f
@@ -26,6 +28,7 @@ class BowStrikeOrchestrator(
         timePassed += delta * battle.timeScale()
 
         if (!poseChanged) {
+            sound?.let { player(it) }
             sourceFigure.switchPose(FigurePose.POSE_ATTACK)
             poseChanged = true
         }

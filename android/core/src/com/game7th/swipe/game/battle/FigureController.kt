@@ -30,7 +30,8 @@ class FigureController(
         val originX: Float,
         val originY: Float,
         private val scale: Float,
-        val flipped: Boolean
+        val flipped: Boolean,
+        val player: (String) -> Unit
 ) : ElementController(context, id) {
 
     var x = originX
@@ -105,6 +106,7 @@ class FigureController(
         timePoseStarted = timePassed
         this.pose = pose
         val pose = figureModel.poses.firstOrNull { it.name == pose.poseName }
+        pose?.sound?.let { player(it) }
         val playMode = when (this.pose) {
             FigurePose.POSE_IDLE -> Animation.PlayMode.LOOP
             FigurePose.POSE_ATTACK -> Animation.PlayMode.NORMAL

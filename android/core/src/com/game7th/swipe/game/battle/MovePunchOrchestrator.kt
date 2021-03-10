@@ -10,7 +10,9 @@ class MovePunchOrchestrator(
         private val battle: BattleController,
         private val sourceFigure: FigureController,
         private val targetFigure: FigureController?,
-        private val targetExactPosition: Float?
+        private val targetExactPosition: Float?,
+        private val player: (String) -> Unit,
+        private val sound: String?
 ) : ElementController(context, id) {
 
     var timePassed = 0f
@@ -38,6 +40,7 @@ class MovePunchOrchestrator(
             sourceFigure.x = sourceFigure.originX + (timePassed / timeStampMove) * (targetX - sourceFigure.originX)
         } else if (!isPunchStarted) {
             sourceFigure.x = if (sourceFigure != targetFigure) targetX else sourceFigure.originX
+            sound?.let { player(it) }
             sourceFigure.switchPose(FigurePose.POSE_ATTACK)
             isPunchStarted = true
         } else if (sourceFigure != targetFigure) {

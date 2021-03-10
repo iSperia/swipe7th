@@ -3,6 +3,7 @@ package com.game7th.swipe.game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.audio.Music
+import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Stage
@@ -50,6 +51,7 @@ class GameScreen(private val game: SwipeGameGdx,
 
     lateinit var gameActor: GameActor
     val atlases = mutableMapOf<String, TextureAtlas>()
+    val sounds = mutableMapOf<String, Sound>()
 
     lateinit var backgroundMusic: Music
 
@@ -111,12 +113,33 @@ class GameScreen(private val game: SwipeGameGdx,
         val gdxModel = Gson().fromJson<GdxModel>(Gdx.files.internal("figures.json").readString(), GdxModel::class.java)
 
         atlases["ailments"] = TextureAtlas(Gdx.files.internal("ailments.atlas"))
+        listOf("wind").forEach {
+            sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/$it.ogg"))
+        }
         config.personages.forEach { personageConfig ->
             atlases[personageConfig.name.getSkin()] = TextureAtlas(Gdx.files.internal("${personageConfig.name.getSkin()}.atlas"))
+            gdxModel.figures.firstOrNull { it.name == personageConfig.name.getSkin() }?.let {
+                it.attacks.forEach {
+                    it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
+                    it.effect?.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg"))  }
+                }
+                it.poses.forEach {
+                    it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
+                }
+            }
         }
         config.waves.forEach { it.forEach { npc ->
             if (!atlases.containsKey(npc.name.getSkin())) {
                 atlases[npc.name.getSkin()] = TextureAtlas(Gdx.files.internal("${npc.name.getSkin()}.atlas"))
+            }
+            gdxModel.figures.firstOrNull { it.name == npc.name.getSkin() }?.let {
+                it.attacks.forEach {
+                    it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
+                    it.effect?.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg"))  }
+                }
+                it.poses.forEach {
+                    it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
+                }
             }
         }}
 
@@ -128,7 +151,7 @@ class GameScreen(private val game: SwipeGameGdx,
                 width = Gdx.graphics.width.toFloat(),
                 height = Gdx.graphics.height.toFloat(),
                 atlases = atlases
-        ), Gdx.graphics.width.toFloat()) {
+        ), Gdx.graphics.width.toFloat(), sounds) {
             if (it is BattleEvent.VictoryEvent) {
                 val experience = config.waves.sumBy {
                     it.sumBy { it.level * 50 }
@@ -192,6 +215,7 @@ class GameScreen(private val game: SwipeGameGdx,
 
     override fun hide() {
         stage.dispose()
+        sounds.forEach { it.value.dispose() }
         backgroundMusic.stop()
         backgroundMusic.dispose()
     }

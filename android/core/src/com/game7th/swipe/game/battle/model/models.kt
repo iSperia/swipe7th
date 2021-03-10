@@ -16,6 +16,7 @@ enum class GdxAttackType {
 
 data class AttackGdxModel(
         val attackType: GdxAttackType,
+        val sound: String?,
         val effect: EffectGdxModel?
 )
 
@@ -32,6 +33,7 @@ data class EffectGdxModel(
         val name: String,
         val atlas: String,
         val step: Int?,
+        val sound: String?,
         val time: Float = 0f,
         val width: Int = 0,
         val height: Int = 0,

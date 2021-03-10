@@ -11,7 +11,9 @@ class AoeSteppedGeneratorOrchestrator(
         private val battle: BattleController,
         private val sourceFigure: FigureController,
         private val targetFigures: List<FigureController>,
-        private val gdxEffect: EffectGdxModel
+        private val gdxEffect: EffectGdxModel,
+        private val player: (String) -> Unit,
+        private val sound: String?
 ) : ElementController(context, id) {
 
     var timePassed = 0f
@@ -27,6 +29,7 @@ class AoeSteppedGeneratorOrchestrator(
         if (!isStarted) {
             isStarted = true
 
+            sound?.let { player(it) }
             sourceFigure.switchPose(FigurePose.POSE_ATTACK)
         }
     }
