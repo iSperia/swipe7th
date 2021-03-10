@@ -81,17 +81,17 @@ class FigureController(
             if (index != oldIndex) {
                 val pose = figureModel.poses.first { pose.poseName == it.name }
 
-                (oldIndex + 1..index).forEach {
+                ((oldIndex + 1)..index).forEach {
                     val hasTrigger = pose.triggers?.contains(it) == true
                     if (hasTrigger) {
-                        battle.propagate(BattleControllerEvent.FigurePoseFrameIndexEvent(id, index))
+                        battle.propagate(BattleControllerEvent.FigurePoseFrameIndexEvent(id, it))
                     }
                 }
 
                 oldIndex = index
             }
             if (animation.isAnimationFinished(timePassed - timePoseStarted) && animation.playMode == Animation.PlayMode.NORMAL
-                    && pose != FigurePose.POSE_DEATH) {
+                    && pose != FigurePose.POSE_DEATH && !isDead) {
                 switchPose(FigurePose.POSE_IDLE)
             }
         }
@@ -102,7 +102,7 @@ class FigureController(
     }
 
     fun switchPose(pose: FigurePose) {
-        if (isDead) return
+//        if (isDead) return
         timePoseStarted = timePassed
         this.pose = pose
         val pose = figureModel.poses.firstOrNull { it.name == pose.poseName }
