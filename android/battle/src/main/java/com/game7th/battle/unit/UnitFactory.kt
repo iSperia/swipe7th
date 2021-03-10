@@ -13,7 +13,7 @@ import com.game7th.metagame.unit.UnitType
 object UnitFactory {
     fun produce(type: UnitType, balance: SwipeBalance, level: Int, unitStats: UnitStats?): UnitStats? {
         return when (type) {
-            UnitType.GLADIATOR -> produceGladiator(balance, unitStats!!)
+            UnitType.GLADIATOR -> produceGladiator(balance, UnitStats(UnitType.GLADIATOR, 100, 15, 15, 15, CappedStat(2000,2000), 1000, 1000, 500, 100, 200))
             UnitType.POISON_ARCHER -> produceToxicArcher(balance, unitStats!!)
             UnitType.GREEN_SLIME -> produceGreenSlime(balance, level)
             UnitType.PURPLE_SLIME -> producePurpleSlime(balance, level)

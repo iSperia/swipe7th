@@ -15,7 +15,7 @@ fun produceToxicArcher(balance: SwipeBalance, unitStats: UnitStats) =
             val poisonTemplate = TileTemplate(TileNames.POISON_ARCHER_POISON, balance.poison_archer.t2)
             val paralizeTemplate = TileTemplate(TileNames.POISON_ARCHER_PARALIZE, balance.poison_archer.t3)
             stats.addAbility {
-                defaultEmitter { skills.addAll(listOf(stats.body to paralizeTemplate, stats.spirit to strikeTemplate, stats.mind to poisonTemplate)) }
+                defaultEmitter { skills.addAll(listOf(25 to paralizeTemplate, 50 to strikeTemplate, 25 to poisonTemplate)) }
                 defaultMerger { tileType = strikeTemplate.skin }
                 defaultMerger { tileType = poisonTemplate.skin; autoCut = true }
                 defaultMerger { tileType = paralizeTemplate.skin; autoCut = true }

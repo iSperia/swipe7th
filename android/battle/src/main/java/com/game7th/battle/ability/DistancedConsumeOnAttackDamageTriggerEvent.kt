@@ -24,46 +24,58 @@ class DistancedConsumeOnAttackDamageTriggerEvent: AbilityTrigger {
         when (event) {
             is InternalBattleEvent.TileConsumedEvent -> {
                 if (tileSkins.contains(event.tile.type.skin)) {
-                    var count = 0
-                    //we are triggering this one
-                    event.battle.tileField.tiles.entries.filter {
-                        val dx = abs((it.key % 5) - (event.position % 5))
-                        val dy = abs((it.key / 5) - (event.position / 5))
-                        val skin = it.value.type.skin
-                        dx <= range && dy <= range && skin == this.sourceSkin && it.value.stackSize == it.value.type.maxStackSize
-                    }.forEach { (position, tile) ->
-                        tilesToRemove.add(position)
-                        count++
-                    }
-                    if (count > 0) {
-                        tilesToAction.add(Pair(event.tile, count))
-                    }
+                    processTileSkinConsumed(event)
                 }
             }
             is InternalBattleEvent.AttackDamageEvent -> {
-                if (event.damage.status == DamageProcessStatus.DAMAGE_DEALT) {
-                    tilesToAction.firstOrNull { it.first.id == event.tile.id }?.let { actionTile ->
-                        action.processAction(
-                                event.battle,
-                                unit,
-                                event.source,
-                                event.target,
-                                ParametrizedMeta(actionTile.second.toFloat() * event.damage.totalDamage()))
-                    }
-                }
+                processAttackDamage(event, unit)
             }
             is InternalBattleEvent.TickEvent -> {
-                tilesToRemove.forEach {
-                    val tile = event.battle.tileField.tiles[it]
-                    tile?.let { tile ->
-                        event.battle.tileField.tiles.remove(it)
-                        event.battle.notifyTileRemoved(tile.id)
-                        event.battle.propagateInternalEvent(InternalBattleEvent.TileConsumedEvent(event.battle, tile, it))
-                    }
-                }
-                tilesToRemove.clear()
-                tilesToAction.clear()
+                processTick(event)
             }
+        }
+    }
+
+    private suspend fun processTick(event: InternalBattleEvent) {
+        tilesToRemove.forEach { tileId ->
+            val entry = event.battle.tileField.tiles.entries.firstOrNull { it.value.id == tileId }
+            entry?.let { entry ->
+                event.battle.tileField.tiles.remove(entry.key)
+                event.battle.notifyTileRemoved(entry.value.id)
+                event.battle.propagateInternalEvent(InternalBattleEvent.TileConsumedEvent(event.battle, entry.value, entry.key))
+            }
+        }
+//        tilesToRemove.clear()
+        tilesToAction.clear()
+    }
+
+    private suspend fun processAttackDamage(event: InternalBattleEvent.AttackDamageEvent, unit: BattleUnit) {
+        if (event.damage.status == DamageProcessStatus.DAMAGE_DEALT) {
+            tilesToAction.firstOrNull { it.first.id == event.tile.id }?.let { actionTile ->
+                action.processAction(
+                        event.battle,
+                        unit,
+                        event.source,
+                        event.target,
+                        ParametrizedMeta(actionTile.second.toFloat() * event.damage.totalDamage()))
+            }
+        }
+    }
+
+    private fun processTileSkinConsumed(event: InternalBattleEvent.TileConsumedEvent) {
+        var count = 0
+        //we are triggering this one
+        event.battle.tileField.tiles.entries.filter {
+            val dx = abs((it.key % 5) - (event.position % 5))
+            val dy = abs((it.key / 5) - (event.position / 5))
+            val skin = it.value.type.skin
+            dx <= range && dy <= range && skin == this.sourceSkin && it.value.stackSize == it.value.type.maxStackSize
+        }.forEach { (position, tile) ->
+            tilesToRemove.add(tile.id)
+            count++
+        }
+        if (count > 0) {
+            tilesToAction.add(Pair(event.tile, count))
         }
     }
 }

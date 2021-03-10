@@ -11,6 +11,7 @@ import com.game7th.battle.tilefield.TileFieldMerger
 import com.game7th.battle.tilefield.tile.*
 import com.game7th.battle.unit.*
 import com.game7th.metagame.account.PersonageAttributeStats
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
@@ -100,7 +101,7 @@ class SwipeBattle(val balance: SwipeBalance) {
             unitStats?.let { stats ->
                 val unit = BattleUnit(newPersonageId(), it.index, stats, Team.LEFT)
                 units.add(unit)
-                events.send(BattleEvent.CreatePersonageEvent(unit.toViewModel(), it.index))
+                notifyEvent(BattleEvent.CreatePersonageEvent(unit.toViewModel(), it.index))
             }
         }
 
@@ -109,14 +110,14 @@ class SwipeBattle(val balance: SwipeBalance) {
     }
 
     private suspend fun generateNpcs(config: BattleConfig) {
-        events.send(BattleEvent.NewWaveEvent(wave))
+        notifyEvent(BattleEvent.NewWaveEvent(wave))
         config.waves[wave].withIndex().forEach {
             val unitStats = UnitFactory.produce(it.value.name, balance, it.value.level, null)
             val position = 4 - it.index
             unitStats?.let { stats ->
                 val unit = BattleUnit(newPersonageId(), position, stats, Team.RIGHT)
                 units.add(unit)
-                events.send(BattleEvent.CreatePersonageEvent(unit.toViewModel(), position))
+                notifyEvent(BattleEvent.CreatePersonageEvent(unit.toViewModel(), position))
             }
         }
     }
@@ -129,7 +130,7 @@ class SwipeBattle(val balance: SwipeBalance) {
         val leftTeamCount = aliveUnits().count { it.team == Team.LEFT }
         val rightTeamCount = aliveUnits().count { it.team == Team.RIGHT }
         if (leftTeamCount == 0) {
-            events.send(BattleEvent.DefeatEvent)
+            notifyEvent(BattleEvent.DefeatEvent)
             events.close()
         } else if (rightTeamCount == 0) {
             if (wave < config.waves.size - 1) {
@@ -139,7 +140,7 @@ class SwipeBattle(val balance: SwipeBalance) {
                 generateNpcs(config)
                 propagateInternalEvent(InternalBattleEvent.BattleStartedEvent(this@SwipeBattle))
             } else {
-                events.send(BattleEvent.VictoryEvent)
+                notifyEvent(BattleEvent.VictoryEvent)
                 events.close()
             }
         }
@@ -147,46 +148,49 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     private suspend fun clearNpcs() {
         units.filter { it.team == Team.RIGHT }.forEach {
-            events.send(BattleEvent.RemovePersonageEvent(it.id))
+            notifyEvent(BattleEvent.RemovePersonageEvent(it.id))
         }
     }
 
     suspend fun processSwipe(dx: Int, dy: Int) = withContext(coroutineContext) {
-        if (!events.isClosedForSend) {
-            var motionEvents = tileField.attemptSwipe(dx, dy, true)
-            var hadAnyEvents = false
-            val eventCache = mutableListOf<BattleEvent>()
-            while (motionEvents.isNotEmpty()) {
-                hadAnyEvents = true
-                eventCache.add(BattleEvent.SwipeMotionEvent(motionEvents))
-                //TODO: post process stacks stages etc.
-                motionEvents = tileField.attemptSwipe(dx, dy, true)
-            }
-            val totalMerges = eventCache.sumBy { be -> (be as? BattleEvent.SwipeMotionEvent)?.events?.count { it is TileFieldEvent.MergeTileEvent } ?: 0 }
-            if (hadAnyEvents) {
-                runBlocking {
-                    eventCache.forEach { events.send(it) }
+        async {
+            if (!events.isClosedForSend) {
+                var motionEvents = tileField.attemptSwipe(dx, dy, true)
+                var hadAnyEvents = false
+                val eventCache = mutableListOf<BattleEvent>()
+                while (motionEvents.isNotEmpty()) {
+                    hadAnyEvents = true
+                    eventCache.add(BattleEvent.SwipeMotionEvent(motionEvents))
+                    //TODO: post process stacks stages etc.
+                    motionEvents = tileField.attemptSwipe(dx, dy, true)
                 }
-                processTick(false)
-                processTickUnits()
-                tick++
+                val totalMerges = eventCache.sumBy { be -> (be as? BattleEvent.SwipeMotionEvent)?.events?.count { it is TileFieldEvent.MergeTileEvent } ?: 0 }
+                if (hadAnyEvents) {
+                    runBlocking {
+                        eventCache.forEach { notifyEvent(it) }
+                    }
+                    processTick(false)
+                    processTickUnits()
+                    tick++
 
-                checkDeadPersonages()
+                    checkDeadPersonages()
 
-                if (tileField.attemptSwipe(-1, 0, false).isEmpty() &&
-                        tileField.attemptSwipe(1, 0, false).isEmpty() &&
-                        tileField.attemptSwipe(0,-1, false).isEmpty() &&
-                        tileField.attemptSwipe(0, 1, false).isEmpty()) {
+                    if (tileField.attemptSwipe(-1, 0, false).isEmpty() &&
+                            tileField.attemptSwipe(1, 0, false).isEmpty() &&
+                            tileField.attemptSwipe(0,-1, false).isEmpty() &&
+                            tileField.attemptSwipe(0, 1, false).isEmpty()) {
                         //we have no moves
                         if (!events.isClosedForSend) {
-                            events.send(BattleEvent.DefeatEvent)
+                            notifyEvent(BattleEvent.DefeatEvent)
                             events.close()
                         }
+                    }
                 }
+                combo = if (totalMerges > 0) combo + totalMerges else 0
+                notifyEvent(BattleEvent.ComboUpdateEvent(combo))
             }
-            combo = if (totalMerges > 0) combo + totalMerges else 0
-            notifyEvent(BattleEvent.ComboUpdateEvent(combo))
         }
+
     }
 
     suspend fun attemptActivateTile(id: Int) = withContext(coroutineContext) {
@@ -207,27 +211,27 @@ class SwipeBattle(val balance: SwipeBalance) {
                 when (ailment.ailmentType) {
                     AilmentType.POISON -> {
                         processAilmentDamage(unit, DamageVector(0, 0, ailment.value.toInt()))
-                        events.send(BattleEvent.ShowAilmentEffect(unit.id, "ailment_poison"))
+                        notifyEvent(BattleEvent.ShowAilmentEffect(unit.id, "ailment_poison"))
                     }
                     AilmentType.SCORCH -> {
                         processAilmentDamage(unit, DamageVector(0, ailment.value.toInt(), 0))
-                        events.send(BattleEvent.ShowAilmentEffect(unit.id, "effect_scorch"))
+                        notifyEvent(BattleEvent.ShowAilmentEffect(unit.id, "effect_scorch"))
                     }
                     AilmentType.STUN -> {
                         needPersonageUpdate = true
-                        events.send(BattleEvent.ShowAilmentEffect(unit.id, "ailment_paralize"))
+                        notifyEvent(BattleEvent.ShowAilmentEffect(unit.id, "ailment_paralize"))
                     }
                 }
                 ailment.ticks--
             }
 
             unit.stats.ailments = unit.stats.ailments.filter { it.ticks > 0 }.toMutableList()
-            if (needPersonageUpdate) events.send(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
+            if (needPersonageUpdate) notifyEvent(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
         }
     }
 
     suspend fun notifyAttack(source: BattleUnit, targets: List<BattleUnit>, attackIndex: Int) {
-        events.send(BattleEvent.PersonageAttackEvent(source.toViewModel(), targets.map { it.toViewModel() }, attackIndex))
+        notifyEvent(BattleEvent.PersonageAttackEvent(source.toViewModel(), targets.map { it.toViewModel() }, attackIndex))
     }
 
     /*
@@ -252,18 +256,18 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     suspend fun processAilmentDamage(target: BattleUnit, damage: DamageVector) {
         target.stats.health.value = max(0, target.stats.health.value - damage.totalDamage())
-        events.send(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.totalDamage()))
+        notifyEvent(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.totalDamage()))
         if (target.stats.health.value <= 0) {
             notifyEvent(BattleEvent.PersonageDeadEvent(target.toViewModel()))
         }
     }
 
     suspend fun notifyTileRemoved(id: Int) {
-        events.send(BattleEvent.RemoveTileEvent(id))
+        notifyEvent(BattleEvent.RemoveTileEvent(id))
     }
 
     suspend fun notifyTileUpdated(tile: SwipeTile) {
-        events.send(BattleEvent.UpdateTileEvent(tile.id, tile.toViewModel()))
+        notifyEvent(BattleEvent.UpdateTileEvent(tile.id, tile.toViewModel()))
     }
 
     suspend fun applyPoison(target: BattleUnit, poisonTicks: Int, poisonDmg: Int) {
@@ -273,7 +277,7 @@ class SwipeBattle(val balance: SwipeBalance) {
 
     suspend fun applyScorch(target: BattleUnit, ticks: Int, dmg: Int) {
         target.stats.ailments.add(UnitAilment(AilmentType.SCORCH, ticks, dmg.toFloat()))
-        events.send(BattleEvent.ShowAilmentEffect(target.id, "effect_scorch"))
+        notifyEvent(BattleEvent.ShowAilmentEffect(target.id, "effect_scorch"))
     }
 
     suspend fun applyStun(target: BattleUnit, ticks: Int) {
@@ -283,8 +287,8 @@ class SwipeBattle(val balance: SwipeBalance) {
         } else {
             target.stats.ailments.add(UnitAilment(AilmentType.STUN, ticks, 0f))
         }
-        events.send(BattleEvent.ShowAilmentEffect(target.id, "ailment_paralize"))
-        events.send(BattleEvent.PersonageUpdateEvent(target.toViewModel()))
+        notifyEvent(BattleEvent.ShowAilmentEffect(target.id, "ailment_paralize"))
+        notifyEvent(BattleEvent.PersonageUpdateEvent(target.toViewModel()))
     }
 
     suspend fun notifyEvent(event: BattleEvent) {
@@ -305,7 +309,7 @@ class SwipeBattle(val balance: SwipeBalance) {
         if (amount > 0 && unit.stats.health.notCapped()) {
             val healAmount = min(unit.stats.health.maxValue - unit.stats.health.value, amount)
             unit.stats.health.value += healAmount
-            events.send(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
+            notifyEvent(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
             notifyEvent(BattleEvent.PersonageHealEvent(unit.toViewModel(), healAmount))
         }
     }
