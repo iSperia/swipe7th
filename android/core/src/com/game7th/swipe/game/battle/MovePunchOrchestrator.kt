@@ -25,6 +25,7 @@ class MovePunchOrchestrator(
     var direction = if (sourceFigure.flipped) -1 else 1
 
     val targetX = targetFigure?.let { it.x - direction * battle.scale * 70f } ?: (targetExactPosition!! - direction * battle.scale * 70f)
+    var backTrigger = false
 
     init {
         battle.lock(1)
@@ -43,7 +44,7 @@ class MovePunchOrchestrator(
             sound?.let { player(it) }
             sourceFigure.switchPose(FigurePose.POSE_ATTACK)
             isPunchStarted = true
-        } else if (sourceFigure != targetFigure) {
+        } else if (sourceFigure != targetFigure || targetExactPosition != null) {
             if (timeStampBackMoveStart + timeStampMove > timePassed) {
                 sourceFigure.x = targetX + ((timePassed - timeStampBackMoveStart) / timeStampBackMove) * (sourceFigure.originX - targetX)
             } else if (timeStampBackMoveStart > 0f && timeStampBackMoveStart + timeStampMove <= timePassed) {
@@ -60,9 +61,10 @@ class MovePunchOrchestrator(
     override fun handle(event: BattleControllerEvent) {
         when (event) {
             is BattleControllerEvent.FigurePoseFrameIndexEvent -> {
-                if (!event.consumed && event.figureId == sourceFigure.id) {
+                if (!event.consumed && event.figureId == sourceFigure.id && !backTrigger) {
                         event.consumed = true
-                        if (sourceFigure != targetFigure) {
+                        backTrigger = true
+                        if (sourceFigure != targetFigure || targetExactPosition != null) {
                             battle.unlock()
 
                             timeStampBackMoveStart = timePassed

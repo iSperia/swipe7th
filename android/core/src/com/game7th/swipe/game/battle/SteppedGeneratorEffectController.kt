@@ -18,7 +18,8 @@ class SteppedGeneratorEffectController(
         private val y: Float,
         private val targetX: Float,
         private val triggers: List<Float>,
-        private val model: EffectGdxModel
+        private val model: EffectGdxModel,
+        private val targetEffectId: Int
 ) : ElementController(context, id) {
     private val animations = mutableListOf<Pair<Float, Animation<TextureRegion>>>()
 
@@ -44,7 +45,7 @@ class SteppedGeneratorEffectController(
                 animations.add(Pair(passedTime, animation))
 
                 if (triggers.size > nextTriggerIndex && triggers[nextTriggerIndex] < nextX) {
-                    battle.propagate(BattleControllerEvent.SteppedGeneratorEvent(nextTriggerIndex))
+                    battle.propagate(BattleControllerEvent.SteppedGeneratorEvent(nextTriggerIndex, targetEffectId))
                     nextTriggerIndex++
                 }
             }

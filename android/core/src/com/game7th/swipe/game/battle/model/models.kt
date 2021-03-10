@@ -50,6 +50,6 @@ data class GdxModel(
 sealed class BattleControllerEvent {
     data class FigurePoseFrameIndexEvent(val figureId: Int, val frame: Int, var consumed: Boolean = false) : BattleControllerEvent()
     data class FigurePoseEndedEvent(val figureId: Int) : BattleControllerEvent()
-    data class SteppedGeneratorEvent(val index: Int): BattleControllerEvent()
+    data class SteppedGeneratorEvent(val index: Int, val targetId: Int = 0, var consumed: Boolean = false): BattleControllerEvent()
     data class EffectTriggerEvent(val effectId: Int): BattleControllerEvent()
 }

@@ -18,6 +18,7 @@ class AoeSteppedGeneratorOrchestrator(
 
     var timePassed = 0f
     var isStarted = false
+    var consumed = false
 
     init {
         battle.lock(1)
@@ -40,7 +41,9 @@ class AoeSteppedGeneratorOrchestrator(
     override fun handle(event: BattleControllerEvent) {
         when (event) {
             is BattleControllerEvent.FigurePoseFrameIndexEvent -> {
-                if (isStarted && event.figureId == sourceFigure.id) {
+                if (isStarted && event.figureId == sourceFigure.id && !event.consumed && !consumed) {
+                    event.consumed = true
+                    consumed = true
                     //we may launch the effect
 
                     val effect = SteppedGeneratorEffectController(
@@ -51,18 +54,22 @@ class AoeSteppedGeneratorOrchestrator(
                             sourceFigure.y,
                             if (sourceFigure.flipped) 0f else context.width,
                             targetFigures.map { it.x },
-                            gdxEffect
+                            gdxEffect,
+                            this.id
                     )
                     battle.addEffect(effect)
+                    battle.unlock()
+                    battle.lock(targetFigures.size)
                 }
             }
             is BattleControllerEvent.SteppedGeneratorEvent -> {
-                if (isStarted) {
+                if (isStarted && !event.consumed && event.targetId == this.id) {
+                    event.consumed = true
                     val figure = targetFigures[event.index]
                     figure.switchPose(FigurePose.POSE_DAMAGE)
 
+                    battle.unlock()
                     if (event.index == targetFigures.size - 1) {
-                        battle.unlock()
                         battle.removeController(this)
                     }
                 }

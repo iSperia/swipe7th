@@ -42,6 +42,7 @@ class BattleController(
     val scale = 0.85f * context.scale
 
     val controllersToRemove = mutableListOf<ElementController>()
+    val figuresToRemove = mutableListOf<FigureController>()
 
     fun enqueueEvent(event: BattleEvent) {
         eventQueue.add(event)
@@ -63,6 +64,8 @@ class BattleController(
             processEvent(event)
         }
 
+        figures.removeAll(figuresToRemove)
+        figuresToRemove.clear()
         effects.removeAll(controllersToRemove)
         controllersToRemove.clear()
     }
@@ -74,13 +77,14 @@ class BattleController(
     }
 
     private fun processEvent(event: BattleEvent) {
+        println(">>PROCESS<< ${event.javaClass.name}")
         when (event) {
             is BattleEvent.CreatePersonageEvent -> {
                 val x = paddingSide + (context.width - 2 * paddingSide) * 0.2f * (0.5f + event.position)
                 val figure = FigureController(context,
                         event.personage.id,
                         this@BattleController,
-                        context.gdxModel.figure(event.personage.skin) ?: context.gdxModel.figure("personage_slime")!!,
+                        context.gdxModel.figure(event.personage.skin) ?: context.gdxModel.figure("slime")!!,
                         x,
                         y,
                         scale,
@@ -240,6 +244,12 @@ class BattleController(
         controllersToRemove.add(controller)
     }
 
+
+    fun removeFigure(figureController: FigureController) {
+        figureController.dispose()
+        figuresToRemove.add(figureController)
+    }
+
     fun propagate(event: BattleControllerEvent) {
         effects.forEach {
             it.handle(event)
@@ -247,7 +257,8 @@ class BattleController(
     }
 
     fun timeScale(): Float {
-        return min(3f, 1f + (eventQueue.size / 6) * 0.33f)
+        return 1f
+//        return min(3f, 1f + (eventQueue.size / 6) * 0.33f)
     }
 
     fun addEffect(effect: SteppedGeneratorEffectController) {
@@ -260,4 +271,5 @@ class BattleController(
         effects.add(controller)
         return effectId
     }
+
 }

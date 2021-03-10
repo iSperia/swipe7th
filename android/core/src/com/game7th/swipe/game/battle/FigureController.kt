@@ -93,6 +93,8 @@ class FigureController(
             if (animation.isAnimationFinished(timePassed - timePoseStarted) && animation.playMode == Animation.PlayMode.NORMAL
                     && pose != FigurePose.POSE_DEATH && !isDead) {
                 switchPose(FigurePose.POSE_IDLE)
+            } else if (pose == FigurePose.POSE_DEATH) {
+                battle.removeFigure(this)
             }
         }
 
