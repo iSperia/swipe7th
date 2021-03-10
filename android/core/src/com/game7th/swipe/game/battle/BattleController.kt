@@ -10,6 +10,7 @@ import com.game7th.swipe.game.GameContextWrapper
 import com.game7th.swipe.game.battle.model.BattleControllerEvent
 import com.game7th.swipe.game.battle.model.EffectGdxModel
 import com.game7th.swipe.game.battle.model.GdxAttackType
+import kotlin.math.min
 
 /**
  * GDX graph controller for battle
@@ -246,7 +247,7 @@ class BattleController(
     }
 
     fun timeScale(): Float {
-        return 1f + (eventQueue.size / 6) * 0.33f
+        return min(3f, 1f + (eventQueue.size / 6) * 0.33f)
     }
 
     fun addEffect(effect: SteppedGeneratorEffectController) {
