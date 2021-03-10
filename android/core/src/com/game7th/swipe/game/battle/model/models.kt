@@ -4,7 +4,8 @@ data class PoseGdxModel(
         val name: String,
         val start: Int,
         val end: Int,
-        val triggers: List<Int>?
+        val triggers: List<Int>?,
+        val sound: String?
 )
 
 enum class GdxAttackType {

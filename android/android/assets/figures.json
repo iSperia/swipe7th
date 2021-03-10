@@ -7,7 +7,7 @@
       "body": "body_gladiator",
       "poses": [
         {"name": "attack", "start":  1, "end": 19, "triggers": [14]},
-        {"name": "damage", "start":  20, "end": 27},
+        {"name": "damage", "start":  20, "end": 27, "sound":  "damage_human_male"},
         {"name": "idle", "start":  28, "end": 52},
         {"name": "death", "start": 53, "end": 65}
       ],
@@ -31,7 +31,7 @@
       "body": "poison_archer_body",
       "poses": [
         {"name": "attack", "start":  1, "end": 44, "triggers": [34]},
-        {"name": "damage", "start":  67, "end": 82},
+        {"name": "damage", "start":  67, "end": 82, "sound":  "damage_human_male"},
         {"name": "idle", "start":  45, "end": 66},
         {"name": "death", "start": 83, "end": 93}
       ],
@@ -52,7 +52,7 @@
       "body": "slime_body",
       "poses": [
         {"name":  "attack", "start":  1, "end":  35, "triggers": [23]},
-        {"name":  "damage", "start":  54, "end":  65},
+        {"name":  "damage", "start":  54, "end":  65, "sound": "monster_damage"},
         {"name":  "idle", "start":  36, "end":  53},
         {"name":  "death", "start":  66, "end":  87}
       ],

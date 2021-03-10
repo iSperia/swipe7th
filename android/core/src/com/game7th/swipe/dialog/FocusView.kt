@@ -13,11 +13,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.game7th.swipe.ScreenContext
+import ktx.actors.onClick
 
 class FocusView(
         private val context: ScreenContext,
         private val rect: Rectangle,
-        private val text: String
+        private val text: String,
+        private val dismissCallback: (() -> Unit)?
 ) : Group() {
 
     private val modalPanel = Image(context.uiAtlas.findRegion("panel_modal")).apply {
@@ -42,8 +44,8 @@ class FocusView(
         height = 60f
         setAlignment(Align.bottomLeft)
         wrap = true
+        setFontScale(context.scale * 100f/3f/36f)
         touchable = Touchable.disabled
-        setFontScale(200f/3f/36f)
     }
 
     init {
@@ -54,6 +56,12 @@ class FocusView(
         modalPanel.addListener { event ->
             when (event) {
                 is InputEvent -> {
+                    if (!rect.contains(event.stageX, event.stageY) && event.type == InputEvent.Type.exit) {
+                        dismissCallback?.let {
+                            this@FocusView.remove()
+                            it.invoke()
+                        }
+                    }
                     !rect.contains(event.stageX, event.stageY)
                 }
                 else -> false

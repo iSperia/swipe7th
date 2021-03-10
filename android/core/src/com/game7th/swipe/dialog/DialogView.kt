@@ -31,7 +31,7 @@ class DialogView(
         width = 330f * context.scale
         height = 180f * context.scale
         y = 10f * context.scale
-        setFontScale(200f/3f/36f)
+        setFontScale(context.scale * 100f/3f/36f)
         setAlignment(Align.topLeft)
         wrap = true
         onClick { dismiss() }

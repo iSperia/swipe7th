@@ -1,5 +1,6 @@
 package com.game7th.swipe.game.actors.ui
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.InputEvent
@@ -161,6 +162,7 @@ class GameFinishedDialog(
                 newLevelShown = true
                 expText.setText(expResult.newExp)
                 if (expResult.levelUp) {
+//                    Gdx.audio.newMusic(Gdx.files.internal("sounds/levelup.ogg")).let { it.play() }
                     newLevelText.isVisible = true
                     statsText.isVisible = true
                     statsText.setText(

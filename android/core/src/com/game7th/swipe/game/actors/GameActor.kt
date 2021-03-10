@@ -1,5 +1,7 @@
 package com.game7th.swipe.game.actors
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
@@ -66,6 +68,7 @@ class GameActor(
     internal fun showDefeat() {
         tileField.touchable = Touchable.disabled
 
+//        Gdx.audio.newMusic(Gdx.files.internal("sounds/defeat.ogg")).let { it.play() }
         GameFinishedDialog(context, "Defeat", null, emptyList()) {
             finishCallback(false)
         }.apply {
@@ -82,6 +85,7 @@ class GameActor(
     }
 
     fun showVictory(expResult: PersonageExperienceResult) {
+//        Gdx.audio.newMusic(Gdx.files.internal("sounds/victory.ogg")).let { it.play() }
         val rewards = rewardCallback()
         GameFinishedDialog(context, "Victory", expResult, rewards) {
             finishCallback(true)

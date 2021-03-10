@@ -86,6 +86,7 @@ class ActScreen(
     private var focusView: FocusView? = null
     private var isShowingFocus1 = false
     private var isShowingFocus2 = false
+    private var isShowingFocus3 = false
 
     lateinit var backgroundMusic: Music
 
@@ -117,12 +118,12 @@ class ActScreen(
             }
 
             override fun tap(x: Float, y: Float, count: Int, button: Int): Boolean {
-                if (isShowingFocus2) {
-                    isShowingFocus2 = false
+                if (isShowingFocus3) {
+                    isShowingFocus3 = false
                     dismissFocusView()
                     battlePrepareDialog?.startBattle()
                     storage.put(KEY_ACT1_INTRO_SHOWN, true.toString())
-                } else {
+                } else if (!isShowingFocus2) {
                     closeOverlay()
                 }
                 val wy = (game.height - y + scroll - mapBottomOffset) / game.scale
@@ -177,9 +178,16 @@ class ActScreen(
             isShowingFocus1 = false
             dismissFocusView()
 
-            val coords = dialog.getStartButtonBounds()
             isShowingFocus2 = true
-            showFocusView(game.context.texts["ttr_intro_8"]!!, coords)
+            showFocusView(game.context.texts["ttr_intro_8"]!!, dialog.getPersonageRowBounds()) {
+                showFocusView(game.context.texts["ttr_intro_9"]!!, dialog.getEnemyRowBounds()) {
+                    showFocusView(game.context.texts["ttr_intro_10"]!!, dialog.getDifficultyBounds()) {
+                        isShowingFocus2 = false
+                        isShowingFocus3 = true
+                        showFocusView(game.context.texts["ttr_intro_11"]!!,  dialog.getStartButtonBounds())
+                    }
+                }
+            }
         }
     }
 
@@ -414,9 +422,9 @@ class ActScreen(
         focusView = null
     }
 
-    private fun showFocusView(text: String, rect: Rectangle) {
+    private fun showFocusView(text: String, rect: Rectangle, dismissCallback: (() -> Unit)? = null) {
         isScrollEnabled = false
-        focusView = FocusView(context, rect, text)
+        focusView = FocusView(context, rect, text, dismissCallback)
         stage.addActor(focusView)
     }
 

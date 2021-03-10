@@ -187,6 +187,21 @@ class BattlePrepareDialog(
         }
     }
 
+    fun getPersonageRowBounds(): Rectangle {
+        val coords = localToStageCoordinates(Vector2(scrollPersonages.x, scrollPersonages.y))
+        return Rectangle(coords.x, coords.y, scrollPersonages.width, scrollPersonages.height)
+    }
+
+    fun getEnemyRowBounds(): Rectangle {
+        val coords = localToStageCoordinates(Vector2(npcPersonages.x, npcPersonages.y))
+        return Rectangle(coords.x, coords.y, npcPersonages.width, npcPersonages.height)
+    }
+
+    fun getDifficultyBounds(): Rectangle {
+        val coords = localToStageCoordinates(Vector2(labelDifficulty.x, labelDifficulty.y))
+        return Rectangle(coords.x, coords.y, context.scale * 420f, 30f * context.scale)
+    }
+
     fun getStartButtonBounds(): Rectangle {
         val coords = localToStageCoordinates(Vector2(buttonStart.x, buttonStart.y))
         return Rectangle(coords.x, coords.y, buttonStart.width, buttonStart.height)

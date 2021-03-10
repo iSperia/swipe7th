@@ -135,8 +135,10 @@ class GameScreen(private val game: SwipeGameGdx,
                 }
                 val expResult = game.accountService.addPersonageExperience(personage.id, experience)
                 gameActor.showVictory(expResult)
+                backgroundMusic.pause()
             } else {
                 gameActor.showDefeat()
+                backgroundMusic.pause()
             }
         }
 
