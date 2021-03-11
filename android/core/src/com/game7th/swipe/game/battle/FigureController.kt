@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
+import com.game7th.battle.personage.PersonageViewModel
 import com.game7th.swipe.game.GameContextWrapper
 import com.game7th.swipe.game.battle.model.FigureGdxModel
 
@@ -25,10 +26,10 @@ class FigureController(
         battle: BattleController,
         id: Int,
         val figureModel: FigureGdxModel,
+        var viewModel: PersonageViewModel,
         val originX: Float,
         val originY: Float,
         private val scale: Float,
-        val flipped: Boolean,
         val player: (String) -> Unit
 ) : ElementController(context, battle, id) {
 
@@ -52,6 +53,7 @@ class FigureController(
     var isDead = false
 
     lateinit var pose: FigurePose
+    val flipped = viewModel.team > 0
     private val flipMultiplier = if (flipped) -1 else 1
 
     init {

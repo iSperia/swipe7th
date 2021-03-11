@@ -24,11 +24,12 @@ class BattleController(
         private val endEventHandler: (event: BattleEvent) -> Unit
 ) {
 
-    private val elements = mutableListOf<ElementController>()
+    private val controllers = mutableListOf<ElementController>()
 
     private val backgroundTexture = context.gameContext.atlas.findRegion("battle_bg", 1)
 
     var effectId = 10000
+    var hudId = 20000
     val scale = 0.85f * context.scale
 
     val controllersToRemove = mutableListOf<ElementController>()
@@ -41,7 +42,7 @@ class BattleController(
     fun act(batch: SpriteBatch, delta: Float) {
         batch.draw(backgroundTexture, 0f, y, context.width, context.width * 0.67f)
 
-        elements.forEach { it.render(batch, delta) }
+        controllers.sortedBy { it.id }.forEach { it.render(batch, delta) }
 
         timePassed += delta * timeScale()
         timeShift = max(timePassed, timeShift)
@@ -52,7 +53,7 @@ class BattleController(
             }
         }
 
-        elements.removeAll(controllersToRemove)
+        controllers.removeAll(controllersToRemove)
         controllersToRemove.clear()
         actions.removeAll { it.first < timePassed }
 
@@ -66,7 +67,7 @@ class BattleController(
         sounds[sound]?.play()
     }
 
-    private fun findFigure(id: Int?) = elements.firstOrNull { it.id == id } as? FigureController
+    private fun findFigure(id: Int?) = controllers.firstOrNull { it.id == id } as? FigureController
 
     fun processEvent(event: BattleEvent) {
         when (event) {
@@ -97,7 +98,17 @@ class BattleController(
             is BattleEvent.PersonagePositionedAbilityEvent -> {
                 schedulePositionedAbility(event)
             }
+            is BattleEvent.PersonageUpdateEvent -> {
+                schedulePersonageUpdateViewModel(event)
+            }
         }
+    }
+
+    private fun schedulePersonageUpdateViewModel(event: BattleEvent.PersonageUpdateEvent) {
+        scheduledActions.add(Pair(timeShift) {
+            findFigure(event.personage.id)?.let { it.viewModel = event.personage }
+            Unit
+        })
     }
 
     private fun schedulePositionedAbility(event: BattleEvent.PersonagePositionedAbilityEvent) {
@@ -118,7 +129,7 @@ class BattleController(
                 effect.sound?.let { playSound(it) }
                 findFigure(event.target)?.let { figure ->
                     EffectController(context, this, effectId++, figure, effect).let {
-                        elements.add(it)
+                        controllers.add(it)
                     }
                 }
             }
@@ -138,7 +149,7 @@ class BattleController(
                         event.amount,
                         Color.GREEN
                 )
-                elements.add(controller)
+                controllers.add(controller)
             }
             Unit
         })
@@ -157,7 +168,7 @@ class BattleController(
                         Color.RED
                 )
                 figure.switchPose(FigurePose.POSE_DAMAGE)
-                elements.add(controller)
+                controllers.add(controller)
             }
             Unit
         })
@@ -205,7 +216,7 @@ class BattleController(
                                 })
                                 scheduledActions.add(Pair(timeShift + attackTriggerDuration) {
                                     SteppedGeneratorEffectController(context, this, effectId++, figure.x + 70f * scale * (if (figure.flipped) -1f else 1f), figure.originY,
-                                            if (figure.flipped) 0f else Gdx.graphics.width.toFloat(), effect).let { elements.add(it) }
+                                            if (figure.flipped) 0f else Gdx.graphics.width.toFloat(), effect).let { controllers.add(it) }
                                     Unit
                                 })
                                 timeShift += triggerDuration + attackTriggerDuration
@@ -224,7 +235,7 @@ class BattleController(
                                 })
                                 scheduledActions.add(Pair(timeShift + attackTriggerDuration) {
                                     targets.forEach {
-                                        it?.let { EffectController(context, this, effectId++, it, effect).let { elements.add(it) } }
+                                        it?.let { EffectController(context, this, effectId++, it, effect).let { controllers.add(it) } }
                                     }
                                 })
                                 timeShift += triggerDuration + attackTriggerDuration
@@ -261,6 +272,10 @@ class BattleController(
                 it.switchPose(FigurePose.POSE_DEATH)
                 it.isDead = true
             }
+            controllers.firstOrNull { it is PersonageHealthbarController && it.figure.id == event.personage.id }?.let {
+                it.dispose()
+                controllersToRemove.add(it)
+            }
             Unit
         })
     }
@@ -279,12 +294,15 @@ class BattleController(
                     this@BattleController,
                     event.personage.id,
                     context.gdxModel.figure(event.personage.skin)!!,
+                    event.personage,
                     x,
                     y,
                     scale,
-                    event.personage.team > 0,
                     this::playSound).let {
-                elements.add(it)
+                controllers.add(it)
+                PersonageHealthbarController(context, this@BattleController, hudId++, it).let {
+                    controllers.add(it)
+                }
             }
             timeShift += 0.2f
         })
