@@ -56,7 +56,7 @@
         {"name":  "attack", "start":  1, "end":  35, "triggers": [23]},
         {"name":  "damage", "start":  54, "end":  65, "sound": "monster_damage"},
         {"name":  "idle", "start":  36, "end":  53},
-        {"name":  "death", "start":  66, "end":  87, "sound": "monster_death"}
+        {"name":  "death", "start":  66, "end":  87}
       ],
       "attacks": [
         {"attackType": "MOVE_AND_PUNCH", "sound":  "monster_damage"},
@@ -72,7 +72,7 @@
         {"name":  "attack", "start":  1, "end":  35, "triggers": [23]},
         {"name":  "damage", "start":  54, "end":  65, "sound":  "monster_damage"},
         {"name":  "idle", "start":  36, "end":  53},
-        {"name":  "death", "start":  66, "end":  87, "sound": "monster_death"}
+        {"name":  "death", "start":  66, "end":  87}
       ],
       "attacks": [
         {"attackType": "MOVE_AND_PUNCH", "sound":  "monster_damage"},
@@ -89,7 +89,7 @@
         {"name":  "attack", "start":  1, "end":  34, "triggers": [27]},
         {"name":  "damage", "start":  51, "end":  65, "sound":  "monster_damage"},
         {"name":  "idle", "start":  35, "end":  50},
-        {"name":  "death", "start":  66, "end":  81, "sound": "monster_death"}
+        {"name":  "death", "start":  66, "end":  81}
       ],
       "attacks": [
         {"attackType": "MOVE_AND_PUNCH", "sound":  "monster_damage"}
@@ -104,7 +104,7 @@
         {"name":  "attack", "start":  1, "end":  34, "triggers": [27]},
         {"name":  "damage", "start":  51, "end":  65, "sound":  "monster_damage"},
         {"name":  "idle", "start":  35, "end":  50},
-        {"name":  "death", "start":  66, "end":  81, "sound": "monster_death"}
+        {"name":  "death", "start":  66, "end":  81}
       ],
       "attacks": [
         {"attackType": "MOVE_AND_PUNCH", "sound":  "monster_damage"}
