@@ -20,10 +20,12 @@ import com.game7th.swipe.SwipeGameGdx
 import com.game7th.swipe.campaign.ActScreen
 import com.game7th.swipe.game.actors.GameActor
 import com.game7th.swipe.game.battle.BattleController
+import com.game7th.swipe.game.battle.model.FigureGdxModel
 import com.game7th.swipe.game.battle.model.GdxModel
 import com.game7th.swipe.gestures.SimpleDirectionGestureDetector
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ktx.async.KtxAsync
@@ -49,12 +51,15 @@ class GameScreen(private val game: SwipeGameGdx,
         exception.printStackTrace()
     }
     lateinit var config: BattleConfig
+    val gdxModel = Gson().fromJson<GdxModel>(Gdx.files.internal("figures.json").readString(), GdxModel::class.java)
 
     lateinit var gameActor: GameActor
     val atlases = mutableMapOf<String, TextureAtlas>()
     val sounds = mutableMapOf<String, Sound>()
 
     lateinit var backgroundMusic: Music
+
+    lateinit var swipeFlow: MutableSharedFlow<Pair<Int, Int>>
 
     var gameEnded = false
 
@@ -68,7 +73,8 @@ class GameScreen(private val game: SwipeGameGdx,
             override fun onLeft() {
                 KtxAsync.launch {
                     if (!gameEnded) {
-                        battle.processSwipe(-1, 0)
+                        gameActor.tileField.finalizeActions()
+                        swipeFlow.emit(Pair(-1,0))
                     }
                 }
             }
@@ -76,7 +82,8 @@ class GameScreen(private val game: SwipeGameGdx,
             override fun onRight() {
                 KtxAsync.launch {
                     if (!gameEnded) {
-                        battle.processSwipe(1, 0)
+                        gameActor.tileField.finalizeActions()
+                        swipeFlow.emit(Pair(1,0))
                     }
                 }
             }
@@ -84,7 +91,8 @@ class GameScreen(private val game: SwipeGameGdx,
             override fun onUp() {
                 KtxAsync.launch {
                     if (!gameEnded) {
-                        battle.processSwipe(0, -1)
+                        gameActor.tileField.finalizeActions()
+                        swipeFlow.emit(Pair(0,-1))
                     }
                 }
             }
@@ -92,7 +100,8 @@ class GameScreen(private val game: SwipeGameGdx,
             override fun onDown() {
                 KtxAsync.launch {
                     if (!gameEnded) {
-                        battle.processSwipe(0, 1)
+                        gameActor.tileField.finalizeActions()
+                        swipeFlow.emit(Pair(0, 1))
                     }
                 }
             }
@@ -108,7 +117,8 @@ class GameScreen(private val game: SwipeGameGdx,
                 } ?: emptyList()
         )
 
-        battle = SwipeBattle(game.context.balance)
+        swipeFlow = MutableSharedFlow()
+        battle = SwipeBattle(game.context.balance, swipeFlow)
         initializeBattle()
         listenEvents()
 
@@ -121,36 +131,18 @@ class GameScreen(private val game: SwipeGameGdx,
 
         game.multiplexer.addProcessor(stage)
 
-        val gdxModel = Gson().fromJson<GdxModel>(Gdx.files.internal("figures.json").readString(), GdxModel::class.java)
-
         atlases["ailments"] = TextureAtlas(Gdx.files.internal("ailments.atlas"))
         listOf("wind").forEach {
             sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/$it.ogg"))
         }
         config.personages.forEach { personageConfig ->
-            atlases[personageConfig.name.getSkin()] = TextureAtlas(Gdx.files.internal("${personageConfig.name.getSkin()}.atlas"))
             gdxModel.figures.firstOrNull { it.name == personageConfig.name.getSkin() }?.let {
-                it.attacks.forEach {
-                    it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
-                    it.effect?.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg"))  }
-                }
-                it.poses.forEach {
-                    it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
-                }
+                loadResources(it)
             }
         }
         config.waves.forEach { it.forEach { npc ->
-            if (!atlases.containsKey(npc.name.getSkin())) {
-                atlases[npc.name.getSkin()] = TextureAtlas(Gdx.files.internal("${npc.name.getSkin()}.atlas"))
-            }
-            gdxModel.figures.firstOrNull { it.name == npc.name.getSkin() }?.let {
-                it.attacks.forEach {
-                    it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
-                    it.effect?.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg"))  }
-                }
-                it.poses.forEach {
-                    it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
-                }
+            gdxModel.figures.firstOrNull { it.name == npc.name.getSkin() }?.let { gdxFigure ->
+                loadResources(gdxFigure)
             }
         }}
 
@@ -183,6 +175,24 @@ class GameScreen(private val game: SwipeGameGdx,
         }
     }
 
+    private fun loadResources(gdxFigure: FigureGdxModel) {
+        if (!atlases.containsKey(gdxFigure.atlas)) {
+            atlases[gdxFigure.atlas] = TextureAtlas(Gdx.files.internal("${gdxFigure.name}.atlas"))
+        }
+        gdxFigure.dependencies?.let { dependencies ->
+            dependencies.forEach { dependencyFigure ->
+                gdxModel.figures.firstOrNull { it.name == dependencyFigure }?.let { loadResources(it) }
+            }
+        }
+        gdxFigure.attacks.forEach {
+            it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
+            it.effect?.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg"))  }
+        }
+        gdxFigure.poses.forEach {
+            it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
+        }
+    }
+
     private fun claimRewards() = actService.markLocationComplete(actId, locationId, difficulty)
 
     private fun initializeBattle() {
@@ -195,7 +205,7 @@ class GameScreen(private val game: SwipeGameGdx,
         KtxAsync.launch(handler) {
             battle.events.collect { event ->
                 gameActor.processAction(event)
-                battleController.enqueueEvent(event)
+                battleController.processEvent(event)
                 when (event) {
                     is BattleEvent.VictoryEvent -> gameEnded = true
                     is BattleEvent.DefeatEvent -> gameEnded = true

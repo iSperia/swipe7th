@@ -1,6 +1,5 @@
 package com.game7th.battle.event
 
-import com.game7th.battle.DamageProcessResult
 import com.game7th.battle.personage.PersonageViewModel
 import com.game7th.battle.tilefield.TileFieldEvent
 

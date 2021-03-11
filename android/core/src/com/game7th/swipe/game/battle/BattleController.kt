@@ -2,14 +2,16 @@
 
 package com.game7th.swipe.game.battle
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.game7th.battle.event.BattleEvent
 import com.game7th.swipe.game.GameContextWrapper
-import com.game7th.swipe.game.battle.model.BattleControllerEvent
-import com.game7th.swipe.game.battle.model.EffectGdxModel
+import com.game7th.swipe.game.battle.model.FigureGdxModel
 import com.game7th.swipe.game.battle.model.GdxAttackType
+import kotlin.math.abs
+import kotlin.math.max
 import kotlin.math.min
 
 /**
@@ -22,52 +24,40 @@ class BattleController(
         private val endEventHandler: (event: BattleEvent) -> Unit
 ) {
 
-    /**
-     * events to resolve
-     */
-    private val eventQueue = mutableListOf<BattleEvent>()
-
-    /**
-     * As soon as lock is zero, we are ready to process next event.
-     * Use orchestrators to reduce event lock
-     */
-    private var eventProcessLock = 0
-
-    private val figures = mutableListOf<FigureController>()
-    private val effects = mutableListOf<ElementController>()
+    private val elements = mutableListOf<ElementController>()
 
     private val backgroundTexture = context.gameContext.atlas.findRegion("battle_bg", 1)
 
-    var effectId = 0
+    var effectId = 10000
     val scale = 0.85f * context.scale
 
     val controllersToRemove = mutableListOf<ElementController>()
-    val figuresToRemove = mutableListOf<FigureController>()
 
-    fun enqueueEvent(event: BattleEvent) {
-        eventQueue.add(event)
-    }
+    var timePassed = 0f                                     //how much time is passed
+    val actions = mutableListOf<Pair<Float, () -> Unit>>()  //the actions to complete on time pass
+    val scheduledActions = mutableListOf<Pair<Float, () -> Unit>>()
+    var timeShift = 0f
 
     fun act(batch: SpriteBatch, delta: Float) {
         batch.draw(backgroundTexture, 0f, y, context.width, context.width * 0.67f)
 
-        figures.forEach {
-            it.render(batch, delta)
-        }
-        effects.forEach {
-            it.render(batch, delta)
+        elements.forEach { it.render(batch, delta) }
+
+        timePassed += delta * timeScale()
+        timeShift = max(timePassed, timeShift)
+
+        actions.forEachIndexed { index, (timestamp, action) ->
+            if (timestamp < timePassed) {
+                action()
+            }
         }
 
-        if (eventProcessLock == 0 && eventQueue.isNotEmpty()) {
-            val event = eventQueue.removeAt(0)
-            //ok, we have an event
-            processEvent(event)
-        }
-
-        figures.removeAll(figuresToRemove)
-        figuresToRemove.clear()
-        effects.removeAll(controllersToRemove)
+        elements.removeAll(controllersToRemove)
         controllersToRemove.clear()
+        actions.removeAll { it.first < timePassed }
+
+        actions.addAll(scheduledActions)
+        scheduledActions.clear()
     }
 
     private val paddingSide = context.width * 0.05f
@@ -76,200 +66,244 @@ class BattleController(
         sounds[sound]?.play()
     }
 
-    private fun processEvent(event: BattleEvent) {
-        println(">>PROCESS<< ${event.javaClass.name}")
+    private fun findFigure(id: Int?) = elements.firstOrNull { it.id == id } as? FigureController
+
+    fun processEvent(event: BattleEvent) {
         when (event) {
             is BattleEvent.CreatePersonageEvent -> {
-                val x = paddingSide + (context.width - 2 * paddingSide) * 0.2f * (0.5f + event.position)
-                val figure = FigureController(context,
-                        event.personage.id,
-                        this@BattleController,
-                        context.gdxModel.figure(event.personage.skin) ?: context.gdxModel.figure("slime")!!,
-                        x,
-                        y,
-                        scale,
-                        event.personage.team > 0,
-                        this::playSound)
-                figures.add(figure)
+                scheduleCreatePersonage(event)
+            }
+            is BattleEvent.VictoryEvent -> {
+                scheduleFinalEventPropagation(event)
+            }
+            is BattleEvent.DefeatEvent -> {
+                scheduleFinalEventPropagation(event)
+            }
+            is BattleEvent.PersonageDeadEvent -> {
+                schedulePersonageDeath(event)
             }
             is BattleEvent.PersonageAttackEvent -> {
-                handleAttack(event)
-            }
-            is BattleEvent.PersonagePositionedAbilityEvent -> {
-                val figure = figures.first { it.id == event.source.id }
-                val targetPosition = paddingSide + (context.width - 2 * paddingSide) * 0.2f * (0.5f + event.target)
-                val orchestrator = MovePunchOrchestrator(
-                        context,
-                        effectId++,
-                        this,
-                        figure,
-                        null,
-                        targetPosition,
-                        this::playSound,
-                        figure.figureModel.attacks[event.attackIndex].sound
-                )
-                effects.add(orchestrator)
+                schedulePersonageAttack(event)
             }
             is BattleEvent.PersonageDamageEvent -> {
-                val figure = figures.first { it.id == event.personage.id }
+                schedulePersonageDamage(event)
+            }
+            is BattleEvent.PersonageHealEvent -> {
+                schedulePersonageHeal(event)
+            }
+            is BattleEvent.ShowAilmentEffect -> {
+                scheduleAilment(event)
+            }
+            is BattleEvent.PersonagePositionedAbilityEvent -> {
+                schedulePositionedAbility(event)
+            }
+        }
+    }
+
+    private fun schedulePositionedAbility(event: BattleEvent.PersonagePositionedAbilityEvent) {
+        scheduledActions.add(Pair(timeShift) {
+            findFigure(event.source.id)?.let { figure ->
+                context.gdxModel.figure(event.source.skin)?.let { gdxModel ->
+                    val targetPosition = paddingSide + (context.width - 2 * paddingSide) * 0.2f * (0.5f + event.target)
+                    moveAndPunch(gdxModel, figure, targetPosition)
+                }
+            }
+            Unit
+        })
+    }
+
+    private fun scheduleAilment(event: BattleEvent.ShowAilmentEffect) {
+        scheduledActions.add(Pair(timeShift) {
+            context.gdxModel.ailments.firstOrNull { it.name == event.effectSkin }?.let { effect ->
+                effect.sound?.let { playSound(it) }
+                findFigure(event.target)?.let { figure ->
+                    EffectController(context, this, effectId++, figure, effect).let {
+                        elements.add(it)
+                    }
+                }
+            }
+            Unit
+        })
+    }
+
+    private fun schedulePersonageHeal(event: BattleEvent.PersonageHealEvent) {
+        scheduledActions.add(Pair(timeShift) {
+            findFigure(event.personage.id)?.let { figure ->
                 val controller = DamagePopupController(
                         context,
-                        effectId++,
                         this,
+                        effectId,
+                        figure.originX,
+                        figure.originY + figure.figureModel.height * scale + 10 * scale,
+                        event.amount,
+                        Color.GREEN
+                )
+                elements.add(controller)
+            }
+            Unit
+        })
+    }
+
+    private fun schedulePersonageDamage(event: BattleEvent.PersonageDamageEvent) {
+        scheduledActions.add(Pair(timeShift) {
+            findFigure(event.personage.id)?.let { figure ->
+                val controller = DamagePopupController(
+                        context,
+                        this,
+                        effectId++,
                         figure.originX,
                         figure.originY + figure.figureModel.height * scale + 10 * scale,
                         event.damage,
                         Color.RED
                 )
                 figure.switchPose(FigurePose.POSE_DAMAGE)
-                effects.add(controller)
-            }
-            is BattleEvent.PersonageDeadEvent -> {
-                val figure = figures.first { it.id == event.personage.id }
-                figure.switchPose(FigurePose.POSE_DEATH)
-                figure.isDead = true
-            }
-            is BattleEvent.PersonageHealEvent -> {
-                val figure = figures.first { it.id == event.personage.id }
-                val controller = DamagePopupController(
-                        context,
-                        effectId++,
-                        this,
-                        figure.originX,
-                        figure.originY + figure.figureModel.height * scale + 10 * scale,
-                        event.amount,
-                        Color.GREEN
-                )
-                effects.add(controller)
-            }
-            is BattleEvent.PersonageUpdateEvent -> {
-            }
-            is BattleEvent.VictoryEvent -> {
-                endEventHandler(event)
-            }
-            is BattleEvent.DefeatEvent -> {
-                endEventHandler(event)
-            }
-            is BattleEvent.ShowAilmentEffect -> {
-                context.gdxModel.ailments.firstOrNull { it.name == event.effectSkin }?.let { effect ->
-                    effect.sound?.let { playSound(it) }
-                    figures.firstOrNull { it.id == event.target }?.let { figure ->
-                        showEffectOverFigure(figure, effect)
-                    }
-                }
-            }
-        }
-    }
-
-    private fun handleAttack(event: BattleEvent.PersonageAttackEvent) {
-        figures.firstOrNull { it.id == event.source.id }?.let { figure ->
-            val attack = figure.figureModel.attacks[event.attackIndex]
-            when (attack.attackType) {
-                GdxAttackType.MOVE_AND_PUNCH -> {
-                    val targetPersonage = event.targets.firstOrNull()
-                    targetPersonage?.let { targetPersonage ->
-                        figures.firstOrNull { it.id == targetPersonage.id }?.let { targetFigure ->
-                            val orchestrator = MovePunchOrchestrator(
-                                    context,
-                                    effectId++,
-                                    this,
-                                    figure,
-                                    targetFigure,
-                                    null,
-                                    this::playSound,
-                                    figure.figureModel.attacks[event.attackIndex].sound
-                            )
-                            effects.add(orchestrator)
-                        }
-                    }
-                    if (targetPersonage == null) {
-                        val orchestrator = MovePunchOrchestrator(
-                                context,
-                                effectId++,
-                                this,
-                                figure,
-                                figure,
-                                null,
-                                this::playSound,
-                                figure.figureModel.attacks[event.attackIndex].sound
-                        )
-                        effects.add(orchestrator)
-                    }
-                }
-                GdxAttackType.AOE_STEPPED_GENERATOR -> {
-                    figure.figureModel.attacks[event.attackIndex].effect?.let { effect ->
-                        val orchestrator = AoeSteppedGeneratorOrchestrator(
-                                context,
-                                effectId++,
-                                this@BattleController,
-                                figure,
-                                event.targets.map { target -> figures.first { it.id == target.id } }.sortedBy { it.x },
-                                effect,
-                                this::playSound,
-                                effect.sound
-                        )
-                        effects.add(orchestrator)
-                    }
-                }
-                GdxAttackType.BOW_STRIKE -> {
-                    figure.figureModel.attacks[event.attackIndex].effect?.let { effect ->
-                        val orchestrator = BowStrikeOrchestrator(
-                                context,
-                                effectId++,
-                                this@BattleController,
-                                figure,
-                                event.targets.map { figures.first { figure -> figure.id == it.id } },
-                                effect,
-                                this::playSound,
-                                effect.sound
-                        )
-                        effects.add(orchestrator)
-                    }
-                }
+                elements.add(controller)
             }
             Unit
+        })
+    }
+
+    private fun schedulePersonageAttack(event: BattleEvent.PersonageAttackEvent) {
+        val figure = findFigure(event.source.id)
+        figure?.let { figure ->
+            context.gdxModel.figures.firstOrNull { it.name == event.source.skin }?.let { figureGdxModel ->
+                figureGdxModel.attacks?.get(event.attackIndex)?.let { attack ->
+                    when (attack.attackType) {
+                        GdxAttackType.MOVE_AND_PUNCH -> {
+                            findFigure(event.targets.firstOrNull()?.id)?.let { targetFigure ->
+                                val tox = targetFigure.originX - (if (figure.flipped) -1f else 1f) * 70f * scale
+
+                                moveAndPunch(figureGdxModel, figure, tox)
+                            }
+                        }
+                        GdxAttackType.ATTACK_IN_PLACE -> {
+                            val attackPose = figureGdxModel.poses.first { it.name == "attack" }
+                            val attackDuration = (attackPose.end - attackPose.start) * FRAMERATE
+                            val triggerDuration = attackPose.triggers?.firstOrNull()?.let { (it - attackPose.start) * FRAMERATE }
+                                    ?: attackDuration
+
+                            scheduledActions.add(Pair(timeShift) {
+                                figure.switchPose(FigurePose.POSE_ATTACK)
+                            })
+                            timeShift += triggerDuration
+                        }
+                        GdxAttackType.AOE_STEPPED_GENERATOR -> {
+                            attack.effect?.let { effect ->
+                                val attackPose = figureGdxModel.poses.first { it.name == "attack" }
+                                val attackDuration = (attackPose.end - attackPose.start) * FRAMERATE
+                                val attackTriggerDuration = attackPose.triggers?.firstOrNull()?.let { (it - attackPose.start) * FRAMERATE }
+                                        ?: attackDuration
+
+                                val triggerDistance = event.targets.map { findFigure(it.id) }.map {
+                                    abs((it?.originX ?: Float.MAX_VALUE) - figure.originX)
+                                }.min()
+                                val triggerDuration = effect.time * (triggerDistance
+                                        ?: Gdx.graphics.width.toFloat()) / (scale * (effect.step
+                                        ?: 1))
+                                scheduledActions.add(Pair(timeShift) {
+                                    figure.switchPose(FigurePose.POSE_ATTACK)
+                                })
+                                scheduledActions.add(Pair(timeShift + attackTriggerDuration) {
+                                    SteppedGeneratorEffectController(context, this, effectId++, figure.x + 70f * scale * (if (figure.flipped) -1f else 1f), figure.originY,
+                                            if (figure.flipped) 0f else Gdx.graphics.width.toFloat(), effect).let { elements.add(it) }
+                                    Unit
+                                })
+                                timeShift += triggerDuration + attackTriggerDuration
+                            }
+                        }
+                        GdxAttackType.BOW_STRIKE -> {
+                            attack.effect?.let { effect ->
+                                val targets = event.targets.map { findFigure(it.id) }
+                                val attackPose = figureGdxModel.poses.first { it.name == "attack" }
+                                val attackDuration = (attackPose.end - attackPose.start) * FRAMERATE
+                                val attackTriggerDuration = attackPose.triggers?.firstOrNull()?.let { (it - attackPose.start) * FRAMERATE }
+                                        ?: attackDuration
+                                val triggerDuration = effect.trigger * FRAMERATE
+                                scheduledActions.add(Pair(timeShift) {
+                                    figure.switchPose(FigurePose.POSE_ATTACK)
+                                })
+                                scheduledActions.add(Pair(timeShift + attackTriggerDuration) {
+                                    targets.forEach {
+                                        it?.let { EffectController(context, this, effectId++, it, effect).let { elements.add(it) } }
+                                    }
+                                })
+                                timeShift += triggerDuration + attackTriggerDuration
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
-    fun lock(lock: Int) {
-        eventProcessLock += lock
+    private fun moveAndPunch(figureGdxModel: FigureGdxModel, figure: FigureController, tox: Float) {
+        val attackPose = figureGdxModel.poses.first { it.name == "attack" }
+        val attackDuration = (attackPose.end - attackPose.start) * FRAMERATE
+        val triggerDuration = attackPose.triggers?.firstOrNull()?.let { (it - attackPose.start) * FRAMERATE }
+                ?: attackDuration
+
+        scheduledActions.add(Pair(timeShift) {
+            figure.move(tox, figure.originY, MOVE_DURATION)
+        })
+        scheduledActions.add(Pair(timeShift + MOVE_DURATION) {
+            figure.switchPose(FigurePose.POSE_ATTACK)
+        })
+        scheduledActions.add(Pair(timeShift + MOVE_DURATION + attackDuration) {
+            figure.move(figure.originX, figure.originY, MOVE_DURATION)
+        })
+        timeShift += MOVE_DURATION + triggerDuration
     }
 
-    fun unlock() {
-        eventProcessLock--
+    private fun schedulePersonageDeath(event: BattleEvent.PersonageDeadEvent) {
+        actions.add(Pair(timeShift) {
+            println(">>> PersonageDeath $event")
+            findFigure(event.personage.id)?.let {
+                it.switchPose(FigurePose.POSE_DEATH)
+                it.isDead = true
+            }
+            Unit
+        })
     }
+
+    private fun scheduleFinalEventPropagation(event: BattleEvent) {
+        actions.add(Pair(timeShift) {
+            endEventHandler(event)
+        })
+    }
+
+    private fun scheduleCreatePersonage(event: BattleEvent.CreatePersonageEvent) {
+        actions.add(Pair(timeShift) {
+            val x = calculatePosition(event.position)
+            println(">>> CreatePersonage $event")
+            FigureController(context,
+                    this@BattleController,
+                    event.personage.id,
+                    context.gdxModel.figure(event.personage.skin)!!,
+                    x,
+                    y,
+                    scale,
+                    event.personage.team > 0,
+                    this::playSound).let {
+                elements.add(it)
+            }
+            timeShift += 0.2f
+        })
+    }
+
+    private fun calculatePosition(position: Int) = paddingSide + (context.width - 2 * paddingSide) * 0.2f * (0.5f + position)
+
 
     fun removeController(controller: ElementController) {
         controller.dispose()
         controllersToRemove.add(controller)
     }
 
-
-    fun removeFigure(figureController: FigureController) {
-        figureController.dispose()
-        figuresToRemove.add(figureController)
-    }
-
-    fun propagate(event: BattleControllerEvent) {
-        effects.forEach {
-            it.handle(event)
-        }
-    }
-
     fun timeScale(): Float {
-        return 1f
-//        return min(3f, 1f + (eventQueue.size / 6) * 0.33f)
+        return 1f + min(5f, timeShift - timePassed)
     }
 
-    fun addEffect(effect: SteppedGeneratorEffectController) {
-        effects.add(effect)
+    companion object {
+        const val MOVE_DURATION = 0.3f
+        const val FRAMERATE = 1 / 30f
     }
-
-    fun showEffectOverFigure(figure: FigureController, effect: EffectGdxModel): Int {
-        val effectId = effectId++
-        val controller = EffectController(context, effectId, this, figure, effect)
-        effects.add(controller)
-        return effectId
-    }
-
 }

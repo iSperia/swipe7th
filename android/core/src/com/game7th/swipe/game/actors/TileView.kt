@@ -7,10 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.game7th.battle.event.TileViewModel
 import com.game7th.swipe.GdxGameContext
 
-interface TileDoubleTapCallback {
-    fun processDoubleTapped(id: Int)
-}
-
 class TileView(
         private val gameContext: GdxGameContext,
         viewModel: TileViewModel
@@ -20,6 +16,11 @@ class TileView(
 
     private var skillImage: Image? = null
     private var stackSizeLabel: Label? = null
+
+    var tx: Int = 0
+    var ty: Int = 0
+    var uvm: TileViewModel? = null
+    var removed = false
 
     init {
         originX = 18f

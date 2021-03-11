@@ -59,7 +59,8 @@
         {"name":  "death", "start":  66, "end":  87, "sound": "monster_death"}
       ],
       "attacks": [
-        {"attackType": "MOVE_AND_PUNCH", "sound":  "monster_damage"}
+        {"attackType": "MOVE_AND_PUNCH", "sound":  "monster_damage"},
+        {"attackType": "ATTACK_IN_PLACE", "sound":  "monster_damage"}
       ]
     },
     {
@@ -74,12 +75,14 @@
         {"name":  "death", "start":  66, "end":  87, "sound": "monster_death"}
       ],
       "attacks": [
-        {"attackType": "MOVE_AND_PUNCH", "sound":  "monster_damage"}
+        {"attackType": "MOVE_AND_PUNCH", "sound":  "monster_damage"},
+        {"attackType": "ATTACK_IN_PLACE", "sound":  "monster_damage"}
       ]
     },
     {
       "name": "slime_mother",
       "atlas": "slime_mother",
+      "dependencies": ["slime"],
       "height": 210,
       "body": "slime_mother_body",
       "poses": [

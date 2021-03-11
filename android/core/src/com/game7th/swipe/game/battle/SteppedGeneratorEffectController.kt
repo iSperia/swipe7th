@@ -6,21 +6,18 @@ import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.game7th.swipe.game.GameContextWrapper
-import com.game7th.swipe.game.battle.model.BattleControllerEvent
 import com.game7th.swipe.game.battle.model.EffectGdxModel
 import kotlin.random.Random
 
 class SteppedGeneratorEffectController(
         context: GameContextWrapper,
+        battle: BattleController,
         id: Int,
-        private val battle: BattleController,
         private val x: Float,
         private val y: Float,
         private val targetX: Float,
-        private val triggers: List<Float>,
-        private val model: EffectGdxModel,
-        private val targetEffectId: Int
-) : ElementController(context, id) {
+        private val model: EffectGdxModel
+) : ElementController(context, battle, id) {
     private val animations = mutableListOf<Pair<Float, Animation<TextureRegion>>>()
 
     private var passedTime = 0f
@@ -30,8 +27,6 @@ class SteppedGeneratorEffectController(
     private var anyStarted = false
 
     private val textures = filterAtlas(context.atlases[model.atlas]!!, model.name)
-
-    var nextTriggerIndex = 0
 
     override fun render(batch: SpriteBatch, delta: Float) {
         passedTime += delta * battle.timeScale()
@@ -43,11 +38,6 @@ class SteppedGeneratorEffectController(
                 animation.frameDuration = 1/60f + 1/30f * Random.nextFloat()
                 animation.playMode = Animation.PlayMode.NORMAL
                 animations.add(Pair(passedTime, animation))
-
-                if (triggers.size > nextTriggerIndex && triggers[nextTriggerIndex] < nextX) {
-                    battle.propagate(BattleControllerEvent.SteppedGeneratorEvent(nextTriggerIndex, targetEffectId))
-                    nextTriggerIndex++
-                }
             }
         }
 
@@ -70,8 +60,5 @@ class SteppedGeneratorEffectController(
             animations.clear()
             battle.removeController(this)
         }
-    }
-
-    override fun handle(event: BattleControllerEvent) {
     }
 }

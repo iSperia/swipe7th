@@ -7,8 +7,10 @@ import com.game7th.battle.event.BattleEvent
 import com.game7th.battle.event.TileViewModel
 import com.game7th.battle.tilefield.TileFieldEvent
 import com.game7th.swipe.GdxGameContext
+import kotlinx.coroutines.Delay
 import kotlinx.coroutines.delay
 import ktx.actors.alpha
+import ktx.actors.div
 
 class TileFieldView(
         private val gameContext: GdxGameContext
@@ -17,6 +19,9 @@ class TileFieldView(
     private val backgroundGroup: Group
 
     private val tileGroup: Group
+
+    private var moveShift = 0
+    private var resetMoveShift = false
 
     init {
         backgroundGroup = Group().apply {
@@ -46,13 +51,19 @@ class TileFieldView(
                 val fx = if (action.sourcePosition >= 0) action.sourcePosition % FIELD_WIDTH else tx
                 val fy = if (action.sourcePosition >= 0) action.sourcePosition / FIELD_WIDTH else ty
 
-                val view = TileView(gameContext, action.tile)
+                val view = TileView(gameContext, action.tile).apply {
+                    this.tx = tx
+                    this.ty = ty
+                }
                 view.applyPosition(fx, fy)
                 view.name = "${action.tile.id}"
                 tileGroup.addActor(view)
 
+                val animation = SequenceAction()
+                animation.addAction(DelayAction(moveShift * 0.1f))
+                val tileAnimation = ParallelAction()
                 if (action.sourcePosition >= 0) {
-                    view.addAction(MoveToAction().apply {
+                    tileAnimation.addAction(MoveToAction().apply {
                         setPosition(36f * tx + 18f, 36f * (FIELD_WIDTH - 1 - ty))
                         duration = 0.2f
                     })
@@ -60,18 +71,21 @@ class TileFieldView(
 
                 view.alpha = 0f
                 view.setScale(1.5f)
-                view.addAction(ParallelAction(
-                        AlphaAction().apply {
-                            alpha = 1f
-                            duration = 0.2f
-                        },
-                        ScaleToAction().apply {
-                            setScale(1f)
-                            duration = 0.2f
-                        }
-                ))
+                tileAnimation.addAction(AlphaAction().apply {
+                    alpha = 1f
+                    duration = 0.2f
+                })
+                tileAnimation.addAction(ScaleToAction().apply {
+                    setScale(1f)
+                    duration = 0.2f
+                })
+
+                animation.addAction(tileAnimation)
+                view.addAction(animation)
+                resetMoveShift = true
             }
             is BattleEvent.SwipeMotionEvent -> {
+                moveShift = if (resetMoveShift) 0 else moveShift + 1
                 for (event in action.events) {
                     when (event) {
                         is TileFieldEvent.MoveTileEvent -> {
@@ -86,15 +100,22 @@ class TileFieldView(
                         }
                     }
                 }
-                delay(50L)
             }
             is BattleEvent.UpdateTileEvent -> {
                 val tile = tileGroup.findActor<TileView>("${action.id}")
-                tile.updateFrom(action.tile)
+                tile.uvm = action.tile
+                tile.addAction(SequenceAction(
+                        DelayAction(moveShift * 0.1f),
+                        RunnableAction().apply { setRunnable { tile.updateFrom(action.tile)
+                        }}
+                ))
+                resetMoveShift = true
             }
             is BattleEvent.RemoveTileEvent -> {
                 val tile = tileGroup.findActor<TileView>("${action.id}")
+                tile.removed = true
                 tile?.addAction(SequenceAction(
+                        DelayAction(moveShift * 0.1f),
                         AlphaAction().apply {
                             alpha = 0f
                             duration = 0.1f
@@ -106,29 +127,41 @@ class TileFieldView(
                             }
                         }
                 ))
+                resetMoveShift = true
             }
         }
     }
 
     private fun animatedMove(id: Int, position: Int) {
         val tile = findActor<TileView>("$id")
-        tile?.addAction(MoveToAction().apply {
-            setPosition(18f + 36f * (position % FIELD_WIDTH), 36f * (FIELD_WIDTH - 1 - (position / FIELD_WIDTH)))
-            duration = MOVE_STEP_LENGTH
-        })
+        tile.tx = position % FIELD_WIDTH
+        tile.ty = position / FIELD_WIDTH
+        tile?.addAction(
+                SequenceAction(
+                        DelayAction(moveShift * 0.1f),
+                        MoveToAction().apply {
+                            setPosition(18f + 36f * (position % FIELD_WIDTH), 36f * (FIELD_WIDTH - 1 - (position / FIELD_WIDTH)))
+                            duration = MOVE_STEP_LENGTH
+                        }
+                ))
     }
 
     private fun animatedMoveAndDestroy(id: Int, position: Int, updateTile: TileViewModel) {
         val tile = findActor<TileView>("$id")
         findActor<TileView>("${updateTile.id}")?.addAction(SequenceAction(
-                DelayAction(MOVE_STEP_LENGTH),
+                DelayAction(moveShift * 0.1f),
                 RunnableAction().apply {
                     setRunnable {
                         findActor<TileView>("${updateTile.id}").updateFrom(updateTile)
                     }
                 }
         ))
-        tile?.addAction(SequenceAction(
+        tile.tx = position % FIELD_WIDTH
+        tile.ty = position / FIELD_WIDTH
+        tile.removed = true
+        tile.uvm = updateTile
+        tile.addAction(SequenceAction(
+                DelayAction(moveShift * 0.1f),
                 ParallelAction(
                         MoveToAction().apply {
                             setPosition(18f + 36f * (position % FIELD_WIDTH), 36f * (FIELD_WIDTH - 1 - (position / FIELD_WIDTH)))
@@ -152,10 +185,24 @@ class TileFieldView(
         ))
     }
 
+    fun finalizeActions() {
+        tileGroup.children.forEach { tileActor ->
+            (tileActor as? TileView)?.let { tileView ->
+                tileView.applyPosition(tileView.tx, tileView.ty)
+                tileView.uvm?.let { tileView.updateFrom(it) }
+                tileView.setScale(1f)
+                tileView.alpha = 1f
+                tileView.clearActions()
+                if (tileView.removed) tileView.remove()
+            }
+        }
+        moveShift = 0
+    }
+
     companion object {
         const val TILE_SIZE = 36f
         const val TILE_BG_REGION = "tile_bg_grey"
         const val FIELD_WIDTH = 5
-        const val MOVE_STEP_LENGTH = 0.05f
+        const val MOVE_STEP_LENGTH = 0.1f
     }
 }

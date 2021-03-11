@@ -13,12 +13,17 @@ import com.game7th.battle.unit.*
 import com.game7th.metagame.account.PersonageAttributeStats
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collect
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-class SwipeBattle(val balance: SwipeBalance) {
+class SwipeBattle(
+        val balance: SwipeBalance,
+        val inputFlow: Flow<Pair<Int, Int>>
+) {
 
     private val coroutineContext = newSingleThreadContext("battle")
 
@@ -61,6 +66,10 @@ class SwipeBattle(val balance: SwipeBalance) {
         generateInitialPersonages(config)
         generateInitialTiles()
         propagateInternalEvent(InternalBattleEvent.BattleStartedEvent(this@SwipeBattle))
+
+        inputFlow.collect { (dx, dy) ->
+            processSwipe(dx, dy)
+        }
     }
 
     private suspend fun generateInitialTiles() = withContext(coroutineContext) {
@@ -134,6 +143,7 @@ class SwipeBattle(val balance: SwipeBalance) {
             notifyEvent(BattleEvent.DefeatEvent)
         } else if (rightTeamCount == 0) {
             if (wave < config.waves.size - 1) {
+                println("!!! Increment wave to ${wave + 1} ${Thread.currentThread()}")
                 wave++
                 clearNpcs()
                 units.removeAll { it.team == Team.RIGHT }
@@ -150,9 +160,10 @@ class SwipeBattle(val balance: SwipeBalance) {
         units.filter { it.team == Team.RIGHT }.forEach {
             notifyEvent(BattleEvent.RemovePersonageEvent(it.id))
         }
+        units.removeAll { it.team == Team.RIGHT }
     }
 
-    suspend fun processSwipe(dx: Int, dy: Int) = withContext(coroutineContext) {
+    private suspend fun processSwipe(dx: Int, dy: Int) = withContext(coroutineContext) {
         if (!gameEnded) {
             var motionEvents = tileField.attemptSwipe(dx, dy, true)
             var hadAnyEvents = false
@@ -160,17 +171,19 @@ class SwipeBattle(val balance: SwipeBalance) {
             while (motionEvents.isNotEmpty()) {
                 hadAnyEvents = true
                 eventCache.add(BattleEvent.SwipeMotionEvent(motionEvents))
-                //TODO: post process stacks stages etc.
                 motionEvents = tileField.attemptSwipe(dx, dy, true)
             }
             val totalMerges = eventCache.sumBy { be ->
-                (be as? BattleEvent.SwipeMotionEvent)?.events?.count { it is TileFieldEvent.MergeTileEvent }
-                        ?: 0
+                (be as? BattleEvent.SwipeMotionEvent)?.events?.count { it is TileFieldEvent.MergeTileEvent } ?: 0
             }
             if (hadAnyEvents) {
-                runBlocking {
-                    eventCache.forEach { notifyEvent(it) }
+                combo = if (totalMerges > 0) combo + totalMerges else 0
+                notifyEvent(BattleEvent.ComboUpdateEvent(combo))
+
+                eventCache.forEach {
+                    notifyEvent(it)
                 }
+
                 processTick(false)
                 processTickUnits()
                 tick++
@@ -186,8 +199,6 @@ class SwipeBattle(val balance: SwipeBalance) {
                     notifyEvent(BattleEvent.DefeatEvent)
                 }
             }
-            combo = if (totalMerges > 0) combo + totalMerges else 0
-            notifyEvent(BattleEvent.ComboUpdateEvent(combo))
         }
     }
 
@@ -222,10 +233,6 @@ class SwipeBattle(val balance: SwipeBalance) {
     suspend fun notifyAttack(source: BattleUnit, targets: List<BattleUnit>, attackIndex: Int) {
         notifyEvent(BattleEvent.PersonageAttackEvent(source.toViewModel(), targets.map { it.toViewModel() }, attackIndex))
     }
-
-    /*
-     * TODO: abstract out npc/personages as battle units
-     */
 
     suspend fun processDamage(target: BattleUnit, source: BattleUnit, damage: DamageVector): DamageProcessResult {
         val damage = DamageCalculator.calculateDamage(balance, source.stats, target.stats, damage)
@@ -281,6 +288,7 @@ class SwipeBattle(val balance: SwipeBalance) {
     }
 
     suspend fun notifyEvent(event: BattleEvent) {
+        println("!!! $event")
         events.emit(event)
     }
 

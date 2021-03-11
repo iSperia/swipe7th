@@ -7,6 +7,7 @@ import com.game7th.metagame.unit.UnitConfig
 import com.game7th.metagame.unit.UnitType
 import com.google.gson.Gson
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import java.io.FileInputStream
 import java.io.FileWriter
@@ -78,7 +79,7 @@ suspend fun emulateBattle(balance: SwipeBalance, config: BattleConfig): Emulatio
 
         val results = (1..runsPerExperiment).map {
             async {
-                val battle = SwipeBattle(balance)
+                val battle = SwipeBattle(balance, MutableSharedFlow())
 
                 var job: Job? = null
 
@@ -104,7 +105,7 @@ suspend fun emulateBattle(balance: SwipeBalance, config: BattleConfig): Emulatio
                         val r = Random.nextInt(4)
                         val dx = if (r == 0) 1 else if (r == 1) -1 else 0
                         val dy = if (r == 2) 1 else if (r == 3) -1 else 0
-                        battle.processSwipe(dx, dy)
+//                        battle.processSwipe(dx, dy)
                     }
                 }
 

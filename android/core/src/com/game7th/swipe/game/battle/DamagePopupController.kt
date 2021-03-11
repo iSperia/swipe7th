@@ -4,18 +4,17 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.Align
 import com.game7th.swipe.game.GameContextWrapper
-import com.game7th.swipe.game.battle.model.BattleControllerEvent
 import kotlin.math.max
 
 class DamagePopupController(
         context: GameContextWrapper,
+        battle: BattleController,
         id: Int,
-        private val battle: BattleController,
         val originX: Float,
         val originY: Float,
         val value: Int,
         val color: Color
-) : ElementController(context, id) {
+) : ElementController(context, battle, id) {
 
     var timePassed = 0f
     val targetY = originY + 50f * battle.scale
@@ -49,6 +48,4 @@ class DamagePopupController(
     override fun dispose() {
         super.dispose()
     }
-
-    override fun handle(event: BattleControllerEvent) {}
 }
