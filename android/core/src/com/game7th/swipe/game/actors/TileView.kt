@@ -9,7 +9,8 @@ import com.game7th.swipe.GdxGameContext
 
 class TileView(
         private val gameContext: GdxGameContext,
-        viewModel: TileViewModel
+        viewModel: TileViewModel,
+        private val size: Float
 ) : Group() {
 
     private var vm: TileViewModel? = null
@@ -23,11 +24,8 @@ class TileView(
     var removed = false
 
     init {
-        originX = 18f
-        originY = 18f
-        width = 36f
-        height = 36f
-
+        width = size
+        height = size
         updateFrom(viewModel)
     }
 
@@ -58,11 +56,9 @@ class TileView(
         vm?.let { vm ->
             val value = if (vm.stackSize < 2) "" else "${vm.stackSize}"
             stackSizeLabel = Label(value, Label.LabelStyle(gameContext.font, Color.WHITE)).apply {
-                setFontScale(0.5f)
-                originX = width
-                originY = 0f
-                x = 36f - width
-                y = 0f
+                setFontScale(size / 4 / 36f)
+                x = size - width - size/8f
+                y = size/8f
                 zIndex = 3
             }
 
@@ -76,8 +72,8 @@ class TileView(
                 zIndex = 2
                 originY = 18f
                 originX = 18f
-                width = 36f
-                height = 36f
+                width = size
+                height = size
             }
 
             addActor(skillImage)
@@ -94,10 +90,5 @@ class TileView(
         skillImage?.let {
             removeActor(it)
         }.also { skillImage = null }
-    }
-
-    fun applyPosition(x: Int, y: Int) {
-        this.x = 36f * x + 18f
-        this.y = 36f * (4 - y)
     }
 }

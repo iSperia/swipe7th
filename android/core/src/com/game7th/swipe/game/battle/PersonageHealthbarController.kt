@@ -43,7 +43,7 @@ class PersonageHealthbarController(
         val percent = displayedValue / figure.viewModel.stats.maxHealth
 
         val sx = figure.x - 48f * battle.scale
-        val sy = figure.y + (20f + figure.figureModel.height) * battle.scale
+        val sy = figure.y - 15f * battle.scale
 
 
         healthBarBackground.draw(batch, sx, sy, 96f * battle.scale, hei)

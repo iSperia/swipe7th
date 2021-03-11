@@ -18,6 +18,14 @@ arrowBlue_right
   orig: 22, 21
   offset: 0, 0
   index: -1
+bg_brass
+  rotate: false
+  xy: 568, 52
+  size: 32, 32
+  split: 8, 8, 8, 8
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 btn_blue_dn
   rotate: false
   xy: 292, 232
@@ -48,7 +56,7 @@ iconCircle_grey
   index: -1
 icon_gear
   rotate: false
-  xy: 921, 280
+  xy: 618, 32
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -76,14 +84,14 @@ panel_blue
   index: -1
 panel_edge
   rotate: false
-  xy: 370, 24
+  xy: 993, 475
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 panel_modal
   rotate: false
-  xy: 971, 312
+  xy: 84, 7
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -111,28 +119,28 @@ ui_attrs_tree
   index: -1
 ui_button_pressed
   rotate: false
-  xy: 50, 7
+  xy: 618, 14
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_simple
   rotate: false
-  xy: 568, 50
+  xy: 370, 24
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_trans_pressed
   rotate: false
-  xy: 568, 68
+  xy: 370, 42
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_trans_simple
   rotate: false
-  xy: 370, 42
+  xy: 50, 7
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
@@ -209,7 +217,7 @@ ui_item_bg_hat
   index: -1
 ui_item_bg_ring
   rotate: false
-  xy: 871, 280
+  xy: 568, 2
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

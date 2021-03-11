@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.ExtendViewport
+import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.game7th.battle.BattleConfig
 import com.game7th.battle.PersonageConfig
@@ -64,7 +65,7 @@ class GameScreen(private val game: SwipeGameGdx,
     var gameEnded = false
 
     override fun show() {
-        viewport = ExtendViewport(480f, 720f, 480f, 2000f)
+        viewport = ScreenViewport()
         stage = Stage(viewport)
 
         batch = SpriteBatch()
@@ -154,7 +155,7 @@ class GameScreen(private val game: SwipeGameGdx,
                 width = Gdx.graphics.width.toFloat(),
                 height = Gdx.graphics.height.toFloat(),
                 atlases = atlases
-        ), Gdx.graphics.width.toFloat(), sounds) {
+        ), Gdx.graphics.height - (Gdx.graphics.width.toFloat() / 1.25f), sounds) {
             if (it is BattleEvent.VictoryEvent) {
                 val experience = config.waves.sumBy {
                     it.sumBy { it.level * 50 }

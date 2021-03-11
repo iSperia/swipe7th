@@ -26,10 +26,13 @@ class BattleController(
 
     private val controllers = mutableListOf<ElementController>()
 
-    private val backgroundTexture = context.gameContext.atlas.findRegion("battle_bg", 1)
+    private val backgroundTexture = context.gameContext.atlas.findRegion("battle_bg", 2)
+    private val foregroundTexture = context.gameContext.atlas.findRegion("battle_fg", 2)
+    private val foregroundRatio = foregroundTexture.originalHeight / foregroundTexture.originalWidth.toFloat()
 
-    var effectId = 10000
-    var hudId = 20000
+    var effectId = 100000
+    var hudId = 300000
+    var fgId = 200000
     val scale = 0.85f * context.scale
 
     val controllersToRemove = mutableListOf<ElementController>()
@@ -39,8 +42,16 @@ class BattleController(
     val scheduledActions = mutableListOf<Pair<Float, () -> Unit>>()
     var timeShift = 0f
 
+    init {
+        controllers.add(object : ElementController(context, this, fgId++) {
+            override fun render(batch: SpriteBatch, delta: Float) {
+                batch.draw(foregroundTexture, 0f, y, context.width, context.width * foregroundRatio)
+            }
+        })
+    }
+
     fun act(batch: SpriteBatch, delta: Float) {
-        batch.draw(backgroundTexture, 0f, y, context.width, context.width * 0.67f)
+        batch.draw(backgroundTexture, 0f, y, context.width, context.width / 1.25f)
 
         controllers.sortedBy { it.id }.forEach { it.render(batch, delta) }
 
@@ -296,7 +307,7 @@ class BattleController(
                     context.gdxModel.figure(event.personage.skin)!!,
                     event.personage,
                     x,
-                    y,
+                    y + 30f * scale,
                     scale,
                     this::playSound).let {
                 controllers.add(it)

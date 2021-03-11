@@ -7,13 +7,13 @@ import com.game7th.battle.event.BattleEvent
 import com.game7th.battle.event.TileViewModel
 import com.game7th.battle.tilefield.TileFieldEvent
 import com.game7th.swipe.GdxGameContext
-import kotlinx.coroutines.Delay
-import kotlinx.coroutines.delay
 import ktx.actors.alpha
-import ktx.actors.div
+import kotlin.random.Random
 
 class TileFieldView(
-        private val gameContext: GdxGameContext
+        private val gameContext: GdxGameContext,
+        private val w: Float,
+        private val h: Float
 ) : Group() {
 
     private val backgroundGroup: Group
@@ -23,15 +23,25 @@ class TileFieldView(
     private var moveShift = 0
     private var resetMoveShift = false
 
+    private val tileSize = w / FIELD_WIDTH
+
     init {
         backgroundGroup = Group().apply {
             for (i in 0..4) {
                 for (j in 0..4) {
                     addActor(Image(gameContext.atlas.findRegion(TILE_BG_REGION)).apply {
-                        x = TILE_SIZE / 2 + TILE_SIZE * j
-                        y = TILE_SIZE * (FIELD_WIDTH - 1 - i)
-                        width = TILE_SIZE
-                        height = TILE_SIZE
+                        val ax = tileSize * j
+                        val ay = tileSize * (FIELD_WIDTH - 1 - i)
+
+                        x = tileSize * j - tileSize / 2 + tileSize * Random.nextFloat()
+                        y = tileSize * (FIELD_WIDTH - 1 - i) - tileSize / 2 + tileSize * Random.nextFloat()
+                        width = tileSize
+                        height = tileSize
+                        setScale(2f)
+                        addAction(ParallelAction(
+                                MoveToAction().apply { setPosition(ax, ay); duration = 1.8f },
+                                ScaleToAction().apply { setScale(1f); duration = 1.6f }
+                        ))
                     })
                 }
             }
@@ -43,7 +53,7 @@ class TileFieldView(
         addActor(tileGroup)
     }
 
-    suspend fun processAction(action: BattleEvent) {
+    fun processAction(action: BattleEvent) {
         when (action) {
             is BattleEvent.CreateTileEvent -> {
                 val tx = action.position % FIELD_WIDTH
@@ -51,7 +61,7 @@ class TileFieldView(
                 val fx = if (action.sourcePosition >= 0) action.sourcePosition % FIELD_WIDTH else tx
                 val fy = if (action.sourcePosition >= 0) action.sourcePosition / FIELD_WIDTH else ty
 
-                val view = TileView(gameContext, action.tile).apply {
+                val view = TileView(gameContext, action.tile, tileSize).apply {
                     this.tx = tx
                     this.ty = ty
                 }
@@ -64,7 +74,7 @@ class TileFieldView(
                 val tileAnimation = ParallelAction()
                 if (action.sourcePosition >= 0) {
                     tileAnimation.addAction(MoveToAction().apply {
-                        setPosition(36f * tx + 18f, 36f * (FIELD_WIDTH - 1 - ty))
+                        setPosition(tileSize * tx , tileSize * (FIELD_WIDTH - 1 - ty))
                         duration = 0.2f
                     })
                 }
@@ -140,7 +150,7 @@ class TileFieldView(
                 SequenceAction(
                         DelayAction(moveShift * 0.1f),
                         MoveToAction().apply {
-                            setPosition(18f + 36f * (position % FIELD_WIDTH), 36f * (FIELD_WIDTH - 1 - (position / FIELD_WIDTH)))
+                            setPosition(tileSize * (position % FIELD_WIDTH), tileSize * (FIELD_WIDTH - 1 - (position / FIELD_WIDTH)))
                             duration = MOVE_STEP_LENGTH
                         }
                 ))
@@ -164,7 +174,7 @@ class TileFieldView(
                 DelayAction(moveShift * 0.1f),
                 ParallelAction(
                         MoveToAction().apply {
-                            setPosition(18f + 36f * (position % FIELD_WIDTH), 36f * (FIELD_WIDTH - 1 - (position / FIELD_WIDTH)))
+                            setPosition(tileSize * (position % FIELD_WIDTH), tileSize * (FIELD_WIDTH - 1 - (position / FIELD_WIDTH)))
                             duration = MOVE_STEP_LENGTH
                         },
                         AlphaAction().apply {
@@ -199,8 +209,12 @@ class TileFieldView(
         moveShift = 0
     }
 
+    private fun TileView.applyPosition(x: Int, y: Int) {
+        this.x = tileSize * x
+        this.y = tileSize * (FIELD_WIDTH - 1 - y)
+    }
+
     companion object {
-        const val TILE_SIZE = 36f
         const val TILE_BG_REGION = "tile_bg_grey"
         const val FIELD_WIDTH = 5
         const val MOVE_STEP_LENGTH = 0.1f
