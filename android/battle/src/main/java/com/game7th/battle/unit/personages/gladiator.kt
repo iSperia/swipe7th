@@ -10,11 +10,13 @@ import com.game7th.battle.unit.UnitStats
 
 fun produceGladiator(balance: SwipeBalance, unitStats: UnitStats) =
         unitStats.let { stats ->
+            val waveWeight = if (unitStats.level < 3) 0 else 30
+            val dropWeight = if (unitStats.level < 6) 0 else 20
             val strikeTemplate = TileTemplate(TileNames.GLADIATOR_STRIKE, balance.gladiator.t1)
             val waveTemplate = TileTemplate(TileNames.GLADIATOR_WAVE, balance.gladiator.t2)
             val dropTemplate = TileTemplate(TileNames.GLADIATOR_DROP, 1)
             stats.addAbility {
-                defaultEmitter { skills.addAll(listOf(50 to strikeTemplate, 30 to waveTemplate, 20 to dropTemplate)) }
+                defaultEmitter { skills.addAll(listOf(50 to strikeTemplate, waveWeight to waveTemplate, dropWeight to dropTemplate)) }
                 defaultMerger { tileType = strikeTemplate.skin }
                 defaultMerger { tileType = waveTemplate.skin }
                 consume {

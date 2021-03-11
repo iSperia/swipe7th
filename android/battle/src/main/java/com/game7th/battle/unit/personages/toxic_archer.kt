@@ -11,11 +11,13 @@ import com.game7th.battle.unit.UnitStats
 
 fun produceToxicArcher(balance: SwipeBalance, unitStats: UnitStats) =
         unitStats.let { stats ->
+            val poisonWeight = if (unitStats.level < 3) 0 else 25
+            val paralizeWeight = if (unitStats.level < 6) 0 else 25
             val strikeTemplate = TileTemplate(TileNames.POISON_ARCHER_STRIKE, balance.poison_archer.t1)
             val poisonTemplate = TileTemplate(TileNames.POISON_ARCHER_POISON, balance.poison_archer.t2)
             val paralizeTemplate = TileTemplate(TileNames.POISON_ARCHER_PARALIZE, balance.poison_archer.t3)
             stats.addAbility {
-                defaultEmitter { skills.addAll(listOf(25 to paralizeTemplate, 50 to strikeTemplate, 25 to poisonTemplate)) }
+                defaultEmitter { skills.addAll(listOf(50 to strikeTemplate, paralizeWeight to paralizeTemplate, poisonWeight to poisonTemplate)) }
                 defaultMerger { tileType = strikeTemplate.skin }
                 defaultMerger { tileType = poisonTemplate.skin; autoCut = true }
                 defaultMerger { tileType = paralizeTemplate.skin; autoCut = true }
