@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.utils.Align
 import com.game7th.battle.event.TileViewModel
 import com.game7th.swipe.GdxGameContext
 
@@ -28,8 +29,9 @@ class TileView(
     private var skillImage: Image? = null
     private var stackSizeLabel: Label = Label("", Label.LabelStyle(gameContext.font, Color.WHITE)).apply {
         setFontScale(size / 4 / 36f)
-        x = size - width - size/8f
-        y = size/8f
+        x = size - width - size/4f
+        y = size/4f
+        setAlignment(Align.right)
         zIndex = 3
     }
 

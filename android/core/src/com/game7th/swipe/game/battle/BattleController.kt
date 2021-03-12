@@ -13,6 +13,7 @@ import com.game7th.swipe.game.battle.model.GdxAttackType
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.random.Random
 
 /**
  * GDX graph controller for battle
@@ -26,8 +27,9 @@ class BattleController(
 
     private val controllers = mutableListOf<ElementController>()
 
-    private val backgroundTexture = context.gameContext.atlas.findRegion("battle_bg", 2)
-    private val foregroundTexture = context.gameContext.atlas.findRegion("battle_fg", 2)
+    val bgIndex = if (Random.nextFloat() > 0.5f) 3 else 2
+    private val backgroundTexture = context.gameContext.atlas.findRegion("battle_bg", bgIndex)
+    private val foregroundTexture = context.gameContext.atlas.findRegion("battle_fg", bgIndex)
     private val foregroundRatio = foregroundTexture.originalHeight / foregroundTexture.originalWidth.toFloat()
 
     var effectId = 100000
