@@ -149,11 +149,11 @@ class GameActor(
         tileField.processAction(event)
         when (event) {
             is BattleEvent.ComboUpdateEvent -> {
+                combo = event.combo
                 labelCombo.isVisible = event.combo > 0
                 labelCombo.setText("COMBO X${event.combo}")
                 labelComboWrapper.clearActions()
                 if (event.combo > 0) {
-                    combo = event.combo
                     labelComboWrapper.addAction(SequenceAction(
                             ScaleToAction().apply { setScale(1.1f + 0.03f * event.combo); duration = 2f / event.combo },
                             ScaleToAction().apply { setScale(0.9f - 0.01f * event.combo); duration = 2f / event.combo }
