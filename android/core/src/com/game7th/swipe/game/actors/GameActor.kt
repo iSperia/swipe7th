@@ -6,6 +6,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Touchable
+import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction
+import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction
+import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
@@ -15,6 +19,7 @@ import com.game7th.metagame.account.RewardData
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.game.actors.ui.GameFinishedDialog
 import ktx.actors.onClick
+import ktx.actors.repeatForever
 import kotlin.math.min
 
 class GameActor(
@@ -24,11 +29,11 @@ class GameActor(
 ) : Group() {
 
     lateinit var atlas: TextureAtlas
-    lateinit var font: BitmapFont
     val tileField: TileFieldView
 
     val buttonConcede: Label
     val labelCombo: Label
+    val labelComboWrapper: Group
     val tileFieldZoneBorder: Image
     val tileFieldBorder: Image
     val bottomSheetBg: Image
@@ -84,16 +89,21 @@ class GameActor(
         }
         addActor(buttonConcede)
 
-        labelCombo = Label("COMBO", Label.LabelStyle(context.font, Color.WHITE)).apply {
-            y = Gdx.graphics.height - 30f * context.scale
-            x = 0f
+        labelCombo = Label("COMBO", Label.LabelStyle(context.font2, Color.WHITE)).apply {
+            x = -Gdx.graphics.width / 2f
+            y = -20f * context.scale
             width = Gdx.graphics.width.toFloat()
-            height = 30f * context.scale
-            setFontScale(30f * context.scale / 36f)
+            height = 40f * context.scale
+            setFontScale(60f * context.scale / 36f)
             setAlignment(Align.center)
             isVisible = false
         }
-        addActor(labelCombo)
+        labelComboWrapper = Group().apply {
+            y = Gdx.graphics.height - 40f * context.scale
+            x = Gdx.graphics.width / 2f
+        }
+        labelComboWrapper.addActor(labelCombo)
+        addActor(labelComboWrapper)
     }
 
     internal fun showDefeat() {
@@ -121,12 +131,19 @@ class GameActor(
         }
     }
 
-    suspend fun processAction(event: BattleEvent) {
+    fun processAction(event: BattleEvent) {
         tileField.processAction(event)
         when (event) {
             is BattleEvent.ComboUpdateEvent -> {
                 labelCombo.isVisible = event.combo > 0
                 labelCombo.setText("COMBO X${event.combo}")
+                labelComboWrapper.clearActions()
+                if (event.combo > 0) {
+                    labelComboWrapper.addAction(SequenceAction(
+                                ScaleToAction().apply { setScale(1.1f + 0.05f * event.combo); duration = 1f / event.combo },
+                                ScaleToAction().apply { setScale(0.9f - 0.025f * event.combo); duration = 1f / event.combo }
+                        ).repeatForever())
+                }
             }
         }
     }

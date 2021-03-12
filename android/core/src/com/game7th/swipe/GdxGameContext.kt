@@ -8,6 +8,7 @@ data class GdxGameContext(
         val atlas: TextureAtlas,
         val uiAtlas: TextureAtlas,
         val font: BitmapFont,
+        val font2: BitmapFont,
         val balance: SwipeBalance,
         val scale: Float,
         val texts: Map<String, String>
