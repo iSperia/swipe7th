@@ -39,20 +39,20 @@ class GameActor(
             x = 0f
             y = 48f * context.scale
             width = Gdx.graphics.width.toFloat()
-            height = tileFieldAreaHeight + 32f
+            height = Gdx.graphics.height - Gdx.graphics.width * 0.8f - 48f * context.scale
             color = Color.GRAY
         }.let { addActor(it) }
         tileFieldZoneBorder = Image(context.uiAtlas.createPatch("bg_brass")).apply {
             x = 0f
             y = 48f * context.scale
             width = Gdx.graphics.width.toFloat()
-            height = tileFieldAreaHeight + 32f
+            height = Gdx.graphics.height - Gdx.graphics.width * 0.8f - 48f * context.scale
         }
         addActor(tileFieldZoneBorder)
 
         tileField = TileFieldView(context, tileFieldAreaHeight, tileFieldAreaHeight).apply {
             x = (Gdx.graphics.width - tileFieldAreaHeight) / 2f
-            y = 48f * context.scale + 16f
+            y = 48f * context.scale + 16f + (Gdx.graphics.height - Gdx.graphics.width * 0.8f - 48f * context.scale - tileFieldAreaHeight) / 2
         }
         addActor(tileField)
         tileFieldBorder = Image(context.uiAtlas.createPatch("bg_brass")).apply {

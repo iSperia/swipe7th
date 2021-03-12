@@ -28,7 +28,7 @@ fun produceGreenSlime(balance: SwipeBalance, level: Int): UnitStats {
             }
             bodies[TickerEntry(balance.slime.w2, balance.slime.t2, "impact")] = { battle, unit ->
                 battle.tileField.calculateFreePosition()?.let { position ->
-                    val tile = SwipeTile(TileTemplate("slime_splash", balance.slime.d2 + 1), battle.tileField.newTileId(), balance.slime.d2, true)
+                    val tile = SwipeTile(TileTemplate("slime_splash", 0), battle.tileField.newTileId(), balance.slime.d2, true)
                     battle.tileField.tiles[position] = tile
                     battle.notifyAttack(unit, emptyList(), 1)
                     battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position, -1))

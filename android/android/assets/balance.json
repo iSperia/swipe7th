@@ -10,7 +10,7 @@
     "regenerationPerSpirit": 3,
     "wizdomMultiplier": 2,
     "evasionPerSpirit": 2,
-    "comboMultiplier": 0.05
+    "comboMultiplier": 0.1
   },
 
   "slime": {"hp": 45, "k1": 20, "t1": 3, "w1": 3, "d2": 5, "t2": 3, "w2": 1},

@@ -1,5 +1,6 @@
 package com.game7th.swipe.game.actors
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -24,6 +25,8 @@ class TileFieldView(
     private var resetMoveShift = false
 
     private val tileSize = w / FIELD_WIDTH
+
+    private val shapeRenderer = ShapeRenderer()
 
     init {
         backgroundGroup = Group().apply {
@@ -61,7 +64,7 @@ class TileFieldView(
                 val fx = if (action.sourcePosition >= 0) action.sourcePosition % FIELD_WIDTH else tx
                 val fy = if (action.sourcePosition >= 0) action.sourcePosition / FIELD_WIDTH else ty
 
-                val view = TileView(gameContext, action.tile, tileSize).apply {
+                val view = TileView(gameContext, action.tile, tileSize, shapeRenderer).apply {
                     this.tx = tx
                     this.ty = ty
                 }
@@ -159,7 +162,7 @@ class TileFieldView(
     private fun animatedMoveAndDestroy(id: Int, position: Int, updateTile: TileViewModel) {
         val tile = findActor<TileView>("$id")
         findActor<TileView>("${updateTile.id}")?.addAction(SequenceAction(
-                DelayAction(moveShift * 0.1f),
+                DelayAction(moveShift * 0.1f + MOVE_STEP_LENGTH),
                 RunnableAction().apply {
                     setRunnable {
                         findActor<TileView>("${updateTile.id}").updateFrom(updateTile)
@@ -173,6 +176,7 @@ class TileFieldView(
         tile.addAction(SequenceAction(
                 DelayAction(moveShift * 0.1f),
                 ParallelAction(
+                        RunnableAction().apply { setRunnable { tile.setScale(1.3f) } },
                         MoveToAction().apply {
                             setPosition(tileSize * (position % FIELD_WIDTH), tileSize * (FIELD_WIDTH - 1 - (position / FIELD_WIDTH)))
                             duration = MOVE_STEP_LENGTH
@@ -182,7 +186,7 @@ class TileFieldView(
                             duration = MOVE_STEP_LENGTH
                         },
                         ScaleToAction().apply {
-                            setScale(1.3f)
+                            setScale(0.7f)
                             duration = MOVE_STEP_LENGTH
                         }
                 ),
