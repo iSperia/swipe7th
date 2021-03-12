@@ -27,7 +27,7 @@ class BattleController(
 
     private val controllers = mutableListOf<ElementController>()
 
-    val bgIndex = if (Random.nextFloat() > 0.5f) 3 else 2
+    val bgIndex = 1 + Random.nextInt(3)
     private val backgroundTexture = context.gameContext.atlas.findRegion("battle_bg", bgIndex)
     private val foregroundTexture = context.gameContext.atlas.findRegion("battle_fg", bgIndex)
     private val foregroundRatio = foregroundTexture.originalHeight / foregroundTexture.originalWidth.toFloat()
