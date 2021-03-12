@@ -17,6 +17,7 @@ class AndroidLauncher : AndroidApplication() {
         }
         val config = AndroidApplicationConfiguration().apply {
             useImmersiveMode = true
+            numSamples = 2
         }
         initialize(SwipeGameGdx(AndroidStorage(applicationContext)), config)
     }
