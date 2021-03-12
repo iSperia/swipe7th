@@ -2,12 +2,11 @@ package com.game7th.swipe.game.actors
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.graphics.g2d.ParticleEffect
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Touchable
-import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction
-import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -37,6 +36,9 @@ class GameActor(
     val tileFieldZoneBorder: Image
     val tileFieldBorder: Image
     val bottomSheetBg: Image
+    val comboParticles: ParticleEffect
+
+    private var combo = 0
 
     val tileFieldAreaHeight = min(Gdx.graphics.width.toFloat(), Gdx.graphics.height - Gdx.graphics.width / 1.25f - 48f * context.scale) - 32f
 
@@ -89,7 +91,7 @@ class GameActor(
         }
         addActor(buttonConcede)
 
-        labelCombo = Label("COMBO", Label.LabelStyle(context.font2, Color.WHITE)).apply {
+        labelCombo = Label("COMBO", Label.LabelStyle(context.font2, Color.SCARLET)).apply {
             x = -Gdx.graphics.width / 2f
             y = -20f * context.scale
             width = Gdx.graphics.width.toFloat()
@@ -104,6 +106,11 @@ class GameActor(
         }
         labelComboWrapper.addActor(labelCombo)
         addActor(labelComboWrapper)
+
+        comboParticles = ParticleEffect()
+        comboParticles.load(Gdx.files.internal("particles_0"), context.atlas)
+        comboParticles.setPosition(labelComboWrapper.x, labelComboWrapper.y + labelCombo.y - 10f * context.scale)
+        comboParticles.scaleEffect(3f)
     }
 
     internal fun showDefeat() {
@@ -117,6 +124,13 @@ class GameActor(
             y = 220f
             this@GameActor.addActor(this)
         }
+    }
+
+    override fun draw(batch: Batch?, parentAlpha: Float) {
+        if (combo > 1) {
+            comboParticles.draw(batch, Gdx.graphics.deltaTime * 0.1f * combo)
+        }
+        super.draw(batch, parentAlpha)
     }
 
     fun showVictory(expResult: PersonageExperienceResult) {
@@ -139,10 +153,13 @@ class GameActor(
                 labelCombo.setText("COMBO X${event.combo}")
                 labelComboWrapper.clearActions()
                 if (event.combo > 0) {
+                    combo = event.combo
                     labelComboWrapper.addAction(SequenceAction(
-                                ScaleToAction().apply { setScale(1.1f + 0.05f * event.combo); duration = 1f / event.combo },
-                                ScaleToAction().apply { setScale(0.9f - 0.025f * event.combo); duration = 1f / event.combo }
-                        ).repeatForever())
+                            ScaleToAction().apply { setScale(1.1f + 0.03f * event.combo); duration = 2f / event.combo },
+                            ScaleToAction().apply { setScale(0.9f - 0.01f * event.combo); duration = 2f / event.combo }
+                    ).repeatForever())
+                    comboParticles.reset()
+                    comboParticles.scaleEffect(3f + combo * 0.2f)
                 }
             }
         }
