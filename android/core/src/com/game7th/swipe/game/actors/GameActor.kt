@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.utils.Align
 import com.game7th.battle.event.BattleEvent
 import com.game7th.metagame.account.PersonageExperienceResult
 import com.game7th.metagame.account.RewardData
@@ -27,7 +28,7 @@ class GameActor(
     val tileField: TileFieldView
 
     val buttonConcede: Label
-    val buttonCombo: Label
+    val labelCombo: Label
     val tileFieldZoneBorder: Image
     val tileFieldBorder: Image
     val bottomSheetBg: Image
@@ -63,23 +64,6 @@ class GameActor(
         }
         addActor(tileFieldBorder)
 
-        buttonConcede = Label("Concede", Label.LabelStyle(context.font, Color.YELLOW)).apply {
-            x = 300f
-            y = 700f
-        }
-        buttonConcede.onClick {
-            showDefeat()
-        }
-        addActor(buttonConcede)
-
-        buttonCombo = Label("COMBO", Label.LabelStyle(context.font, Color.WHITE)).apply {
-            y = 700f
-            x = 10f
-            setFontScale(1.2f)
-            isVisible = false
-        }
-        addActor(buttonCombo)
-
         bottomSheetBg = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
             x = 0f
             y = 0f
@@ -87,6 +71,29 @@ class GameActor(
             height = 48f * context.scale
         }
         addActor(bottomSheetBg)
+
+        buttonConcede = Label("Concede", Label.LabelStyle(context.font, Color.BLACK)).apply {
+            setFontScale(22f * context.scale / 36f)
+            width = 100f * context.scale
+            x = Gdx.graphics.width - width - 10f * context.scale
+            y = 30f
+            setAlignment(Align.center)
+        }
+        buttonConcede.onClick {
+            showDefeat()
+        }
+        addActor(buttonConcede)
+
+        labelCombo = Label("COMBO", Label.LabelStyle(context.font, Color.WHITE)).apply {
+            y = Gdx.graphics.height - 30f * context.scale
+            x = 0f
+            width = Gdx.graphics.width.toFloat()
+            height = 30f * context.scale
+            setFontScale(30f * context.scale / 36f)
+            setAlignment(Align.center)
+            isVisible = false
+        }
+        addActor(labelCombo)
     }
 
     internal fun showDefeat() {
@@ -118,8 +125,8 @@ class GameActor(
         tileField.processAction(event)
         when (event) {
             is BattleEvent.ComboUpdateEvent -> {
-                buttonCombo.isVisible = event.combo > 0
-                buttonCombo.setText("COMBO X${event.combo}")
+                labelCombo.isVisible = event.combo > 0
+                labelCombo.setText("COMBO X${event.combo}")
             }
         }
     }

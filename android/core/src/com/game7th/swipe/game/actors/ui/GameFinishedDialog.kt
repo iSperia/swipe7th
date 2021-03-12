@@ -137,6 +137,7 @@ class GameFinishedDialog(
     var newLevelShown = false
 
     init {
+        setScale(context.scale)
         if (expResult == null) {
             expBackground.isVisible = false
             expForeground.isVisible = false
