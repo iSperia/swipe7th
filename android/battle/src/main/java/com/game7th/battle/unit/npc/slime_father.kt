@@ -13,7 +13,7 @@ fun produceSlimeFather(balance: SwipeBalance, level: Int): UnitStats {
     val slime = UnitStats(UnitType.SLIME_FATHER, level = level, health = CappedStat(hp, hp), armor = level * balance.father_slime.k3.toInt())
     slime += ability {
         ticker {
-            bodies[TickerEntry(balance.father_slime.w1, balance.father_slime.t1, "attack")] = { battle, unit ->
+            bodies[TickerEntry(balance.father_slime.w1, balance.father_slime.t1, "sword")] = { battle, unit ->
                 val damage = (unit.stats.level * balance.father_slime.k1).toInt()
                 if (damage > 0) {
                     battle.findClosestAliveEnemy(unit)?.let { target ->
@@ -22,7 +22,7 @@ fun produceSlimeFather(balance: SwipeBalance, level: Int): UnitStats {
                     }
                 }
             }
-            bodies[TickerEntry(balance.father_slime.w2, balance.father_slime.t2, "impact")] = { battle, unit ->
+            bodies[TickerEntry(balance.father_slime.w2, balance.father_slime.t2, "shield")] = { battle, unit ->
                 val allies = battle.aliveAllies(unit)
                 val armor = (unit.stats.level * balance.father_slime.k2).toInt()
                 battle.notifyAttack(unit, emptyList(), 0)

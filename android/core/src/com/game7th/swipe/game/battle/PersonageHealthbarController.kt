@@ -23,7 +23,7 @@ class PersonageHealthbarController(
     var lastDisplayedValue: Float = displayedValue
 
     private var distance: Float = (healthBarWidth - 4f) * 100f / figure.viewModel.stats.maxHealth.toFloat()
-    private val hei: Float = 12f * battle.scale
+    private val hei: Float = 16f * battle.scale
     private val sectorHei: Float = (hei - 4f) / 2f
 
     override fun render(batch: SpriteBatch, delta: Float) {

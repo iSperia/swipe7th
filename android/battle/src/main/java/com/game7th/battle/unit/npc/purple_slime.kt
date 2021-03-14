@@ -17,7 +17,7 @@ fun producePurpleSlime(balance: SwipeBalance, level: Int): UnitStats {
     val slime = UnitStats(UnitType.PURPLE_SLIME, level = level, health = CappedStat(hp, hp))
     slime += ability {
         ticker {
-            bodies[TickerEntry(balance.red_slime.w1, balance.red_slime.t1, "attack")] = { battle, unit ->
+            bodies[TickerEntry(balance.red_slime.w1, balance.red_slime.t1, "sword")] = { battle, unit ->
                 val damage = (unit.stats.level * balance.red_slime.k1).toInt()
                 if (damage > 0) {
                     battle.findClosestAliveEnemy(unit)?.let { target ->
@@ -26,7 +26,7 @@ fun producePurpleSlime(balance: SwipeBalance, level: Int): UnitStats {
                     }
                 }
             }
-            bodies[TickerEntry(balance.red_slime.w2, balance.red_slime.t2, "impact")] = { battle, unit ->
+            bodies[TickerEntry(balance.red_slime.w2, balance.red_slime.t2, "leaf")] = { battle, unit ->
                 battle.tileField.calculateFreePosition()?.let { position ->
                     val tile = SwipeTile(TileTemplate("slime_splash", 0), battle.tileField.newTileId(), balance.red_slime.d2, true)
                     battle.tileField.tiles[position] = tile

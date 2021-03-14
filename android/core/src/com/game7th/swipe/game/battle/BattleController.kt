@@ -289,6 +289,10 @@ class BattleController(
                 it.dispose()
                 controllersToRemove.add(it)
             }
+            controllers.firstOrNull { it is PersonageTickerController && it.figure.id == event.personage.id }?.let {
+                it.dispose()
+                controllersToRemove.add(it)
+            }
             Unit
         })
     }
@@ -309,11 +313,14 @@ class BattleController(
                     context.gdxModel.figure(event.personage.skin)!!,
                     event.personage,
                     x,
-                    y + 30f * scale,
+                    y + 45f * scale,
                     scale,
                     this::playSound).let {
                 controllers.add(it)
                 PersonageHealthbarController(context, this@BattleController, hudId++, it).let {
+                    controllers.add(it)
+                }
+                PersonageTickerController(context, this@BattleController, hudId++, it).let {
                     controllers.add(it)
                 }
             }

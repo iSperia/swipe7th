@@ -14,7 +14,7 @@ fun produceSlimeMother(balance: SwipeBalance, level: Int): UnitStats {
     val slime = UnitStats(UnitType.SLIME_MOTHER, level = level, health = CappedStat(hp, hp), regeneration = balance.mother_slime.k3.toInt() * level)
     slime += ability {
         ticker {
-            bodies[TickerEntry(balance.mother_slime.w1, balance.mother_slime.t1, "attack")] = { battle, unit ->
+            bodies[TickerEntry(balance.mother_slime.w1, balance.mother_slime.t1, "sword")] = { battle, unit ->
                 val damage = (unit.stats.level * balance.mother_slime.k1).toInt()
                 if (damage > 0) {
                     battle.findClosestAliveEnemy(unit)?.let { target ->
@@ -23,7 +23,7 @@ fun produceSlimeMother(balance: SwipeBalance, level: Int): UnitStats {
                     }
                 }
             }
-            bodies[TickerEntry(balance.mother_slime.w2, balance.mother_slime.t2, "impact")] = { battle, unit ->
+            bodies[TickerEntry(balance.mother_slime.w2, balance.mother_slime.t2, "summon")] = { battle, unit ->
                 val position = battle.calculateFreeNpcPosition()
                 if (position > 0) {
                     val producedUnit = UnitFactory.produce(UnitType.GREEN_SLIME, balance, unit.stats.level, null)
