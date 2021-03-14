@@ -52,6 +52,8 @@ class FigureController(
 
     var isDead = false
 
+    val bodyScale = scale * if (figureModel.scale > 0f) figureModel.scale else 1f
+
     lateinit var pose: FigurePose
     val flipped = viewModel.team > 0
     private val flipMultiplier = if (flipped) -1 else 1
@@ -77,19 +79,19 @@ class FigureController(
         animation?.let { animation ->
             if (pose != FigurePose.POSE_DEATH || !animation.isAnimationFinished(timePassed - timePoseStarted)) {
                 batch.draw(animation.getKeyFrame(timePassed - timePoseStarted, true),
-                        x - 256f * scale * flipMultiplier,
+                        x - 256f * bodyScale * flipMultiplier,
                         y,
-                        512f * scale * flipMultiplier,
-                        512f * scale)
+                        512f * bodyScale * flipMultiplier,
+                        512f * bodyScale)
             } else if (pose == FigurePose.POSE_DEATH) {
                 if (flipped) {
                     battle.removeController(this)
                 } else {
                     batch.draw(animation.keyFrames.last(),
-                            x - 256f * scale * flipMultiplier,
+                            x - 256f * bodyScale * flipMultiplier,
                             y,
-                            512f * scale * flipMultiplier,
-                            512f * scale)
+                            512f * bodyScale * flipMultiplier,
+                            512f * bodyScale)
                 }
             }
 

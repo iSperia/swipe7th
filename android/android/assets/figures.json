@@ -82,6 +82,7 @@
     {
       "name": "slime_mother",
       "atlas": "slime_mother",
+      "scale": 0.8,
       "dependencies": ["slime"],
       "height": 210,
       "body": "slime_mother_body",
@@ -98,6 +99,7 @@
     {
       "name": "slime_father",
       "atlas": "slime_father",
+      "scale": 0.8,
       "height": 210,
       "body": "slime_father_body",
       "poses": [

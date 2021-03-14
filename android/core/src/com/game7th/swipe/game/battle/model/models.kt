@@ -26,6 +26,7 @@ data class FigureGdxModel(
     val atlas: String,
     val dependencies: List<String>?,
     val height: Int,
+    val scale: Float,
     val body: String,
     val poses: List<PoseGdxModel>,
     val attacks: List<AttackGdxModel>
