@@ -23,6 +23,7 @@ class PersonageHealthbarController(
     var lastDisplayedValue: Float = displayedValue
 
     private var distance: Float = (healthBarWidth - 4f) * 100f / figure.viewModel.stats.maxHealth.toFloat()
+    private var isBigHealth = distance <= healthBarWidth / 25
     private val hei: Float = 16f * battle.scale
     private val sectorHei: Float = (hei - 4f) / 2f
 
@@ -54,7 +55,9 @@ class PersonageHealthbarController(
         while (cursor < healthBarWidth) {
             val wid = if (index % 5 == 0) 2f * context.scale else 1f * context.scale
             val extraHei = if (index % 5 == 0) sectorHei else 0f
-            blackQuad.draw(batch, sx + 2f + cursor, sy + 2f + sectorHei - extraHei, wid, sectorHei + extraHei)
+            if (index % 5 == 0 || !isBigHealth) {
+                blackQuad.draw(batch, sx + 2f + cursor, sy + 2f + sectorHei - extraHei, wid, sectorHei + extraHei)
+            }
             index++
             cursor += distance
         }
