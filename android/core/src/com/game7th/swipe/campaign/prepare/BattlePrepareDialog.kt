@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.campaign.ActsService
 import com.game7th.metagame.campaign.LocationConfig
 import com.game7th.metagame.unit.UnitConfig
+import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.ScreenContext
 import com.game7th.swipe.campaign.plist.PersonageScrollActor
 import com.game7th.swipe.game.GameScreen
@@ -30,7 +31,7 @@ import org.w3c.dom.css.Rect
  */
 class BattlePrepareDialog(
         private val game: SwipeGameGdx,
-        private val context: ScreenContext,
+        private val context: GdxGameContext,
         private val actId: Int,
         private val locationId: Int,
         private val config: LocationConfig,

@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.game7th.battle.balance.SwipeBalance
 
 data class GdxGameContext(
-        val atlas: TextureAtlas,
+        val battleAtlas: TextureAtlas,
         val uiAtlas: TextureAtlas,
         val font: BitmapFont,
         val font2: BitmapFont,

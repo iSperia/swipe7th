@@ -9,11 +9,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.inventory.InventoryItem
+import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.ScreenContext
 import ktx.actors.onClick
 
 class InventoryDetailPanel(
-        private val context: ScreenContext,
+        private val context: GdxGameContext,
         private val item: InventoryItem,
         private val action: String,
         private val dismisser: () -> Unit,

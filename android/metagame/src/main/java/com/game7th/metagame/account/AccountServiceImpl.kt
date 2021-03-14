@@ -72,58 +72,62 @@ class AccountServiceImpl(
         storage.put(KEY_PERSONAGES, dataString)
     }
 
-    override fun addPersonageExperience(personageId: Int, experience: Int): PersonageExperienceResult {
-        return pool.personages.firstOrNull { it.id == personageId }?.let { personage ->
-            val newExp = personage.experience + experience
-            val nextLevelExp = ((personage.level - 1) + exp(personage.level * 0.1f)).toInt() * personage.level * 50
-            val personageUpdateResult: PersonageExperienceResult
-            val updatedPersonage = if (newExp >= nextLevelExp) {
-                val rolls = 1
-                var bodyBonus = 0
-                var spiritBonus = 0
-                var mindBonus = 0
-                if (personage.level > 5) {
-                    (1..rolls).forEach {
-                        val roll = Random.nextInt(personage.unit.bodyWeight + personage.unit.mindWeight + personage.unit.spiritWeight)
-                        if (roll < personage.unit.bodyWeight) {
-                            bodyBonus++
-                        } else if (roll < personage.unit.bodyWeight + personage.unit.spiritWeight) {
-                            spiritBonus++
-                        } else {
-                            mindBonus++
+    override fun addPersonageExperience(personageId: Int, experience: Int): List<PersonageExperienceResult> {
+        var expLeft = experience
+        val result = mutableListOf<PersonageExperienceResult>()
+        while (expLeft > 0) {
+            pool.personages.firstOrNull { it.id == personageId }?.let { personage ->
+                val newExp = personage.experience + experience
+                val nextLevelExp = ((personage.level - 1) + exp(personage.level * 0.1f)).toInt() * personage.level * 50
+                val updatedPersonage = if (newExp >= nextLevelExp) {
+                    expLeft = newExp - nextLevelExp
+                    val rolls = 1
+                    var bodyBonus = 0
+                    var spiritBonus = 0
+                    var mindBonus = 0
+                    if (personage.level > 5) {
+                        (1..rolls).forEach {
+                            val roll = Random.nextInt(personage.unit.bodyWeight + personage.unit.mindWeight + personage.unit.spiritWeight)
+                            if (roll < personage.unit.bodyWeight) {
+                                bodyBonus++
+                            } else if (roll < personage.unit.bodyWeight + personage.unit.spiritWeight) {
+                                spiritBonus++
+                            } else {
+                                mindBonus++
+                            }
                         }
+                    } else {
+                        bodyBonus = scriptedBonuses.count { it.level == personage.level && it.weight == personage.unit.bodyWeight }
+                        mindBonus = scriptedBonuses.count { it.level == personage.level && it.weight == personage.unit.mindWeight }
+                        spiritBonus = scriptedBonuses.count { it.level == personage.level && it.weight == personage.unit.spiritWeight }
                     }
+
+                    result.add(PersonageExperienceResult(true, personage.level + 1, PersonageAttributeStats(bodyBonus, spiritBonus, mindBonus), personage.experience, nextLevelExp, nextLevelExp))
+
+                    personage.copy(level = personage.level + 1, stats = personage.stats.copy(
+                            personage.stats.body + bodyBonus,
+                            personage.stats.spirit + spiritBonus,
+                            personage.stats.mind + mindBonus),
+                            experience = 0)
+
                 } else {
-                    bodyBonus = scriptedBonuses.count { it.level == personage.level && it.weight == personage.unit.bodyWeight }
-                    mindBonus = scriptedBonuses.count { it.level == personage.level && it.weight == personage.unit.mindWeight }
-                    spiritBonus = scriptedBonuses.count { it.level == personage.level && it.weight == personage.unit.spiritWeight }
+                    expLeft = 0
+                    result.add(PersonageExperienceResult(false, 0, null, personage.experience, newExp, nextLevelExp))
+                    personage.copy(experience = newExp)
                 }
 
-                personageUpdateResult = PersonageExperienceResult(true, personage.level + 1, PersonageAttributeStats(bodyBonus, spiritBonus, mindBonus), personage.experience, nextLevelExp, nextLevelExp)
-
-                personage.copy(level = personage.level + 1, stats = personage.stats.copy(
-                        personage.stats.body + bodyBonus,
-                        personage.stats.spirit + spiritBonus,
-                        personage.stats.mind + mindBonus),
-                        experience = 0)
-
-            } else {
-                personageUpdateResult = PersonageExperienceResult(false, 0, null, personage.experience, newExp, nextLevelExp)
-                personage.copy(experience = newExp)
-            }
-
-            val updatedData = pool.personages.map { personage ->
-                if (personage.id == personageId) {
-                    updatedPersonage
-                } else {
-                    personage
+                val updatedData = pool.personages.map { personage ->
+                    if (personage.id == personageId) {
+                        updatedPersonage
+                    } else {
+                        personage
+                    }
                 }
+                pool = pool.copy(personages = updatedData)
             }
-            pool = pool.copy(personages = updatedData)
-            savePersonagePool(pool)
-
-            personageUpdateResult
-        } ?: PersonageExperienceResult(false, 0, null, 0, 0, 0)
+        }
+        savePersonagePool(pool)
+        return result
     }
 
     override fun equipItem(personageId: Int, item: InventoryItem) {

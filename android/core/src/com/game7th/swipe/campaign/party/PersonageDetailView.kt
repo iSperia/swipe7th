@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.unit.UnitConfig
+import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.ScreenContext
 import com.game7th.swipe.campaign.inventory.InventoryEditor
 import com.game7th.swipe.campaign.plist.PersonageVerticalPortrait
@@ -26,7 +27,7 @@ sealed class UiState {
 }
 
 class PersonageDetailView(
-        private val context: ScreenContext,
+        private val context: GdxGameContext,
         private val accountService: AccountService,
         private val gearService: GearService,
         private val personageId: Int
@@ -57,8 +58,6 @@ class PersonageDetailView(
 
     val ah = 0.08f * attrsBg.height
     val aw = 0.13f * attrsBg.height
-
-
 
     val bodyLabel = Label("", Label.LabelStyle(context.font, Color.WHITE)).apply {
         x = attrsBg.x + 0.19f * attrsBg.width

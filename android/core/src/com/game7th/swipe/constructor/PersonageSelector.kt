@@ -11,7 +11,7 @@ class PersonageSelector(
         callback: (Int) -> Unit
 ) : Group() {
 
-    val bg = Image(context.atlas.findRegion("ui_dialog")).apply {
+    val bg = Image(context.battleAtlas.findRegion("ui_dialog")).apply {
         width = 370f
         height = 370f
     }
@@ -20,7 +20,7 @@ class PersonageSelector(
         addActor(bg)
 
         skins.withIndex().forEach {
-            val skin = Image(context.atlas.findRegion(it.value)).apply {
+            val skin = Image(context.battleAtlas.findRegion(it.value)).apply {
                 width = 60f
                 height = 120f
                 x = (it.index % 6) * 60f

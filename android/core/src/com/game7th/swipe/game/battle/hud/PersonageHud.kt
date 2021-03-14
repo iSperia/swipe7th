@@ -20,18 +20,18 @@ class PersonageHud(
         name = vm.id.toString()
     }
 
-    val portrait: Image = Image(context.atlas.findRegion(vm.portrait)).apply {
+    val portrait: Image = Image(context.battleAtlas.findRegion(vm.portrait)).apply {
         width = tw / 2
         height = tw / 4
     }
 
-    val healthBarBg = Image(context.atlas.findRegion("resist_bar_black")).apply {
+    val healthBarBg = Image(context.battleAtlas.findRegion("resist_bar_black")).apply {
         width = tw / 2
         height = tw / 12
         x = tw / 2
         y = 0f
     }
-    val healthBarFg = Image(context.atlas.findRegion("health_bar_green")).apply {
+    val healthBarFg = Image(context.battleAtlas.findRegion("health_bar_green")).apply {
         width = tw / 2
         height = tw / 12
         x = tw / 2
@@ -62,7 +62,7 @@ class PersonageHud(
         setFontScale(0.6f/context.scale)
     }
 
-    val iconTick = Image(context.atlas.findRegion("icon_attack")).apply {
+    val iconTick = Image(context.battleAtlas.findRegion("icon_attack")).apply {
         x = 0f
         y = tw / 4
         width = tw / 6
@@ -85,7 +85,7 @@ class PersonageHud(
         portrait.alpha = if (personage.stats.health > 0) 1f else 0.2f
 
         iconTick.isVisible = personage.stats.health > 0 && personage.stats.tickAbility != null
-        personage.stats.tickAbility?.let { iconTick.drawable = TextureRegionDrawable(context.atlas.findRegion("icon_$it")) }
+        personage.stats.tickAbility?.let { iconTick.drawable = TextureRegionDrawable(context.battleAtlas.findRegion("icon_$it")) }
         labelTick.isVisible = personage.stats.health > 0 && iconTick.isVisible
         labelTick.setText("${personage.stats.tick}/${personage.stats.maxTick}")
     }

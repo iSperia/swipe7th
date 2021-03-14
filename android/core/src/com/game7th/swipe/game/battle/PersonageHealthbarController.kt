@@ -11,9 +11,9 @@ class PersonageHealthbarController(
         val figure: FigureController
 ) : ElementController(context, battle, id) {
 
-    private val healthBarBackground = context.gameContext.atlas.createPatch("hp_bar_bg")
-    private val healthBarForeground = TextureRegionDrawable(context.gameContext.atlas.findRegion("hp_bar_rect"))
-    private val blackQuad = TextureRegionDrawable(context.gameContext.atlas.findRegion("black_quad"))
+    private val healthBarBackground = context.gameContext.battleAtlas.createPatch("hp_bar_bg")
+    private val healthBarForeground = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("hp_bar_rect"))
+    private val blackQuad = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("black_quad"))
     var timePassed: Float = 0f
     var timeHpActual: Float = timePassed
     val healthBarWidth = 96f * battle.scale - 12f

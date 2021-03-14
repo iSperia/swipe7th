@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.unit.UnitConfig
-import com.game7th.swipe.ScreenContext
+import com.game7th.swipe.GdxGameContext
 
 data class PortraitConfig(
         val name: String,
@@ -21,7 +21,7 @@ fun UnitConfig.toPortraitConfig(): PortraitConfig {
 }
 
 class PersonageVerticalPortrait(
-        private val context: ScreenContext,
+        private val context: GdxGameContext,
         private val unitConfig: PortraitConfig,
         private val h: Float
 ) : Group() {

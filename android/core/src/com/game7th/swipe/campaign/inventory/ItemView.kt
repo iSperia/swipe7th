@@ -6,10 +6,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.inventory.InventoryItem
-import com.game7th.swipe.ScreenContext
+import com.game7th.swipe.GdxGameContext
 
 class ItemView(
-        private val context: ScreenContext,
+        private val context: GdxGameContext,
         val item: InventoryItem?,
         backgroundShown: Boolean
 ) : Group() {

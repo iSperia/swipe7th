@@ -10,5 +10,4 @@ class ScreenContext(
         val battleAtlas: TextureAtlas,
         val scale: Float,
         val balance: SwipeBalance
-) {
-}
+)

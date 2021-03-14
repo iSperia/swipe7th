@@ -9,13 +9,14 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
+import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.ScreenContext
 import com.game7th.swipe.campaign.plist.PersonageVerticalPortrait
 import com.game7th.swipe.campaign.plist.PortraitConfig
 import ktx.actors.onClick
 
 class DialogView(
-        private val context: ScreenContext,
+        private val context: GdxGameContext,
         name: String,
         text: String,
         texture: String,

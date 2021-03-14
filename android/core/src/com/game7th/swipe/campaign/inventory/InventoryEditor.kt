@@ -7,13 +7,14 @@ import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.inventory.InventoryItem
 import com.game7th.metagame.inventory.ItemNode
+import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.ScreenContext
 import ktx.actors.onClick
 import kotlin.math.max
 import kotlin.math.min
 
 class InventoryEditor(
-        private val context: ScreenContext,
+        private val context: GdxGameContext,
         private val accountService: AccountService,
         private val gearService: GearService,
         private val personageId: Int,

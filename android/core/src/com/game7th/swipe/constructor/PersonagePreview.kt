@@ -16,7 +16,7 @@ class PersonagePreview(
         val selectSkinCallback: () -> Unit
 ) : Group() {
 
-    val bg = Image(context.atlas.createPatch("ui_button")).apply {
+    val bg = Image(context.battleAtlas.createPatch("ui_button")).apply {
         width = 400f
         height = 120f
     }
@@ -80,7 +80,7 @@ class PersonagePreview(
     fun applyCharImage() {
         charImage?.remove()
 
-        charImage = Image(context.atlas.findRegion(config.name.getSkin())).apply {
+        charImage = Image(context.battleAtlas.findRegion(config.name.getSkin())).apply {
             setScale(0.8f)
             x = 20f
             y = 12f

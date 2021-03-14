@@ -33,7 +33,6 @@ class SwipeGameGdx(val storage: PersistentStorage) : Game() {
     lateinit var actService: ActsService
     lateinit var accountService: AccountService
     lateinit var service: GameService
-    lateinit var screenContext: ScreenContext
 
     lateinit var uiAtlas: TextureAtlas
 
@@ -81,8 +80,7 @@ class SwipeGameGdx(val storage: PersistentStorage) : Game() {
 
         Gdx.input.inputProcessor = multiplexer
 
-        screenContext = ScreenContext(uiAtlas, font, atlas, scale, balance)
-        setScreen(ActScreen(this, actService, 0, screenContext, storage))
+        setScreen(ActScreen(this, actService, 0, context, storage))
     }
 
     private fun initializeGearService() {

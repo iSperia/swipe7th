@@ -32,7 +32,7 @@ class TileFieldView(
         backgroundGroup = Group().apply {
             for (i in 0..4) {
                 for (j in 0..4) {
-                    addActor(Image(gameContext.atlas.findRegion(TILE_BG_REGION)).apply {
+                    addActor(Image(gameContext.battleAtlas.findRegion(TILE_BG_REGION)).apply {
                         val ax = tileSize * j
                         val ay = tileSize * (FIELD_WIDTH - 1 - i)
 

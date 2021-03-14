@@ -6,7 +6,7 @@ interface AccountService {
 
     fun getPersonages(): List<PersonageData>
 
-    fun addPersonageExperience(personageId: Int, experience: Int) : PersonageExperienceResult
+    fun addPersonageExperience(personageId: Int, experience: Int) : List<PersonageExperienceResult>
 
     fun equipItem(personageId: Int, item: InventoryItem)
 

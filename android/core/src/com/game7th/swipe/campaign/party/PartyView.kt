@@ -9,11 +9,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.unit.UnitConfig
+import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.ScreenContext
 import com.game7th.swipe.campaign.plist.PersonageScrollActor
 
 class PartyView(
-        private val context: ScreenContext,
+        private val context: GdxGameContext,
         private val accountService: AccountService,
         private val gearService: GearService
 ) : Group() {

@@ -18,6 +18,7 @@ import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.campaign.*
 import com.game7th.metagame.state.ActProgressState
 import com.game7th.metagame.state.LocationProgressState
+import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.ScreenContext
 import com.game7th.swipe.SwipeGameGdx
 import com.game7th.swipe.campaign.bottom_menu.BottomMenu
@@ -43,7 +44,7 @@ class ActScreen(
         private val game: SwipeGameGdx,
         private val actsService: ActsService,
         private val actId: Int,
-        private val context: ScreenContext,
+        private val context: GdxGameContext,
         private val storage: PersistentStorage
 ) : Screen {
 

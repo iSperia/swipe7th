@@ -108,7 +108,7 @@ class GameActor(
         addActor(labelComboWrapper)
 
         comboParticles = ParticleEffect()
-        comboParticles.load(Gdx.files.internal("particles_0"), context.atlas)
+        comboParticles.load(Gdx.files.internal("particles_0"), context.battleAtlas)
         comboParticles.setPosition(labelComboWrapper.x, labelComboWrapper.y + labelCombo.y - 10f * context.scale)
         comboParticles.scaleEffect(3f)
     }
@@ -117,7 +117,7 @@ class GameActor(
         tileField.touchable = Touchable.disabled
 
 //        Gdx.audio.newMusic(Gdx.files.internal("sounds/defeat.ogg")).let { it.play() }
-        GameFinishedDialog(context, "Defeat", null, emptyList()) {
+        GameFinishedDialog(context, "Defeat", emptyList(), emptyList()) {
             finishCallback(false)
         }.apply {
             x = 40f
@@ -133,7 +133,7 @@ class GameActor(
         super.draw(batch, parentAlpha)
     }
 
-    fun showVictory(expResult: PersonageExperienceResult) {
+    fun showVictory(expResult: List<PersonageExperienceResult>) {
 //        Gdx.audio.newMusic(Gdx.files.internal("sounds/victory.ogg")).let { it.play() }
         val rewards = rewardCallback()
         GameFinishedDialog(context, "Victory", expResult, rewards) {

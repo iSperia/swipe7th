@@ -125,7 +125,7 @@ class GameScreen(private val game: SwipeGameGdx,
 
         gameActor = GameActor(
                 game.context, this::claimRewards) { _ ->
-            game.switchScreen(ActScreen(game, game.actService, actId, game.screenContext, game.storage))
+            game.switchScreen(ActScreen(game, game.actService, actId, game.context, game.storage))
         }
 
         stage.addActor(gameActor)

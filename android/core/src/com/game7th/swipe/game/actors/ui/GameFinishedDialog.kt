@@ -1,6 +1,5 @@
 package com.game7th.swipe.game.actors.ui
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.InputEvent
@@ -13,28 +12,30 @@ import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.account.PersonageExperienceResult
 import com.game7th.metagame.account.RewardData
 import com.game7th.swipe.GdxGameContext
+import com.game7th.swipe.campaign.party.ExperienceBar
+import kotlin.math.min
 
 class GameFinishedDialog(
         private val context: GdxGameContext,
         private val text: String,
-        private val expResult: PersonageExperienceResult?,
+        private val expResult: List<PersonageExperienceResult>,
         private val rewards: List<RewardData>,
         callback: () -> Unit
         ) : Group() {
 
     val background = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
-        width = 400f
-        height = 300f
+        width = 400f * context.scale
+        height = 300f * context.scale
         zIndex = 5
         addActor(this)
     }
 
     val buttonClose = Image(context.uiAtlas.findRegion("ui_button_simple")).apply {
-        width = 120f
-        height = 20f
+        width = 120f * context.scale
+        height = 20f * context.scale
         zIndex = 6
-        x = 140f
-        y = 20f
+        x = 140f * context.scale
+        y = 20f * context.scale
         addActor(this)
 
         addListener(object : ClickListener() {
@@ -46,12 +47,12 @@ class GameFinishedDialog(
     }
 
     val buttonCloseLabel = Label("CLOSE", Label.LabelStyle(context.font, Color.BLACK)).apply {
-        width = 120f
-        height = 20f
+        width = 120f * context.scale
+        height = 20f * context.scale
         zIndex = 7
-        x = 140f
-        y = 20f
-        setFontScale(0.5f)
+        x = 140f * context.scale
+        y = 20f * context.scale
+        setFontScale(0.5f * context.scale)
         setAlignment(Align.center)
         addActor(this)
         touchable = Touchable.disabled
@@ -59,74 +60,50 @@ class GameFinishedDialog(
 
     val label = Label(text, Label.LabelStyle(context.font, Color.RED)).apply {
         setAlignment(Align.center)
-        width = 400f
-        height = 25f
-        setFontScale(1f)
+        width = 400f * context.scale
+        height = 25f * context.scale
+        setFontScale(1f * context.scale)
         x = 0f
-        y = 265f
+        y = 265f * context.scale
         zIndex = 10
         addActor(this)
     }
 
-    val expBackground = Image(context.atlas.findRegion("bar_black")).apply {
-        width = 380f
-        height = 40f
-        x = 10f
-        y = 220f
-        zIndex = 11
-        addActor(this)
+    val experienceBar = ExperienceBar(context, 380f * context.scale, 40f * context.scale, expResult.firstOrNull()?.oldExp ?: 0, expResult.firstOrNull()?.maxExp ?: 100, false).apply {
+        x = 10f * context.scale
+        y = 220f * context.scale
+        touchable = Touchable.disabled
     }
 
-    val expForeground = Image(context.atlas.findRegion("bar_purple")).apply {
-        width = 380f
-        height = 40f
-        x = 10f
-        y = 220f
-        zIndex = 12
-        addActor(this)
-    }
-
-    val expText = Label(expResult?.oldExp?.toString(), Label.LabelStyle(context.font, Color.BLUE)).apply {
-        width = 380f
-        height = 25f
-        setFontScale(0.75f)
-        x = 10f
-        y = 220f
-        zIndex = 13
-        setAlignment(Align.left)
-        addActor(this)
-    }
-
-    val newLevelText = Label("New level: ${expResult?.newLevel}!", Label.LabelStyle(context.font, Color.YELLOW)).apply {
-        width = 380f
-        height = 30f
-        setFontScale(1f)
-        x = 10f
-        y = 190f
+    val newLevelText = Label("", Label.LabelStyle(context.font, Color.YELLOW)).apply {
+        width = 380f * context.scale
+        height = 30f * context.scale
+        setFontScale(context.scale)
+        x = 10f * context.scale
+        y = 190f * context.scale
         zIndex = 14
         setAlignment(Align.left)
         addActor(this)
-        isVisible = false
+        isVisible = true
     }
 
     val statsText = Label("", Label.LabelStyle(context.font, Color.BLUE)).apply {
-        width = 380f
-        height = 25f
-        setFontScale(0.75f)
-        x = 10f
-        y = 150f
+        width = 380f * context.scale
+        height = 25f * context.scale
+        setFontScale(0.75f * context.scale)
+        x = 10f * context.scale
+        y = 150f * context.scale
         zIndex = 15
         setAlignment(Align.left)
         addActor(this)
-        isVisible = false
     }
 
     val rewardsText = Label("", Label.LabelStyle(context.font, Color.BLACK)).apply {
-        width = 380f
-        height = 75f
-        setFontScale(0.75f)
-        x = 10f
-        y = 75f
+        width = 380f * context.scale
+        height = 75f * context.scale
+        setFontScale(0.75f * context.scale)
+        x = 10f * context.scale
+        y = 70f * context.scale
         zIndex = 16
         setAlignment(Align.left)
         addActor(this)
@@ -134,52 +111,49 @@ class GameFinishedDialog(
     }
 
     var timePassed = 0f
-    var newLevelShown = false
 
     init {
-        setScale(context.scale)
-        if (expResult == null) {
-            expBackground.isVisible = false
-            expForeground.isVisible = false
-            expText.isVisible = false
-        } else {
-            expForeground.scaleX = expResult.oldExp.toFloat() / expResult.maxExp
-            expForeground.addAction(ScaleToAction().apply {
-                setScale(expResult.newExp.toFloat() / expResult.maxExp, 1f)
-                duration = 3f
-            })
+        expResult.firstOrNull()?.let {
+            addActor(experienceBar)
         }
+//            expForeground.scaleX = expResult.oldExp.toFloat() / expResult.maxExp
+//            expForeground.addAction(ScaleToAction().apply {
+//                setScale(expResult.newExp.toFloat() / expResult.maxExp, 1f)
+//                duration = 3f
+//            })
+
+        rewardsText.isVisible = true
+        val txt = "Received new items:\n" + rewards.map {
+            when (it) {
+                is RewardData.ArtifactRewardData -> "${it.item.name} LVL ${it.item.level}"
+                else -> "?"
+            }
+        }.joinToString("\n")
+        rewardsText.setText(txt)
     }
+
+    private var activeExpResultStep = -1
 
     override fun act(delta: Float) {
         super.act(delta)
 
         timePassed += delta
-        if (expResult != null) {
-            if (timePassed < 3f) {
-                val valueToDraw = (expResult.oldExp + (expResult.newExp - expResult.oldExp) * timePassed / 3f).toInt().toString()
-                expText.setText(valueToDraw)
-            } else if (!newLevelShown) {
-                newLevelShown = true
-                expText.setText(expResult.newExp)
-                if (expResult.levelUp) {
-//                    Gdx.audio.newMusic(Gdx.files.internal("sounds/levelup.ogg")).let { it.play() }
-                    newLevelText.isVisible = true
-                    statsText.isVisible = true
-                    statsText.setText(
-                            (if (expResult.gainedStats?.body ?: 0 > 0) "BODY +${expResult.gainedStats?.body} " else "") +
-                                    (if (expResult.gainedStats?.spirit ?: 0 > 0) "SPIRIT +${expResult.gainedStats?.spirit} " else "") +
-                                    (if (expResult.gainedStats?.mind ?: 0 > 0) "MIND +${expResult.gainedStats?.mind} " else "")
-                    )
+        var shownExpStep = min(expResult.size, (timePassed / 1.1f).toInt())
+        if (shownExpStep > activeExpResultStep) {
+            if (activeExpResultStep >= 0) {
+                if (expResult[activeExpResultStep].levelUp) {
+                    //show level up
+                    newLevelText.setText("NEW LEVEL ${expResult[activeExpResultStep].newLevel}")
+                    newLevelText.setScale(1.5f)
+                    newLevelText.addAction(ScaleToAction().apply { setScale(1f); duration=0.25f })
+
+                    statsText.setText(expResult[activeExpResultStep].gainedStats.toString())
                 }
-                rewardsText.isVisible = true
-                val txt = rewards.map {
-                    when (it) {
-                        is RewardData.ArtifactRewardData -> "${it.item.name} LVL ${it.item.level}"
-                        else -> "?"
-                    }
-                }.joinToString("\n")
-                rewardsText.setText(txt)
+            }
+
+            activeExpResultStep = shownExpStep
+            if (shownExpStep < expResult.size) {
+                experienceBar.animateProgress(expResult[shownExpStep].oldExp, expResult[shownExpStep].maxExp, expResult[shownExpStep].newExp)
             }
         }
     }

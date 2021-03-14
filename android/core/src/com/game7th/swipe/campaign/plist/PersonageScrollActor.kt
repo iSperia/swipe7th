@@ -2,11 +2,12 @@ package com.game7th.swipe.campaign.plist
 
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.game7th.metagame.unit.UnitConfig
+import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.ScreenContext
 import ktx.actors.onClick
 
 class PersonageScrollActor(
-        private val context: ScreenContext,
+        private val context: GdxGameContext,
         private val personages: List<UnitConfig>,
         private val h: Float,
         private val indexSelectable: Boolean,

@@ -1,6 +1,5 @@
 package com.game7th.swipe.game.battle
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.game7th.swipe.game.GameContextWrapper
@@ -19,7 +18,7 @@ class PersonageTickerController(
     override fun render(batch: SpriteBatch, delta: Float) {
         figure.viewModel.stats.tickAbility?.let { tickAbility ->
             if (oldAbility != tickAbility) {
-                texture = context.gameContext.atlas.findRegion("pic_${tickAbility}")
+                texture = context.gameContext.battleAtlas.findRegion("pic_${tickAbility}")
                 oldAbility = tickAbility
             }
             val ticksLeft = figure.viewModel.stats.maxTick - figure.viewModel.stats.tick

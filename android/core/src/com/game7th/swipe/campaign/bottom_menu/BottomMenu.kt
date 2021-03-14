@@ -9,11 +9,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
+import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.ScreenContext
 import ktx.actors.onClick
 
 class BottomMenu(
-        context: ScreenContext
+        context: GdxGameContext
 ) : Group() {
 
     var onPartyButtonPressed: (() -> Unit)? = null

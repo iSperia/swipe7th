@@ -114,7 +114,7 @@ class TileView(
 
     private fun addSkill() {
         vm?.let { vm ->
-            skillImage = Image(gameContext.atlas.findRegion(vm.skin)).apply {
+            skillImage = Image(gameContext.battleAtlas.findRegion(vm.skin)).apply {
                 zIndex = 2
                 originY = 18f
                 originX = 18f
