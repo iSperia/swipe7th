@@ -128,7 +128,7 @@ class GameActor(
 
     override fun draw(batch: Batch?, parentAlpha: Float) {
         if (combo > 1) {
-            comboParticles.draw(batch, Gdx.graphics.deltaTime * 0.1f * combo)
+            comboParticles.draw(batch, Gdx.graphics.deltaTime * 0.1f * min(combo, 8))
         }
         super.draw(batch, parentAlpha)
     }
@@ -155,11 +155,11 @@ class GameActor(
                 labelComboWrapper.clearActions()
                 if (event.combo > 0) {
                     labelComboWrapper.addAction(SequenceAction(
-                            ScaleToAction().apply { setScale(1.1f + 0.03f * event.combo); duration = 2f / event.combo },
-                            ScaleToAction().apply { setScale(0.9f - 0.01f * event.combo); duration = 2f / event.combo }
+                            ScaleToAction().apply { setScale(1.1f + 0.03f * min(8, event.combo)); duration = 2f / min(8, event.combo) },
+                            ScaleToAction().apply { setScale(0.9f - 0.01f * min(8, event.combo)); duration = 2f / min(8, event.combo) }
                     ).repeatForever())
                     comboParticles.reset()
-                    comboParticles.scaleEffect(3f + combo * 0.2f)
+                    comboParticles.scaleEffect(3f + min(8, combo) * 0.2f)
                 }
             }
         }
