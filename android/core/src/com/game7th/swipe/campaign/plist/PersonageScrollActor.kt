@@ -8,7 +8,7 @@ import ktx.actors.onClick
 
 class PersonageScrollActor(
         private val context: GdxGameContext,
-        private val personages: List<UnitConfig>,
+        private var personages: List<UnitConfig>,
         private val h: Float,
         private val indexSelectable: Boolean,
         private val defaultIndex: Int = 0
@@ -25,6 +25,16 @@ class PersonageScrollActor(
         width = elementWidth * personages.size
         height = h
 
+        addPersonages()
+    }
+
+    fun changePersonages(personages: List<UnitConfig>) {
+        this.personages = personages
+        addPersonages()
+    }
+
+    private fun addPersonages() {
+        children.forEach { it.remove() }
         personages.forEachIndexed { index, unitConfig ->
             val groupX = index * elementWidth
             val portrait = PersonageVerticalPortrait(context, unitConfig.toPortraitConfig(), h).apply {
@@ -40,7 +50,6 @@ class PersonageScrollActor(
                 }
             }
         }
-
         applySelection()
     }
 

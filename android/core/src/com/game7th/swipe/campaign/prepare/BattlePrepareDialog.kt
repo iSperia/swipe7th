@@ -116,7 +116,7 @@ class BattlePrepareDialog(
         }
         addActor(scrollPersonages)
 
-        npcGroup = PersonageScrollActor(context, config.waves.flatMap { it }.map { it }, scrollHeight, false)
+        npcGroup = PersonageScrollActor(context, mapNpcWaves(), scrollHeight, false)
         npcPersonages = ScrollPane(npcGroup).apply {
             x = 20f * context.scale
             width = 380 * context.scale
@@ -162,6 +162,8 @@ class BattlePrepareDialog(
         applyDifficulty()
     }
 
+    private fun mapNpcWaves() = config.waves.flatMap { it }.map { it.copy(level = it.level + difficulty * 3) }
+
     private fun showGameScreen() {
         game.switchScreen(GameScreen(
                 game,
@@ -186,6 +188,7 @@ class BattlePrepareDialog(
                 (star as Image).drawable = TextureRegionDrawable(context.uiAtlas.findRegion("star_grey"))
             }
         }
+        npcGroup.changePersonages(mapNpcWaves())
     }
 
     fun getPersonageRowBounds(): Rectangle {
