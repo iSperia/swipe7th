@@ -24,5 +24,26 @@
   "ttr_a1l1_12": "Now, swipe up to stack this skill again",
   "ttr_a1l1_13": "After tile is stacked enough, it is consumed and you attack a slime.",
   "ttr_a1l1_14": "You have dealt damage to slime, one more strike and you win!",
-  "ttr_a1l1_15": "Nice job, so...n of the king. Let hurry and go further!"
+  "ttr_a1l1_15": "Nice job, so...n of the king. Let hurry and go further!",
+
+
+
+  "inv_affix_flat_body": "+$ body",
+  "inv_affix_perc_body": "+$% body",
+  "inv_affix_flat_spirit": "+$ spirit",
+  "inv_affix_perc_spirit": "+$% spirit",
+  "inv_affix_flat_mind": "+$ mind",
+  "inv_affix_perc_mind": "+$% mind",
+  "inv_affix_flat_armor": "+$ armor",
+  "inv_affix_perc_armor": "+$% armor",
+  "inv_affix_flat_hp": "+$ health",
+  "inv_affix_perc_hp": "+$% health",
+  "inv_affix_flat_evasion": "+$ evasion",
+  "inv_affix_perc_evasion": "+$% evasion",
+  "inv_affix_flat_regeneration": "+$ regeneration",
+  "inv_affix_perc_regeneration": "+$% regeneration",
+  "inv_affix_flat_resist": "+$ resist",
+  "inv_affix_perc_resist": "+$% resist",
+  "inv_affix_flat_wisdom": "+$ wisdom",
+  "inv_affix_perc_wisdom": "+$% wisdom"
 }
