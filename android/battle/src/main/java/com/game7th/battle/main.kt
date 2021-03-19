@@ -1,10 +1,12 @@
 package com.game7th.battle
 
-import com.game7th.battle.balance.SwipeBalance
-import com.game7th.battle.event.BattleEvent
-import com.game7th.metagame.account.PersonageAttributeStats
-import com.game7th.metagame.unit.UnitConfig
-import com.game7th.metagame.unit.UnitType
+import com.game7th.battle.dto.BattleConfig
+import com.game7th.battle.dto.SwipeBalance
+import com.game7th.battle.dto.BattleEvent
+import com.game7th.battle.dto.PersonageConfig
+import com.game7th.metagame.account.dto.PersonageAttributeStats
+import com.game7th.metagame.dto.UnitConfig
+import com.game7th.metagame.dto.UnitType
 import com.google.gson.Gson
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -12,7 +14,6 @@ import kotlinx.coroutines.flow.collect
 import java.io.FileInputStream
 import java.io.FileWriter
 import java.io.InputStreamReader
-import java.lang.StringBuilder
 import java.util.*
 import kotlin.random.Random
 
@@ -34,7 +35,7 @@ data class EmulationResult(
 )
 
 val runsPerExperiment = 50
-val zeroStats = PersonageAttributeStats(0,0,0)
+val zeroStats = PersonageAttributeStats(0, 0, 0)
 
 fun main(args: Array<String>) {
 
@@ -58,7 +59,7 @@ fun main(args: Array<String>) {
                                 personageType.spiritWeight * totalStats / 6,
                                 personageType.mindWeight * totalStats / 6), null)),
                         encounter.waves.map { wave -> wave.map { PersonageConfig(it.unitType, it.level + personageLevel, zeroStats, null) } }
-                        )
+                )
                 val result = runBlocking { emulateBattle(balance, battleConfig) }
                 writer.append((result.winrate*100f).toInt().toString())
                 if (personageLevel < 100) writer.append(",")

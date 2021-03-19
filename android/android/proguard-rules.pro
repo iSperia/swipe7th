@@ -40,3 +40,19 @@
    boolean reportFixture(long);
    float   reportRayFixture(long, float, float, float, float, float);
 }
+
+-keep class com.game7th.metagame.account.dto.** { *; }
+-keep public class com.game7th.metagame.campaign.dto.** { *; }
+-keep public class com.game7th.metagame.dto.** { *; }
+-keep public class com.game7th.metagame.inventory.dto.** { *; }
+-keep public class com.game7th.battle.dto.** { *; }
+-keep public class com.game7th.swipe.game.battle.model.** { *; }
+
+
+-keepclassmembers class com.game7th.metagame.account.dto.** { *; }
+-keepclassmembers public class com.game7th.metagame.campaign.dto.** { *; }
+-keepclassmembers public class com.game7th.metagame.dto.** { *; }
+-keepclassmembers public class com.game7th.metagame.inventory.dto.** { *; }
+-keepclassmembers public class com.game7th.battle.dto.** { *; }
+-keepclassmembers public class com.game7th.swipe.game.battle.model.** { *; }
+

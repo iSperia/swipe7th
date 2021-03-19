@@ -2,13 +2,13 @@ package com.game7th.metagame.campaign
 
 import com.game7th.metagame.FileProvider
 import com.game7th.metagame.PersistentStorage
-import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.account.RewardData
+import com.game7th.metagame.campaign.dto.ActConfig
 import com.game7th.metagame.inventory.GearService
-import com.game7th.metagame.state.ActProgressState
-import com.game7th.metagame.state.LocationProgressState
-import com.game7th.metagame.unit.UnitConfig
-import com.game7th.metagame.unit.UnitType
+import com.game7th.metagame.dto.ActProgressState
+import com.game7th.metagame.dto.LocationProgressState
+import com.game7th.metagame.dto.UnitConfig
+import com.game7th.metagame.dto.UnitType
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.gson.Gson
 import kotlin.random.Random

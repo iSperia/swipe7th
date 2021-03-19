@@ -3,8 +3,8 @@ package com.game7th.battle.unit.personages
 import com.game7th.battle.DamageVector
 import com.game7th.battle.action.AttackAction
 import com.game7th.battle.action.RegenerateParametrizedAmountAction
-import com.game7th.battle.balance.SwipeBalance
-import com.game7th.battle.event.TileTemplate
+import com.game7th.battle.dto.SwipeBalance
+import com.game7th.battle.dto.TileTemplate
 import com.game7th.battle.tilefield.tile.TileNames
 import com.game7th.battle.unit.UnitStats
 

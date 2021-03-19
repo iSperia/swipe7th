@@ -5,7 +5,6 @@ import com.badlogic.gdx.Screen
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.GL20.*
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
@@ -16,10 +15,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.campaign.*
-import com.game7th.metagame.state.ActProgressState
-import com.game7th.metagame.state.LocationProgressState
+import com.game7th.metagame.campaign.dto.ActConfig
+import com.game7th.metagame.campaign.dto.CampaignNodeType
+import com.game7th.metagame.campaign.dto.LocationConfig
+import com.game7th.metagame.dto.ActProgressState
+import com.game7th.metagame.dto.LocationProgressState
 import com.game7th.swipe.GdxGameContext
-import com.game7th.swipe.ScreenContext
 import com.game7th.swipe.SwipeGameGdx
 import com.game7th.swipe.campaign.bottom_menu.BottomMenu
 import com.game7th.swipe.campaign.party.PartyView

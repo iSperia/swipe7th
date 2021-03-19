@@ -3,6 +3,9 @@ package com.game7th.metagame.inventory
 import com.game7th.metagame.FileProvider
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.account.RewardData
+import com.game7th.metagame.inventory.dto.GearConfig
+import com.game7th.metagame.inventory.dto.InventoryItem
+import com.game7th.metagame.inventory.dto.InventoryPool
 import com.google.gson.Gson
 import kotlin.random.Random
 

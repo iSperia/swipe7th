@@ -7,15 +7,14 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.badlogic.gdx.utils.viewport.Viewport
-import com.game7th.battle.BattleConfig
-import com.game7th.battle.PersonageConfig
+import com.game7th.battle.dto.BattleConfig
+import com.game7th.battle.dto.PersonageConfig
 import com.game7th.battle.SwipeBattle
-import com.game7th.battle.event.BattleEvent
-import com.game7th.metagame.account.PersonageAttributeStats
-import com.game7th.metagame.account.PersonageData
+import com.game7th.battle.dto.BattleEvent
+import com.game7th.metagame.account.dto.PersonageAttributeStats
+import com.game7th.metagame.account.dto.PersonageData
 import com.game7th.metagame.campaign.ActsService
 import com.game7th.swipe.SwipeGameGdx
 import com.game7th.swipe.campaign.ActScreen
@@ -114,7 +113,7 @@ class GameScreen(private val game: SwipeGameGdx,
                         PersonageConfig(personage.unit, personage.level, personage.stats, game.context.balance.produceGearStats(personage))
                 ),
                 waves = actService.getActConfig(actId).findNode(locationId)?.waves?.map {
-                    it.map { PersonageConfig(it.unitType, it.level + (difficulty-1) * 3,  PersonageAttributeStats(0,0,0), null) }
+                    it.map { PersonageConfig(it.unitType, it.level + (difficulty - 1) * 3, PersonageAttributeStats(0, 0, 0), null) }
                 } ?: emptyList()
         )
 

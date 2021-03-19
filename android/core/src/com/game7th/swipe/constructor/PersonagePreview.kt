@@ -5,8 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
-import com.game7th.battle.PersonageConfig
-import com.game7th.metagame.unit.UnitType
+import com.game7th.battle.dto.PersonageConfig
+import com.game7th.metagame.dto.UnitType
 import com.game7th.swipe.GdxGameContext
 import ktx.actors.*
 

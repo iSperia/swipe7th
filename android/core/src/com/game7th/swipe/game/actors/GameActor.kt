@@ -12,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
-import com.game7th.battle.event.BattleEvent
-import com.game7th.metagame.account.PersonageExperienceResult
+import com.game7th.battle.dto.BattleEvent
+import com.game7th.metagame.account.dto.PersonageExperienceResult
 import com.game7th.metagame.account.RewardData
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.game.actors.ui.GameFinishedDialog

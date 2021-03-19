@@ -3,7 +3,7 @@ package com.game7th.battle.unit
 import com.game7th.battle.ability.UnitAbility
 import com.game7th.battle.personage.PersonageStats
 import com.game7th.battle.personage.PersonageViewModel
-import com.game7th.metagame.unit.UnitType
+import com.game7th.metagame.dto.UnitType
 
 enum class Team {
     LEFT, RIGHT

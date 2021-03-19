@@ -2,7 +2,7 @@ package com.game7th.swipe
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.game7th.battle.balance.SwipeBalance
+import com.game7th.battle.dto.SwipeBalance
 
 class ScreenContext(
         val uiAtlas: TextureAtlas,

@@ -3,10 +3,10 @@ package com.game7th.battle.unit.npc
 import com.game7th.battle.DamageVector
 import com.game7th.battle.ability.TickerEntry
 import com.game7th.battle.ability.ability
-import com.game7th.battle.balance.SwipeBalance
+import com.game7th.battle.dto.SwipeBalance
 import com.game7th.battle.unit.CappedStat
 import com.game7th.battle.unit.UnitStats
-import com.game7th.metagame.unit.UnitType
+import com.game7th.metagame.dto.UnitType
 
 fun produceSlimeFather(balance: SwipeBalance, level: Int): UnitStats {
     val hp = level * balance.father_slime.hp

@@ -1,8 +1,8 @@
 package com.game7th.battle.ability
 
 import com.game7th.battle.EfficencyCalculator
-import com.game7th.battle.event.BattleEvent
-import com.game7th.battle.event.TileTemplate
+import com.game7th.battle.dto.BattleEvent
+import com.game7th.battle.dto.TileTemplate
 import com.game7th.battle.internal_event.InternalBattleEvent
 import com.game7th.battle.tilefield.tile.SwipeTile
 import com.game7th.battle.toViewModel

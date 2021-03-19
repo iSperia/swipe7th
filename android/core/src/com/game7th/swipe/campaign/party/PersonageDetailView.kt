@@ -12,9 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.inventory.GearService
-import com.game7th.metagame.unit.UnitConfig
+import com.game7th.metagame.dto.UnitConfig
 import com.game7th.swipe.GdxGameContext
-import com.game7th.swipe.ScreenContext
 import com.game7th.swipe.campaign.inventory.InventoryEditor
 import com.game7th.swipe.campaign.plist.PersonageVerticalPortrait
 import com.game7th.swipe.campaign.plist.toPortraitConfig

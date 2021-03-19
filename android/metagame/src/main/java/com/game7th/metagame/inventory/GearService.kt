@@ -1,6 +1,7 @@
 package com.game7th.metagame.inventory
 
 import com.game7th.metagame.account.RewardData
+import com.game7th.metagame.inventory.dto.InventoryItem
 
 interface GearService {
     fun getArtifactReward(level: Int): RewardData.ArtifactRewardData?

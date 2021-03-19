@@ -1,18 +1,16 @@
 package com.game7th.battle
 
-import com.game7th.battle.balance.SwipeBalance
-import com.game7th.battle.event.BattleEvent
-import com.game7th.battle.event.TileViewModel
+import com.game7th.battle.dto.BattleConfig
+import com.game7th.battle.dto.SwipeBalance
+import com.game7th.battle.dto.BattleEvent
+import com.game7th.battle.dto.TileViewModel
 import com.game7th.battle.internal_event.InternalBattleEvent
-import com.game7th.battle.personage.*
 import com.game7th.battle.tilefield.TileField
 import com.game7th.battle.tilefield.TileFieldEvent
 import com.game7th.battle.tilefield.TileFieldMerger
 import com.game7th.battle.tilefield.tile.*
 import com.game7th.battle.unit.*
-import com.game7th.metagame.account.PersonageAttributeStats
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect

@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
-import com.game7th.battle.event.TileViewModel
+import com.game7th.battle.dto.TileViewModel
 import com.game7th.swipe.GdxGameContext
 
 class TileView(

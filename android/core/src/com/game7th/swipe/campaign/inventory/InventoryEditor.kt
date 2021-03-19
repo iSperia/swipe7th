@@ -5,10 +5,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.inventory.GearService
-import com.game7th.metagame.inventory.InventoryItem
-import com.game7th.metagame.inventory.ItemNode
+import com.game7th.metagame.inventory.dto.InventoryItem
+import com.game7th.metagame.inventory.dto.ItemNode
 import com.game7th.swipe.GdxGameContext
-import com.game7th.swipe.ScreenContext
 import ktx.actors.onClick
 import kotlin.math.max
 import kotlin.math.min

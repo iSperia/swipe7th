@@ -1,9 +1,8 @@
 package com.game7th.swipe.campaign.plist
 
 import com.badlogic.gdx.scenes.scene2d.Group
-import com.game7th.metagame.unit.UnitConfig
+import com.game7th.metagame.dto.UnitConfig
 import com.game7th.swipe.GdxGameContext
-import com.game7th.swipe.ScreenContext
 import ktx.actors.onClick
 
 class PersonageScrollActor(

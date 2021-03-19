@@ -1,6 +1,6 @@
 package com.game7th.battle.tilefield.tile
 
-import com.game7th.battle.event.TileTemplate
+import com.game7th.battle.dto.TileTemplate
 
 data class SwipeTile(
         //Type of tile

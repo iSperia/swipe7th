@@ -8,9 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
-import com.game7th.metagame.inventory.InventoryItem
+import com.game7th.metagame.inventory.dto.InventoryItem
 import com.game7th.swipe.GdxGameContext
-import com.game7th.swipe.ScreenContext
 import ktx.actors.onClick
 
 class InventoryDetailPanel(

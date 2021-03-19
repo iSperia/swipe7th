@@ -2,7 +2,7 @@ package com.game7th.battle.action
 
 import com.game7th.battle.DamageVector
 import com.game7th.battle.SwipeBattle
-import com.game7th.battle.event.BattleEvent
+import com.game7th.battle.dto.BattleEvent
 import com.game7th.battle.internal_event.InternalBattleEvent
 import com.game7th.battle.tilefield.tile.SwipeTile
 import com.game7th.battle.unit.BattleUnit

@@ -1,6 +1,6 @@
 package com.game7th.battle.tilefield
 
-import com.game7th.battle.event.TileViewModel
+import com.game7th.battle.dto.TileViewModel
 
 sealed class TileFieldEvent {
 

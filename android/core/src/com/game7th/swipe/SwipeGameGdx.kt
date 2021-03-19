@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.game7th.battle.balance.SwipeBalance
+import com.game7th.battle.dto.SwipeBalance
 import com.game7th.metagame.FileProvider
 import com.game7th.metagame.GameService
 import com.game7th.metagame.PersistentStorage

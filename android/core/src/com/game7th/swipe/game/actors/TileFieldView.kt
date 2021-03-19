@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
-import com.game7th.battle.event.BattleEvent
-import com.game7th.battle.event.TileViewModel
+import com.game7th.battle.dto.BattleEvent
+import com.game7th.battle.dto.TileViewModel
 import com.game7th.battle.tilefield.TileFieldEvent
 import com.game7th.swipe.GdxGameContext
 import ktx.actors.alpha

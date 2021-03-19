@@ -1,6 +1,5 @@
 package com.game7th.swipe.campaign.prepare
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
@@ -11,20 +10,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.game7th.swipe.SwipeGameGdx
 import ktx.actors.alpha
 import ktx.actors.onClick
-import com.badlogic.gdx.scenes.scene2d.actions.Actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.campaign.ActsService
-import com.game7th.metagame.campaign.LocationConfig
-import com.game7th.metagame.unit.UnitConfig
+import com.game7th.metagame.campaign.dto.LocationConfig
+import com.game7th.metagame.dto.UnitConfig
 import com.game7th.swipe.GdxGameContext
-import com.game7th.swipe.ScreenContext
 import com.game7th.swipe.campaign.plist.PersonageScrollActor
 import com.game7th.swipe.game.GameScreen
-import org.w3c.dom.css.Rect
 
 /**
  * Dialog is shown before battle is started after player clicked some unlocked location

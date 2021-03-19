@@ -1,7 +1,8 @@
 package com.game7th.metagame.campaign
 
 import com.game7th.metagame.account.RewardData
-import com.game7th.metagame.state.ActProgressState
+import com.game7th.metagame.campaign.dto.ActConfig
+import com.game7th.metagame.dto.ActProgressState
 
 interface ActsService {
 

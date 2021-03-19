@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
-import com.game7th.metagame.unit.UnitConfig
+import com.game7th.metagame.dto.UnitConfig
 import com.game7th.swipe.GdxGameContext
 
 data class PortraitConfig(

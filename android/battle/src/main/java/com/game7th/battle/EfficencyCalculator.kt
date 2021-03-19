@@ -1,6 +1,6 @@
 package com.game7th.battle
 
-import com.game7th.battle.balance.SwipeBalance
+import com.game7th.battle.dto.SwipeBalance
 import kotlin.random.Random
 
 object EfficencyCalculator {
