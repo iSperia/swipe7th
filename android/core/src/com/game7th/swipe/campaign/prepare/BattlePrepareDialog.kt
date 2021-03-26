@@ -158,7 +158,7 @@ class BattlePrepareDialog(
         applyDifficulty()
     }
 
-    private fun mapNpcWaves() = config.waves.flatMap { it }.map { it.copy(level = it.level + difficulty * 3) }
+    private fun mapNpcWaves() = config.waves.flatMap { it }.map { it.copy(level = it.level + (difficulty - 1) * 3) }
 
     private fun showGameScreen() {
         game.switchScreen(GameScreen(
