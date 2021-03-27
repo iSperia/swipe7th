@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Rectangle
 import com.game7th.battle.dto.BattleEvent
 import com.game7th.swipe.game.GameContextWrapper
 import com.game7th.swipe.game.battle.model.FigureGdxModel
@@ -330,7 +331,6 @@ class BattleController(
 
     private fun calculatePosition(position: Int) = paddingSide + (context.width - 2 * paddingSide) * 0.2f * (0.5f + position)
 
-
     fun removeController(controller: ElementController) {
         controller.dispose()
         controllersToRemove.add(controller)
@@ -338,6 +338,46 @@ class BattleController(
 
     fun timeScale(): Float {
         return 1f + min(5f, timeShift - timePassed)
+    }
+
+    fun calcLeftPersonageRect(): Rectangle {
+        return (controllers.first { it is FigureController && !it.flipped } as FigureController).let {
+            val x = it.x - 65f * scale
+            val y = it.y
+            Rectangle(x, y, 140f * scale, it.figureModel.height * scale)
+        }
+    }
+
+    fun calcRightPersonageRect(): Rectangle {
+        return (controllers.first { it is FigureController && it.flipped } as FigureController).let {
+            val x = it.x - 65f * scale
+            val y = it.y
+            Rectangle(x, y, 140f * scale, it.figureModel.height * scale)
+        }
+    }
+
+    fun calcLeftPersonageHpBarRect(): Rectangle {
+        return (controllers.first { it is PersonageHealthbarController && !it.figure.flipped } as PersonageHealthbarController).let {
+            val sx = it.figure.x - 48f * scale - 5f
+            val sy = it.figure.y - 15f * scale - 5f
+            Rectangle(sx, sy, 96f * scale + 10f, 16f * scale + 10f)
+        }
+    }
+
+    fun calcRightPersonageHpBarRect(): Rectangle {
+        return (controllers.first { it is PersonageHealthbarController && it.figure.flipped } as PersonageHealthbarController).let {
+            val sx = it.figure.x - 48f * scale - 5f
+            val sy = it.figure.y - 15f * scale - 5f
+            Rectangle(sx, sy, 96f * scale + 10f, 16f * scale + 10f)
+        }
+    }
+
+    fun calcRightPersonageSkillRect(): Rectangle {
+        return (controllers.first { it is PersonageTickerController && it.figure.flipped } as PersonageTickerController).let {
+            val sx = it.figure.x - context.scale * 15f - 5f
+            val sy = it.figure.y + (it.figure.figureModel.height + 10f) * context.scale - 5f
+            Rectangle(sx, sy, 45f * scale, 45f * scale)
+        }
     }
 
     companion object {

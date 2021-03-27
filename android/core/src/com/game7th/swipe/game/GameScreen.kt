@@ -1,27 +1,33 @@
 package com.game7th.swipe.game
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Screen
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.game7th.battle.dto.BattleConfig
 import com.game7th.battle.dto.PersonageConfig
 import com.game7th.battle.SwipeBattle
+import com.game7th.battle.ability.AbilityTrigger
 import com.game7th.battle.dto.BattleEvent
+import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.account.dto.PersonageAttributeStats
 import com.game7th.metagame.account.dto.PersonageData
 import com.game7th.metagame.campaign.ActsService
+import com.game7th.swipe.BaseScreen
+import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.SwipeGameGdx
+import com.game7th.swipe.TutorialKeys
 import com.game7th.swipe.campaign.ActScreen
 import com.game7th.swipe.game.actors.GameActor
 import com.game7th.swipe.game.battle.BattleController
 import com.game7th.swipe.game.battle.model.FigureGdxModel
 import com.game7th.swipe.game.battle.model.GdxModel
+import com.game7th.swipe.game.battle.tutorial.FirstBattleTutorial
 import com.game7th.swipe.gestures.SimpleDirectionGestureDetector
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -35,10 +41,11 @@ class GameScreen(private val game: SwipeGameGdx,
                  private val locationId: Int,
                  private val difficulty: Int,
                  private val personage: PersonageData,
-                 private val actService: ActsService
-) : Screen {
+                 private val actService: ActsService,
+                 private val storage: PersistentStorage,
+                 gdxGameContext: GdxGameContext
+) : BaseScreen(gdxGameContext) {
 
-    lateinit var stage: Stage
     lateinit var viewport: Viewport
 
     lateinit var battleController: BattleController
@@ -62,50 +69,19 @@ class GameScreen(private val game: SwipeGameGdx,
     lateinit var swipeFlow: MutableSharedFlow<Pair<Int, Int>>
 
     var gameEnded = false
+    var preventLeftSwipe = false
+    var preventRightSwipe = false
+    var preventBottomSwipe = false
+    var preventTopSwipe = false
+    var dismissOnSwipe = false
 
     override fun show() {
+        super.show()
         viewport = ScreenViewport()
-        stage = Stage(viewport)
 
         batch = SpriteBatch()
 
-        processor = SimpleDirectionGestureDetector(object : SimpleDirectionGestureDetector.DirectionListener {
-            override fun onLeft() {
-                KtxAsync.launch {
-                    if (!gameEnded) {
-                        gameActor.tileField.finalizeActions()
-                        swipeFlow.emit(Pair(-1,0))
-                    }
-                }
-            }
-
-            override fun onRight() {
-                KtxAsync.launch {
-                    if (!gameEnded) {
-                        gameActor.tileField.finalizeActions()
-                        swipeFlow.emit(Pair(1,0))
-                    }
-                }
-            }
-
-            override fun onUp() {
-                KtxAsync.launch {
-                    if (!gameEnded) {
-                        gameActor.tileField.finalizeActions()
-                        swipeFlow.emit(Pair(0,-1))
-                    }
-                }
-            }
-
-            override fun onDown() {
-                KtxAsync.launch {
-                    if (!gameEnded) {
-                        gameActor.tileField.finalizeActions()
-                        swipeFlow.emit(Pair(0, 1))
-                    }
-                }
-            }
-        })
+        processor = createSwipeDetector()
         game.multiplexer.addProcessor(0, processor)
 
         config = BattleConfig(
@@ -118,7 +94,7 @@ class GameScreen(private val game: SwipeGameGdx,
         )
 
         swipeFlow = MutableSharedFlow()
-        battle = SwipeBattle(game.context.balance, swipeFlow)
+        battle = SwipeBattle(game.context.balance, swipeFlow, produceTutorials())
         initializeBattle()
         listenEvents()
 
@@ -140,11 +116,13 @@ class GameScreen(private val game: SwipeGameGdx,
                 loadResources(it)
             }
         }
-        config.waves.forEach { it.forEach { npc ->
-            gdxModel.figures.firstOrNull { it.name == npc.name.getSkin() }?.let { gdxFigure ->
-                loadResources(gdxFigure)
+        config.waves.forEach {
+            it.forEach { npc ->
+                gdxModel.figures.firstOrNull { it.name == npc.name.getSkin() }?.let { gdxFigure ->
+                    loadResources(gdxFigure)
+                }
             }
-        }}
+        }
 
         val scale = game.context.scale
         battleController = BattleController(GameContextWrapper(
@@ -175,6 +153,26 @@ class GameScreen(private val game: SwipeGameGdx,
         }
     }
 
+    private fun processSwipe(dx: Int, dy: Int, prevent: Boolean) {
+        KtxAsync.launch {
+            if (dismissOnSwipe) {
+                dismissFocusView()
+            }
+            if (!gameEnded && !prevent) {
+                gameActor.tileField.finalizeActions()
+                swipeFlow.emit(Pair(dx, dy))
+            }
+        }
+    }
+
+    private fun createSwipeDetector() =
+            SimpleDirectionGestureDetector(object : SimpleDirectionGestureDetector.DirectionListener {
+                override fun onLeft() { processSwipe(-1, 0, preventLeftSwipe) }
+                override fun onRight() { processSwipe(1, 0, preventRightSwipe) }
+                override fun onUp() { processSwipe(0, -1, preventTopSwipe) }
+                override fun onDown() { processSwipe(0, 1, preventBottomSwipe) }
+            })
+
     private fun loadResources(gdxFigure: FigureGdxModel) {
         if (!atlases.containsKey(gdxFigure.atlas)) {
             atlases[gdxFigure.atlas] = TextureAtlas(Gdx.files.internal("${gdxFigure.name}.atlas"))
@@ -186,7 +184,7 @@ class GameScreen(private val game: SwipeGameGdx,
         }
         gdxFigure.attacks.forEach {
             it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
-            it.effect?.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg"))  }
+            it.effect?.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
         }
         gdxFigure.poses.forEach {
             it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
@@ -207,10 +205,17 @@ class GameScreen(private val game: SwipeGameGdx,
                 gameActor.processAction(event)
                 battleController.processEvent(event)
                 when (event) {
-                    is BattleEvent.VictoryEvent -> gameEnded = true
-                    is BattleEvent.DefeatEvent -> gameEnded = true
+                    is BattleEvent.VictoryEvent -> onGameEnded(true)
+                    is BattleEvent.DefeatEvent -> onGameEnded(false)
                 }
             }
+        }
+    }
+
+    private fun onGameEnded(victory: Boolean) {
+        gameEnded = true
+        if (actId == 0 && locationId == 0) {
+            storage.put(TutorialKeys.ACT1_FIRST_BATTLE_INTRO_SHOWN, true.toString())
         }
     }
 
@@ -219,8 +224,7 @@ class GameScreen(private val game: SwipeGameGdx,
         battleController.act(batch, delta)
         batch.end()
 
-        stage.act(Gdx.graphics.deltaTime)
-        stage.draw()
+        super.render(delta)
     }
 
     override fun resize(width: Int, height: Int) {
@@ -245,4 +249,32 @@ class GameScreen(private val game: SwipeGameGdx,
             atlas.dispose()
         }
     }
+
+    private fun produceTutorials(): List<AbilityTrigger> {
+        val result = mutableListOf<AbilityTrigger>()
+        if (actId == 0 && locationId == 0 && storage.get(TutorialKeys.ACT1_FIRST_BATTLE_INTRO_SHOWN)?.toBoolean() != true) {
+            result.add(FirstBattleTutorial(this, game))
+        }
+        return result
+    }
+
+    fun calcLeftPersonageRect() = battleController.calcLeftPersonageRect()
+    fun calcRightPersonageRect() = battleController.calcRightPersonageRect()
+    fun calcLeftPersonageHpBarRect() = battleController.calcLeftPersonageHpBarRect()
+    fun calcRightPersonageHpBarRect() = battleController.calcRightPersonageHpBarRect()
+    fun calcTileFieldRect() = gameActor.tileField.localToStageCoordinates(Vector2()).let {
+        Rectangle(it.x - 5f, it.y - 5f, gameActor.tileField.tileSize * 5 + 10f, gameActor.tileField.tileSize * 5 + 10f)
+    }
+
+    fun calcTileRect(p: Int) = gameActor.tileField.localToStageCoordinates(Vector2()).let {
+        Rectangle(it.x + gameActor.tileField.calcX(p) - 5f, it.y + gameActor.tileField.calcY(p) - 5f, gameActor.tileField.tileSize + 10f, gameActor.tileField.tileSize + 10f)
+    }
+
+    fun calcComboRect(): Rectangle = gameActor.labelCombo.localToStageCoordinates(Vector2()).let {
+        Rectangle(it.x - 30f, it.y - 30f, gameActor.labelCombo.width + 30f, gameActor.labelCombo.height + 30f)
+    }
+
+    fun calcRightPersonageSkillRect() = battleController.calcRightPersonageSkillRect()
+    fun showFingerAnimation(dx: Int, dy: Int) = gameActor.showFingerAnimation(dx, dy)
+    fun dismissFingerAnimation() = gameActor.dismissFingerAnimation()
 }

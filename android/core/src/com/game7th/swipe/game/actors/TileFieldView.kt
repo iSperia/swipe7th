@@ -24,7 +24,7 @@ class TileFieldView(
     private var moveShift = 0
     private var resetMoveShift = false
 
-    private val tileSize = w / FIELD_WIDTH
+    val tileSize = w / FIELD_WIDTH
 
     private val shapeRenderer = ShapeRenderer()
 
@@ -217,6 +217,9 @@ class TileFieldView(
         this.x = tileSize * x
         this.y = tileSize * (FIELD_WIDTH - 1 - y)
     }
+
+    fun calcX(position: Int): Float = tileSize * (position % 5)
+    fun calcY(position: Int): Float = tileSize * (FIELD_WIDTH - 1 - (position / FIELD_WIDTH))
 
     companion object {
         const val TILE_BG_REGION = "tile_bg_grey"

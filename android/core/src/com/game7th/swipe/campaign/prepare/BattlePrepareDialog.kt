@@ -167,7 +167,9 @@ class BattlePrepareDialog(
                 locationId,
                 difficulty,
                 personages[personagesGroup.selectedIndex % personages.size],
-                actsService
+                actsService,
+                game.storage,
+                game.context
         ))
     }
 

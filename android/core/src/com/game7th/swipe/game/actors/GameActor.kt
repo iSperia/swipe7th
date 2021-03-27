@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Touchable
+import com.badlogic.gdx.scenes.scene2d.actions.DelayAction
+import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -37,6 +39,8 @@ class GameActor(
     val tileFieldBorder: Image
     val bottomSheetBg: Image
     val comboParticles: ParticleEffect
+
+    var fingerActor: Image? = null
 
     private var combo = 0
 
@@ -163,5 +167,29 @@ class GameActor(
                 }
             }
         }
+    }
+
+    fun showFingerAnimation(dx: Int, dy: Int) {
+        dismissFingerAnimation()
+        fingerActor = Image(context.uiAtlas.findRegion("tutorial_swipe_finger")).apply {
+            x = tileField.x + tileField.tileSize * 5 / 2f - 32f * context.scale
+            y = tileField.y + tileField.tileSize * 5 / 2f - 32f * context.scale
+            width = 64f * context.scale
+            height = 64f * context.scale
+            val distance = tileField.tileSize * 2f
+            this@GameActor.addActor(this)
+
+            this.addAction(SequenceAction(
+                    MoveByAction().apply { setAmount(dx * distance, dy * distance); duration = 0.6f },
+                    DelayAction(0.2f).apply { action =  MoveByAction().apply { setAmount(-dx * distance, -dy * distance); duration = 0.01f }}
+            ).repeatForever())
+        }
+    }
+
+    fun dismissFingerAnimation() {
+        fingerActor?.let {
+            it.remove()
+        }
+        fingerActor = null
     }
 }

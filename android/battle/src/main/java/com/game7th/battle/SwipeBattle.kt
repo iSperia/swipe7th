@@ -1,5 +1,6 @@
 package com.game7th.battle
 
+import com.game7th.battle.ability.AbilityTrigger
 import com.game7th.battle.dto.BattleConfig
 import com.game7th.battle.dto.SwipeBalance
 import com.game7th.battle.dto.BattleEvent
@@ -20,7 +21,8 @@ import kotlin.math.min
 
 class SwipeBattle(
         val balance: SwipeBalance,
-        val inputFlow: Flow<Pair<Int, Int>>
+        val inputFlow: Flow<Pair<Int, Int>>,
+        private val triggers: List<AbilityTrigger>
 ) {
 
     private val coroutineContext = newSingleThreadContext("battle")
@@ -55,6 +57,7 @@ class SwipeBattle(
                 trigger.process(event, battleUnit)
             }
         }
+        units.first { it.team == Team.LEFT }.let { unit -> triggers.forEach { it.process(event, unit) } }
     }
 
     private fun aliveUnits() = units.filter { it.stats.health.value > 0 }
@@ -63,7 +66,6 @@ class SwipeBattle(
         this@SwipeBattle.config = config
         generateInitialPersonages(config)
         generateInitialTiles()
-        propagateInternalEvent(InternalBattleEvent.BattleStartedEvent(this@SwipeBattle))
 
         inputFlow.collect { (dx, dy) ->
             processSwipe(dx, dy)
@@ -71,8 +73,17 @@ class SwipeBattle(
     }
 
     private suspend fun generateInitialTiles() = withContext(coroutineContext) {
-        for (i in 0 until 6) {
-            produceGuaranteedTile()
+        val event = InternalBattleEvent.ScriptedInitialTiles(this@SwipeBattle, null)
+        propagateInternalEvent(event)
+        if (event.tiles != null) {
+            event.tiles?.forEach {
+                tileField.tiles[it.key] = it.value
+                notifyEvent(BattleEvent.CreateTileEvent(it.value.toViewModel(), it.key, -1))
+            }
+        } else {
+            for (i in 0 until balance.initialTiles) {
+                produceGuaranteedTile()
+            }
         }
     }
 
@@ -83,7 +94,16 @@ class SwipeBattle(
 
     private suspend fun processTick(preventTickers: Boolean) {
         checkAutoTickTiles()
-        produceGuaranteedTile()
+        val event = InternalBattleEvent.ScriptedTilesTick(this, tick, null)
+        propagateInternalEvent(event)
+        if (event.tiles != null) {
+            event.tiles?.forEach {
+                tileField.tiles[it.key] = it.value
+                notifyEvent(BattleEvent.CreateTileEvent(it.value.toViewModel(), it.key, -1))
+            }
+        } else {
+            produceGuaranteedTile()
+        }
         propagateInternalEvent(InternalBattleEvent.TickEvent(this, preventTickers))
     }
 
@@ -182,9 +202,9 @@ class SwipeBattle(
                     notifyEvent(it)
                 }
 
+                tick++
                 processTick(false)
                 processTickUnits()
-                tick++
 
                 checkDeadPersonages()
 

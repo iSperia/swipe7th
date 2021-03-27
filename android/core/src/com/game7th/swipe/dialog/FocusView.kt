@@ -15,11 +15,20 @@ import com.badlogic.gdx.utils.Align
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.ScreenContext
 import ktx.actors.onClick
+import kotlin.math.max
+import kotlin.math.min
+
+enum class DismissStrategy {
+    DISMISS_ON_INSIDE,
+    DISMISS_ON_OUTSIDE,
+    DISMISS_FORCED
+}
 
 class FocusView(
         private val context: GdxGameContext,
         private val rect: Rectangle,
         private val text: String,
+        private val dismissStrategy: DismissStrategy,
         private val dismissCallback: (() -> Unit)?
 ) : Group() {
 
@@ -39,11 +48,17 @@ class FocusView(
     private val mask = TextureRegionDrawable(context.uiAtlas.findRegion("panel_modal"))
 
     private val textLabel = Label(text, Label.LabelStyle(context.font, Color.WHITE)).apply {
-        x = rect.x
-        y = rect.height + 12f * context.scale + rect.y
-        width = 480f * context.scale - rect.x
+        val w = min(480f * context.scale, max(200f * context.scale, 480f * context.scale - rect.x))
+        val bottom = rect.y + rect.height + 60f > Gdx.graphics.height
+        x = max(0f, min(rect.x, 480f * context.scale - w))
+        y = if (bottom) {
+            rect.y - 60f
+        } else {
+            rect.height + 12f * context.scale + rect.y
+        }
+        width = w
         height = 60f
-        setAlignment(Align.bottomLeft)
+        setAlignment(if (bottom) Align.topLeft else Align.bottomLeft)
         wrap = true
         setFontScale(context.scale * 100f/3f/36f)
         touchable = Touchable.disabled
@@ -57,13 +72,18 @@ class FocusView(
         modalPanel.addListener { event ->
             when (event) {
                 is InputEvent -> {
-                    if (!rect.contains(event.stageX, event.stageY) && event.type == InputEvent.Type.exit) {
+                    if (rect.contains(event.stageX, event.stageY) && event.type == InputEvent.Type.exit && dismissStrategy == DismissStrategy.DISMISS_ON_INSIDE) {
+                        dismissCallback?.let {
+                            this@FocusView.remove()
+                            it.invoke()
+                        }
+                    } else if (!rect.contains(event.stageX, event.stageY) && event.type == InputEvent.Type.exit && dismissStrategy == DismissStrategy.DISMISS_ON_OUTSIDE) {
                         dismissCallback?.let {
                             this@FocusView.remove()
                             it.invoke()
                         }
                     }
-                    !rect.contains(event.stageX, event.stageY)
+                    true
                 }
                 else -> false
             }
@@ -97,5 +117,13 @@ class FocusView(
         super.draw(batch, parentAlpha)
 //disable the stencil
         Gdx.gl.glDisable(GL_STENCIL_TEST)
+    }
+
+    fun forceDismiss() {
+        if (dismissStrategy == DismissStrategy.DISMISS_FORCED) {
+            dismissCallback?.let {
+                it.invoke()
+            }
+        }
     }
 }

@@ -20,7 +20,7 @@ arrowBlue_right
   index: -1
 bg_brass
   rotate: false
-  xy: 568, 52
+  xy: 879, 246
   size: 32, 32
   split: 8, 8, 8, 8
   orig: 32, 32
@@ -42,7 +42,7 @@ btn_blue_up
   index: -1
 iconCircle_blue
   rotate: false
-  xy: 847, 298
+  xy: 855, 224
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
@@ -56,7 +56,7 @@ iconCircle_grey
   index: -1
 icon_gear
   rotate: false
-  xy: 618, 32
+  xy: 762, 137
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -70,7 +70,7 @@ icon_gear_focused
   index: -1
 icon_squads
   rotate: false
-  xy: 749, 241
+  xy: 612, 132
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -84,14 +84,14 @@ panel_blue
   index: -1
 panel_edge
   rotate: false
-  xy: 993, 475
+  xy: 354, 42
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 panel_modal
   rotate: false
-  xy: 84, 7
+  xy: 913, 262
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -110,6 +110,13 @@ star_yellow
   orig: 194, 195
   offset: 0, 0
   index: -1
+tutorial_swipe_finger
+  rotate: false
+  xy: 675, 187
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
 ui_attrs_tree
   rotate: false
   xy: 2, 222
@@ -119,28 +126,28 @@ ui_attrs_tree
   index: -1
 ui_button_pressed
   rotate: false
-  xy: 618, 14
+  xy: 762, 119
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_simple
   rotate: false
-  xy: 370, 24
+  xy: 50, 7
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_trans_pressed
   rotate: false
-  xy: 370, 42
+  xy: 320, 42
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_trans_simple
   rotate: false
-  xy: 50, 7
+  xy: 516, 68
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
@@ -161,70 +168,70 @@ ui_exp_bar_bg
   index: -1
 ui_exp_bar_fg
   rotate: false
-  xy: 749, 291
+  xy: 418, 60
   size: 96, 24
   orig: 96, 24
   offset: 0, 0
   index: -1
 ui_icon_vs
   rotate: false
-  xy: 675, 243
+  xy: 805, 243
   size: 72, 72
   orig: 72, 72
   offset: 0, 0
   index: -1
 ui_item_bg
   rotate: false
-  xy: 320, 10
+  xy: 712, 137
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_body
   rotate: false
-  xy: 612, 82
+  xy: 879, 280
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_book
   rotate: false
-  xy: 468, 36
+  xy: 662, 137
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_boots
   rotate: false
-  xy: 799, 241
+  xy: 612, 82
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_hand
   rotate: false
-  xy: 612, 132
+  xy: 805, 193
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_hat
   rotate: false
-  xy: 418, 36
+  xy: 929, 280
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_ring
   rotate: false
-  xy: 568, 2
+  xy: 712, 87
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_level_bg
   rotate: false
-  xy: 518, 36
+  xy: 662, 87
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

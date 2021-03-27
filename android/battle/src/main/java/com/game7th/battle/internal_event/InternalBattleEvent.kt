@@ -65,4 +65,15 @@ sealed class InternalBattleEvent(
             val position: Int
     ) : InternalBattleEvent(battle)
 
+    class ScriptedInitialTiles(
+            battle: SwipeBattle,
+            var tiles: Map<Int, SwipeTile>?
+    ) : InternalBattleEvent(battle)
+
+    class ScriptedTilesTick(
+            battle: SwipeBattle,
+            val tick: Int,
+            var tiles: Map<Int, SwipeTile>?
+    ) : InternalBattleEvent(battle)
+
 }

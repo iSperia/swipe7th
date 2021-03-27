@@ -37,6 +37,7 @@ data class SwipeBalance(
         val version: String,
 
         val stats: StatBalance,
+        val initialTiles: Int,
 
         val slime: PersonageBalance,
         val red_slime: PersonageBalance,

@@ -80,7 +80,7 @@ suspend fun emulateBattle(balance: SwipeBalance, config: BattleConfig): Emulatio
 
         val results = (1..runsPerExperiment).map {
             async {
-                val battle = SwipeBattle(balance, MutableSharedFlow())
+                val battle = SwipeBattle(balance, MutableSharedFlow(), emptyList())
 
                 var job: Job? = null
 
