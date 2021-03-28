@@ -20,8 +20,8 @@ android {
         applicationId "com.game7th.swipe"
         minSdkVersion 14
         targetSdkVersion 30
-        versionCode 2
-        versionName "0.0.1 Ratcher"
+        versionCode 3
+        versionName "0.0.2 Auto"
     }
     buildTypes {
         release {

@@ -116,7 +116,7 @@ class ActsServiceImpl(
         val location = config.nodes.firstOrNull { it.id == locationId }
         location?.let {
             val totalPoints = it.waves.flatten().sumBy { it.level + (starCount - 1) * 3  }
-            val maxArtifactLevel = it.waves.flatten().maxBy { it.level }?.level ?: 1
+            val maxArtifactLevel = it.waves.flatten().maxBy { it.level }?.level ?: 1 + (starCount - 1) * 3
 
             val rewards = mutableListOf<RewardData>()
             val r1 = min(maxArtifactLevel, Random.nextInt(totalPoints) + 1)
