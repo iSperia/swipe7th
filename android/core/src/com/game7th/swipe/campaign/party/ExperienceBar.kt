@@ -4,7 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.game7th.swipe.GdxGameContext
-import com.game7th.swipe.ScreenContext
 import kotlin.math.min
 
 class ExperienceBar(

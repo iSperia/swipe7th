@@ -50,8 +50,8 @@ class SwipeGameGdx(val storage: PersistentStorage) : Game() {
         KtxAsync.initiate()
 
         initializeGearService()
-        initializeActService()
         initializeAccountService()
+        initializeActService()
         service = GameService(actService)
 
         width = Gdx.graphics.width.toFloat()
@@ -88,7 +88,7 @@ class SwipeGameGdx(val storage: PersistentStorage) : Game() {
     }
 
     private fun initializeActService() {
-        actService = ActsServiceImpl(gson, storage, fileProvider, gearService)
+        actService = ActsServiceImpl(gson, storage, fileProvider, gearService, accountService)
     }
 
     private fun initializeAccountService() {

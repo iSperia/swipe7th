@@ -155,7 +155,7 @@ class AccountServiceImpl(
     }
 
     override fun fund(currency: Currency, amount: Int): PersonageBalance {
-        personageBalance.currencies[currency] = personageBalance.currencies[currency] ?: 0 + amount
+        personageBalance.currencies[currency] = (personageBalance.currencies[currency] ?: 0) + amount
         saveBalance()
         return getBalance()
     }
@@ -167,6 +167,16 @@ class AccountServiceImpl(
             saveBalance()
         }
         return getBalance()
+    }
+
+    override fun addRewards(rewards: List<RewardData>) {
+        rewards.forEach { reward ->
+            when (reward) {
+                is RewardData.CurrencyRewardData -> {
+                    fund(reward.currency, reward.amount)
+                }
+            }
+        }
     }
 
     companion object {

@@ -20,7 +20,7 @@ arrowBlue_right
   index: -1
 bg_brass
   rotate: false
-  xy: 879, 246
+  xy: 762, 153
   size: 32, 32
   split: 8, 8, 8, 8
   orig: 32, 32
@@ -42,7 +42,7 @@ btn_blue_up
   index: -1
 iconCircle_blue
   rotate: false
-  xy: 855, 224
+  xy: 566, 49
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
@@ -56,7 +56,7 @@ iconCircle_grey
   index: -1
 icon_gear
   rotate: false
-  xy: 762, 137
+  xy: 871, 164
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -70,7 +70,7 @@ icon_gear_focused
   index: -1
 icon_squads
   rotate: false
-  xy: 612, 132
+  xy: 945, 280
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -84,14 +84,14 @@ panel_blue
   index: -1
 panel_edge
   rotate: false
-  xy: 354, 42
+  xy: 84, 7
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 panel_modal
   rotate: false
-  xy: 913, 262
+  xy: 354, 42
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -126,14 +126,14 @@ ui_attrs_tree
   index: -1
 ui_button_pressed
   rotate: false
-  xy: 762, 119
+  xy: 50, 7
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_simple
   rotate: false
-  xy: 50, 7
+  xy: 762, 135
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
@@ -147,9 +147,23 @@ ui_button_trans_pressed
   index: -1
 ui_button_trans_simple
   rotate: false
-  xy: 516, 68
+  xy: 566, 68
   size: 32, 16
   orig: 32, 16
+  offset: 0, 0
+  index: -1
+ui_currency_gems
+  rotate: false
+  xy: 879, 264
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ui_currency_gold
+  rotate: false
+  xy: 805, 177
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
 ui_dialog
@@ -182,21 +196,21 @@ ui_icon_vs
   index: -1
 ui_item_bg
   rotate: false
-  xy: 712, 137
+  xy: 516, 36
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_body
   rotate: false
-  xy: 879, 280
+  xy: 662, 137
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_book
   rotate: false
-  xy: 662, 137
+  xy: 662, 87
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -210,28 +224,28 @@ ui_item_bg_boots
   index: -1
 ui_item_bg_hand
   rotate: false
-  xy: 805, 193
+  xy: 612, 132
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_hat
   rotate: false
-  xy: 929, 280
+  xy: 712, 137
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_ring
   rotate: false
-  xy: 712, 87
+  xy: 879, 214
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_level_bg
   rotate: false
-  xy: 662, 87
+  xy: 712, 87
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

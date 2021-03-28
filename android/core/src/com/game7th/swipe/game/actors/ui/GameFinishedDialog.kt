@@ -4,6 +4,9 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.Touchable
+import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction
+import com.badlogic.gdx.scenes.scene2d.actions.DelayAction
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
@@ -12,7 +15,10 @@ import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.account.dto.PersonageExperienceResult
 import com.game7th.metagame.account.RewardData
 import com.game7th.swipe.GdxGameContext
+import com.game7th.swipe.campaign.inventory.ItemView
 import com.game7th.swipe.campaign.party.ExperienceBar
+import com.game7th.swipe.campaign.reward.CurrencyRewardView
+import ktx.actors.alpha
 import kotlin.math.min
 
 class GameFinishedDialog(
@@ -98,15 +104,11 @@ class GameFinishedDialog(
         addActor(this)
     }
 
-    val rewardsText = Label("", Label.LabelStyle(context.font, Color.BLACK)).apply {
-        width = 380f * context.scale
-        height = 75f * context.scale
-        setFontScale(0.75f * context.scale)
+    val rewardsRoot = Group().apply {
         x = 10f * context.scale
         y = 70f * context.scale
         zIndex = 16
-        setAlignment(Align.left)
-        addActor(this)
+        this@GameFinishedDialog.addActor(this)
         isVisible = false
     }
 
@@ -116,20 +118,42 @@ class GameFinishedDialog(
         expResult.firstOrNull()?.let {
             addActor(experienceBar)
         }
-//            expForeground.scaleX = expResult.oldExp.toFloat() / expResult.maxExp
-//            expForeground.addAction(ScaleToAction().apply {
-//                setScale(expResult.newExp.toFloat() / expResult.maxExp, 1f)
-//                duration = 3f
-//            })
 
-        rewardsText.isVisible = true
-        val txt = "Received new items:\n" + rewards.map {
-            when (it) {
-                is RewardData.ArtifactRewardData -> "${it.item.name} LVL ${it.item.level}"
-                else -> "?"
+        rewardsRoot.isVisible = true
+        rewards.forEachIndexed { index, reward ->
+            when (reward) {
+                is RewardData.ArtifactRewardData -> {
+                    val artifact = ItemView(context, reward.item, true, 70 * context.scale).apply {
+                        x = 80f * index * context.scale
+                        y = 0f
+                        setScale(2f)
+                        alpha = 0f
+                    }
+                    rewardsRoot.addActor(artifact)
+                    artifact.addAction(DelayAction(index * 0.1f).apply { action =
+                            ParallelAction(
+                                    AlphaAction().apply { alpha = 1f; duration = 0.3f },
+                                    ScaleToAction().apply { setScale(1f, 1f); duration = 0.3f }
+                            )
+                    })
+                }
+                is RewardData.CurrencyRewardData -> {
+                    val reward = CurrencyRewardView(context, reward.currency, reward.amount, 70 * context.scale).apply {
+                        x = 80f * index * context.scale
+                        y = 0f
+                        setScale(2f)
+                        alpha = 0f
+                    }
+                    rewardsRoot.addActor(reward)
+                    reward.addAction(DelayAction(index * 0.1f).apply { action =
+                            ParallelAction(
+                                    AlphaAction().apply { alpha = 1f; duration = 0.3f },
+                                    ScaleToAction().apply { setScale(1f, 1f); duration = 0.3f }
+                            )
+                    })
+                }
             }
-        }.joinToString("\n")
-        rewardsText.setText(txt)
+        }
     }
 
     private var activeExpResultStep = -1

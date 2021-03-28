@@ -12,6 +12,8 @@ interface AccountService {
 
     fun addPersonageExperience(personageId: Int, experience: Int) : List<PersonageExperienceResult>
 
+    fun addRewards(rewards: List<RewardData>): Unit
+
     fun equipItem(personageId: Int, item: InventoryItem)
 
     fun dequipItem(personageId: Int, item: InventoryItem)

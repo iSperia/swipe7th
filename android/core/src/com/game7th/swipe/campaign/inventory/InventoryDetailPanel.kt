@@ -22,7 +22,7 @@ class InventoryDetailPanel(
 
     val bg = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
         width = context.scale * 160f
-        height = context.scale * 250f
+        height = context.scale * 270f
         onClick {
             dismisser()
         }
@@ -30,14 +30,14 @@ class InventoryDetailPanel(
 
     val itemView = ItemView(context, item, false).apply {
         x = 10f * context.scale
-        y = 100f * context.scale
+        y = 120f * context.scale
         setScale(140f/60f)
         touchable = Touchable.disabled
     }
 
     val nameLabel = Label(item.name, Label.LabelStyle(context.font, Color.BLACK)).apply {
         x = 10f * context.scale
-        y = 80f * context.scale
+        y = 100f * context.scale
         setFontScale(18f * context.scale / 36f)
         width = 140f * context.scale
         height = 20f * context.scale
@@ -47,7 +47,7 @@ class InventoryDetailPanel(
 
     val affixText = Label("", Label.LabelStyle(context.font, Color.BLUE)).apply {
         x = 10f * context.scale
-        y = 40f * context.scale
+        y = 60f * context.scale
         width = 140f * context.scale
         height = 30f * context.scale
         setFontScale(25f * context.scale / 36f)
@@ -60,7 +60,7 @@ class InventoryDetailPanel(
         x = 10f * context.scale
         y = 10f * context.scale
         width = 140f * context.scale
-        height = 20f * context.scale
+        height = 40f * context.scale
         onClick { equipper(item) }
     }
 
@@ -69,7 +69,7 @@ class InventoryDetailPanel(
         y = equipButton.y
         width = equipButton.width
         height = equipButton.height
-        setFontScale(18f * context.scale / 36f)
+        setFontScale(36f * context.scale / 36f)
         setAlignment(Align.center)
         touchable = Touchable.disabled
     }

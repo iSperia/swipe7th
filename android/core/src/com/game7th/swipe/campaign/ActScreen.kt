@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.input.GestureDetector
 import com.badlogic.gdx.math.Rectangle
 import com.game7th.metagame.PersistentStorage
+import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.campaign.*
 import com.game7th.metagame.campaign.dto.ActConfig
 import com.game7th.metagame.campaign.dto.CampaignNodeType
@@ -24,6 +25,7 @@ import com.game7th.swipe.TutorialKeys
 import com.game7th.swipe.campaign.bottom_menu.BottomMenu
 import com.game7th.swipe.campaign.party.PartyView
 import com.game7th.swipe.campaign.prepare.BattlePrepareDialog
+import com.game7th.swipe.campaign.top_menu.CurrencyPanel
 import com.game7th.swipe.dialog.DismissStrategy
 import kotlin.math.*
 
@@ -73,6 +75,7 @@ class ActScreen(
     lateinit var gestureDetector: GestureDetector
 
     lateinit var bottomMenu: BottomMenu
+    lateinit var currencyView: CurrencyPanel
 
     private var uiState: UiState = UiState.Hidden
 
@@ -150,6 +153,12 @@ class ActScreen(
             onPartyButtonPressed = this@ActScreen::onPartyButtonPressed
         }
         stage.addActor(bottomMenu)
+
+        currencyView = CurrencyPanel(context, game.accountService).apply {
+            y = game.height - 34f * context.scale
+        }
+        stage.addActor(currencyView)
+
         bottomMenu.zIndex = 100
         mapBottomOffset = context.scale * 48f
 

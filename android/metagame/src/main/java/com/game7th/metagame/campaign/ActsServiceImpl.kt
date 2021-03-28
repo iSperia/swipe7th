@@ -2,7 +2,9 @@ package com.game7th.metagame.campaign
 
 import com.game7th.metagame.FileProvider
 import com.game7th.metagame.PersistentStorage
+import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.account.RewardData
+import com.game7th.metagame.account.dto.Currency
 import com.game7th.metagame.campaign.dto.ActConfig
 import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.dto.ActProgressState
@@ -11,6 +13,7 @@ import com.game7th.metagame.dto.UnitConfig
 import com.game7th.metagame.dto.UnitType
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.gson.Gson
+import kotlin.math.min
 import kotlin.random.Random
 
 /**
@@ -20,7 +23,8 @@ class ActsServiceImpl(
         private val gson: Gson,
         private val storage: PersistentStorage,
         private val fileProvider: FileProvider,
-        private val gearService: GearService
+        private val gearService: GearService,
+        private val accountService: AccountService
 ) : ActsService {
 
     val csvReader = csvReader()
@@ -111,27 +115,22 @@ class ActsServiceImpl(
         val config = getActConfig(actId)
         val location = config.nodes.firstOrNull { it.id == locationId }
         location?.let {
-            val totalPoints = it.waves.flatten().sumBy { it.level + (starCount - 1)*3  }
+            val totalPoints = it.waves.flatten().sumBy { it.level + (starCount - 1) * 3  }
+            val maxArtifactLevel = it.waves.flatten().maxBy { it.level }?.level ?: 1
+
             val rewards = mutableListOf<RewardData>()
-            val r1 = Random.nextInt(totalPoints)
-            gearService.getArtifactReward(r1 + 1)?.let { rewards.add(it) }
-            if (Random.nextBoolean()) {
-                val r2 = Random.nextInt(totalPoints - r1)
-                gearService.getArtifactReward(r2 + 1)?.let { rewards.add(it) }
-                if (Random.nextBoolean()) {
-                    val r3 = Random.nextInt(totalPoints - r1 - r2)
-                    gearService.getArtifactReward(r3 + 1)?.let { rewards.add(it) }
-                }
-            }
+            val r1 = min(maxArtifactLevel, Random.nextInt(totalPoints) + 1)
+            gearService.getArtifactReward(r1)?.let { rewards.add(it) }
+            val goldAmount = (totalPoints - r1) * 100
+            rewards.add(RewardData.CurrencyRewardData(Currency.GOLD, goldAmount))
 
             gearService.addRewards(rewards)
+            accountService.addRewards(rewards)
             return rewards
         }
 
         return emptyList()
     }
-
-
 
     override fun unlockLocation(currentState: ActProgressState, actId: Int, locationId: Int): ActProgressState {
         val isLocked = currentState.locations.count { it.id == locationId } == 0
