@@ -17,11 +17,16 @@ class PersonageHealthbarController(
     private val blackQuad = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("black_quad"))
     var timePassed: Float = 0f
     var timeHpActual: Float = timePassed
+    var timeRsActual: Float = timePassed
     val healthBarWidth = 96f * battle.scale - 12f
 
     var lastKnownValue: Float = figure.viewModel.stats.health.toFloat()
     var displayedValue: Float = lastKnownValue
     var lastDisplayedValue: Float = displayedValue
+
+    var lastKnownResist: Float = figure.viewModel.stats.resist.toFloat()
+    var displayedResist: Float = lastKnownResist
+    var lastDisplayedResist: Float = displayedResist
 
     private var distance: Float = (healthBarWidth - 4f) * 100f / figure.viewModel.stats.maxHealth.toFloat()
     private var isBigHealth = distance <= healthBarWidth / 25
@@ -51,7 +56,18 @@ class PersonageHealthbarController(
         healthBarForeground.draw(batch, sx + 6f, sy + 2f, healthBarWidth * percent, hei - 4f)
 
         if (figure.viewModel.stats.resistMax > 0) {
-            val resistPercent = figure.viewModel.stats.resist.toFloat() / figure.viewModel.stats.resistMax
+            var resist = figure.viewModel.stats.resist.toFloat()
+            if (resist != lastKnownResist) {
+                lastKnownResist = resist
+                timeRsActual = timePassed + 0.3f
+                lastDisplayedResist = displayedResist
+            } else if (timeRsActual <= timePassed) {
+                displayedResist = resist
+            } else {
+                displayedResist = resist - (resist - lastDisplayedResist) * (timeRsActual - timePassed) / 0.3f
+            }
+
+            val resistPercent = displayedResist / figure.viewModel.stats.resistMax
             resistForeground.draw(batch, sx + 6f, sy + 2f, healthBarWidth * resistPercent, hei - 4f)
         }
 
