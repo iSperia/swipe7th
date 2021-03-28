@@ -397,23 +397,23 @@ ui_button_simple
   orig: 32, 16
   offset: 0, 0
   index: -1
-vp_slime_father
-  rotate: false
-  xy: 1630, 48
-  size: 150, 210
-  orig: 150, 210
-  offset: 0, 0
-  index: -1
-vp_slime_mother
+vp_slime_boss
   rotate: false
   xy: 1480, 48
   size: 150, 210
   orig: 150, 210
   offset: 0, 0
   index: -1
-vp_strange_figure
+vp_slime_father
   rotate: false
   xy: 1780, 0
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_slime_mother
+  rotate: false
+  xy: 1630, 48
   size: 150, 210
   orig: 150, 210
   offset: 0, 0
@@ -426,49 +426,49 @@ filter: Nearest, Nearest
 repeat: none
 art_BOOK_OF_REGENERATION
   rotate: false
-  xy: 1180, 160
+  xy: 1330, 160
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 art_CLOAK
   rotate: false
-  xy: 1276, 160
+  xy: 1426, 160
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 art_HOOD
   rotate: false
-  xy: 1084, 160
+  xy: 1234, 160
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 art_LEGGINGS
   rotate: false
-  xy: 1660, 164
+  xy: 1810, 164
   size: 92, 92
   orig: 92, 92
   offset: 0, 0
   index: -1
 art_MANTLE
   rotate: false
-  xy: 1372, 160
+  xy: 1522, 160
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 art_SHIELD
   rotate: false
-  xy: 1564, 160
+  xy: 1714, 160
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 art_SHOES
   rotate: false
-  xy: 1468, 160
+  xy: 1618, 160
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -489,70 +489,77 @@ portrait_gladiator
   index: -1
 portrait_poison_archer
   rotate: false
-  xy: 916, 52
+  xy: 1066, 52
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
 portrait_slime
   rotate: false
-  xy: 1752, 196
+  xy: 1902, 196
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
 portrait_slime_mother
   rotate: false
-  xy: 1872, 196
+  xy: 1234, 100
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
 portrait_slime_red
   rotate: false
-  xy: 796, 52
+  xy: 946, 52
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
 slime_splash
   rotate: false
-  xy: 940, 112
+  xy: 1090, 112
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 ui_dialog
   rotate: false
-  xy: 796, 112
+  xy: 946, 112
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 vp_personage_gladiator
   rotate: false
-  xy: 646, 46
+  xy: 796, 46
   size: 150, 210
   orig: 150, 210
   offset: 0, 0
   index: -1
 vp_poison_archer
   rotate: false
-  xy: 346, 46
+  xy: 496, 46
   size: 150, 210
   orig: 150, 210
   offset: 0, 0
   index: -1
 vp_slime
   rotate: false
-  xy: 196, 46
+  xy: 346, 46
   size: 150, 210
   orig: 150, 210
   offset: 0, 0
   index: -1
 vp_slime_red
   rotate: false
-  xy: 496, 46
+  xy: 646, 46
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_strange_figure
+  rotate: false
+  xy: 196, 46
   size: 150, 210
   orig: 150, 210
   offset: 0, 0

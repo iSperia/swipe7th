@@ -64,6 +64,23 @@
       ]
     },
     {
+      "name": "slime_boss",
+      "atlas": "slime_boss",
+      "height": 250,
+      "scale": 1.2,
+      "body": "slime_boss",
+      "poses": [
+        {"name":  "attack", "start":  1, "end":  20, "triggers": [17]},
+        {"name":  "damage", "start":  21, "end":  27, "sound": "monster_damage"},
+        {"name":  "idle", "start":  28, "end":  47},
+        {"name":  "death", "start":  48, "end":  55}
+      ],
+      "attacks": [
+        {"attackType": "MOVE_AND_PUNCH", "sound":  "monster_damage"},
+        {"attackType": "ATTACK_IN_PLACE", "sound":  "monster_damage"}
+      ]
+    },
+    {
       "name": "slime_red",
       "atlas": "slime_red",
       "height": 94,

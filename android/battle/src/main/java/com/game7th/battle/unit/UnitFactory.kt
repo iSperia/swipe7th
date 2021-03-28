@@ -1,10 +1,7 @@
 package com.game7th.battle.unit
 
 import com.game7th.battle.dto.SwipeBalance
-import com.game7th.battle.unit.npc.produceGreenSlime
-import com.game7th.battle.unit.npc.producePurpleSlime
-import com.game7th.battle.unit.npc.produceSlimeFather
-import com.game7th.battle.unit.npc.produceSlimeMother
+import com.game7th.battle.unit.npc.*
 import com.game7th.battle.unit.personages.produceGladiator
 import com.game7th.battle.unit.personages.produceToxicArcher
 import com.game7th.metagame.account.dto.PersonageAttributeStats
@@ -19,6 +16,7 @@ object UnitFactory {
             UnitType.PURPLE_SLIME -> producePurpleSlime(balance, level)
             UnitType.SLIME_MOTHER -> produceSlimeMother(balance, level)
             UnitType.SLIME_FATHER -> produceSlimeFather(balance, level)
+            UnitType.SLIME_BOSS -> produceSlimeBoss(balance, level)
             else -> null
         }
     }
