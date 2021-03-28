@@ -2,10 +2,7 @@ package com.game7th.metagame.account
 
 import com.game7th.metagame.FileProvider
 import com.game7th.metagame.PersistentStorage
-import com.game7th.metagame.account.dto.PersonageAttributeStats
-import com.game7th.metagame.account.dto.PersonageData
-import com.game7th.metagame.account.dto.PersonageExperienceResult
-import com.game7th.metagame.account.dto.PersonagePool
+import com.game7th.metagame.account.dto.*
 import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.inventory.dto.InventoryItem
 import com.game7th.metagame.dto.UnitType
@@ -22,7 +19,15 @@ class AccountServiceImpl(
 
     var pool: PersonagePool
 
+    val personageBalance: PersonageBalance
+
     init {
+        val balanceString = storage.get(KEY_BALANCE)
+        personageBalance = if (balanceString == null) {
+            PersonageBalance(Currency.values().map { it to 0 }.toMap().toMutableMap())
+        } else {
+            gson.fromJson<PersonageBalance>(balanceString, PersonageBalance::class.java)
+        }
         val dataString = storage.get(KEY_PERSONAGES)
         pool = if (dataString == null) {
             val initialData = PersonagePool(
@@ -44,22 +49,6 @@ class AccountServiceImpl(
                     ),
                     nextPersonageId = 2
             )
-//            val initialData = PersonagePool(
-//                    ((1..10).map {
-//                        val lvl = it * 2 - 1
-//                        val primary = max(1, lvl / 2)
-//                        val tertiary = (lvl - primary) / 3
-//                        val secondary = lvl - primary - tertiary
-//
-//                    } + (1..10).map {
-//                        val lvl = it * 2 - 1
-//                        val primary = max(1, lvl / 2)
-//                        val tertiary = (lvl - primary) / 3
-//                        val secondary = lvl - primary - tertiary
-//
-//                    }).sortedBy { it.level },
-//                    nextPersonageId = 200
-//            )
             savePersonagePool(initialData)
             initialData
         } else {
@@ -74,6 +63,11 @@ class AccountServiceImpl(
     private fun savePersonagePool(pool: PersonagePool) {
         val dataString = gson.toJson(pool)
         storage.put(KEY_PERSONAGES, dataString)
+    }
+
+    private fun saveBalance() {
+        val balanceString = gson.toJson(personageBalance)
+        storage.put(KEY_BALANCE, balanceString)
     }
 
     override fun addPersonageExperience(personageId: Int, experience: Int): List<PersonageExperienceResult> {
@@ -156,8 +150,28 @@ class AccountServiceImpl(
         }
     }
 
+    override fun getBalance(): PersonageBalance {
+        return personageBalance.copy()
+    }
+
+    override fun fund(currency: Currency, amount: Int): PersonageBalance {
+        personageBalance.currencies[currency] = personageBalance.currencies[currency] ?: 0 + amount
+        saveBalance()
+        return getBalance()
+    }
+
+    override fun spend(currency: Currency, amount: Int): PersonageBalance {
+        val currentBalance = personageBalance.currencies[currency] ?: 0
+        if (currentBalance >= amount) {
+            personageBalance.currencies[currency] = currentBalance - amount
+            saveBalance()
+        }
+        return getBalance()
+    }
+
     companion object {
         const val KEY_PERSONAGES = "account.personages"
+        const val KEY_BALANCE = "account.balance"
         val scriptedBonuses = listOf(
             ScriptedAttrBonusSetup(1, 3),
                 ScriptedAttrBonusSetup(2,2),
