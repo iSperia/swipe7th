@@ -6,10 +6,10 @@
     "healthPerBody": 50,
     "healthPerLevel": 100,
     "armorPerBody": 20,
-    "resistPerMind": 20,
+    "resistPerMind": 50,
     "regenerationPerSpirit": 3,
     "wizdomMultiplier": 2,
-    "evasionPerSpirit": 2,
+    "evasionPerSpirit": 1,
     "comboMultiplier": 0.1
   },
 

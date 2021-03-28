@@ -24,6 +24,7 @@ data class DamageProcessResult(
         val damage: DamageVector,
         val armorDeplete: Int,
         val resistDeplete: Int,
+        val resistConsumed: Int,
         val status: DamageProcessStatus
 ) {
     override fun toString(): String = "$damage {$armorDeplete/$resistDeplete} status=$status"

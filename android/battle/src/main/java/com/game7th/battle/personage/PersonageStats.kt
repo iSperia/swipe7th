@@ -13,6 +13,7 @@ data class PersonageStats(
         var mind: Int,
         var effectiveness: Int,
         var resist: Int,
+        var resistMax: Int,
 
         var level: Int,
 

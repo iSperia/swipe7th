@@ -6,14 +6,14 @@ filter: Nearest, Nearest
 repeat: none
 armor_bar_black
   rotate: false
-  xy: 2000, 1022
+  xy: 2000, 990
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
   index: -1
 armor_bar_grey
   rotate: false
-  xy: 2000, 1051
+  xy: 2000, 1019
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
@@ -97,14 +97,14 @@ art_STAFF
   index: -1
 bar_black
   rotate: false
-  xy: 2000, 1111
+  xy: 2000, 1079
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 bar_purple
   rotate: false
-  xy: 2000, 1135
+  xy: 2000, 1103
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
@@ -160,7 +160,7 @@ battle_fg
   index: 2
 black_quad
   rotate: false
-  xy: 2000, 1020
+  xy: 2000, 988
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -188,14 +188,14 @@ gladiator_wave
   index: -1
 health_bar_green
   rotate: false
-  xy: 2000, 1071
+  xy: 2000, 1039
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 health_bar_red
   rotate: false
-  xy: 2000, 1021
+  xy: 2000, 989
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
@@ -308,23 +308,30 @@ portrait_unknown
   index: -1
 ptcl_brown
   rotate: false
-  xy: 2000, 1023
+  xy: 2000, 991
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 resist_bar_black
   rotate: false
-  xy: 2000, 1091
+  xy: 2000, 1059
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 resist_bar_blue
   rotate: false
-  xy: 2000, 1031
+  xy: 2000, 999
   size: 20, 20
   orig: 20, 20
+  offset: 0, 0
+  index: -1
+rs_bar_rect
+  rotate: false
+  xy: 2000, 1191
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
 skill_tile_gun
@@ -343,7 +350,7 @@ skill_tile_holy_strike
   index: -1
 skill_tile_poison_arrow
   rotate: false
-  xy: 2000, 1191
+  xy: 2000, 1159
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -378,14 +385,14 @@ tile_fg_empire
   index: -1
 ui_button_pressed
   rotate: false
-  xy: 2000, 1175
+  xy: 2000, 1143
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_simple
   rotate: false
-  xy: 2000, 1159
+  xy: 2000, 1127
   size: 32, 16
   orig: 32, 16
   offset: 0, 0

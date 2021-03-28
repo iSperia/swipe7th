@@ -97,7 +97,7 @@
       "weight": 10
     },
     {
-      "template": {"name": "BOOTS", "node": "FOOT", "gbFlatEvasion": 2},
+      "template": {"name": "BOOTS", "node": "FOOT", "gbFlatEvasion": 1},
       "minLevel": 1,
       "maxLevel": 10000,
       "weight": 15

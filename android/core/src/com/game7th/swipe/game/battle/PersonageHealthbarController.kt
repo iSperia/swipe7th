@@ -13,6 +13,7 @@ class PersonageHealthbarController(
 
     private val healthBarBackground = context.gameContext.battleAtlas.createPatch("hp_bar_bg")
     private val healthBarForeground = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("hp_bar_rect"))
+    private val resistForeground = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("rs_bar_rect"))
     private val blackQuad = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("black_quad"))
     var timePassed: Float = 0f
     var timeHpActual: Float = timePassed
@@ -46,9 +47,13 @@ class PersonageHealthbarController(
         val sx = figure.x - 48f * battle.scale
         val sy = figure.y - 15f * battle.scale
 
-
         healthBarBackground.draw(batch, sx, sy, 96f * battle.scale, hei)
         healthBarForeground.draw(batch, sx + 6f, sy + 2f, healthBarWidth * percent, hei - 4f)
+
+        if (figure.viewModel.stats.resistMax > 0) {
+            val resistPercent = figure.viewModel.stats.resist.toFloat() / figure.viewModel.stats.resistMax
+            resistForeground.draw(batch, sx + 6f, sy + 2f, healthBarWidth * resistPercent, hei - 4f)
+        }
 
         var cursor = distance
         var index = 1

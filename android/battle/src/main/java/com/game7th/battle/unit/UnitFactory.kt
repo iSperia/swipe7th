@@ -47,6 +47,7 @@ object UnitFactory {
                 health = CappedStat(health, health),
                 armor = armor,
                 resist = resist,
+                resistMax = resist,
                 regeneration = (b.stats.regenerationPerSpirit * spirit).toInt(),
                 evasion = b.stats.evasionPerSpirit * spirit,
                 wisdom = mind * b.stats.wizdomMultiplier

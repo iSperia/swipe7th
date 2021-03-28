@@ -55,7 +55,7 @@ data class SwipeBalance(
 
     fun produceBaseStats(p: PersonageData): UnitStats {
         return UnitStats(p.unit, p.level, p.stats.body, p.stats.spirit, p.stats.mind, calculateHealth(p).let { CappedStat(it, it) },
-            calculateArmor(p), calculateResist(p), calculateEvasion(p), calculateRegeneration(p), calculateWisdom(p))
+            calculateArmor(p), calculateResist(p), calculateResist(p), calculateEvasion(p), calculateRegeneration(p), calculateWisdom(p))
     }
 
     fun produceGearStats(p: PersonageData): UnitStats {
@@ -86,10 +86,13 @@ data class SwipeBalance(
         val percResist = p.items.sumBy { it.gbPercResist * it.level }
         val percWisdom = p.items.sumBy { it.gbPercWisdom * it.level }
 
+        val resist = updated(calculateResist(_p), flatResist, percResist)
+
         return UnitStats(_p.unit, _p.level, _body, _mind, _spirit,
             updated(calculateHealth(_p), flatHp, percHp).let { CappedStat(it, it) },
             updated(calculateArmor(_p), flatArmor, percArmor),
-            updated(calculateResist(_p), flatResist, percResist),
+                resist,
+                resist,
             updated(calculateEvasion(_p), flatEvasion, percEvasion),
             updated(calculateRegeneration(_p), flatRegeneration, percRegeneration),
             updated(calculateWisdom(_p), flatWisdom, percWisdom))

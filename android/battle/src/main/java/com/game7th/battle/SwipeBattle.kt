@@ -257,6 +257,7 @@ class SwipeBattle(
         val totalDamage = damage.damage.totalDamage()
         if (totalDamage > 0 || damage.armorDeplete > 0 || damage.resistDeplete > 0) {
             target.stats.health.value = max(0, target.stats.health.value - totalDamage)
+            target.stats.resist -= damage.resistConsumed
 
             notifyEvent(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
             if (target.stats.health.value <= 0) {
