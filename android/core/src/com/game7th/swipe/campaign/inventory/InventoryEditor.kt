@@ -98,7 +98,7 @@ class InventoryEditor(
                 detailPanel = InventoryDetailPanel(
                         context,
                         item,
-                        "Put on",
+                        listOf(InventoryAction.StringAction("Put on")),
                         this@InventoryEditor::dismissDetailPanel,
                         this@InventoryEditor::equipFromDetailPanel).apply {
                     x = min(context.scale * 340f, panelScroller.x + itemView.x - panelScroller.scrollX)
@@ -129,7 +129,7 @@ class InventoryEditor(
                     detailPanel = InventoryDetailPanel(
                             context,
                             item,
-                            "Wear off",
+                            listOf(InventoryAction.StringAction("Wear off")),
                             this@InventoryEditor::dismissDetailPanel,
                             this@InventoryEditor::dequipFromEquipped).apply {
                         x = min(context.scale * 340f, equippedGroup.x + itemView.x)
@@ -146,14 +146,14 @@ class InventoryEditor(
         detailPanel = null
     }
 
-    private fun equipFromDetailPanel(item: InventoryItem) {
+    private fun equipFromDetailPanel(item: InventoryItem, actionIndex: Int) {
         accountService.equipItem(personageId, item)
         dismissDetailPanel()
         dirty = true
         refresher()
     }
 
-    private fun dequipFromEquipped(item: InventoryItem) {
+    private fun dequipFromEquipped(item: InventoryItem, actionIndex: Int) {
         accountService.dequipItem(personageId, item)
         dismissDetailPanel()
         dirty = true

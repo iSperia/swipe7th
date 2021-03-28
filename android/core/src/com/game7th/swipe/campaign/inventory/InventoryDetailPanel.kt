@@ -8,21 +8,30 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
+import com.game7th.metagame.account.dto.Currency
 import com.game7th.metagame.inventory.dto.InventoryItem
 import com.game7th.swipe.GdxGameContext
+import com.game7th.swipe.campaign.reward.CurrencyRewardView
 import ktx.actors.onClick
+
+sealed class InventoryAction {
+    data class StringAction(val text: String): InventoryAction()
+    data class IconAction(val text: String, val icon: String, val currency: Currency): InventoryAction()
+}
 
 class InventoryDetailPanel(
         private val context: GdxGameContext,
         private val item: InventoryItem,
-        private val action: String,
+        private val actions: List<InventoryAction>,
         private val dismisser: () -> Unit,
-        private val equipper: (item: InventoryItem) -> Unit
+        private val equipper: (item: InventoryItem, actionIndex: Int) -> Unit
 ) : Group() {
+
+    val h = (230 + 40 * actions.size) * context.scale
 
     val bg = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
         width = context.scale * 160f
-        height = context.scale * 270f
+        height = h
         onClick {
             dismisser()
         }
@@ -30,14 +39,14 @@ class InventoryDetailPanel(
 
     val itemView = ItemView(context, item, false).apply {
         x = 10f * context.scale
-        y = 120f * context.scale
+        y = h - 160f * context.scale
         setScale(140f/60f)
         touchable = Touchable.disabled
     }
 
     val nameLabel = Label(item.name, Label.LabelStyle(context.font, Color.BLACK)).apply {
         x = 10f * context.scale
-        y = 100f * context.scale
+        y = h - 180f * context.scale
         setFontScale(18f * context.scale / 36f)
         width = 140f * context.scale
         height = 20f * context.scale
@@ -47,7 +56,7 @@ class InventoryDetailPanel(
 
     val affixText = Label("", Label.LabelStyle(context.font, Color.BLUE)).apply {
         x = 10f * context.scale
-        y = 60f * context.scale
+        y = h - 210f * context.scale
         width = 140f * context.scale
         height = 30f * context.scale
         setFontScale(25f * context.scale / 36f)
@@ -55,32 +64,85 @@ class InventoryDetailPanel(
         setAlignment(Align.left)
     }
 
-    val equipButton = Button(Button.ButtonStyle(TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_simple")),
-        TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_pressed")), null)).apply {
-        x = 10f * context.scale
+    val actionGroup = Group().apply {
         y = 10f * context.scale
-        width = 140f * context.scale
-        height = 40f * context.scale
-        onClick { equipper(item) }
+        x = 10f * context.scale
     }
 
-    val equipLabel = Label(action, Label.LabelStyle(context.font, Color.BLACK)).apply {
-        x = equipButton.x
-        y = equipButton.y
-        width = equipButton.width
-        height = equipButton.height
-        setFontScale(36f * context.scale / 36f)
-        setAlignment(Align.center)
-        touchable = Touchable.disabled
-    }
+
 
     init {
         addActor(bg)
         addActor(itemView)
         addActor(nameLabel)
-        addActor(equipButton)
+        addActor(actionGroup)
         addActor(affixText)
-        addActor(equipLabel)
+
+        actions.forEachIndexed { index, action ->
+
+            when (action) {
+                is InventoryAction.StringAction -> {
+                    val button = Button(Button.ButtonStyle(TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_simple")),
+                            TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_pressed")), null)).apply {
+                        y = index * 40f * context.scale
+                        width = 140f * context.scale
+                        height = 30f * context.scale
+                        onClick { equipper(item, index) }
+                    }
+
+                    val label = Label(action.text, Label.LabelStyle(context.font, Color.BLACK)).apply {
+                        x = button.x
+                        y = button.y
+                        width = button.width
+                        height = button.height
+                        setFontScale(24f * context.scale / 36f)
+                        setAlignment(Align.center)
+                        touchable = Touchable.disabled
+                    }
+                    actionGroup.addActor(button)
+                    actionGroup.addActor(label)
+                }
+
+                is InventoryAction.IconAction -> {
+                    val button = Button(Button.ButtonStyle(TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_simple")),
+                            TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_pressed")), null)).apply {
+                        y = index * 40f * context.scale
+                        width = 140f * context.scale
+                        height = 30f * context.scale
+                        onClick { equipper(item, index) }
+                    }
+
+                    val label = Label(action.text, Label.LabelStyle(context.font, Color.BLACK)).apply {
+                        x = button.x + 30f * context.scale
+                        y = button.y
+                        height = button.height
+                        setFontScale(24f * context.scale / 36f)
+                        setAlignment(Align.left)
+                        touchable = Touchable.disabled
+                    }
+
+                    actionGroup.addActor(button)
+                    actionGroup.addActor(label)
+
+                    val actionIcon = Image(context.uiAtlas.findRegion(action.icon)).apply {
+                        x = button.x + 3f * context.scale
+                        y = button.y + 3f * context.scale
+                        width = 24f * context.scale
+                        height = 24f * context.scale
+                        touchable = Touchable.disabled
+                    }
+                    actionGroup.addActor(actionIcon)
+
+                    val currencyIcon = Image(context.uiAtlas.findRegion(CurrencyRewardView.getTextureName(action.currency))).apply {
+                        x = label.x + label.width + 20f * context.scale
+                        y = button.y
+                        touchable = Touchable.disabled
+                    }
+                    actionGroup.addActor(currencyIcon)
+                }
+            }
+
+        }
 
         affixText.setText(getAffixText())
     }

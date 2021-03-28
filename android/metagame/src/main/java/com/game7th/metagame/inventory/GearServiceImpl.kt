@@ -69,6 +69,12 @@ class GearServiceImpl(
         storage.put(KEY_INVENTORY, gson.toJson(inventory))
     }
 
+    override fun upgradeItem(item: InventoryItem) {
+        val newItem = item.copy(level = item.level + 1)
+        inventory.items.remove(item)
+        inventory.items.add(newItem)
+    }
+
     companion object {
         const val KEY_INVENTORY = "account.inventory"
     }

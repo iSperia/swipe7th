@@ -9,4 +9,5 @@ interface GearService {
     fun listInventory(): List<InventoryItem>
     fun equipItem(personageId: Int, item: InventoryItem)
     fun removeItem(item: InventoryItem)
+    fun upgradeItem(item: InventoryItem)
 }

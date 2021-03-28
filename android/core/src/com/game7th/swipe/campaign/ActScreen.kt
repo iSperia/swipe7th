@@ -27,11 +27,13 @@ import com.game7th.swipe.campaign.party.PartyView
 import com.game7th.swipe.campaign.prepare.BattlePrepareDialog
 import com.game7th.swipe.campaign.top_menu.CurrencyPanel
 import com.game7th.swipe.dialog.DismissStrategy
+import com.game7th.swipe.forge.ForgePanel
 import kotlin.math.*
 
 sealed class UiState {
     object Hidden : UiState()
     object PartyUi : UiState()
+    object ForgeUi: UiState()
     data class BattlePreparation(
             val node: LocationConfig
     ) : UiState()
@@ -83,6 +85,7 @@ class ActScreen(
 
     private var battlePrepareDialog: BattlePrepareDialog? = null
     private var partyUi: PartyView? = null
+    private var forgeUi: ForgePanel? = null
 
     private var isScrollEnabled = true
 
@@ -151,6 +154,7 @@ class ActScreen(
 
         bottomMenu = BottomMenu(context).apply {
             onPartyButtonPressed = this@ActScreen::onPartyButtonPressed
+            onForgeButtonPressed = this@ActScreen::onForgeButtonPressed
         }
         stage.addActor(bottomMenu)
 
@@ -202,6 +206,11 @@ class ActScreen(
     private fun onPartyButtonPressed() {
         if (uiState == UiState.PartyUi) return
         transiteUiState(UiState.PartyUi)
+    }
+
+    private fun onForgeButtonPressed() {
+        if (uiState == UiState.ForgeUi) return
+        transiteUiState(UiState.ForgeUi)
     }
 
     private fun closeOverlay() {
@@ -345,6 +354,7 @@ class ActScreen(
         when (this.uiState) {
             is UiState.PartyUi -> hidePartyUi()
             is UiState.BattlePreparation -> hideBattlePreparation()
+            is UiState.ForgeUi -> hideForgeUi()
         }
 
         uiState = state
@@ -353,11 +363,16 @@ class ActScreen(
         when (state) {
             is UiState.BattlePreparation -> showBattlePreparation(state.node)
             is UiState.PartyUi -> showPartyUi()
+            is UiState.ForgeUi -> showForgeUi()
         }
     }
 
     private fun hidePartyUi() {
         partyUi?.animateHide()
+    }
+
+    private fun hideForgeUi() {
+        forgeUi?.animateHide()
     }
 
     private fun showPartyUi() {
@@ -366,6 +381,15 @@ class ActScreen(
         }
         stage.addActor(partyUi)
         partyUi?.zIndex = 0
+    }
+
+    private fun showForgeUi() {
+        forgeUi = ForgePanel(context, game.gearService, game.accountService).apply {
+            y = context.scale * 48f
+        }
+        stage.addActor(forgeUi)
+        forgeUi?.zIndex = 0
+        forgeUi?.animateShow()
     }
 
     private fun showBattlePreparation(node: LocationConfig) {

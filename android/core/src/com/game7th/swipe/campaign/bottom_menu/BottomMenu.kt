@@ -18,6 +18,7 @@ class BottomMenu(
 ) : Group() {
 
     var onPartyButtonPressed: (() -> Unit)? = null
+    var onForgeButtonPressed: (() -> Unit)? = null
 
     val bg = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
         x = 0f
@@ -30,7 +31,7 @@ class BottomMenu(
             TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_trans_simple")),
             TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_trans_pressed")),
             null)).apply {
-        x = 12f
+        x = 12f * context.scale
         y = 0f
         width = context.scale * 144f
         height = context.scale * 48f
@@ -48,9 +49,38 @@ class BottomMenu(
         x = btnSquads.x + context.scale * 52f
         y = btnSquads.y + context.scale * 12f
         setAlignment(Align.left)
+        setFontScale(20f * context.scale / 36f)
+        width = 76f * context.scale
+        height = 24f * context.scale
+        touchable = Touchable.disabled
+    }
+
+    val btnForge = Button(Button.ButtonStyle(
+            TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_trans_simple")),
+            TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_trans_pressed")),
+            null)).apply {
+        x = 132f * context.scale
+        y = 0f
+        width = context.scale * 144f
+        height = context.scale * 48f
+    }
+
+    val iconForge = Image(context.uiAtlas.findRegion("icon_forge")).apply {
+        x = btnForge.x
+        y = btnForge.y
+        width = context.scale * 48f
+        height = context.scale * 48f
+        touchable = Touchable.disabled
+    }
+
+    val labelForge = Label("Forge", Label.LabelStyle(context.font, Color.BLACK)).apply {
+        x = btnForge.x + context.scale * 52f
+        y = btnForge.y + context.scale * 12f
+        setAlignment(Align.left)
         width = 96f * context.scale
         height = 24f * context.scale
         touchable = Touchable.disabled
+        setFontScale(20f * context.scale / 36f)
     }
 
     init {
@@ -60,8 +90,15 @@ class BottomMenu(
         addActor(iconSquads)
         addActor(labelSquads)
 
+        addActor(btnForge)
+        addActor(iconForge)
+        addActor(labelForge)
+
         btnSquads.onClick {
             onPartyButtonPressed?.invoke()
+        }
+        btnForge.onClick {
+            onForgeButtonPressed?.invoke()
         }
     }
 }

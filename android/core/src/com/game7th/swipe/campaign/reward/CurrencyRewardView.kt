@@ -20,7 +20,7 @@ class CurrencyRewardView(
         height = size
     }
 
-    val image: Image? = Image(context.uiAtlas.findRegion(getTextureName())).apply {
+    val image: Image? = Image(context.uiAtlas.findRegion(getTextureName(currency))).apply {
         width = size
         height = size
     }
@@ -34,11 +34,14 @@ class CurrencyRewardView(
         setFontScale(size / 4 / 36f)
     }
 
-    private fun getTextureName(): String {
-        return when (currency) {
-            Currency.GEMS -> "ui_currency_gems"
-            Currency.GOLD -> "ui_currency_gold"
-            else -> "ui_currency_gems"
+    companion object {
+        fun getTextureName(currency: Currency): String {
+            return when (currency) {
+                Currency.GEMS -> "ui_currency_gems"
+                Currency.GOLD -> "ui_currency_gold"
+                Currency.DUST -> "ui_currency_dust"
+                else -> "ui_currency_gems"
+            }
         }
     }
 
