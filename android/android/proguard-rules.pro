@@ -50,6 +50,7 @@
 
 
 -keepclassmembers class com.game7th.metagame.account.dto.** { *; }
+-keepclassmembers public class com.game7th.metagame.shop.dto.** { *; }
 -keepclassmembers public class com.game7th.metagame.campaign.dto.** { *; }
 -keepclassmembers public class com.game7th.metagame.dto.** { *; }
 -keepclassmembers public class com.game7th.metagame.inventory.dto.** { *; }

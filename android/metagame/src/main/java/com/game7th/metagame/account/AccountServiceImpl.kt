@@ -25,6 +25,11 @@ class AccountServiceImpl(
         val balanceString = storage.get(KEY_BALANCE)
         personageBalance = if (balanceString == null) {
             PersonageBalance(Currency.values().map { it to 0 }.toMap().toMutableMap())
+//                    .apply {
+//                        currencies[Currency.GOLD] = 10000
+//                        currencies[Currency.GEMS] = 1000
+//                        currencies[Currency.DUST] = 10000
+//                    }
         } else {
             gson.fromJson<PersonageBalance>(balanceString, PersonageBalance::class.java)
         }

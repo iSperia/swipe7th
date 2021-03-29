@@ -18,6 +18,8 @@ import com.game7th.metagame.campaign.ActsService
 import com.game7th.metagame.campaign.ActsServiceImpl
 import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.inventory.GearServiceImpl
+import com.game7th.metagame.shop.ShopService
+import com.game7th.metagame.shop.ShopServiceImpl
 import com.game7th.swipe.campaign.ActScreen
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -31,6 +33,7 @@ class SwipeGameGdx(val storage: PersistentStorage) : Game() {
     lateinit var context: GdxGameContext
     lateinit var gearService: GearService
     lateinit var actService: ActsService
+    lateinit var shopService: ShopService
     lateinit var accountService: AccountService
     lateinit var service: GameService
 
@@ -52,6 +55,7 @@ class SwipeGameGdx(val storage: PersistentStorage) : Game() {
         initializeGearService()
         initializeAccountService()
         initializeActService()
+        initializeShopService()
         service = GameService(actService)
 
         width = Gdx.graphics.width.toFloat()
@@ -89,6 +93,10 @@ class SwipeGameGdx(val storage: PersistentStorage) : Game() {
 
     private fun initializeActService() {
         actService = ActsServiceImpl(gson, storage, fileProvider, gearService, accountService)
+    }
+
+    private fun initializeShopService() {
+        shopService = ShopServiceImpl(storage, gearService, accountService, gson)
     }
 
     private fun initializeAccountService() {

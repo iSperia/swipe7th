@@ -19,6 +19,7 @@ class BottomMenu(
 
     var onPartyButtonPressed: (() -> Unit)? = null
     var onForgeButtonPressed: (() -> Unit)? = null
+    var onShopButtonPressed: (() -> Unit)? = null
 
     val bg = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
         x = 0f
@@ -61,6 +62,16 @@ class BottomMenu(
             null)).apply {
         x = 132f * context.scale
         y = 0f
+        width = context.scale * 120f
+        height = context.scale * 48f
+    }
+
+    val btnShop = Button(Button.ButtonStyle(
+            TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_trans_simple")),
+            TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_trans_pressed")),
+            null)).apply {
+        x = btnForge.x + btnForge.width
+        y = 0f
         width = context.scale * 144f
         height = context.scale * 48f
     }
@@ -73,9 +84,27 @@ class BottomMenu(
         touchable = Touchable.disabled
     }
 
+    val iconShop = Image(context.uiAtlas.findRegion("ui_currency_gold")).apply {
+        x = btnShop.x
+        y = btnShop.y
+        width = context.scale * 48f
+        height = context.scale * 48f
+        touchable = Touchable.disabled
+    }
+
     val labelForge = Label("Forge", Label.LabelStyle(context.font, Color.BLACK)).apply {
         x = btnForge.x + context.scale * 52f
         y = btnForge.y + context.scale * 12f
+        setAlignment(Align.left)
+        width = 96f * context.scale
+        height = 24f * context.scale
+        touchable = Touchable.disabled
+        setFontScale(20f * context.scale / 36f)
+    }
+
+    val labelShop = Label("Shop", Label.LabelStyle(context.font, Color.BLACK)).apply {
+        x = btnShop.x + context.scale * 52f
+        y = btnShop.y + context.scale * 12f
         setAlignment(Align.left)
         width = 96f * context.scale
         height = 24f * context.scale
@@ -94,11 +123,18 @@ class BottomMenu(
         addActor(iconForge)
         addActor(labelForge)
 
+        addActor(btnShop)
+        addActor(iconShop)
+        addActor(labelShop)
+
         btnSquads.onClick {
             onPartyButtonPressed?.invoke()
         }
         btnForge.onClick {
             onForgeButtonPressed?.invoke()
+        }
+        btnShop.onClick {
+            onShopButtonPressed?.invoke()
         }
     }
 }

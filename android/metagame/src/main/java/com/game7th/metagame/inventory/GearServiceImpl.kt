@@ -35,7 +35,7 @@ class GearServiceImpl(
     }
 
     override fun getArtifactReward(level: Int): RewardData.ArtifactRewardData? {
-        val filteredArtifacts = gearConfig.items.filter { it.maxLevel >= level && it.minLevel <= level }
+        val filteredArtifacts = gearConfig.items.filter { it.maxLevel >= level && it.minLevel <= level && it.template.rarity == 0 }
         val totalWeight = filteredArtifacts.sumBy { it.weight }
         val roll = Random.nextInt(1, totalWeight + 1)
         var sum = 0

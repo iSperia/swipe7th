@@ -24,10 +24,12 @@ class InventoryDetailPanel(
         private val item: InventoryItem,
         private val actions: List<InventoryAction>,
         private val dismisser: () -> Unit,
-        private val equipper: (item: InventoryItem, actionIndex: Int) -> Unit
+        private val equipper: (item: InventoryItem, actionIndex: Int, meta: String?) -> Unit
 ) : Group() {
 
     val h = (230 + 40 * actions.size) * context.scale
+
+    var meta: String? = null
 
     val bg = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
         width = context.scale * 160f
@@ -69,9 +71,9 @@ class InventoryDetailPanel(
         x = 10f * context.scale
     }
 
-
-
     init {
+        width = bg.width
+
         addActor(bg)
         addActor(itemView)
         addActor(nameLabel)
@@ -87,7 +89,7 @@ class InventoryDetailPanel(
                         y = index * 40f * context.scale
                         width = 140f * context.scale
                         height = 30f * context.scale
-                        onClick { equipper(item, index) }
+                        onClick { equipper(item, index, meta) }
                     }
 
                     val label = Label(action.text, Label.LabelStyle(context.font, Color.BLACK)).apply {
@@ -109,7 +111,7 @@ class InventoryDetailPanel(
                         y = index * 40f * context.scale
                         width = 140f * context.scale
                         height = 30f * context.scale
-                        onClick { equipper(item, index) }
+                        onClick { equipper(item, index, meta) }
                     }
 
                     val label = Label(action.text, Label.LabelStyle(context.font, Color.BLACK)).apply {

@@ -25,7 +25,8 @@ data class InventoryItem(
         val gbPercWisdom: Int = 0,
         val level: Int = 1,
         val name: String,
-        val node: ItemNode
+        val node: ItemNode,
+        val rarity: Int
 )
 
 data class InventoryItemMetadata(

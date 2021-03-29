@@ -252,7 +252,7 @@ class GameScreen(private val game: SwipeGameGdx,
 
     private fun produceTutorials(): List<AbilityTrigger> {
         val result = mutableListOf<AbilityTrigger>()
-        if (actId == 0 && locationId == 0 && storage.get(TutorialKeys.ACT1_FIRST_BATTLE_INTRO_SHOWN)?.toBoolean() != true) {
+        if (actId == 0 && locationId == 0 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_FIRST_BATTLE_INTRO_SHOWN)?.toBoolean() != true) {
             result.add(FirstBattleTutorial(this, game))
         }
         return result

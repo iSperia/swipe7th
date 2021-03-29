@@ -146,14 +146,14 @@ class InventoryEditor(
         detailPanel = null
     }
 
-    private fun equipFromDetailPanel(item: InventoryItem, actionIndex: Int) {
+    private fun equipFromDetailPanel(item: InventoryItem, actionIndex: Int, meta: String?) {
         accountService.equipItem(personageId, item)
         dismissDetailPanel()
         dirty = true
         refresher()
     }
 
-    private fun dequipFromEquipped(item: InventoryItem, actionIndex: Int) {
+    private fun dequipFromEquipped(item: InventoryItem, actionIndex: Int, meta: String?) {
         accountService.dequipItem(personageId, item)
         dismissDetailPanel()
         dirty = true

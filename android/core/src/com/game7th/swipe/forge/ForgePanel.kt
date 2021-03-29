@@ -66,28 +66,6 @@ class ForgePanel(
         reloadData()
     }
 
-    fun animateHide() {
-        val shift = h * context.scale + 48f * context.scale
-        addAction(SequenceAction(
-                MoveByAction().apply {
-                    amountY = -shift
-                    duration = 0.25f
-
-                },
-                RunnableAction().apply {
-                    setRunnable { this@ForgePanel.remove() }
-                })
-        )
-    }
-
-    fun animateShow() {
-        y = -h * context.scale
-        addAction(MoveByAction().apply {
-            amountY = 48f * context.scale + h * context.scale
-            duration = 0.25f
-        })
-    }
-
     private fun dismissDetailPanel() {
         detailPanel?.remove()
         detailPanel = null
@@ -137,7 +115,7 @@ class ForgePanel(
         }
     }
 
-    fun processAction(item: InventoryItem, index: Int) {
+    fun processAction(item: InventoryItem, index: Int, meta: String?) {
         when (index) {
             0 -> { //to dust!
                 accountService.fund(Currency.DUST, item.level * 50)
@@ -156,7 +134,7 @@ class ForgePanel(
     }
 
     companion object {
-        const val h = 300
+        const val h = 300f
     }
 
 }

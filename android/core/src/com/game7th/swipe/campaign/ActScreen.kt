@@ -28,12 +28,16 @@ import com.game7th.swipe.campaign.prepare.BattlePrepareDialog
 import com.game7th.swipe.campaign.top_menu.CurrencyPanel
 import com.game7th.swipe.dialog.DismissStrategy
 import com.game7th.swipe.forge.ForgePanel
+import com.game7th.swipe.shop.ShopPanel
+import com.game7th.swipe.util.animateHideToBottom
+import com.game7th.swipe.util.animateShowFromBottom
 import kotlin.math.*
 
 sealed class UiState {
     object Hidden : UiState()
     object PartyUi : UiState()
     object ForgeUi: UiState()
+    object ShopUi: UiState()
     data class BattlePreparation(
             val node: LocationConfig
     ) : UiState()
@@ -86,6 +90,7 @@ class ActScreen(
     private var battlePrepareDialog: BattlePrepareDialog? = null
     private var partyUi: PartyView? = null
     private var forgeUi: ForgePanel? = null
+    private var shopUi: ShopPanel? = null
 
     private var isScrollEnabled = true
 
@@ -155,6 +160,7 @@ class ActScreen(
         bottomMenu = BottomMenu(context).apply {
             onPartyButtonPressed = this@ActScreen::onPartyButtonPressed
             onForgeButtonPressed = this@ActScreen::onForgeButtonPressed
+            onShopButtonPressed = this@ActScreen::onShopButtonPressed
         }
         stage.addActor(bottomMenu)
 
@@ -166,7 +172,7 @@ class ActScreen(
         bottomMenu.zIndex = 100
         mapBottomOffset = context.scale * 48f
 
-        if (actId == 0 && storage.get(TutorialKeys.ACT1_INTRO_SHOWN)?.toBoolean() != true) {
+        if (actId == 0 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_INTRO_SHOWN)?.toBoolean() != true) {
             showIntro()
         }
 
@@ -211,6 +217,11 @@ class ActScreen(
     private fun onForgeButtonPressed() {
         if (uiState == UiState.ForgeUi) return
         transiteUiState(UiState.ForgeUi)
+    }
+
+    private fun onShopButtonPressed() {
+        if (uiState == UiState.ShopUi) return
+        transiteUiState(UiState.ShopUi)
     }
 
     private fun closeOverlay() {
@@ -355,6 +366,7 @@ class ActScreen(
             is UiState.PartyUi -> hidePartyUi()
             is UiState.BattlePreparation -> hideBattlePreparation()
             is UiState.ForgeUi -> hideForgeUi()
+            is UiState.ShopUi -> hideShopUi()
         }
 
         uiState = state
@@ -364,15 +376,29 @@ class ActScreen(
             is UiState.BattlePreparation -> showBattlePreparation(state.node)
             is UiState.PartyUi -> showPartyUi()
             is UiState.ForgeUi -> showForgeUi()
+            is UiState.ShopUi -> showShopUi()
         }
     }
 
+    private fun hideShopUi() {
+        shopUi?.animateHideToBottom(context, ShopPanel.h).also { shopUi = null }
+    }
+
     private fun hidePartyUi() {
-        partyUi?.animateHide()
+        partyUi?.animateHide().also { partyUi = null }
     }
 
     private fun hideForgeUi() {
-        forgeUi?.animateHide()
+        forgeUi?.animateHideToBottom(context, ForgePanel.h).also { forgeUi = null }
+    }
+
+    private fun showShopUi() {
+        shopUi = ShopPanel(context, game.shopService).apply {
+            y = context.scale * 48f
+        }
+        stage.addActor(shopUi)
+        shopUi?.zIndex = 0
+        shopUi?.animateShowFromBottom(context, ShopPanel.h)
     }
 
     private fun showPartyUi() {
@@ -389,7 +415,7 @@ class ActScreen(
         }
         stage.addActor(forgeUi)
         forgeUi?.zIndex = 0
-        forgeUi?.animateShow()
+        forgeUi?.animateShowFromBottom(context, ForgePanel.h)
     }
 
     private fun showBattlePreparation(node: LocationConfig) {
