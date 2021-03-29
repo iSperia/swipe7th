@@ -77,7 +77,14 @@
       ],
       "attacks": [
         {"attackType": "MOVE_AND_PUNCH", "sound":  "monster_damage"},
-        {"attackType": "ATTACK_IN_PLACE", "sound":  "monster_damage"}
+        {"attackType": "BOW_STRIKE", "effect": {
+          "name": "slime_boss_projectile",
+          "atlas": "slime_boss",
+          "trigger": 12,
+          "height": 144,
+          "width": 96,
+          "sound": "arrow"
+        }}
       ]
     },
     {
