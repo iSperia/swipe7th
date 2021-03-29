@@ -124,8 +124,8 @@ class GameActor(
         GameFinishedDialog(context, "Defeat", emptyList(), emptyList()) {
             finishCallback(false)
         }.apply {
-            x = 40f
-            y = 220f
+            x = 40f * context.scale
+            y = 220f * context.scale
             this@GameActor.addActor(this)
         }
     }
@@ -143,8 +143,8 @@ class GameActor(
         GameFinishedDialog(context, "Victory", expResult, rewards) {
             finishCallback(true)
         }.apply {
-            x = 40f
-            y = 220f
+            x = 40f * context.scale
+            y = 220f * context.scale
             this@GameActor.addActor(this)
         }
     }

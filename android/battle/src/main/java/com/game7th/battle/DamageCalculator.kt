@@ -22,8 +22,8 @@ object DamageCalculator {
             DamageProcessResult(DamageVector(0,0,0), 0, 0, 0, DamageProcessStatus.DAMAGE_EVADED)
         } else {
 
-            val magicReduction = min(damage.magical.toFloat(), target.resist / 2f).toInt()
-            val resistAfterMr = target.resist - magicReduction
+            val magicReduction = min(damage.magical.toFloat(), target.resist * 2f).toInt()
+            val resistAfterMr = (target.resist - magicReduction / 2f).toInt()
             val resistPhysReduction = min(damage.physical.toFloat() / 2f, resistAfterMr.toFloat()).toInt()
             val damageAfterResistPhysReduction = damage.physical.toFloat() - resistPhysReduction
 
