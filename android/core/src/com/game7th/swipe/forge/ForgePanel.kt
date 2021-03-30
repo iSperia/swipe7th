@@ -14,9 +14,9 @@ import com.game7th.metagame.account.dto.Currency
 import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.inventory.dto.InventoryItem
 import com.game7th.swipe.GdxGameContext
-import com.game7th.swipe.campaign.inventory.InventoryAction
 import com.game7th.swipe.campaign.inventory.InventoryDetailPanel
 import com.game7th.swipe.campaign.inventory.ItemView
+import com.game7th.swipe.util.InventoryAction
 import ktx.actors.onClick
 import kotlin.math.max
 import kotlin.math.min

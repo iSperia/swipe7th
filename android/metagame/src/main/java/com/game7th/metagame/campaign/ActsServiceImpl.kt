@@ -13,6 +13,7 @@ import com.game7th.metagame.dto.UnitConfig
 import com.game7th.metagame.dto.UnitType
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.gson.Gson
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
 
@@ -121,7 +122,7 @@ class ActsServiceImpl(
             val rewards = mutableListOf<RewardData>()
             val r1 = min(maxArtifactLevel, Random.nextInt(totalPoints) + 1)
             gearService.getArtifactReward(r1)?.let { rewards.add(it) }
-            val goldAmount = (totalPoints - r1) * 100
+            val goldAmount = max(100, (totalPoints - r1) * 100)
             rewards.add(RewardData.CurrencyRewardData(Currency.GOLD, goldAmount))
 
             gearService.addRewards(rewards)

@@ -25,11 +25,11 @@ class AccountServiceImpl(
         val balanceString = storage.get(KEY_BALANCE)
         personageBalance = if (balanceString == null) {
             PersonageBalance(Currency.values().map { it to 0 }.toMap().toMutableMap())
-//                    .apply {
+                    .apply {
 //                        currencies[Currency.GOLD] = 10000
-//                        currencies[Currency.GEMS] = 1000
+                        currencies[Currency.GEMS] = 1000
 //                        currencies[Currency.DUST] = 10000
-//                    }
+                    }
         } else {
             gson.fromJson<PersonageBalance>(balanceString, PersonageBalance::class.java)
         }
@@ -43,13 +43,6 @@ class AccountServiceImpl(
                                     experience = 0,
                                     stats = PersonageAttributeStats(1, 0, 0),
                                     id = 0,
-                                    items = mutableListOf()),
-                            PersonageData(
-                                    unit = UnitType.POISON_ARCHER,
-                                    level = 1,
-                                    experience = 0,
-                                    stats = PersonageAttributeStats(0, 1, 0),
-                                    id = 1,
                                     items = mutableListOf())
                     ),
                     nextPersonageId = 2
@@ -63,6 +56,13 @@ class AccountServiceImpl(
 
     override fun getPersonages(): List<PersonageData> {
         return pool.personages
+    }
+
+    override fun addPersonage(personage: UnitType) {
+        val max = listOf(personage.bodyWeight, personage.spiritWeight, personage.mindWeight).withIndex().maxBy { it.value }?.index ?: 0
+        val personage = PersonageData(personage, 1, 0, PersonageAttributeStats(if (max == 0) 1 else 0, if (max == 1) 1 else 0, if (max == 2) 1 else 0), pool.nextPersonageId, mutableListOf())
+        pool = pool.copy(personages = pool.personages + personage, nextPersonageId = pool.nextPersonageId + 1)
+        savePersonagePool(pool)
     }
 
     private fun savePersonagePool(pool: PersonagePool) {

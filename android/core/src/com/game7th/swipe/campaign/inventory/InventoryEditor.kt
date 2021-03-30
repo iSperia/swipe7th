@@ -8,6 +8,7 @@ import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.inventory.dto.InventoryItem
 import com.game7th.metagame.inventory.dto.ItemNode
 import com.game7th.swipe.GdxGameContext
+import com.game7th.swipe.util.InventoryAction
 import ktx.actors.onClick
 import kotlin.math.max
 import kotlin.math.min
@@ -129,7 +130,7 @@ class InventoryEditor(
                     detailPanel = InventoryDetailPanel(
                             context,
                             item,
-                            listOf(InventoryAction.StringAction("Wear off")),
+                            listOf(com.game7th.swipe.util.InventoryAction.StringAction("Wear off")),
                             this@InventoryEditor::dismissDetailPanel,
                             this@InventoryEditor::dequipFromEquipped).apply {
                         x = min(context.scale * 340f, equippedGroup.x + itemView.x)

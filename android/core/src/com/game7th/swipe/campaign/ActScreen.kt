@@ -393,7 +393,7 @@ class ActScreen(
     }
 
     private fun showShopUi() {
-        shopUi = ShopPanel(context, game.shopService).apply {
+        shopUi = ShopPanel(context, game.shopService, currencyView::refreshBalance).apply {
             y = context.scale * 48f
         }
         stage.addActor(shopUi)

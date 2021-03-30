@@ -20,8 +20,8 @@ android {
         applicationId "com.game7th.swipe"
         minSdkVersion 14
         targetSdkVersion 30
-        versionCode 4
-        versionName "0.0.3 Bracer"
+        versionCode 5
+        versionName "0.0.4 Mecha"
     }
     buildTypes {
         release {

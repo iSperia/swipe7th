@@ -1,6 +1,7 @@
 package com.game7th.metagame.shop.dto
 
 import com.game7th.metagame.account.dto.Currency
+import com.game7th.metagame.dto.UnitType
 import com.game7th.metagame.inventory.dto.InventoryItem
 
 data class PaymentOption(
@@ -14,5 +15,11 @@ sealed class ShopItem(val id: String) {
         val item: InventoryItem,
         val paymentOptions: List<PaymentOption>,
         id: String
+    ): ShopItem(id)
+
+    class PersonageShopItem(
+            val personage: UnitType,
+            val paymentOptions: List<PaymentOption>,
+            id: String
     ): ShopItem(id)
 }

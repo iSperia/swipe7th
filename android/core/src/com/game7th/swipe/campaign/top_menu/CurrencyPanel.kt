@@ -60,4 +60,10 @@ class CurrencyPanel(
         addActor(labelGold)
         addActor(labelGems)
     }
+
+    fun refreshBalance() {
+        balance = accountService.getBalance()
+        labelGold.setText((balance.currencies[Currency.GOLD] ?: 0).toString())
+        labelGems.setText((balance.currencies[Currency.GEMS] ?: 0).toString())
+    }
 }

@@ -3,21 +3,14 @@ package com.game7th.swipe.campaign.inventory
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Touchable
-import com.badlogic.gdx.scenes.scene2d.ui.Button
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
-import com.game7th.metagame.account.dto.Currency
 import com.game7th.metagame.inventory.dto.InventoryItem
 import com.game7th.swipe.GdxGameContext
-import com.game7th.swipe.campaign.reward.CurrencyRewardView
+import com.game7th.swipe.util.ActionPanel
+import com.game7th.swipe.util.InventoryAction
 import ktx.actors.onClick
-
-sealed class InventoryAction {
-    data class StringAction(val text: String): InventoryAction()
-    data class IconAction(val text: String, val icon: String, val currency: Currency): InventoryAction()
-}
 
 class InventoryDetailPanel(
         private val context: GdxGameContext,
@@ -66,7 +59,7 @@ class InventoryDetailPanel(
         setAlignment(Align.left)
     }
 
-    val actionGroup = Group().apply {
+    val actionGroup = ActionPanel(context, context.scale * 140f, actions, { index: Int -> equipper(item, index, meta) }).apply {
         y = 10f * context.scale
         x = 10f * context.scale
     }
@@ -79,72 +72,6 @@ class InventoryDetailPanel(
         addActor(nameLabel)
         addActor(actionGroup)
         addActor(affixText)
-
-        actions.forEachIndexed { index, action ->
-
-            when (action) {
-                is InventoryAction.StringAction -> {
-                    val button = Button(Button.ButtonStyle(TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_simple")),
-                            TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_pressed")), null)).apply {
-                        y = index * 40f * context.scale
-                        width = 140f * context.scale
-                        height = 30f * context.scale
-                        onClick { equipper(item, index, meta) }
-                    }
-
-                    val label = Label(action.text, Label.LabelStyle(context.font, Color.BLACK)).apply {
-                        x = button.x
-                        y = button.y
-                        width = button.width
-                        height = button.height
-                        setFontScale(24f * context.scale / 36f)
-                        setAlignment(Align.center)
-                        touchable = Touchable.disabled
-                    }
-                    actionGroup.addActor(button)
-                    actionGroup.addActor(label)
-                }
-
-                is InventoryAction.IconAction -> {
-                    val button = Button(Button.ButtonStyle(TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_simple")),
-                            TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_pressed")), null)).apply {
-                        y = index * 40f * context.scale
-                        width = 140f * context.scale
-                        height = 30f * context.scale
-                        onClick { equipper(item, index, meta) }
-                    }
-
-                    val label = Label(action.text, Label.LabelStyle(context.font, Color.BLACK)).apply {
-                        x = button.x + 30f * context.scale
-                        y = button.y
-                        height = button.height
-                        setFontScale(24f * context.scale / 36f)
-                        setAlignment(Align.left)
-                        touchable = Touchable.disabled
-                    }
-
-                    actionGroup.addActor(button)
-                    actionGroup.addActor(label)
-
-                    val actionIcon = Image(context.uiAtlas.findRegion(action.icon)).apply {
-                        x = button.x + 3f * context.scale
-                        y = button.y + 3f * context.scale
-                        width = 24f * context.scale
-                        height = 24f * context.scale
-                        touchable = Touchable.disabled
-                    }
-                    actionGroup.addActor(actionIcon)
-
-                    val currencyIcon = Image(context.uiAtlas.findRegion(CurrencyRewardView.getTextureName(action.currency))).apply {
-                        x = label.x + label.width + 20f * context.scale
-                        y = button.y
-                        touchable = Touchable.disabled
-                    }
-                    actionGroup.addActor(currencyIcon)
-                }
-            }
-
-        }
 
         affixText.setText(getAffixText())
     }
