@@ -13,14 +13,14 @@ arrowBlue_left
   index: -1
 arrowBlue_right
   rotate: false
-  xy: 1353, 397
+  xy: 935, 54
   size: 22, 21
   orig: 22, 21
   offset: 0, 0
   index: -1
 bg_brass
   rotate: false
-  xy: 1319, 386
+  xy: 901, 43
   size: 32, 32
   split: 8, 8, 8, 8
   orig: 32, 32
@@ -42,44 +42,79 @@ btn_blue_up
   index: -1
 iconCircle_blue
   rotate: false
-  xy: 899, 140
+  xy: 978, 58
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
   index: -1
 iconCircle_grey
   rotate: false
-  xy: 849, 90
+  xy: 959, 58
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
   index: -1
 icon_forge
   rotate: false
-  xy: 1783, 462
+  xy: 849, 127
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 icon_gear
   rotate: false
-  xy: 849, 127
+  xy: 851, 27
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 icon_gear_focused
   rotate: false
-  xy: 1583, 462
+  xy: 1945, 462
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 icon_squads
   rotate: false
-  xy: 1683, 462
+  xy: 799, 127
   size: 48, 48
   orig: 48, 48
+  offset: 0, 0
+  index: -1
+life_flask_grand
+  rotate: false
+  xy: 727, 2
+  size: 72, 72
+  orig: 72, 72
+  offset: 0, 0
+  index: -1
+life_flask_greater
+  rotate: false
+  xy: 1467, 438
+  size: 72, 72
+  orig: 72, 72
+  offset: 0, 0
+  index: -1
+life_flask_large
+  rotate: false
+  xy: 653, 2
+  size: 72, 72
+  orig: 72, 72
+  offset: 0, 0
+  index: -1
+life_flask_medium
+  rotate: false
+  xy: 1319, 438
+  size: 72, 72
+  orig: 72, 72
+  offset: 0, 0
+  index: -1
+life_flask_small
+  rotate: false
+  xy: 1541, 438
+  size: 72, 72
+  orig: 72, 72
   offset: 0, 0
   index: -1
 panel_blue
@@ -91,7 +126,7 @@ panel_blue
   index: -1
 panel_edge
   rotate: false
-  xy: 1451, 428
+  xy: 1353, 394
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -140,28 +175,28 @@ ui_bg_forge
   index: -1
 ui_button_dust
   rotate: false
-  xy: 1517, 446
+  xy: 1879, 446
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 ui_button_levelup
   rotate: false
-  xy: 1319, 446
+  xy: 1615, 446
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 ui_button_pressed
   rotate: false
-  xy: 849, 109
+  xy: 1417, 420
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_simple
   rotate: false
-  xy: 899, 159
+  xy: 801, 9
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
@@ -175,28 +210,28 @@ ui_button_trans_pressed
   index: -1
 ui_button_trans_simple
   rotate: false
-  xy: 1417, 428
+  xy: 1319, 394
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_currency_dust
   rotate: false
-  xy: 1385, 446
+  xy: 1747, 446
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 ui_currency_gems
   rotate: false
-  xy: 1451, 446
+  xy: 1813, 446
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 ui_currency_gold
   rotate: false
-  xy: 727, 10
+  xy: 1681, 446
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -217,70 +252,70 @@ ui_exp_bar_bg
   index: -1
 ui_exp_bar_fg
   rotate: false
-  xy: 1319, 420
+  xy: 1319, 412
   size: 96, 24
   orig: 96, 24
   offset: 0, 0
   index: -1
 ui_icon_vs
   rotate: false
-  xy: 653, 2
+  xy: 1393, 438
   size: 72, 72
   orig: 72, 72
   offset: 0, 0
   index: -1
 ui_item_bg
   rotate: false
-  xy: 799, 127
+  xy: 949, 77
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_body
   rotate: false
-  xy: 1833, 462
+  xy: 849, 77
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_book
   rotate: false
-  xy: 1933, 462
+  xy: 899, 77
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_boots
   rotate: false
-  xy: 1733, 462
+  xy: 799, 77
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_hand
   rotate: false
-  xy: 1633, 462
+  xy: 1995, 462
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_hat
   rotate: false
-  xy: 1883, 462
+  xy: 899, 127
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_item_bg_ring
   rotate: false
-  xy: 799, 77
+  xy: 801, 27
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_level_bg
   rotate: false
-  xy: 1983, 462
+  xy: 949, 127
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

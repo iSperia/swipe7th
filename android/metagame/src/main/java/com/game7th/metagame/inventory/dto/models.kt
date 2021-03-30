@@ -37,9 +37,28 @@ data class InventoryItemMetadata(
 )
 
 data class GearConfig(
-        val items: List<InventoryItemMetadata>
+        val items: List<InventoryItemMetadata>,
+        val flasks: List<FlaskDto>
 )
 
 data class InventoryPool(
-        val items: MutableList<InventoryItem>
+        val items: MutableList<InventoryItem>,
+        val flasks: MutableList<FlaskStackDto>
+)
+
+data class FlaskTemplate(
+        val name: String,
+        val fbFlatHeal: Int
+)
+
+data class FlaskStackDto(
+        val template: FlaskTemplate,
+        var amount: Int
+)
+
+data class FlaskDto(
+        val template: FlaskTemplate,
+        val dropWeight: Int,
+        val gold: Int,
+        val rarity: Int
 )

@@ -126,5 +126,37 @@
       "weight": 8,
       "rarity": 0
     }
+  ],
+  "flasks": [
+    {
+      "template": {"name": "LIFE_FLASK_SMALL", "fbFlatHeal": 100},
+      "dropWeight": 32,
+      "gold": 200,
+      "rarity": 0
+    },
+    {
+      "template": {"name": "LIFE_FLASK_MEDIUM", "fbFlatHeal": 200},
+      "dropWeight": 28,
+      "gold": 300,
+      "rarity": 0
+    },
+    {
+      "template": {"name": "LIFE_FLASK_LARGE", "fbFlatHeal": 300},
+      "dropWeight": 24,
+      "gold": 500,
+      "rarity": 0
+    },
+    {
+      "template": {"name": "LIFE_FLASK_GREATER", "fbFlatHeal": 500},
+      "dropWeight": 20,
+      "gold": 800,
+      "rarity": 0
+    },
+    {
+      "template": {"name": "LIFE_FLASK_GRAND", "fbFlatHeal":  1000},
+      "dropWeight": 16,
+      "gold": 1500,
+      "rarity": 0
+    }
   ]
 }

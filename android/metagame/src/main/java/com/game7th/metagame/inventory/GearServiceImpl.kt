@@ -3,9 +3,7 @@ package com.game7th.metagame.inventory
 import com.game7th.metagame.FileProvider
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.account.RewardData
-import com.game7th.metagame.inventory.dto.GearConfig
-import com.game7th.metagame.inventory.dto.InventoryItem
-import com.game7th.metagame.inventory.dto.InventoryPool
+import com.game7th.metagame.inventory.dto.*
 import com.google.gson.Gson
 import kotlin.random.Random
 
@@ -23,8 +21,8 @@ class GearServiceImpl(
         val inventoryString = storage.get(KEY_INVENTORY)
         inventory = if (inventoryString == null) {
             val initialData = InventoryPool(
-                    items = mutableListOf()
-//                    items = (1..10).map { InventoryItem(gbFlatArmor = it, level = it, node = ItemNode.HEAD, name = "HELMET") }.toMutableList()
+                    items = mutableListOf(),
+                    flasks = mutableListOf(FlaskStackDto(FlaskTemplate("LIFE_FLASK_SMALL", 100), 5), FlaskStackDto(FlaskTemplate("LIFE_FLASK_MEDIUM", 150), 5))
             )
             initialData
         } else {
@@ -73,6 +71,45 @@ class GearServiceImpl(
         val newItem = item.copy(level = item.level + 1)
         inventory.items.remove(item)
         inventory.items.add(newItem)
+    }
+
+    override fun listFlasks(): List<FlaskStackDto> {
+        return inventory.flasks
+    }
+
+    override fun removeFlask(flask: FlaskTemplate) {
+        val stack = inventory.flasks.firstOrNull { it.template == flask }
+        if (stack != null) {
+            if (stack.amount == 1) {
+                inventory.flasks.remove(stack)
+            } else {
+                stack.amount--
+            }
+        }
+        storage.put(KEY_INVENTORY, gson.toJson(inventory))
+    }
+
+    override fun addFlask(flask: FlaskTemplate) {
+        val stack = inventory.flasks.firstOrNull { it.template == flask }
+        if (stack == null) {
+            inventory.flasks.add(FlaskStackDto(flask, 1))
+        } else {
+            stack.amount++
+        }
+        storage.put(KEY_INVENTORY, gson.toJson(inventory))
+    }
+
+    override fun generateFlaskReward(): RewardData.FlaskRewardData? {
+        val filteredFlasks = gearConfig.flasks
+        val totalWeight = filteredFlasks.sumBy { it.dropWeight }
+        val roll = Random.nextInt(1, totalWeight + 1)
+        var sum = 0
+        return filteredFlasks.firstOrNull {
+            sum += it.dropWeight
+            sum >= roll
+        }?.let {
+            RewardData.FlaskRewardData(it.template.copy())
+        }
     }
 
     companion object {
