@@ -10,7 +10,7 @@ import com.game7th.metagame.dto.UnitType
 
 fun produceSlimeMother(balance: SwipeBalance, level: Int): UnitStats {
     val hp = level * balance.mother_slime.hp
-    val slime = UnitStats(UnitType.SLIME_MOTHER, level = level, health = CappedStat(hp, hp), regeneration = balance.mother_slime.k3.toInt() * level)
+    val slime = UnitStats(UnitType.SLIME_MOTHER, level = level, health = CappedStat(hp, hp))
     slime += ability {
         ticker {
             bodies[TickerEntry(balance.mother_slime.w1, balance.mother_slime.t1, "sword")] = { battle, unit ->
@@ -31,6 +31,12 @@ fun produceSlimeMother(balance: SwipeBalance, level: Int): UnitStats {
                     battle.notifyEvent(BattleEvent.PersonagePositionedAbilityEvent(unit.toViewModel(), position, 0))
                     battle.notifyEvent(BattleEvent.CreatePersonageEvent(battleUnit.toViewModel(), battleUnit.position))
                 }
+            }
+            bodies[TickerEntry(balance.mother_slime.w3, balance.mother_slime.t3, "leaf")] = { battle, unit ->
+                val healAmount = balance.mother_slime.k3.toInt() * unit.stats.level
+                battle.notifyEvent(BattleEvent.PersonagePositionedAbilityEvent(unit.toViewModel(), unit.position, 0))
+                battle.notifyEvent(BattleEvent.ShowAilmentEffect(unit.id, "ailment_heal"))
+                battle.processHeal(unit, healAmount)
             }
         }
     }
