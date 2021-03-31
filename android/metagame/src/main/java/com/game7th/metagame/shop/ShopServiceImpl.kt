@@ -6,6 +6,7 @@ import com.game7th.metagame.account.RewardData
 import com.game7th.metagame.account.dto.Currency
 import com.game7th.metagame.dto.UnitType
 import com.game7th.metagame.inventory.GearService
+import com.game7th.metagame.inventory.GearServiceImpl
 import com.game7th.metagame.shop.dto.PaymentOption
 import com.game7th.metagame.shop.dto.ShopItem
 import com.google.gson.Gson
@@ -19,15 +20,19 @@ class ShopServiceImpl(
         private val gson: Gson
 ) : ShopService {
 
-    private var cachedGearItems: List<ShopItem> = storage.get(KEY_GEAR_ITEMS)?.let { shopItemsText ->
+    private var cachedGearItems: List<ShopItem.GearShopItem> = storage.get(KEY_GEAR_ITEMS)?.let { shopItemsText ->
         val token = object : TypeToken<List<ShopItem.GearShopItem>>() {}.type
         gson.fromJson<List<ShopItem.GearShopItem>>(shopItemsText, token)
     } ?: emptyList()
 
-    private var cachedPersonages: List<ShopItem> = storage.get(KEY_PERSONAGES)?.let { shopItemsText ->
+    private var cachedPersonages: List<ShopItem.PersonageShopItem> = storage.get(KEY_PERSONAGES)?.let { shopItemsText ->
         val token = object : TypeToken<List<ShopItem.PersonageShopItem>>() {}.type
         gson.fromJson<List<ShopItem.PersonageShopItem>>(shopItemsText, token)
     } ?: emptyList()
+
+    private var packs = listOf(
+            ShopItem.PackShopItem("SHOP_BEGINNER_POTION_PACK", listOf(PaymentOption(1000, Currency.GOLD), PaymentOption(100, Currency.GEMS)), "_p_0")
+    )
 
     init {
         checkShopRefreshed()
@@ -49,7 +54,7 @@ class ShopServiceImpl(
             }.filterNotNull()
 
             cachedPersonages = listOf(
-                    ShopItem.PersonageShopItem(UnitType.POISON_ARCHER, listOf(PaymentOption(5000, Currency.GOLD), PaymentOption(500, Currency.GEMS)), UUID.randomUUID().toString())
+                    ShopItem.PersonageShopItem(UnitType.POISON_ARCHER.toString(), listOf(PaymentOption(5000, Currency.GOLD), PaymentOption(500, Currency.GEMS)), UUID.randomUUID().toString())
             )
             storage.put(KEY_GEAR_ITEMS, gson.toJson(cachedGearItems))
             storage.put(KEY_PERSONAGES, gson.toJson(cachedPersonages))
@@ -58,7 +63,7 @@ class ShopServiceImpl(
 
     override fun listItems(): List<ShopItem> {
         checkShopRefreshed()
-        return cachedPersonages + cachedGearItems
+        return cachedPersonages + cachedGearItems + packs
     }
 
     override fun acquireItem(id: String, paymentOption: PaymentOption): Boolean {
@@ -80,15 +85,31 @@ class ShopServiceImpl(
                 is ShopItem.PersonageShopItem -> {
                     if (shopItem.paymentOptions.contains(paymentOption)) {
                         val balance = accountService.getBalance()
-                        val hasPersonage = accountService.getPersonages().firstOrNull { it.unit == shopItem.personage }
+                        val hasPersonage = accountService.getPersonages().firstOrNull { it.unit.toString() == shopItem.personage }
                         if (balance.currencies[paymentOption.currency] ?: 0 >= paymentOption.amount && hasPersonage == null) {
                             accountService.spend(paymentOption.currency, paymentOption.amount)
-                            accountService.addPersonage(shopItem.personage)
+                            accountService.addPersonage(UnitType.valueOf(shopItem.personage))
 
                             cachedPersonages = cachedPersonages.filter { it.id != id }
-                            storage.put(KEY_PERSONAGES, gson.toJson(cachedGearItems))
+                            storage.put(KEY_PERSONAGES, gson.toJson(cachedPersonages))
                             return true
                         }
+                    }
+                }
+                is ShopItem.PackShopItem -> {
+                    val balance = accountService.getBalance()
+                    if (balance.currencies[paymentOption.currency] ?: 0 >= paymentOption.amount) {
+                        accountService.spend(paymentOption.currency, paymentOption.amount)
+                        when (shopItem.name) {
+                            "SHOP_BEGINNER_POTION_PACK" -> {
+                                (gearService as? GearServiceImpl)?.let { gearService ->
+                                    gearService.gearConfig.flasks.forEach {
+                                        gearService.addFlask(it.template)
+                                    }
+                                }
+                            }
+                        }
+                        return true
                     }
                 }
             }

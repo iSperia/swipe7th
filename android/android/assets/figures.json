@@ -159,6 +159,13 @@
       "trigger": 10,
       "height": 144,
       "width": 144
+    },
+    {
+      "name": "ailment_heal",
+      "atlas": "ailments",
+      "trigger": 28,
+      "height": 144,
+      "width": 144
     }
   ]
 }

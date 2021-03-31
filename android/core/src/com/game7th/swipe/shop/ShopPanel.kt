@@ -4,11 +4,12 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
-import com.game7th.metagame.inventory.dto.InventoryItem
+import com.game7th.metagame.dto.UnitType
 import com.game7th.metagame.shop.ShopService
 import com.game7th.metagame.shop.dto.ShopItem
 import com.game7th.swipe.GdxGameContext
-import com.game7th.swipe.campaign.inventory.InventoryDetailPanel
+import com.game7th.swipe.campaign.inventory.ItemDetailPanel
+import com.game7th.swipe.campaign.inventory.ItemViewAdapter
 import com.game7th.swipe.campaign.reward.CurrencyRewardView
 import com.game7th.swipe.util.InventoryAction
 
@@ -50,7 +51,7 @@ class ShopPanel(
         shopItems.forEachIndexed { index, shopItem ->
             when (shopItem) {
                 is ShopItem.GearShopItem -> {
-                    val panel = InventoryDetailPanel(context, shopItem.item, shopItem.paymentOptions
+                    val panel = ItemDetailPanel(context, ItemViewAdapter.InventoryItemAdapter(shopItem.item), shopItem.paymentOptions
                             .map {
                                 InventoryAction.IconAction("-${it.amount}", CurrencyRewardView.getTextureName(it.currency), it.currency)
                             }, {}, this::processGearAcquisition).apply {
@@ -63,9 +64,22 @@ class ShopPanel(
                 }
 
                 is ShopItem.PersonageShopItem -> {
-                    val panel = PersonageShopPanel(context, shopItem.personage, shopItem.id, shopItem.paymentOptions.map {
+                    val panel = PersonageShopPanel(context, UnitType.valueOf(shopItem.personage), shopItem.id, shopItem.paymentOptions.map {
                         InventoryAction.IconAction("-${it.amount}", CurrencyRewardView.getTextureName(it.currency), it.currency)
                     }, this::processPersonageAcquisition).apply {
+                        bg.touchable = Touchable.disabled
+                        x = offset + 5f * context.scale
+                    }
+                    offset += panel.width + 5f * context.scale
+                    panelItems.addActor(panel)
+                }
+
+                is ShopItem.PackShopItem -> {
+                    val panel = ItemDetailPanel(context, ItemViewAdapter.PackItemAdapter(shopItem.name), shopItem.paymentOptions
+                            .map {
+                                InventoryAction.IconAction("-${it.amount}", CurrencyRewardView.getTextureName(it.currency), it.currency)
+                            }, {}, this::processPackAcquisition).apply {
+                        meta = shopItem.id
                         bg.touchable = Touchable.disabled
                         x = offset + 5f * context.scale
                     }
@@ -80,10 +94,21 @@ class ShopPanel(
         panelScroller.actor = panelItems
     }
 
-    private fun processGearAcquisition(item: InventoryItem, actionIndex: Int, meta: String?) {
+    private fun processGearAcquisition(actionIndex: Int, meta: String?) {
         shopItems.firstOrNull { it.id == meta }?.let { shopItem ->
             when (shopItem) {
                 is ShopItem.GearShopItem -> {
+                    val acquireResult = shopService.acquireItem(shopItem.id, shopItem.paymentOptions[actionIndex])
+                    if (acquireResult) reloadData()
+                }
+            }
+        }
+    }
+
+    private fun processPackAcquisition(actionIndex: Int, meta: String?) {
+        shopItems.firstOrNull { it.id == meta }?.let { shopItem ->
+            when (shopItem) {
+                is ShopItem.PackShopItem -> {
                     val acquireResult = shopService.acquireItem(shopItem.id, shopItem.paymentOptions[actionIndex])
                     if (acquireResult) reloadData()
                 }

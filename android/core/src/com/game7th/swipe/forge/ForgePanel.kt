@@ -2,9 +2,6 @@ package com.game7th.swipe.forge
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
-import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction
-import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
@@ -14,8 +11,9 @@ import com.game7th.metagame.account.dto.Currency
 import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.inventory.dto.InventoryItem
 import com.game7th.swipe.GdxGameContext
-import com.game7th.swipe.campaign.inventory.InventoryDetailPanel
+import com.game7th.swipe.campaign.inventory.ItemDetailPanel
 import com.game7th.swipe.campaign.inventory.ItemView
+import com.game7th.swipe.campaign.inventory.ItemViewAdapter
 import com.game7th.swipe.util.InventoryAction
 import ktx.actors.onClick
 import kotlin.math.max
@@ -51,7 +49,7 @@ class ForgePanel(
         height = 240f * context.scale
     }
 
-    var detailPanel: InventoryDetailPanel? = null
+    var detailPanel: ItemDetailPanel? = null
 
     val bg = Image(context.uiAtlas.findRegion("ui_bg_forge")).apply {
         width = context.scale * 480f
@@ -86,15 +84,15 @@ class ForgePanel(
         val emptyItems = max(15 - items.size, 3 - items.size % 3)
 
         items.forEachIndexed { index, item ->
-            val itemView = ItemView(context, item, true, 80f * context.scale).apply {
+            val itemView = ItemView(context, ItemViewAdapter.InventoryItemAdapter(item), true, 80f * context.scale).apply {
                 x = (index / 3) * 80f * context.scale
                 y = (160f - (index % 3) * 80f) * context.scale
             }
             itemView.onClick {
                 dismissDetailPanel()
-                detailPanel = InventoryDetailPanel(
+                detailPanel = ItemDetailPanel(
                         context,
-                        item,
+                        ItemViewAdapter.InventoryItemAdapter(item),
                         listOf(InventoryAction.IconAction("+${item.level * 50}", "ui_button_dust", Currency.DUST), InventoryAction.IconAction("-${item.level * 150}", "ui_button_levelup", Currency.DUST)),
                         this@ForgePanel::dismissDetailPanel,
                         this@ForgePanel::processAction).apply {
@@ -106,7 +104,7 @@ class ForgePanel(
             panelItems.addActor(itemView)
         }
         (1..emptyItems).forEach {
-            val itemView = ItemView(context, null, true, 80f * context.scale).apply {
+            val itemView = ItemView(context, ItemViewAdapter.EmptyAdapter, true, 80f * context.scale).apply {
                 val index = items.size + it - 1
                 x = (index / 3) * 80f * context.scale
                 y = (160f - (index % 3) * 80f) * context.scale
@@ -115,22 +113,24 @@ class ForgePanel(
         }
     }
 
-    fun processAction(item: InventoryItem, index: Int, meta: String?) {
-        when (index) {
-            0 -> { //to dust!
-                accountService.fund(Currency.DUST, item.level * 50)
-                gearService.removeItem(item)
-            }
-            1 -> { //level up
-                val dustNeeded = 150 * item.level
-                if ((accountService.getBalance().currencies[Currency.DUST] ?: 0) >= dustNeeded) {
-                    accountService.spend(Currency.DUST, dustNeeded)
-                    gearService.upgradeItem(item)
+    fun processAction(index: Int, meta: String?) {
+        (detailPanel?.item as? ItemViewAdapter.InventoryItemAdapter)?.item?.let { item ->
+            when (index) {
+                0 -> { //to dust!
+                    accountService.fund(Currency.DUST, item.level * 50)
+                    gearService.removeItem(item)
+                }
+                1 -> { //level up
+                    val dustNeeded = 150 * item.level
+                    if ((accountService.getBalance().currencies[Currency.DUST] ?: 0) >= dustNeeded) {
+                        accountService.spend(Currency.DUST, dustNeeded)
+                        gearService.upgradeItem(item)
+                    }
                 }
             }
+            dismissDetailPanel()
+            reloadData()
         }
-        dismissDetailPanel()
-        reloadData()
     }
 
     companion object {

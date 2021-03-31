@@ -14,10 +14,12 @@ import com.game7th.battle.dto.PersonageConfig
 import com.game7th.battle.SwipeBattle
 import com.game7th.battle.ability.AbilityTrigger
 import com.game7th.battle.dto.BattleEvent
+import com.game7th.battle.dto.BattleFlaskDto
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.account.dto.PersonageAttributeStats
 import com.game7th.metagame.account.dto.PersonageData
 import com.game7th.metagame.campaign.ActsService
+import com.game7th.metagame.inventory.dto.FlaskStackDto
 import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.SwipeGameGdx
@@ -99,7 +101,7 @@ class GameScreen(private val game: SwipeGameGdx,
         listenEvents()
 
         gameActor = GameActor(
-                game.context, this::claimRewards) { _ ->
+                game.context, game.gearService, this:: usePotion, this::claimRewards) { _ ->
             game.switchScreen(ActScreen(game, game.actService, actId, game.context, game.storage))
         }
 
@@ -188,6 +190,15 @@ class GameScreen(private val game: SwipeGameGdx,
         }
         gdxFigure.poses.forEach {
             it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
+        }
+    }
+
+    private fun usePotion(flask: FlaskStackDto) {
+        KtxAsync.launch {
+            game.gearService.removeFlask(flask.template)
+            gameActor.refreshAlchemy()
+            battle.useFlask(BattleFlaskDto(flask.template.fbFlatHeal))
+            gameActor.hideAlchemy()
         }
     }
 

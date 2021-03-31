@@ -1,10 +1,7 @@
 package com.game7th.battle
 
 import com.game7th.battle.ability.AbilityTrigger
-import com.game7th.battle.dto.BattleConfig
-import com.game7th.battle.dto.SwipeBalance
-import com.game7th.battle.dto.BattleEvent
-import com.game7th.battle.dto.TileViewModel
+import com.game7th.battle.dto.*
 import com.game7th.battle.internal_event.InternalBattleEvent
 import com.game7th.battle.tilefield.TileField
 import com.game7th.battle.tilefield.TileFieldEvent
@@ -338,6 +335,16 @@ class SwipeBattle(
 
     fun aliveAllies(unit: BattleUnit): List<BattleUnit> {
         return units.filter { it.isAlive() && it.team == unit.team && it.id != unit.id }
+    }
+
+    suspend fun useFlask(battleFlaskDto: BattleFlaskDto) = withContext(coroutineContext) {
+        units.filter { it.isAlive() && it.team == Team.LEFT }.firstOrNull()?.let { unit ->
+            if (battleFlaskDto.flatHeal > 0) {
+                //heal
+                processHeal(unit, battleFlaskDto.flatHeal)
+                notifyEvent(BattleEvent.ShowAilmentEffect(unit.id, "ailment_heal"))
+            }
+        }
     }
 }
 

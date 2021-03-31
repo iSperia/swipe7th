@@ -66,5 +66,14 @@
   "inv_affix_flat_resist": "+$ resist",
   "inv_affix_perc_resist": "+$% resist",
   "inv_affix_flat_wisdom": "+$ wisdom",
-  "inv_affix_perc_wisdom": "+$% wisdom"
+  "inv_affix_perc_wisdom": "+$% wisdom",
+
+  "flask_affix_flat_heal": "Heals $ health",
+
+  "LIFE_FLASK_SMALL": "Small Life Flask",
+  "LIFE_FLASK_MEDIUM": "Medium Life Flask",
+  "LIFE_FLASK_LARGE": "Large Life Flask",
+  "LIFE_FLASK_GREATER": "Greater Life Flask",
+  "LIFE_FLASK_GRAND": "Grand Life Flask",
+  "SHOP_BEGINNER_POTION_PACK": "Beginner's potions"
 }

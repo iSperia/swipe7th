@@ -85,7 +85,7 @@ class PersonageDetailView(
         setFontScale(ah / 36f)
     }
 
-    val secondAttrsBody = Label("", Label.LabelStyle(context.font, Color.RED)).apply {
+    val secondAttrsBody = Label("", Label.LabelStyle(context.font, Color.SALMON)).apply {
         y = attrsBg.y + 2 * sh
         x = attrsBg.x + attrsBg.width + context.scale * 0.1f
         width = 140f * context.scale
@@ -94,7 +94,7 @@ class PersonageDetailView(
         setAlignment(Align.left)
     }
 
-    val secondAttrsSpirit = Label("", Label.LabelStyle(context.font, Color.FOREST)).apply {
+    val secondAttrsSpirit = Label("", Label.LabelStyle(context.font, Color.LIME)).apply {
         y = attrsBg.y + sh
         x = attrsBg.x + attrsBg.width + context.scale * 0.1f
         width = 140f * context.scale

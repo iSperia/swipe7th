@@ -22,6 +22,8 @@ import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.SwipeGameGdx
 import com.game7th.swipe.TutorialKeys
+import com.game7th.swipe.alchemy.AlchemyPanel
+import com.game7th.swipe.alchemy.AlchemyPanelMode
 import com.game7th.swipe.campaign.bottom_menu.BottomMenu
 import com.game7th.swipe.campaign.party.PartyView
 import com.game7th.swipe.campaign.prepare.BattlePrepareDialog
@@ -38,6 +40,7 @@ sealed class UiState {
     object PartyUi : UiState()
     object ForgeUi: UiState()
     object ShopUi: UiState()
+    object AlchUi: UiState()
     data class BattlePreparation(
             val node: LocationConfig
     ) : UiState()
@@ -91,6 +94,7 @@ class ActScreen(
     private var partyUi: PartyView? = null
     private var forgeUi: ForgePanel? = null
     private var shopUi: ShopPanel? = null
+    private var alchUi: AlchemyPanel? = null
 
     private var isScrollEnabled = true
 
@@ -161,6 +165,7 @@ class ActScreen(
             onPartyButtonPressed = this@ActScreen::onPartyButtonPressed
             onForgeButtonPressed = this@ActScreen::onForgeButtonPressed
             onShopButtonPressed = this@ActScreen::onShopButtonPressed
+            onAlchButtonPressed = this@ActScreen::onAlchButtonPressed
         }
         stage.addActor(bottomMenu)
 
@@ -222,6 +227,11 @@ class ActScreen(
     private fun onShopButtonPressed() {
         if (uiState == UiState.ShopUi) return
         transiteUiState(UiState.ShopUi)
+    }
+
+    private fun onAlchButtonPressed() {
+        if  (uiState == UiState.AlchUi) return
+        transiteUiState(UiState.AlchUi)
     }
 
     private fun closeOverlay() {
@@ -367,6 +377,7 @@ class ActScreen(
             is UiState.BattlePreparation -> hideBattlePreparation()
             is UiState.ForgeUi -> hideForgeUi()
             is UiState.ShopUi -> hideShopUi()
+            is UiState.AlchUi -> hideAlchUi()
         }
 
         uiState = state
@@ -377,7 +388,12 @@ class ActScreen(
             is UiState.PartyUi -> showPartyUi()
             is UiState.ForgeUi -> showForgeUi()
             is UiState.ShopUi -> showShopUi()
+            is UiState.AlchUi -> showAlchUi()
         }
+    }
+
+    private fun hideAlchUi() {
+        alchUi?.animateHideToBottom(context, AlchemyPanel.h).also { alchUi = null }
     }
 
     private fun hideShopUi() {
@@ -390,6 +406,15 @@ class ActScreen(
 
     private fun hideForgeUi() {
         forgeUi?.animateHideToBottom(context, ForgePanel.h).also { forgeUi = null }
+    }
+
+    private fun showAlchUi() {
+        alchUi = AlchemyPanel(context, game.gearService, AlchemyPanelMode.CraftMode).apply {
+            y = context.scale * 48f
+        }
+        stage.addActor(alchUi)
+        alchUi?.zIndex = 0
+        alchUi?.animateShowFromBottom(context, AlchemyPanel.h)
     }
 
     private fun showShopUi() {

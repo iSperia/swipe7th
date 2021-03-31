@@ -51,7 +51,7 @@ class InventoryEditor(
         height = 180f * context.scale
     }
 
-    var detailPanel: InventoryDetailPanel? = null
+    var detailPanel: ItemDetailPanel? = null
 
     var dirty = false
 
@@ -90,15 +90,15 @@ class InventoryEditor(
         val emptyItems = max(15 - items.size, 3 - items.size % 3)
 
         items.forEachIndexed { index, item ->
-            val itemView = ItemView(context, item, true).apply {
+            val itemView = ItemView(context, ItemViewAdapter.InventoryItemAdapter(item), true).apply {
                 x = (index / 3) * 60f * context.scale
                 y = (120f - (index % 3) * 60f) * context.scale
             }
             itemView.onClick {
                 dismissDetailPanel()
-                detailPanel = InventoryDetailPanel(
+                detailPanel = ItemDetailPanel(
                         context,
-                        item,
+                        ItemViewAdapter.InventoryItemAdapter(item),
                         listOf(InventoryAction.StringAction("Put on")),
                         this@InventoryEditor::dismissDetailPanel,
                         this@InventoryEditor::equipFromDetailPanel).apply {
@@ -110,7 +110,7 @@ class InventoryEditor(
             panelItems.addActor(itemView)
         }
         (1..emptyItems).forEach {
-            val itemView = ItemView(context, null, true).apply {
+            val itemView = ItemView(context, ItemViewAdapter.EmptyAdapter, true).apply {
                 val index = items.size + it - 1
                 x = (index / 3) * 60f * context.scale
                 y = (120f - (index % 3) * 60f) * context.scale
@@ -121,15 +121,15 @@ class InventoryEditor(
         accountService.getPersonages().firstOrNull { it.id == personageId }?.let { personage ->
             println(personage.items)
             personage.items.forEach { item ->
-                val itemView = ItemView(context, item, false)
+                val itemView = ItemView(context, ItemViewAdapter.InventoryItemAdapter(item), false)
                 itemView.x = context.scale * 60f * xs[item.node]!!
                 itemView.y = context.scale * 60f * ys[item.node]!!
                 equippedGroup.addActor(itemView)
                 itemView.onClick {
                     dismissDetailPanel()
-                    detailPanel = InventoryDetailPanel(
+                    detailPanel = ItemDetailPanel(
                             context,
-                            item,
+                            ItemViewAdapter.InventoryItemAdapter(item),
                             listOf(com.game7th.swipe.util.InventoryAction.StringAction("Wear off")),
                             this@InventoryEditor::dismissDetailPanel,
                             this@InventoryEditor::dequipFromEquipped).apply {
@@ -147,18 +147,22 @@ class InventoryEditor(
         detailPanel = null
     }
 
-    private fun equipFromDetailPanel(item: InventoryItem, actionIndex: Int, meta: String?) {
-        accountService.equipItem(personageId, item)
-        dismissDetailPanel()
-        dirty = true
-        refresher()
+    private fun equipFromDetailPanel( actionIndex: Int, meta: String?) {
+        (detailPanel?.item as? ItemViewAdapter.InventoryItemAdapter)?.item?.let { item ->
+            accountService.equipItem(personageId, item)
+            dismissDetailPanel()
+            dirty = true
+            refresher()
+        }
     }
 
-    private fun dequipFromEquipped(item: InventoryItem, actionIndex: Int, meta: String?) {
-        accountService.dequipItem(personageId, item)
-        dismissDetailPanel()
-        dirty = true
-        refresher()
+    private fun dequipFromEquipped(actionIndex: Int, meta: String?) {
+        (detailPanel?.item as? ItemViewAdapter.InventoryItemAdapter)?.item?.let { item ->
+            accountService.dequipItem(personageId, item)
+            dismissDetailPanel()
+            dirty = true
+            refresher()
+        }
     }
 
     override fun act(delta: Float) {

@@ -16,6 +16,7 @@ import com.game7th.metagame.account.dto.PersonageExperienceResult
 import com.game7th.metagame.account.RewardData
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.campaign.inventory.ItemView
+import com.game7th.swipe.campaign.inventory.ItemViewAdapter
 import com.game7th.swipe.campaign.party.ExperienceBar
 import com.game7th.swipe.campaign.reward.CurrencyRewardView
 import ktx.actors.alpha
@@ -123,7 +124,7 @@ class GameFinishedDialog(
         rewards.forEachIndexed { index, reward ->
             when (reward) {
                 is RewardData.ArtifactRewardData -> {
-                    val artifact = ItemView(context, reward.item, true, 70 * context.scale).apply {
+                    val artifact = ItemView(context, ItemViewAdapter.InventoryItemAdapter(reward.item), true, 70 * context.scale).apply {
                         x = 80f * index * context.scale
                         y = 0f
                         setScale(2f)

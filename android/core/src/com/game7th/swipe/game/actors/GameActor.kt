@@ -17,14 +17,23 @@ import com.badlogic.gdx.utils.Align
 import com.game7th.battle.dto.BattleEvent
 import com.game7th.metagame.account.dto.PersonageExperienceResult
 import com.game7th.metagame.account.RewardData
+import com.game7th.metagame.inventory.GearService
+import com.game7th.metagame.inventory.dto.FlaskStackDto
 import com.game7th.swipe.GdxGameContext
+import com.game7th.swipe.alchemy.AlchemyPanel
+import com.game7th.swipe.alchemy.AlchemyPanelMode
 import com.game7th.swipe.game.actors.ui.GameFinishedDialog
+import com.game7th.swipe.util.IconTextButton
+import com.game7th.swipe.util.animateHideToBottom
+import com.game7th.swipe.util.animateShowFromBottom
 import ktx.actors.onClick
 import ktx.actors.repeatForever
 import kotlin.math.min
 
 class GameActor(
         private val context: GdxGameContext,
+        private val gearService: GearService,
+        private val usePotionCallback: (FlaskStackDto) -> Unit,
         private val rewardCallback: () -> List<RewardData>,
         private val finishCallback: (Boolean) -> Unit
 ) : Group() {
@@ -33,6 +42,7 @@ class GameActor(
     val tileField: TileFieldView
 
     val buttonConcede: Label
+    val buttonPotions = IconTextButton(context, "icon_alch", "Potions", this::switchPotions)
     val labelCombo: Label
     val labelComboWrapper: Group
     val tileFieldZoneBorder: Image
@@ -45,6 +55,8 @@ class GameActor(
     private var combo = 0
 
     val tileFieldAreaHeight = min(Gdx.graphics.width.toFloat(), Gdx.graphics.height - Gdx.graphics.width / 1.25f - 48f * context.scale) - 32f
+
+    private var potionPanel: AlchemyPanel? = null
 
     init {
         Image(context.uiAtlas.findRegion("ui_dialog")).apply {
@@ -94,6 +106,8 @@ class GameActor(
             showDefeat()
         }
         addActor(buttonConcede)
+
+        addActor(buttonPotions)
 
         labelCombo = Label("COMBO", Label.LabelStyle(context.font2, Color.SCARLET)).apply {
             x = -Gdx.graphics.width / 2f
@@ -191,5 +205,26 @@ class GameActor(
             it.remove()
         }
         fingerActor = null
+    }
+
+    fun hideAlchemy() {
+        potionPanel?.animateHideToBottom(context, AlchemyPanel.h)
+        potionPanel = null
+    }
+
+    private fun switchPotions() {
+        if (potionPanel == null) {
+            potionPanel = AlchemyPanel(context, gearService, AlchemyPanelMode.DrinkMode(usePotionCallback)).apply {
+                y = 48f * context.scale
+            }
+            addActor(potionPanel)
+            potionPanel?.animateShowFromBottom(context, AlchemyPanel.h)
+        } else {
+            hideAlchemy()
+        }
+    }
+
+    fun refreshAlchemy() {
+        potionPanel?.reloadData()
     }
 }
