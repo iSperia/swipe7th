@@ -20,6 +20,7 @@ class DefaultStackMerger : AbilityTrigger {
                         event.result == null &&
                         event.tile1.type.skin == tileType &&
                         event.tile2.type.skin == tileType &&
+                        !event.tile1.stun && !event.tile2.stun &&
                         (!autoCut || event.tile1.stackSize < event.tile1.type.maxStackSize) &&
                         (!autoCut || event.tile2.stackSize < event.tile2.type.maxStackSize)) {
                     val stackSize = event.tile1.stackSize + event.tile2.stackSize

@@ -12,7 +12,8 @@ data class TileViewModel(
         val id: Int,
         val skin: String,
         val stackSize: Int,
-        val maxStackSize: Int
+        val maxStackSize: Int,
+        val stun: Boolean
 )
 
 sealed class BattleEvent {

@@ -35,6 +35,8 @@ class TileView(
         zIndex = 3
     }
 
+    private var stunImage: Image? = null
+
     private var drawnSectors = 0
     private var angle = 10f
     private var sectorRotation = 0f
@@ -92,6 +94,7 @@ class TileView(
     fun updateFrom(viewModel: TileViewModel) {
         val isSkinChanged = vm?.skin != viewModel.skin
         val isStackSizeChanged = vm?.stackSize != viewModel.stackSize
+        val isStunChanged = vm?.stun != viewModel.stun
 
         vm = viewModel
         name = "${viewModel.id}"
@@ -108,6 +111,23 @@ class TileView(
                 skillImage?.color = Color.BLUE
             } else {
                 skillImage?.color = Color.WHITE
+            }
+        }
+
+        if (isStunChanged) {
+            if (vm?.stun == true) {
+                //appear stun
+                stunImage = Image(gameContext.battleAtlas.findRegion("tile_stun")).apply {
+                    width = size
+                    height = size
+                    originX = 18f
+                    originY = 18f
+                    zIndex = 3
+                }
+                addActor(stunImage)
+            } else {
+                stunImage?.remove()
+                stunImage = null
             }
         }
     }

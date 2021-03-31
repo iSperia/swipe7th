@@ -106,7 +106,7 @@ class SwipeBattle(
 
     private suspend fun checkAutoTickTiles() {
         tileField.tiles.forEach {
-            if (it.value.autoDecrement) {
+            if (it.value.autoDecrement && !it.value.stun) {
                 if (it.value.stackSize > 1) {
                     val newTile = it.value.copy(stackSize = it.value.stackSize - 1)
                     tileField.tiles[it.key] = newTile
@@ -116,6 +116,11 @@ class SwipeBattle(
                     notifyTileRemoved(it.value.id)
                 }
             }
+        }
+        tileField.tiles.entries.filter { it.value.stun }.shuffled().firstOrNull()?.let { (position, tile) ->
+            val copy = tile.copy(stun = false)
+            tileField.tiles[position] = copy
+            notifyEvent(BattleEvent.UpdateTileEvent(tile.id, copy.toViewModel()))
         }
     }
 
@@ -293,14 +298,25 @@ class SwipeBattle(
     }
 
     suspend fun applyStun(target: BattleUnit, ticks: Int) {
-        val existingStun = target.stats.ailments.firstOrNull { it.ailmentType == AilmentType.STUN }
-        if (existingStun != null) {
-            existingStun.ticks += ticks
+        if (target.team == Team.RIGHT) {
+            val existingStun = target.stats.ailments.firstOrNull { it.ailmentType == AilmentType.STUN }
+            if (existingStun != null) {
+                existingStun.ticks += ticks
+            } else {
+                target.stats.ailments.add(UnitAilment(AilmentType.STUN, ticks, 0f))
+            }
+            notifyEvent(BattleEvent.ShowAilmentEffect(target.id, "ailment_paralize"))
+            notifyEvent(BattleEvent.PersonageUpdateEvent(target.toViewModel()))
         } else {
-            target.stats.ailments.add(UnitAilment(AilmentType.STUN, ticks, 0f))
+            //we are stunning the player
+            val notStunnedYetTiles = tileField.tiles.entries.filter { !it.value.stun }.shuffled()
+            val amountToStun = min(notStunnedYetTiles.size - 1, ticks)
+            notStunnedYetTiles.take(amountToStun).forEach { (position, tile) ->
+                val copy = tile.copy(stun = true)
+                tileField.tiles[position] = copy
+                notifyEvent(BattleEvent.UpdateTileEvent(tile.id, copy.toViewModel()))
+            }
         }
-        notifyEvent(BattleEvent.ShowAilmentEffect(target.id, "ailment_paralize"))
-        notifyEvent(BattleEvent.PersonageUpdateEvent(target.toViewModel()))
     }
 
     suspend fun notifyEvent(event: BattleEvent) {
@@ -353,6 +369,7 @@ fun SwipeTile.toViewModel(): TileViewModel {
             id,
             type.skin,
             stackSize,
-            type.maxStackSize
+            type.maxStackSize,
+            stun
     )
 }

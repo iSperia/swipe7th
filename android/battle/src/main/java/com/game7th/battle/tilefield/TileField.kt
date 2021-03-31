@@ -42,9 +42,13 @@ class TileField(private val merger: TileFieldMerger) {
 
             if (nx >= 0 && ny >= 0 && nx < WIDTH && ny < HEIGHT) {
                 if (!freshGeneration.containsKey(newPosition)) {
-                    //we are fine to move
-                    result.add(TileFieldEvent.MoveTileEvent(tile.id, newPosition))
-                    freshGeneration[newPosition] = tile
+                    if (!tile.stun) {
+                        //we are fine to move
+                        result.add(TileFieldEvent.MoveTileEvent(tile.id, newPosition))
+                        freshGeneration[newPosition] = tile
+                    } else {
+                        freshGeneration[position] = tile
+                    }
                 } else {
                     //we are maybe merge subjects
                     val mergeResult = merger.merge(tile, freshGeneration[newPosition]!!)

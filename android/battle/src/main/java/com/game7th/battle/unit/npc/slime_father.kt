@@ -3,10 +3,12 @@ package com.game7th.battle.unit.npc
 import com.game7th.battle.DamageVector
 import com.game7th.battle.ability.TickerEntry
 import com.game7th.battle.ability.ability
+import com.game7th.battle.dto.BattleEvent
 import com.game7th.battle.dto.SwipeBalance
 import com.game7th.battle.unit.CappedStat
 import com.game7th.battle.unit.UnitStats
 import com.game7th.metagame.dto.UnitType
+import kotlin.math.max
 
 fun produceSlimeFather(balance: SwipeBalance, level: Int): UnitStats {
     val hp = level * balance.father_slime.hp
@@ -22,13 +24,10 @@ fun produceSlimeFather(balance: SwipeBalance, level: Int): UnitStats {
                     }
                 }
             }
-            bodies[TickerEntry(balance.father_slime.w2, balance.father_slime.t2, "shield")] = { battle, unit ->
-                val allies = battle.aliveAllies(unit)
-                val armor = (unit.stats.level * balance.father_slime.k2).toInt()
-                battle.notifyAttack(unit, emptyList(), 0)
-                allies.forEach {
-                    it.stats.armor = it.stats.armor + armor
-                    battle.notifyPersonageUpdated(it)
+            bodies[TickerEntry(balance.father_slime.w2, balance.father_slime.t2, "leaf")] = { battle, unit ->
+                battle.findClosestAliveEnemy(unit)?.let { target ->
+                    battle.notifyEvent(BattleEvent.PersonagePositionedAbilityEvent(unit.toViewModel(), unit.position, 0))
+                    battle.applyStun(target, max(1, (balance.father_slime.k2 * unit.stats.level.toFloat() / target.stats.level).toInt()))
                 }
             }
         }

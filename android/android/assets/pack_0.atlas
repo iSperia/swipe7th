@@ -6,14 +6,14 @@ filter: Nearest, Nearest
 repeat: none
 armor_bar_black
   rotate: false
-  xy: 2000, 990
+  xy: 2000, 942
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
   index: -1
 armor_bar_grey
   rotate: false
-  xy: 2000, 1019
+  xy: 2000, 971
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
@@ -97,14 +97,14 @@ art_STAFF
   index: -1
 bar_black
   rotate: false
-  xy: 2000, 1079
+  xy: 2000, 1031
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 bar_purple
   rotate: false
-  xy: 2000, 1103
+  xy: 2000, 1055
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
@@ -160,7 +160,7 @@ battle_fg
   index: 2
 black_quad
   rotate: false
-  xy: 2000, 988
+  xy: 2000, 940
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -174,7 +174,7 @@ gladiator_drop
   index: -1
 gladiator_strike
   rotate: false
-  xy: 2000, 1711
+  xy: 2000, 1663
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -188,14 +188,14 @@ gladiator_wave
   index: -1
 health_bar_green
   rotate: false
-  xy: 2000, 1039
+  xy: 2000, 991
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 health_bar_red
   rotate: false
-  xy: 2000, 989
+  xy: 2000, 941
   size: 5, 1
   orig: 5, 1
   offset: 0, 0
@@ -210,14 +210,14 @@ hp_bar_bg
   index: -1
 hp_bar_rect
   rotate: false
-  xy: 2000, 1223
+  xy: 2000, 1175
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 icon_attack
   rotate: false
-  xy: 2000, 1319
+  xy: 2000, 1271
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -238,42 +238,42 @@ icon_resist
   index: -1
 kn_shield
   rotate: false
-  xy: 2000, 1383
+  xy: 2000, 1335
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 pic_leaf
   rotate: false
-  xy: 2000, 1513
+  xy: 2000, 1465
   size: 34, 34
   orig: 34, 34
   offset: 0, 0
   index: -1
 pic_shield
   rotate: false
-  xy: 2000, 1547
+  xy: 2000, 1499
   size: 34, 34
   orig: 34, 34
   offset: 0, 0
   index: -1
 pic_summon
   rotate: false
-  xy: 2000, 1479
+  xy: 2000, 1431
   size: 34, 34
   orig: 34, 34
   offset: 0, 0
   index: -1
 pic_sword
   rotate: false
-  xy: 2000, 1581
+  xy: 2000, 1533
   size: 34, 34
   orig: 34, 34
   offset: 0, 0
   index: -1
 poison_archer_paralize
   rotate: false
-  xy: 2000, 1663
+  xy: 2000, 1615
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -308,91 +308,98 @@ portrait_unknown
   index: -1
 ptcl_brown
   rotate: false
-  xy: 2000, 991
+  xy: 2000, 943
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 resist_bar_black
   rotate: false
-  xy: 2000, 1059
+  xy: 2000, 1011
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 resist_bar_blue
   rotate: false
-  xy: 2000, 999
+  xy: 2000, 951
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 rs_bar_rect
   rotate: false
-  xy: 2000, 1191
+  xy: 2000, 1143
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 skill_tile_gun
   rotate: false
-  xy: 2000, 1287
+  xy: 2000, 1239
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 skill_tile_holy_strike
   rotate: false
-  xy: 2000, 1447
+  xy: 2000, 1399
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 skill_tile_poison_arrow
   rotate: false
-  xy: 2000, 1159
+  xy: 2000, 1111
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 tile_bg
   rotate: false
-  xy: 2000, 1415
+  xy: 2000, 1367
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 tile_bg
   rotate: false
-  xy: 2000, 1255
+  xy: 2000, 1207
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 tile_bg_grey
   rotate: false
-  xy: 2000, 1615
+  xy: 2000, 1567
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 tile_fg_empire
   rotate: false
-  xy: 2000, 1351
+  xy: 2000, 1303
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
+tile_stun
+  rotate: false
+  xy: 2000, 1711
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 ui_button_pressed
   rotate: false
-  xy: 2000, 1143
+  xy: 2000, 1095
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_simple
   rotate: false
-  xy: 2000, 1127
+  xy: 2000, 1079
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
