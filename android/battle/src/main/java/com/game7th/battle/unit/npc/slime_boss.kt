@@ -11,6 +11,7 @@ import com.game7th.battle.toViewModel
 import com.game7th.battle.unit.CappedStat
 import com.game7th.battle.unit.UnitStats
 import com.game7th.metagame.dto.UnitType
+import kotlin.math.max
 
 fun produceSlimeBoss(balance: SwipeBalance, level: Int): UnitStats {
     val hp = balance.slime_boss.hp * level
@@ -24,15 +25,7 @@ fun produceSlimeBoss(balance: SwipeBalance, level: Int): UnitStats {
                     battle.findClosestAliveEnemy(unit)?.let { target ->
                         battle.notifyAttack(unit, listOf(target), 0)
                         battle.processDamage(target, unit, DamageVector(damage, 0, 0))
-                    }
-                }
-
-                //generate two nodes
-                (0..1).forEach { _ ->
-                    battle.tileField.calculateFreePosition()?.let { position ->
-                        val tile = SwipeTile(TileTemplate("slime_splash", 0), battle.tileField.newTileId(), balance.slime_boss.d1, true)
-                        battle.tileField.tiles[position] = tile
-                        battle.notifyEvent(BattleEvent.CreateTileEvent(tile.toViewModel(), position, -1))
+                        battle.applyStun(target, max(1, (unit.stats.level.toFloat() / target.stats.level * balance.slime_boss.d1).toInt()))
                     }
                 }
             }
