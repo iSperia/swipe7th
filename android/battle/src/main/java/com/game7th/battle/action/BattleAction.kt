@@ -55,6 +55,7 @@ class RegenerateParametrizedAmountAction(
         val regen = meta as? ParametrizedMeta
         regen ?: return
         val amount = regen.parameter * perParameter * (1 + 0.02f * battle.combo)
+        battle.notifyEvent(BattleEvent.ShowAilmentEffect(unit.id, "ailment_heal"))
         battle.processHeal(unit, amount.toInt())
     }
 }
