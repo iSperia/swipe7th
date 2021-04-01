@@ -10,6 +10,7 @@ enum class UnitType(val bodyWeight: Int, val spiritWeight: Int, val mindWeight: 
     SLIME_MOTHER(0,0,0),
     SLIME_FATHER(0,0,0),
     SLIME_BOSS(0,0,0),
+    SLIME_ARMORED(0,0,0),
 
     DRYAD(0,0,0),
     DRYAD_QUEEN(0,0,0),
@@ -26,6 +27,7 @@ enum class UnitType(val bodyWeight: Int, val spiritWeight: Int, val mindWeight: 
         SLIME_BOSS -> "slime_boss"
         DRYAD -> "dryad"
         DRYAD_QUEEN -> "dryad_queen"
+        SLIME_ARMORED -> "slime_armored"
         else -> "personage_dead"
     }
 
@@ -39,6 +41,7 @@ enum class UnitType(val bodyWeight: Int, val spiritWeight: Int, val mindWeight: 
         SLIME_BOSS -> "slime_boss"
         DRYAD -> "dryad"
         DRYAD_QUEEN -> "dryad_queen"
+        SLIME_ARMORED -> "slime_armored"
         else -> "portrait_unknown"
     }
 }

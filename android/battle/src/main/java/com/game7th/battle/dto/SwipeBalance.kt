@@ -40,6 +40,7 @@ data class SwipeBalance(
         val initialTiles: Int,
 
         val slime: PersonageBalance,
+        val slime_armored: PersonageBalance,
         val slime_boss: PersonageBalance,
         val red_slime: PersonageBalance,
         val mother_slime: PersonageBalance,

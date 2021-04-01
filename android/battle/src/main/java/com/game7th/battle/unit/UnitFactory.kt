@@ -13,6 +13,7 @@ object UnitFactory {
             UnitType.GLADIATOR -> produceGladiator(balance, unitStats!!)//UnitStats(UnitType.GLADIATOR, 100, 20, 20, 20, CappedStat(5000,5000), 1000, 1000, 500,100,150))// unitStats!!)
             UnitType.POISON_ARCHER -> produceToxicArcher(balance, unitStats!!)
             UnitType.GREEN_SLIME -> produceGreenSlime(balance, level)
+            UnitType.SLIME_ARMORED -> produceSlimeArmored(balance, level)
             UnitType.PURPLE_SLIME -> producePurpleSlime(balance, level)
             UnitType.SLIME_MOTHER -> produceSlimeMother(balance, level)
             UnitType.SLIME_FATHER -> produceSlimeFather(balance, level)
