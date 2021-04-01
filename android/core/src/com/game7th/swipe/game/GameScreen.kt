@@ -29,7 +29,7 @@ import com.game7th.swipe.game.actors.GameActor
 import com.game7th.swipe.game.battle.BattleController
 import com.game7th.swipe.game.battle.model.FigureGdxModel
 import com.game7th.swipe.game.battle.model.GdxModel
-import com.game7th.swipe.game.battle.tutorial.FirstBattleTutorial
+import com.game7th.swipe.game.battle.tutorial.*
 import com.game7th.swipe.gestures.SimpleDirectionGestureDetector
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -263,9 +263,12 @@ class GameScreen(private val game: SwipeGameGdx,
 
     private fun produceTutorials(): List<AbilityTrigger> {
         val result = mutableListOf<AbilityTrigger>()
-        if (actId == 0 && locationId == 0 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_FIRST_BATTLE_INTRO_SHOWN)?.toBoolean() != true) {
-            result.add(FirstBattleTutorial(this, game))
-        }
+        if (actId == 0 && locationId == 0 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_FIRST_BATTLE_INTRO_SHOWN)?.toBoolean() != true) { result.add(FirstBattleTutorial(this, game)) }
+        if (actId == 0 && locationId == 2 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L3_TALK)?.toBoolean() != true) { result.add(Act1L3Talk(this, game)) }
+        if (actId == 0 && locationId == 3 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L4_TALK)?.toBoolean() != true) { result.add(Act1L4Talk(this, game)) }
+        if (actId == 0 && locationId == 4 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L5_TALK)?.toBoolean() != true) { result.add(Act1L5Talk(this, game)) }
+        if (actId == 0 && locationId == 6 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L7_TALK)?.toBoolean() != true) { result.add(Act1L7Talk(this, game)) }
+        if (actId == 0 && locationId == 7 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L8_TALK)?.toBoolean() != true) { result.add(Act1L8Talk(this, game)) }
         return result
     }
 
