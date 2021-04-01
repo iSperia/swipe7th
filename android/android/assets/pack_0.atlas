@@ -433,49 +433,49 @@ filter: Nearest, Nearest
 repeat: none
 art_BOOK_OF_REGENERATION
   rotate: false
-  xy: 1330, 160
+  xy: 1480, 160
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 art_CLOAK
   rotate: false
-  xy: 1426, 160
+  xy: 1576, 160
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 art_HOOD
   rotate: false
-  xy: 1234, 160
+  xy: 1384, 160
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 art_LEGGINGS
   rotate: false
-  xy: 1810, 164
+  xy: 1624, 68
   size: 92, 92
   orig: 92, 92
   offset: 0, 0
   index: -1
 art_MANTLE
   rotate: false
-  xy: 1522, 160
+  xy: 1672, 160
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 art_SHIELD
   rotate: false
-  xy: 1714, 160
+  xy: 1864, 160
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 art_SHOES
   rotate: false
-  xy: 1618, 160
+  xy: 1768, 160
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -489,35 +489,35 @@ icon_impact
   index: -1
 life_flask_grand
   rotate: false
-  xy: 1354, 88
+  xy: 1960, 184
   size: 72, 72
   orig: 72, 72
   offset: 0, 0
   index: -1
 life_flask_greater
   rotate: false
-  xy: 1570, 88
+  xy: 1860, 88
   size: 72, 72
   orig: 72, 72
   offset: 0, 0
   index: -1
 life_flask_large
   rotate: false
-  xy: 1642, 88
+  xy: 1932, 88
   size: 72, 72
   orig: 72, 72
   offset: 0, 0
   index: -1
 life_flask_medium
   rotate: false
-  xy: 1498, 88
+  xy: 1788, 88
   size: 72, 72
   orig: 72, 72
   offset: 0, 0
   index: -1
 life_flask_small
   rotate: false
-  xy: 1714, 88
+  xy: 1716, 16
   size: 72, 72
   orig: 72, 72
   offset: 0, 0
@@ -531,77 +531,84 @@ portrait_gladiator
   index: -1
 portrait_poison_archer
   rotate: false
-  xy: 1066, 52
+  xy: 1384, 100
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
 portrait_slime
   rotate: false
-  xy: 1902, 196
+  xy: 1216, 52
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
 portrait_slime_mother
   rotate: false
-  xy: 1234, 100
+  xy: 1504, 100
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
 portrait_slime_red
   rotate: false
-  xy: 946, 52
+  xy: 1096, 52
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
 shop_beginner_potion_pack
   rotate: false
-  xy: 1426, 88
+  xy: 1716, 88
   size: 72, 72
   orig: 72, 72
   offset: 0, 0
   index: -1
 slime_splash
   rotate: false
-  xy: 1090, 112
+  xy: 1240, 112
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 ui_dialog
   rotate: false
-  xy: 946, 112
+  xy: 1096, 112
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
-vp_personage_gladiator
-  rotate: false
-  xy: 796, 46
-  size: 150, 210
-  orig: 150, 210
-  offset: 0, 0
-  index: -1
-vp_poison_archer
-  rotate: false
-  xy: 496, 46
-  size: 150, 210
-  orig: 150, 210
-  offset: 0, 0
-  index: -1
-vp_slime
+vp_dryad
   rotate: false
   xy: 346, 46
   size: 150, 210
   orig: 150, 210
   offset: 0, 0
   index: -1
-vp_slime_red
+vp_personage_gladiator
+  rotate: false
+  xy: 946, 46
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_poison_archer
   rotate: false
   xy: 646, 46
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_slime
+  rotate: false
+  xy: 496, 46
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_slime_red
+  rotate: false
+  xy: 796, 46
   size: 150, 210
   orig: 150, 210
   offset: 0, 0

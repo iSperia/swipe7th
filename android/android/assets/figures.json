@@ -48,6 +48,29 @@
       ]
     },
     {
+      "name": "dryad",
+      "atlas": "dryad",
+      "height": 230,
+      "scale": 0.75,
+      "body": "dryad_body",
+      "poses": [
+        {"name":  "attack", "start":  1, "end":  21, "triggers": [20]},
+        {"name":  "damage", "start":  22, "end":  29, "sound": "damage_human_male"},
+        {"name":  "idle", "start":  30, "end":  45},
+        {"name":  "death", "start":  46, "end":  57}
+      ],
+      "attacks": [
+        {"attackType": "BOW_STRIKE", "effect": {
+          "name": "dryad_arrow",
+          "atlas": "dryad",
+          "trigger": 16,
+          "height": 144,
+          "width": 96,
+          "sound": "arrow"
+        }}
+      ]
+    },
+    {
       "name": "slime",
       "atlas": "slime",
       "height": 94,

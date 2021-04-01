@@ -17,6 +17,7 @@ object UnitFactory {
             UnitType.SLIME_MOTHER -> produceSlimeMother(balance, level)
             UnitType.SLIME_FATHER -> produceSlimeFather(balance, level)
             UnitType.SLIME_BOSS -> produceSlimeBoss(balance, level)
+            UnitType.DRYAD -> produceDryad(balance, level)
             else -> null
         }
     }
