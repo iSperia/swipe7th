@@ -46,7 +46,8 @@ data class SwipeBalance(
         val father_slime: PersonageBalance,
         val gladiator: PersonageBalance,
         val poison_archer: PersonageBalance,
-        val dryad: PersonageBalance
+        val dryad: PersonageBalance,
+        val dryad_queen: PersonageBalance
 ) {
     private fun calculateHealth(p: PersonageData) = p.level * stats.healthPerLevel + p.stats.body * stats.healthPerBody
     private fun calculateArmor(p: PersonageData) = p.stats.body * stats.armorPerBody

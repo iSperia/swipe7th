@@ -1,6 +1,7 @@
 package com.game7th.swipe.game.actors
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -20,6 +21,7 @@ class TileFieldView(
     private val backgroundGroup: Group
 
     private val tileGroup: Group
+    private val tileEffectGroup: Group
 
     private var moveShift = 0
     private var resetMoveShift = false
@@ -51,9 +53,11 @@ class TileFieldView(
         }
 
         tileGroup = Group()
+        tileEffectGroup = Group()
 
         addActor(backgroundGroup)
         addActor(tileGroup)
+        addActor(tileEffectGroup)
     }
 
     fun processAction(action: BattleEvent) {
@@ -142,6 +146,25 @@ class TileFieldView(
                 ))
                 resetMoveShift = true
             }
+            is BattleEvent.ShowTileEffect -> {
+                val x = action.position % 5
+                val y = action.position / 5
+                val effect = Image(gameContext.battleAtlas.findRegion(action.effect)).apply {
+                    width = tileSize
+                    height = tileSize
+                }
+                effect.applyPosition(x, y)
+                tileEffectGroup.addActor(effect)
+                effect.setScale(1.2f)
+                effect.alpha = 0f
+                effect.addAction(SequenceAction(
+                        ParallelAction(
+                                ScaleToAction().apply { duration = 0.3f; setScale(1f) },
+                                AlphaAction().apply { alpha = 1f; duration = 0.1f }
+                        ),
+                        RunnableAction().apply { setRunnable { effect.remove() } }
+                ))
+            }
         }
     }
 
@@ -213,7 +236,7 @@ class TileFieldView(
         moveShift = 0
     }
 
-    private fun TileView.applyPosition(x: Int, y: Int) {
+    private fun Actor.applyPosition(x: Int, y: Int) {
         this.x = tileSize * x
         this.y = tileSize * (FIELD_WIDTH - 1 - y)
     }

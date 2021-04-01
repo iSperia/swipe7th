@@ -41,6 +41,11 @@ sealed class BattleEvent {
             val id: Int
     ) : BattleEvent()
 
+    data class ShowTileEffect(
+            val position: Int,
+            val effect: String
+    ) : BattleEvent()
+
     data class CreatePersonageEvent(
             val personage: PersonageViewModel,
             val position: Int
