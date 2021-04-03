@@ -8,7 +8,7 @@ import com.game7th.metagame.account.dto.PersonageAttributeStats
 import com.game7th.metagame.dto.UnitType
 
 object UnitFactory {
-    fun produce(type: UnitType, balance: SwipeBalance, level: Int, unitStats: UnitStats?): UnitStats? {
+    fun produce(type: UnitType, balance: SwipeBalance, unitId: Int, level: Int, unitStats: UnitStats?): UnitStats? {
         return when (type) {
             UnitType.GLADIATOR -> produceGladiator(balance, unitStats!!)//UnitStats(UnitType.GLADIATOR, 100, 20, 20, 20, CappedStat(5000,5000), 1000, 1000, 500,100,150))// unitStats!!)
             UnitType.POISON_ARCHER -> produceToxicArcher(balance, unitStats!!)
@@ -20,6 +20,7 @@ object UnitFactory {
             UnitType.SLIME_BOSS -> produceSlimeBoss(balance, level)
             UnitType.DRYAD -> produceDryad(balance, level)
             UnitType.DRYAD_QUEEN -> produceDryadQueen(balance, level)
+            UnitType.BHASTUSE_JOLLY -> produceBhastuseJolly(balance, unitId, level)
             else -> null
         }
     }

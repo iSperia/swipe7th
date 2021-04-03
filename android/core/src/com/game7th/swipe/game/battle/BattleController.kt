@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import com.game7th.battle.dto.BattleEvent
+import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.game.GameContextWrapper
 import com.game7th.swipe.game.battle.model.FigureGdxModel
 import com.game7th.swipe.game.battle.model.GdxAttackType
@@ -21,6 +22,7 @@ import kotlin.random.Random
  */
 class BattleController(
         private val context: GameContextWrapper,
+        private val screen: BaseScreen,
         private val y: Float,
         private val sounds: Map<String, Sound>,
         private val endEventHandler: (event: BattleEvent) -> Unit
@@ -41,9 +43,12 @@ class BattleController(
     val controllersToRemove = mutableListOf<ElementController>()
 
     var timePassed = 0f                                     //how much time is passed
-    val actions = mutableListOf<Pair<Float, () -> Unit>>()  //the actions to complete on time pass
+    var actions = mutableListOf<Pair<Float, () -> Unit>>()  //the actions to complete on time pass
     val scheduledActions = mutableListOf<Pair<Float, () -> Unit>>()
     var timeShift = 0f
+
+    var speechLockStarted = 0f
+    var isSpeechLocked = false
 
     init {
         controllers.add(object : ElementController(context, this, fgId++) {
@@ -61,18 +66,20 @@ class BattleController(
         timePassed += delta * timeScale()
         timeShift = max(timePassed, timeShift)
 
-        actions.forEachIndexed { index, (timestamp, action) ->
-            if (timestamp < timePassed) {
-                action()
+        if (!isSpeechLocked) {
+            actions.forEachIndexed { index, (timestamp, action) ->
+                if (timestamp < timePassed) {
+                    action()
+                }
             }
+
+            controllers.removeAll(controllersToRemove)
+            controllersToRemove.clear()
+            actions.removeAll { it.first < timePassed }
+
+            actions.addAll(scheduledActions)
+            scheduledActions.clear()
         }
-
-        controllers.removeAll(controllersToRemove)
-        controllersToRemove.clear()
-        actions.removeAll { it.first < timePassed }
-
-        actions.addAll(scheduledActions)
-        scheduledActions.clear()
     }
 
     private val paddingSide = context.width * 0.05f
@@ -85,6 +92,9 @@ class BattleController(
 
     fun processEvent(event: BattleEvent) {
         when (event) {
+            is BattleEvent.ShowSpeech -> {
+                scheduleShowSpeech(event)
+            }
             is BattleEvent.CreatePersonageEvent -> {
                 scheduleCreatePersonage(event)
             }
@@ -280,9 +290,10 @@ class BattleController(
     }
 
     private fun schedulePersonageDeath(event: BattleEvent.PersonageDeadEvent) {
+        println(">>> DEATH: $timePassed, $timeShift")
+        val figure = findFigure(event.personage.id)
         actions.add(Pair(timeShift) {
-            println(">>> PersonageDeath $event")
-            findFigure(event.personage.id)?.let {
+            figure?.let {
                 it.switchPose(FigurePose.POSE_DEATH)
                 it.isDead = true
             }
@@ -296,6 +307,9 @@ class BattleController(
             }
             Unit
         })
+        if (event.blocking) {
+            timeShift += (figure?.figureModel?.poses?.firstOrNull { it.name == "death" }?.let { (it.end - it.start) * FRAMERATE } ?: 0f)
+        }
     }
 
     private fun scheduleFinalEventPropagation(event: BattleEvent) {
@@ -304,10 +318,27 @@ class BattleController(
         })
     }
 
+    private fun scheduleShowSpeech(event: BattleEvent.ShowSpeech) {
+        actions.add(Pair(timeShift) {
+            speechLockStarted = timePassed
+            isSpeechLocked = true
+            screen.showDialog(event.portrait, event.name, context.gameContext.texts[event.text] ?: event.text) {
+                unlockSpeech()
+            }
+        })
+        timeShift += 1f
+    }
+
+    fun unlockSpeech() {
+        val delta = timePassed - speechLockStarted
+        actions = actions.map { Pair(it.first + delta, it.second) }.toMutableList()
+        isSpeechLocked = false
+    }
+
     private fun scheduleCreatePersonage(event: BattleEvent.CreatePersonageEvent) {
+        println(">>> CREATE: $timePassed, $timeShift")
         actions.add(Pair(timeShift) {
             val x = calculatePosition(event.position)
-            println(">>> CreatePersonage $event")
             FigureController(context,
                     this@BattleController,
                     event.personage.id,

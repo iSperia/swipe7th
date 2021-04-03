@@ -411,23 +411,23 @@ ui_button_simple
   orig: 32, 16
   offset: 0, 0
   index: -1
-vp_bhastuse
+vp_slime_boss
   rotate: false
   xy: 1480, 48
   size: 150, 210
   orig: 150, 210
   offset: 0, 0
   index: -1
-vp_slime_boss
+vp_slime_father
   rotate: false
-  xy: 1630, 48
+  xy: 1780, 0
   size: 150, 210
   orig: 150, 210
   offset: 0, 0
   index: -1
 vp_slime_mother
   rotate: false
-  xy: 1780, 0
+  xy: 1630, 48
   size: 150, 210
   orig: 150, 210
   offset: 0, 0
@@ -585,16 +585,23 @@ ui_dialog
   orig: 144, 144
   offset: 0, 0
   index: -1
+vp_bhastuse_jolly
+  rotate: false
+  xy: 646, 292
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
 vp_dryad
   rotate: false
-  xy: 346, 292
+  xy: 196, 292
   size: 150, 210
   orig: 150, 210
   offset: 0, 0
   index: -1
 vp_dryad_queen
   rotate: false
-  xy: 646, 292
+  xy: 496, 292
   size: 150, 210
   orig: 150, 210
   offset: 0, 0
@@ -615,7 +622,7 @@ vp_poison_archer
   index: -1
 vp_slime
   rotate: false
-  xy: 496, 292
+  xy: 346, 292
   size: 150, 210
   orig: 150, 210
   offset: 0, 0
@@ -623,13 +630,6 @@ vp_slime
 vp_slime_armored
   rotate: false
   xy: 1246, 292
-  size: 150, 210
-  orig: 150, 210
-  offset: 0, 0
-  index: -1
-vp_slime_father
-  rotate: false
-  xy: 0, 96
   size: 150, 210
   orig: 150, 210
   offset: 0, 0
@@ -643,7 +643,7 @@ vp_slime_red
   index: -1
 vp_strange_figure
   rotate: false
-  xy: 196, 292
+  xy: 0, 96
   size: 150, 210
   orig: 150, 210
   offset: 0, 0

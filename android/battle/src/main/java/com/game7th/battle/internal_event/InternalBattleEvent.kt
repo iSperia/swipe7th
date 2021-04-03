@@ -76,4 +76,9 @@ sealed class InternalBattleEvent(
             var tiles: Map<Int, SwipeTile>?
     ) : InternalBattleEvent(battle)
 
+    class UnitPhaseTriggered(
+            battle: SwipeBattle,
+            val unit: BattleUnit
+    ) : InternalBattleEvent(battle)
+
 }

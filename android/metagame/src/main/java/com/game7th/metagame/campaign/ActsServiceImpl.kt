@@ -77,6 +77,8 @@ class ActsServiceImpl(
                     } else locationConfig
                 })
         actCache[id] = config
+
+//        (0..13).forEach { markLocationComplete(0, it, 1) }
         return config
     }
 

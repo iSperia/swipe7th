@@ -20,8 +20,8 @@ android {
         applicationId "com.game7th.swipe"
         minSdkVersion 14
         targetSdkVersion 30
-        versionCode 9
-        versionName "0.0.8 Andromeda"
+        versionCode 10
+        versionName "0.0.9 Roland Shades"
     }
     buildTypes {
         release {

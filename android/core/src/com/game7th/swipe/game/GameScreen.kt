@@ -134,7 +134,7 @@ class GameScreen(private val game: SwipeGameGdx,
                 width = Gdx.graphics.width.toFloat(),
                 height = Gdx.graphics.height.toFloat(),
                 atlases = atlases
-        ), Gdx.graphics.height - (Gdx.graphics.width.toFloat() / 1.25f), sounds) {
+        ), this@GameScreen, Gdx.graphics.height - (Gdx.graphics.width.toFloat() / 1.25f), sounds) {
             if (it is BattleEvent.VictoryEvent) {
                 val experience = config.waves.sumBy {
                     it.sumBy { it.level * 50 }

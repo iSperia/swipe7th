@@ -30,11 +30,13 @@ class EffectController(
     override fun render(batch: SpriteBatch, delta: Float) {
         timePassed += delta * battle.timeScale()
 
-        batch.draw(animation.getKeyFrame(timePassed, true),
-                targetFigure.originX - effect.width * battle.scale * flipMultiplier / 2f,
-                targetFigure.originY,
-                effect.width * battle.scale * flipMultiplier,
-                effect.height * battle.scale)
+        if (!animation.isAnimationFinished(timePassed)) {
+            batch.draw(animation.getKeyFrame(timePassed, true),
+                    targetFigure.originX - effect.width * battle.scale * flipMultiplier / 2f,
+                    targetFigure.originY,
+                    effect.width * battle.scale * flipMultiplier,
+                    effect.height * battle.scale)
+        }
 
         if (animation.isAnimationFinished(timePassed)) {
             battle.removeController(this)

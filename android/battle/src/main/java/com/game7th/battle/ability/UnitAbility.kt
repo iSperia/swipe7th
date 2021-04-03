@@ -47,6 +47,13 @@ class UnitAbility {
         return trigger
     }
 
+    fun phaser(init: PhaseTrigger.() -> Unit) : PhaseTrigger {
+        val trigger = PhaseTrigger()
+        trigger.init()
+        triggers.add(trigger)
+        return trigger
+    }
+
     /**END OF DSL*/
 }
 

@@ -126,9 +126,10 @@ class SwipeBattle(
 
     private suspend fun generateInitialPersonages(config: BattleConfig) = withContext(coroutineContext) {
         config.personages.withIndex().forEach {
-            val unitStats = UnitFactory.produce(it.value.name, balance, it.value.level, it.value.unitStats)
+            val unitId = newPersonageId()
+            val unitStats = UnitFactory.produce(it.value.name, balance, unitId, it.value.level, it.value.unitStats)
             unitStats?.let { stats ->
-                val unit = BattleUnit(newPersonageId(), it.index, stats, Team.LEFT)
+                val unit = BattleUnit(unitId, it.index, stats, Team.LEFT)
                 units.add(unit)
                 notifyEvent(BattleEvent.CreatePersonageEvent(unit.toViewModel(), it.index))
             }
@@ -141,17 +142,18 @@ class SwipeBattle(
     private suspend fun generateNpcs(config: BattleConfig) {
         notifyEvent(BattleEvent.NewWaveEvent(wave))
         config.waves[wave].withIndex().forEach {
-            val unitStats = UnitFactory.produce(it.value.name, balance, it.value.level, null)
+            val personageId = newPersonageId()
+            val unitStats = UnitFactory.produce(it.value.name, balance, personageId, it.value.level, null)
             val position = 4 - it.index
             unitStats?.let { stats ->
-                val unit = BattleUnit(newPersonageId(), position, stats, Team.RIGHT)
+                val unit = BattleUnit(personageId, position, stats, Team.RIGHT)
                 units.add(unit)
                 notifyEvent(BattleEvent.CreatePersonageEvent(unit.toViewModel(), position))
             }
         }
     }
 
-    private fun newPersonageId(): Int {
+    fun newPersonageId(): Int {
         return personageId.also { personageId++ }
     }
 
@@ -258,7 +260,13 @@ class SwipeBattle(
         val damage = DamageCalculator.calculateDamage(balance, source.stats, target.stats, damage)
         val totalDamage = damage.damage.totalDamage()
         if (totalDamage > 0 || damage.armorDeplete > 0 || damage.resistDeplete > 0) {
-            target.stats.health.value = max(0, target.stats.health.value - totalDamage)
+            val minHealth = if (target.stats.phase < target.stats.maxPhase) target.stats.phaseThresholds[target.stats.phase] else 0
+            target.stats.health.value = max(minHealth, target.stats.health.value - totalDamage)
+            if (target.stats.phase < target.stats.maxPhase && target.stats.health.value == minHealth) {
+                //we move phase
+                target.stats.phase++
+                propagateInternalEvent(InternalBattleEvent.UnitPhaseTriggered(this@SwipeBattle, target))
+            }
             target.stats.resist -= damage.resistConsumed
 
             notifyEvent(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
@@ -361,6 +369,11 @@ class SwipeBattle(
                 notifyEvent(BattleEvent.ShowAilmentEffect(unit.id, "ailment_heal"))
             }
         }
+    }
+
+    suspend fun destroyUnit(unit: BattleUnit) {
+        notifyEvent(BattleEvent.PersonageDeadEvent(unit.toViewModel(), true))
+        units.remove(unit)
     }
 }
 

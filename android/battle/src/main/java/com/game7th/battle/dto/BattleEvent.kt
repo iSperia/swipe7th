@@ -69,7 +69,8 @@ sealed class BattleEvent {
     ) : BattleEvent()
 
     data class PersonageDeadEvent(
-            val personage: PersonageViewModel
+            val personage: PersonageViewModel,
+            val blocking: Boolean = false
     ) : BattleEvent()
 
     data class PersonageUpdateEvent(
@@ -105,6 +106,8 @@ sealed class BattleEvent {
     data class NewWaveEvent(
             val wave: Int
     ) : BattleEvent()
+
+    data class ShowSpeech(val portrait: String, val text: String, val name: String) : BattleEvent()
 
     object VictoryEvent: BattleEvent()
     object DefeatEvent : BattleEvent()

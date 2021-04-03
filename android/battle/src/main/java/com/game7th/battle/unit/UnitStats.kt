@@ -92,6 +92,10 @@ data class UnitStats(
         var maxTick: Int = 0,
         var tickAbility: String? = null,
 
+        var phase: Int = 0,
+        val maxPhase: Int = 0,
+        val phaseThresholds: List<Int> = emptyList(),
+
         var ailments: MutableList<UnitAilment> = mutableListOf()
 ) {
     val abilities = mutableListOf<UnitAbility>()

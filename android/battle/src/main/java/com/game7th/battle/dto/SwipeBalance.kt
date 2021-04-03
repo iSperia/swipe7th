@@ -44,6 +44,7 @@ data class SwipeBalance(
         val slime_boss: PersonageBalance,
         val red_slime: PersonageBalance,
         val mother_slime: PersonageBalance,
+        val bhastuse_jolly: PersonageBalance,
         val father_slime: PersonageBalance,
         val gladiator: PersonageBalance,
         val poison_archer: PersonageBalance,

@@ -185,6 +185,23 @@
       ]
     },
     {
+      "name": "bhastuse_jolly",
+      "atlas": "bhastuse_jolly",
+      "scale": 1,
+      "dependencies": ["slime_red", "slime_armored", "slime_boss"],
+      "height": 210,
+      "body": "bhastuse_jolly_body",
+      "poses": [
+        {"name":  "attack", "start":  1, "end":  18, "triggers": [14]},
+        {"name":  "damage", "start":  19, "end":  29, "sound":  "damage_human_male"},
+        {"name":  "idle", "start":  30, "end":  50},
+        {"name":  "death", "start":  51, "end":  81}
+      ],
+      "attacks": [
+        {"attackType": "MOVE_AND_PUNCH", "sound":  "damage_human_male"}
+      ]
+    },
+    {
       "name": "slime_father",
       "atlas": "slime_father",
       "scale": 0.8,
