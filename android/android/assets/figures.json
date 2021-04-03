@@ -259,6 +259,13 @@
       "width": 144
     },
     {
+      "name": "ailment_defense",
+      "atlas": "ailments",
+      "trigger": 15,
+      "height": 144,
+      "width": 144
+    },
+    {
       "name": "ailment_paralize",
       "atlas": "ailments",
       "sound": "stun",
