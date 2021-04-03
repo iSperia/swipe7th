@@ -93,7 +93,7 @@ class ForgePanel(
                 detailPanel = ItemDetailPanel(
                         context,
                         ItemViewAdapter.InventoryItemAdapter(item),
-                        listOf(InventoryAction.IconAction("+${item.level * 50}", "ui_button_dust", Currency.DUST), InventoryAction.IconAction("-${item.level * 150}", "ui_button_levelup", Currency.DUST)),
+                        listOf(InventoryAction.IconAction("+${item.level * 100}", "ui_button_dust", Currency.DUST), InventoryAction.IconAction("-${item.level * 100}", "ui_button_levelup", Currency.DUST)),
                         this@ForgePanel::dismissDetailPanel,
                         this@ForgePanel::processAction).apply {
                     x = min(context.scale * 320f, panelScroller.x + itemView.x)
@@ -117,11 +117,11 @@ class ForgePanel(
         (detailPanel?.item as? ItemViewAdapter.InventoryItemAdapter)?.item?.let { item ->
             when (index) {
                 0 -> { //to dust!
-                    accountService.fund(Currency.DUST, item.level * 50)
+                    accountService.fund(Currency.DUST, item.level * 100)
                     gearService.removeItem(item)
                 }
                 1 -> { //level up
-                    val dustNeeded = 150 * item.level
+                    val dustNeeded = 100 * item.level
                     if ((accountService.getBalance().currencies[Currency.DUST] ?: 0) >= dustNeeded) {
                         accountService.spend(Currency.DUST, dustNeeded)
                         gearService.upgradeItem(item)

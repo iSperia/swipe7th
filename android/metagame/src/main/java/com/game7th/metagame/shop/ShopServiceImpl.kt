@@ -31,7 +31,7 @@ class ShopServiceImpl(
     } ?: emptyList()
 
     private var packs = listOf(
-            ShopItem.PackShopItem("SHOP_BEGINNER_POTION_PACK", listOf(PaymentOption(1000, Currency.GOLD), PaymentOption(100, Currency.GEMS)), "_p_0")
+            ShopItem.PackShopItem("SHOP_BEGINNER_POTION_PACK", listOf(PaymentOption(5000, Currency.GOLD), PaymentOption(150, Currency.GEMS)), "_p_0")
     )
 
     init {
@@ -44,7 +44,7 @@ class ShopServiceImpl(
         if (time > timeForUpdate) {
             storage.put(KEY_NEXT_TIME_SHOP_UPDATE, (time + (SHOP_UPDATE_TIME - time % SHOP_UPDATE_TIME)).toString())
             //update shop
-            cachedGearItems = listOf(1, 1, 1, 2, 2, 3).map {
+            cachedGearItems = listOf(1, 1, 1, 2, 2, 3, 5).map {
                 gearService.getArtifactReward(it)?.item?.let { item ->
                     ShopItem.GearShopItem(item, listOf(
                             PaymentOption(item.level * 500, Currency.GOLD),
@@ -63,7 +63,8 @@ class ShopServiceImpl(
 
     override fun listItems(): List<ShopItem> {
         checkShopRefreshed()
-        return cachedPersonages + cachedGearItems + packs
+        val personages = accountService.getPersonages()
+        return cachedPersonages.filter{ cached -> personages.count { it.unit.toString() == cached.personage } == 0} + cachedGearItems + packs
     }
 
     override fun acquireItem(id: String, paymentOption: PaymentOption): Boolean {
