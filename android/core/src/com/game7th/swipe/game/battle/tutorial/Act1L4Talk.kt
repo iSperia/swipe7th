@@ -24,7 +24,7 @@ class Act1L4Talk(
                     screen.showDialog("vp_strange_figure", "Strange figure", game.context.texts["ttr_a1l4_fb_2"]!!) {
                         screen.showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l4_fb_3"]!!) {
                             screen.showDialog("vp_strange_figure", "Strange figure", game.context.texts["ttr_a1l4_fb_4"]!!) {
-                                screen.showDialog("vp_bhastuse", "Bhastuse", game.context.texts["ttr_a1l4_fb_5"]!!) {
+                                screen.showDialog("vp_bhastuse_jolly", "Bhastuse", game.context.texts["ttr_a1l4_fb_5"]!!) {
                                     screen.showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l4_fb_6"]!!) {
                                         screen.showDialog("vp_strange_figure", "Strange figure", game.context.texts["ttr_a1l4_fb_7"]!!) {
                                             screen.preventBottomSwipe = false

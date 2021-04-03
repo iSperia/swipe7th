@@ -21,7 +21,7 @@ class Act1L7Talk(
                 screen.preventRightSwipe = true
 
                 screen.showDialog("vp_personage_gladiator", "Strange Figure", game.context.texts["ttr_a1l7_fb_1"]!!) {
-                    screen.showDialog("vp_bhastuse", "Bhastuse", game.context.texts["ttr_a1l7_fb_2"]!!) {
+                    screen.showDialog("vp_bhastuse_jolly", "Bhastuse", game.context.texts["ttr_a1l7_fb_2"]!!) {
                         screen.showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l7_fb_3"]!!) {
                                 screen.preventBottomSwipe = false
                                 screen.preventTopSwipe = false

@@ -7,7 +7,7 @@ import com.game7th.swipe.SwipeGameGdx
 import com.game7th.swipe.TutorialKeys
 import com.game7th.swipe.game.GameScreen
 
-class Act1L8Talk(
+class Act1L9Talk(
         private val screen: GameScreen,
         private val game: SwipeGameGdx
 ) : AbilityTrigger {
@@ -23,9 +23,9 @@ class Act1L8Talk(
                     screen.preventLeftSwipe = true
                     screen.preventRightSwipe = true
 
-                    screen.showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l8_fb_1"]!!) {
-                        screen.showDialog("vp_bhastuse_jolly", "Bhastuse", game.context.texts["ttr_a1l8_fb_2"]!!) {
-                            screen.showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l8_fb_3"]!!) {
+                    screen.showDialog("vp_bhastuse_jolly", "Bhastuse", game.context.texts["ttr_a1l9_fb_1"]!!) {
+                        screen.showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l9_fb_2"]!!) {
+                            screen.showDialog("vp_bhastuse_jolly", "Bhastuse", game.context.texts["ttr_a1l9_fb_3"]!!) {
                                 screen.preventBottomSwipe = false
                                 screen.preventTopSwipe = false
                                 screen.preventLeftSwipe = false
@@ -39,14 +39,12 @@ class Act1L8Talk(
                     screen.preventTopSwipe = true
                     screen.preventLeftSwipe = true
                     screen.preventRightSwipe = true
-                    screen.showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l8_fb_4"]!!) {
-                        screen.showDialog("vp_personage_gladiator", "Strange Figure", game.context.texts["ttr_a1l8_fb_5"]!!) {
+                    screen.showDialog("vp_bhastuse_jolly", "Bhastuse", game.context.texts["ttr_a1l9_fb_4"]!!) {
                             screen.preventBottomSwipe = false
                             screen.preventTopSwipe = false
                             screen.preventLeftSwipe = false
                             screen.preventRightSwipe = false
-                            game.storage.put(TutorialKeys.ACT1_L8_TALK, true.toString())
-                        }
+                            game.storage.put(TutorialKeys.ACT1_L9_TALK, true.toString())
                     }
                 }
             }
