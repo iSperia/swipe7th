@@ -271,7 +271,7 @@ class GameScreen(private val game: SwipeGameGdx,
         if (actId == 0 && locationId == 7 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L8_TALK)?.toBoolean() != true) { result.add(Act1L8Talk(this, game)) }
         if (actId == 0 && locationId == 8 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L9_TALK)?.toBoolean() != true) { result.add(Act1L9Talk(this, game)) }
         if (actId == 0 && locationId == 10 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L11_TALK)?.toBoolean() != true) { result.add(Act1L11Talk(this, game)) }
-        if (actId == 0 && locationId == 13 && TutorialKeys.tutorialsEnabled /&& storage.get(TutorialKeys.ACT1_L14_TALK)?.toBoolean() != true) { result.add(Act1L14Talk(this, game)) }
+        if (actId == 0 && locationId == 13 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L14_TALK)?.toBoolean() != true) { result.add(Act1L14Talk(this, game)) }
         return result
     }
 

@@ -1,6 +1,5 @@
 package com.game7th.swipe
 
-import android.net.Uri
 import android.os.Bundle
 import android.widget.MediaController
 import android.widget.VideoView
@@ -25,7 +24,7 @@ class VideoPlaybackActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        videoView.setVideoURI(Uri.parse("android.resource://$packageName/${R.raw.intro}"))
+//        videoView.setVideoURI(Uri.parse("android.resource://$packageName/${R.raw.intro}"))
         videoView.start()
     }
 }

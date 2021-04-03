@@ -2,6 +2,7 @@ package com.game7th.battle.unit
 
 import com.game7th.battle.dto.SwipeBalance
 import com.game7th.battle.unit.npc.*
+import com.game7th.battle.unit.personages.produceFreezeMage
 import com.game7th.battle.unit.personages.produceGladiator
 import com.game7th.battle.unit.personages.produceToxicArcher
 import com.game7th.metagame.account.dto.PersonageAttributeStats
@@ -12,6 +13,7 @@ object UnitFactory {
         return when (type) {
             UnitType.GLADIATOR -> produceGladiator(balance, unitStats!!)//UnitStats(UnitType.GLADIATOR, 100, 20, 20, 20, CappedStat(5000,5000), 1000, 1000, 500,100,150))// unitStats!!)
             UnitType.POISON_ARCHER -> produceToxicArcher(balance, unitStats!!)
+            UnitType.FREEZE_MAGE -> produceFreezeMage(balance, unitId, unitStats!!)
             UnitType.GREEN_SLIME -> produceGreenSlime(balance, level)
             UnitType.SLIME_ARMORED -> produceSlimeArmored(balance, level)
             UnitType.PURPLE_SLIME -> producePurpleSlime(balance, level)

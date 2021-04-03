@@ -48,6 +48,38 @@
       ]
     },
     {
+      "name": "freeze_mage",
+      "atlas": "freeze_mage",
+      "height": 205,
+      "body": "freeze_mage_body",
+      "poses": [
+        {"name": "attack", "start":  1, "end": 24, "triggers": [20]},
+        {"name": "damage", "start":  25, "end": 36, "sound":  "damage_human_male"},
+        {"name": "idle", "start":  37, "end": 55},
+        {"name": "death", "start": 56, "end": 78}
+      ],
+      "attacks": [
+        {"attackType": "BOW_STRIKE", "effect": {
+          "name": "freeze_mage_arrow",
+          "atlas": "freeze_mage",
+          "trigger": 15,
+          "height": 144,
+          "width": 96,
+          "sound": "arrow"
+        }},
+        {"attackType": "AOE_STEPPED_GENERATOR", "effect": {
+          "name": "freeze_mage_storm",
+          "atlas": "freeze_mage",
+          "type": "STEPPED_GENERATOR",
+          "step": 36,
+          "time": 0.1,
+          "width": 120,
+          "height": 128,
+          "sound": "phys_wave"
+        }}
+      ]
+    },
+    {
       "name": "dryad",
       "atlas": "dryad",
       "height": 230,

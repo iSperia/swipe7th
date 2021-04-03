@@ -54,7 +54,8 @@ class ShopServiceImpl(
             }.filterNotNull()
 
             cachedPersonages = listOf(
-                    ShopItem.PersonageShopItem(UnitType.POISON_ARCHER.toString(), listOf(PaymentOption(5000, Currency.GOLD), PaymentOption(500, Currency.GEMS)), UUID.randomUUID().toString())
+                    ShopItem.PersonageShopItem(UnitType.POISON_ARCHER.toString(), listOf(PaymentOption(5000, Currency.GOLD), PaymentOption(300, Currency.GEMS)), UUID.randomUUID().toString()),
+                    ShopItem.PersonageShopItem(UnitType.FREEZE_MAGE.toString(), listOf(PaymentOption(5000, Currency.GOLD), PaymentOption(300, Currency.GEMS)), UUID.randomUUID().toString())
             )
             storage.put(KEY_GEAR_ITEMS, gson.toJson(cachedGearItems))
             storage.put(KEY_PERSONAGES, gson.toJson(cachedPersonages))

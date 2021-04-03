@@ -24,9 +24,9 @@ class AndroidLaunchActivity : AndroidApplication() {
         val storage = AndroidStorage(applicationContext)
         initialize(SwipeGameGdx(storage), config)
 
-        if (storage.get(KEY_INTRO_SHOWN)?.toBoolean() != true) {
-            startActivity(Intent(this@AndroidLaunchActivity, VideoPlaybackActivity::class.java))
-        }
+//        if (storage.get(KEY_INTRO_SHOWN)?.toBoolean() != true) {
+//            startActivity(Intent(this@AndroidLaunchActivity, VideoPlaybackActivity::class.java))
+//        }
     }
 
     companion object {

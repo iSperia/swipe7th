@@ -1,6 +1,7 @@
 package com.game7th.battle.internal_event
 
 import com.game7th.battle.DamageProcessResult
+import com.game7th.battle.DamageVector
 import com.game7th.battle.SwipeBattle
 import com.game7th.battle.tilefield.tile.SwipeTile
 import com.game7th.battle.unit.BattleUnit
@@ -78,6 +79,13 @@ sealed class InternalBattleEvent(
 
     class UnitPhaseTriggered(
             battle: SwipeBattle,
+            val unit: BattleUnit
+    ) : InternalBattleEvent(battle)
+
+    class PreprocessDamage(
+            battle: SwipeBattle,
+            val damage: DamageVector,
+            val delta: MutableList<DamageVector>,
             val unit: BattleUnit
     ) : InternalBattleEvent(battle)
 

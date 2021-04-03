@@ -21,8 +21,8 @@ class DefaultStackMerger : AbilityTrigger {
                         event.tile1.type.skin == tileType &&
                         event.tile2.type.skin == tileType &&
                         !event.tile1.stun && !event.tile2.stun &&
-                        (!autoCut || event.tile1.stackSize < event.tile1.type.maxStackSize) &&
-                        (!autoCut || event.tile2.stackSize < event.tile2.type.maxStackSize)) {
+                        (!autoCut || event.tile1.type.maxStackSize == 0 || event.tile1.stackSize < event.tile1.type.maxStackSize) &&
+                        (!autoCut || event.tile2.type.maxStackSize == 0 || event.tile2.stackSize < event.tile2.type.maxStackSize)) {
                     val stackSize = event.tile1.stackSize + event.tile2.stackSize
                     val finalStackSize = if (autoCut && stackSize > event.tile2.type.maxStackSize) event.tile2.type.maxStackSize else stackSize
                     event.result = SwipeTile(event.tile1.type, event.tile2.id, finalStackSize)

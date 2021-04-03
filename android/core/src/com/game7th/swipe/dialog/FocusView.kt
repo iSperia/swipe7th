@@ -72,7 +72,7 @@ class FocusView(
         modalPanel.addListener { event ->
             when (event) {
                 is InputEvent -> {
-                    if (rect.contains(event.stageX, event.stageY) && event.type == InputEvent.Type.exit && dismissStrategy == DismissStrategy.DISMISS_ON_INSIDE) {
+                    if (rect.contains(event.stageX, event.stageY) && event.type == InputEvent.Type.exit && dismissStrategy != DismissStrategy.DISMISS_FORCED) {
                         dismissCallback?.let {
                             this@FocusView.remove()
                             it.invoke()

@@ -46,6 +46,8 @@ class FigureController(
     var targetX = x
     var targetY = y
 
+    val frozenTexture = context.gameContext.battleAtlas.findRegion("ailment_frozen")
+
     var atlas: TextureAtlas = context.atlases[figureModel.atlas]!!
     val allTextures = filterAtlas(atlas, figureModel.body).toList()
     var animation: Animation<TextureRegion>? = null
@@ -99,6 +101,10 @@ class FigureController(
                     && pose != FigurePose.POSE_DEATH && !isDead) {
                 switchPose(FigurePose.POSE_IDLE)
             }
+        }
+
+        if (viewModel.stats.isFrozen) {
+            batch.draw(frozenTexture, x - 64f * bodyScale * flipMultiplier, y, 128f * bodyScale * flipMultiplier, 64f * bodyScale)
         }
 
     }

@@ -40,6 +40,13 @@ class UnitAbility {
         return trigger
     }
 
+    fun preprocessIncomingDamage(init: IncomingDamagePreprocessor.() -> Unit): IncomingDamagePreprocessor {
+        val trigger = IncomingDamagePreprocessor()
+        trigger.init()
+        triggers.add(trigger)
+        return trigger
+    }
+
     fun distancedConsumeOnAttackDamage(init: DistancedConsumeOnAttackDamageTriggerEvent.() -> Unit) : DistancedConsumeOnAttackDamageTriggerEvent {
         val trigger = DistancedConsumeOnAttackDamageTriggerEvent()
         trigger.init()

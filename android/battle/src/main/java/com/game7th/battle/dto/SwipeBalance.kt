@@ -47,6 +47,7 @@ data class SwipeBalance(
         val bhastuse_jolly: PersonageBalance,
         val father_slime: PersonageBalance,
         val gladiator: PersonageBalance,
+        val freeze_mage: PersonageBalance,
         val poison_archer: PersonageBalance,
         val dryad: PersonageBalance,
         val dryad_queen: PersonageBalance

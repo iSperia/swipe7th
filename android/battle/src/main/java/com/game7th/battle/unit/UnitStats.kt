@@ -42,7 +42,8 @@ data class BattleUnit(
                     tick = stats.tick,
                     tickAbility = stats.tickAbility,
                     maxTick = stats.maxTick,
-                    isStunned = !isNotStunned()
+                    isStunned = !isNotStunned(),
+                    isFrozen = stats.isFrozen()
             ),
             skin = stats.unitType.getSkin(),
             portrait = stats.unitType.getPortrait(),
@@ -54,13 +55,17 @@ data class BattleUnit(
         return stats.ailments.firstOrNull { it.ailmentType == AilmentType.STUN } == null
     }
 
+    fun isNotFrozen(): Boolean {
+        return !stats.isFrozen()
+    }
+
     fun isAlive(): Boolean {
         return stats.health.value > 0
     }
 }
 
 enum class AilmentType {
-    POISON, STUN, SCORCH
+    POISON, STUN, SCORCH, FROZEN
 }
 
 data class UnitAilment(
@@ -99,6 +104,8 @@ data class UnitStats(
         var ailments: MutableList<UnitAilment> = mutableListOf()
 ) {
     val abilities = mutableListOf<UnitAbility>()
+
+    fun isFrozen() = ailments.count { it.ailmentType ==  AilmentType.FROZEN} > 0
 
     operator fun plusAssign(ability: UnitAbility) {
         abilities.add(ability)

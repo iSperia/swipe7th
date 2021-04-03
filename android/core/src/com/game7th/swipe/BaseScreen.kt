@@ -4,7 +4,7 @@ import com.badlogic.gdx.Screen
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.ScreenViewport
-import com.game7th.swipe.dialog.DialogView
+import com.game7th.swipe.dialog.SpeechView
 import com.game7th.swipe.dialog.DismissStrategy
 import com.game7th.swipe.dialog.FocusView
 
@@ -27,7 +27,7 @@ abstract class BaseScreen(
     }
 
     fun showDialog(portrait: String, name: String, text: String, dismisser: () -> Unit) {
-        DialogView(context, name, text, portrait, dismisser).let { dialog -> stage.addActor(dialog) }
+        SpeechView(context, name, text, portrait, dismisser).let { dialog -> stage.addActor(dialog) }
     }
 
     open fun showFocusView(text: String, rect: Rectangle, strategy: DismissStrategy, dismissCallback: (() -> Unit)? = null) {

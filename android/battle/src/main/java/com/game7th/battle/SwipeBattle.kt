@@ -258,9 +258,19 @@ class SwipeBattle(
     }
 
     suspend fun processDamage(target: BattleUnit, source: BattleUnit, damage: DamageVector): DamageProcessResult {
-        val damage = DamageCalculator.calculateDamage(balance, source.stats, target.stats, damage)
-        val totalDamage = damage.damage.totalDamage()
-        if (totalDamage > 0 || damage.armorDeplete > 0 || damage.resistDeplete > 0) {
+        val dmg = DamageCalculator.calculateDamage(balance, source.stats, target.stats, damage)
+        val damageVector = if (dmg.status == DamageProcessStatus.DAMAGE_DEALT) {
+            val preprocessEvent = InternalBattleEvent.PreprocessDamage(this@SwipeBattle, dmg.damage, mutableListOf(), target)
+            propagateInternalEvent(preprocessEvent)
+
+            DamageVector(
+                    dmg.damage.physical - preprocessEvent.delta.sumBy { it.physical },
+                    dmg.damage.magical - preprocessEvent.delta.sumBy { it.magical },
+                    dmg.damage.chaos - preprocessEvent.delta.sumBy { it.chaos })
+        } else dmg.damage
+
+        val totalDamage = damageVector.totalDamage()
+        if (totalDamage > 0 || dmg.armorDeplete > 0 || dmg.resistDeplete > 0) {
             val minHealth = if (target.stats.phase < target.stats.maxPhase) target.stats.phaseThresholds[target.stats.phase] else 0
             target.stats.health.value = max(minHealth, target.stats.health.value - totalDamage)
             if (target.stats.phase < target.stats.maxPhase && target.stats.health.value == minHealth) {
@@ -268,16 +278,18 @@ class SwipeBattle(
                 target.stats.phase++
                 propagateInternalEvent(InternalBattleEvent.UnitPhaseTriggered(this@SwipeBattle, target))
             }
-            target.stats.resist -= damage.resistConsumed
+            target.stats.resist -= dmg.resistConsumed
 
-            notifyEvent(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.damage.totalDamage()))
+            if (totalDamage > 0) {
+                notifyEvent(BattleEvent.PersonageDamageEvent(target.toViewModel(), totalDamage))
+            }
             if (target.stats.health.value <= 0) {
                 notifyEvent(BattleEvent.PersonageDeadEvent(target.toViewModel()))
             }
-        } else if (damage.status == DamageProcessStatus.DAMAGE_EVADED) {
+        } else if (dmg.status == DamageProcessStatus.DAMAGE_EVADED) {
             notifyEvent(BattleEvent.ShowAilmentEffect(target.id, "ailment_evade"))
         }
-        return damage
+        return dmg.copy(damage = damageVector)
     }
 
     suspend fun processAilmentDamage(target: BattleUnit, damage: DamageVector) {
@@ -322,6 +334,16 @@ class SwipeBattle(
                 notifyEvent(BattleEvent.UpdateTileEvent(tile.id, copy.toViewModel()))
             }
         }
+    }
+
+    suspend fun applyFrozen(target: BattleUnit, duration: Int) {
+        val existingFrozen = target.stats.ailments.firstOrNull { it.ailmentType == AilmentType.FROZEN }
+        if (existingFrozen != null) {
+            existingFrozen.ticks += duration
+        } else {
+            target.stats.ailments.add(UnitAilment(AilmentType.FROZEN, duration, 0f))
+        }
+        notifyEvent(BattleEvent.PersonageUpdateEvent(target.toViewModel()))
     }
 
     suspend fun notifyEvent(event: BattleEvent) {

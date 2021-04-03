@@ -21,6 +21,7 @@ class AttackAction : BattleAction {
 
     lateinit var target: (SwipeBattle, BattleUnit) -> List<BattleUnit>
     lateinit var damage: (SwipeBattle, BattleUnit, BattleUnit, Int, Int) -> DamageVector
+    var action: (suspend (SwipeBattle, BattleUnit, BattleUnit, Int, Int, Int) -> Unit)? = null
     var attackIndex = 0
 
     override suspend fun processAction(battle: SwipeBattle, unit: BattleUnit, source: BattleUnit, target: BattleUnit, meta: Any) {
@@ -36,6 +37,9 @@ class AttackAction : BattleAction {
 
         damages.forEach {
             battle.propagateInternalEvent(InternalBattleEvent.AttackDamageEvent(battle, it.second, tile, source, it.first))
+        }
+        targets.forEach {
+            action?.invoke(battle, unit, it, tile.stackSize, tile.type.maxStackSize, battle.combo)
         }
         targets.forEach {
             battle.notifyEvent(BattleEvent.PersonageUpdateEvent(it.toViewModel()))
