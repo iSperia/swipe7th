@@ -232,12 +232,13 @@ class SwipeBattle(
             unit.stats.ailments.forEach { ailment ->
                 when (ailment.ailmentType) {
                     AilmentType.POISON -> {
-                        processAilmentDamage(unit, DamageVector(0, 0, ailment.value.toInt()))
                         notifyEvent(BattleEvent.ShowAilmentEffect(unit.id, "ailment_poison"))
+                        processAilmentDamage(unit, DamageVector(0, 0, ailment.value.toInt()))
+
                     }
                     AilmentType.SCORCH -> {
-                        processAilmentDamage(unit, DamageVector(0, ailment.value.toInt(), 0))
                         notifyEvent(BattleEvent.ShowAilmentEffect(unit.id, "effect_scorch"))
+                        processAilmentDamage(unit, DamageVector(0, ailment.value.toInt(), 0))
                     }
                     AilmentType.STUN -> {
                         needPersonageUpdate = true
@@ -280,11 +281,7 @@ class SwipeBattle(
     }
 
     suspend fun processAilmentDamage(target: BattleUnit, damage: DamageVector) {
-        target.stats.health.value = max(0, target.stats.health.value - damage.totalDamage())
-        notifyEvent(BattleEvent.PersonageDamageEvent(target.toViewModel(), damage.totalDamage()))
-        if (target.stats.health.value <= 0) {
-            notifyEvent(BattleEvent.PersonageDeadEvent(target.toViewModel()))
-        }
+        processDamage(target, target, damage)
     }
 
     suspend fun notifyTileRemoved(id: Int) {
