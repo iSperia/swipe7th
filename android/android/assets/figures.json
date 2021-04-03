@@ -229,6 +229,7 @@
     {
       "name": "ailment_paralize",
       "atlas": "ailments",
+      "sound": "stun",
       "trigger": 10,
       "height": 144,
       "width": 144
@@ -244,6 +245,7 @@
     {
       "name": "ailment_heal",
       "atlas": "ailments",
+      "sound": "sound_heal",
       "trigger": 28,
       "height": 144,
       "width": 144
