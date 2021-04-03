@@ -22,7 +22,7 @@ class GearServiceImpl(
         inventory = if (inventoryString == null) {
             val initialData = InventoryPool(
                     items = mutableListOf(),
-                    flasks = mutableListOf(FlaskStackDto(FlaskTemplate("LIFE_FLASK_SMALL", 100), 5), FlaskStackDto(FlaskTemplate("LIFE_FLASK_MEDIUM", 200), 5))
+                    flasks = mutableListOf(FlaskStackDto(FlaskTemplate("LIFE_FLASK_SMALL", 100, 0), 5), FlaskStackDto(FlaskTemplate("LIFE_FLASK_MEDIUM", 200,0), 5))
             )
             initialData
         } else {

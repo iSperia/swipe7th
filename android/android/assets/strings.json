@@ -99,6 +99,7 @@
   "inv_affix_perc_wisdom": "+$% wisdom",
 
   "flask_affix_flat_heal": "Heals $ health",
+  "flask_affix_remove_stun": "Removes stun",
 
   "LIFE_FLASK_SMALL": "Small Life Flask",
   "LIFE_FLASK_MEDIUM": "Medium Life Flask",

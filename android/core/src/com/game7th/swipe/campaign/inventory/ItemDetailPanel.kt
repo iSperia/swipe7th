@@ -138,6 +138,9 @@ class ItemDetailPanel(
                 if (item.potion.template.fbFlatHeal > 0) {
                     texts.add(context.texts["flask_affix_flat_heal"]?.replace("$", item.potion.template.fbFlatHeal.toString()))
                 }
+                if (item.potion.template.fbRemoveStun > 0) {
+                    texts.add(context.texts["flask_affix_remove_stun"].toString())
+                }
             }
         }
 

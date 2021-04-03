@@ -157,6 +157,12 @@
       "dropWeight": 16,
       "gold": 1500,
       "rarity": 0
+    },
+    {
+      "template": {"name":  "STUN_FLASK", "fbRemoveStun":  1},
+      "dropWeight": 2,
+      "gold": 2000,
+      "rarity": 0
     }
   ]
 }

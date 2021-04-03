@@ -365,6 +365,16 @@ class SwipeBattle(
                 processHeal(unit, battleFlaskDto.flatHeal)
                 notifyEvent(BattleEvent.ShowAilmentEffect(unit.id, "ailment_heal"))
             }
+            if (battleFlaskDto.removeStun > 0) {
+                tileField.tiles.entries.toList().forEach { (position, tile) ->
+                    if (tile.stun) {
+                        val tileUpdated = tile.copy(stun = false)
+                        tileField.tiles[position] = tileUpdated
+                        notifyEvent(BattleEvent.UpdateTileEvent(tile.id, tileUpdated.toViewModel()))
+                    }
+                }
+                notifyEvent(BattleEvent.ShowAilmentEffect(unit.id, "ailment_heal"))
+            }
         }
     }
 
