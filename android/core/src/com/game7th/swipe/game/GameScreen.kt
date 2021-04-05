@@ -157,7 +157,7 @@ class GameScreen(private val game: SwipeGameGdx,
 
     private fun processSwipe(dx: Int, dy: Int, prevent: Boolean) {
         KtxAsync.launch {
-            if (dismissFocusOnSwipe) {
+            if (dismissFocusOnSwipe && !prevent) {
                 dismissFocusView()
             }
             if (!gameEnded && !prevent) {

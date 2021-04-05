@@ -10,17 +10,25 @@ import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.account.dto.Currency
 import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.inventory.dto.InventoryItem
+import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.GdxGameContext
+import com.game7th.swipe.TutorialKeys
 import com.game7th.swipe.campaign.inventory.ItemDetailPanel
 import com.game7th.swipe.campaign.inventory.ItemView
 import com.game7th.swipe.campaign.inventory.ItemViewAdapter
+import com.game7th.swipe.dialog.DismissStrategy
 import com.game7th.swipe.util.InventoryAction
+import com.game7th.swipe.util.bounds
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import ktx.actors.onClick
+import ktx.async.KtxAsync
 import kotlin.math.max
 import kotlin.math.min
 
 class ForgePanel(
         private val context: GdxGameContext,
+        private val screen: BaseScreen,
         private val gearService: GearService,
         private val accountService: AccountService
 ) : Group() {
@@ -62,6 +70,30 @@ class ForgePanel(
         addActor(dustIcon)
         addActor(dustLabel)
         reloadData()
+
+        val items = gearService.listInventory()
+        if (items.isNotEmpty() && context.storage.get(TutorialKeys.TUTORIAL_FORGE)?.toBoolean() != true) {
+            KtxAsync.launch {
+                delay(300)
+                screen.showFocusView("ttr_forge_1", bg.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                    screen.showFocusView("ttr_forge_2", dustLabel.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                        screen.showFocusView("ttr_forge_3", panelItems.getChild(0).bounds(), DismissStrategy.DISMISS_ON_INSIDE) {
+                            processItemClicked(items[0], panelItems.getChild(0) as ItemView)
+                            KtxAsync.launch {
+                                delay(50)
+                                detailPanel?.let { detail ->
+                                    screen.showFocusView("ttr_forge_4", detail.actionGroup.getChild(4).bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                        screen.showFocusView("ttr_forge_5", detail.actionGroup.getChild(0).bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                            context.storage.put(TutorialKeys.TUTORIAL_FORGE, "true")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun dismissDetailPanel() {
@@ -89,17 +121,7 @@ class ForgePanel(
                 y = (160f - (index % 3) * 80f) * context.scale
             }
             itemView.onClick {
-                dismissDetailPanel()
-                detailPanel = ItemDetailPanel(
-                        context,
-                        ItemViewAdapter.InventoryItemAdapter(item),
-                        listOf(InventoryAction.IconAction("+${item.level * 100}", "ui_button_dust", Currency.DUST), InventoryAction.IconAction("-${item.level * 100}", "ui_button_levelup", Currency.DUST)),
-                        this@ForgePanel::dismissDetailPanel,
-                        this@ForgePanel::processAction).apply {
-                    x = min(context.scale * 320f, panelScroller.x + itemView.x)
-                    y = panelScroller.y + itemView.y
-                }
-                this@ForgePanel.addActor(detailPanel)
+                processItemClicked(item, itemView)
             }
             panelItems.addActor(itemView)
         }
@@ -111,6 +133,20 @@ class ForgePanel(
             }
             panelItems.addActor(itemView)
         }
+    }
+
+    private fun processItemClicked(item: InventoryItem, itemView: ItemView) {
+        dismissDetailPanel()
+        detailPanel = ItemDetailPanel(
+                context,
+                ItemViewAdapter.InventoryItemAdapter(item),
+                listOf(InventoryAction.IconAction("+${item.level * 100}", "ui_button_dust", Currency.DUST), InventoryAction.IconAction("-${item.level * 100}", "ui_button_levelup", Currency.DUST)),
+                this@ForgePanel::dismissDetailPanel,
+                this@ForgePanel::processAction).apply {
+            x = min(context.scale * 320f, panelScroller.x + itemView.x)
+            y = panelScroller.y + itemView.y
+        }
+        this@ForgePanel.addActor(detailPanel)
     }
 
     fun processAction(index: Int, meta: String?) {

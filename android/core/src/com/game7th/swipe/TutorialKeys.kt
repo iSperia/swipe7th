@@ -8,6 +8,7 @@ object TutorialKeys {
     const val ACT1_FIRST_BATTLE_INTRO_SHOWN = "ttr.act1.first.battle.intro"
     const val ACT1_FIRST_REWARD_DIALOG_SHOWN = "ttr.act1.first.reward"
     const val ACT1_AFTER_FIRST_LEVEL_DONE = "ttr.act1.first.level.complete"
+    const val TUTORIAL_FORGE = "ttr.act1.forge"
     const val ACT1_L3_TALK = "ttr.act1.l3.talk"
     const val ACT1_L4_TALK = "ttr.act1.l4.talk"
     const val ACT1_L5_TALK = "ttr.act1.l5.talk"

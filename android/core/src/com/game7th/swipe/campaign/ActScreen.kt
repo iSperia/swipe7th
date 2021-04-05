@@ -427,7 +427,7 @@ class ActScreen(
     }
 
     private fun showForgeUi() {
-        forgeUi = ForgePanel(context, game.gearService, game.accountService).apply {
+        forgeUi = ForgePanel(context, this@ActScreen, game.gearService, game.accountService).apply {
             y = context.scale * 48f
         }
         stage.addActor(forgeUi)
@@ -568,7 +568,7 @@ class ActScreen(
         }
     }
 
-    
+
     override fun showFocusView(text: String, rect: Rectangle, strategy: DismissStrategy, dismissCallback: (() -> Unit)?) {
         isScrollEnabled = false
         super.showFocusView(text, rect, strategy, dismissCallback)
