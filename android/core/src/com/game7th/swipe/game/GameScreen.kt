@@ -101,7 +101,7 @@ class GameScreen(private val game: SwipeGameGdx,
         listenEvents()
 
         gameActor = GameActor(
-                game.context, game.gearService, this:: usePotion, this::claimRewards) { _ ->
+                game.context, game.gearService, this@GameScreen, this:: usePotion, this::claimRewards) { _ ->
             game.switchScreen(ActScreen(game, game.actService, actId, game.context, game.storage))
         }
 

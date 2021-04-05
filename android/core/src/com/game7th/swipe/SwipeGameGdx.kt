@@ -79,7 +79,7 @@ class SwipeGameGdx(val storage: PersistentStorage) : Game() {
         val token = object : TypeToken<Map<String, String>>() {}.type
         val texts = gson.fromJson<Map<String, String>>(textsText, token)
 
-        context = GdxGameContext(atlas, uiAtlas, font, font2, balance, scale, texts)
+        context = GdxGameContext(atlas, uiAtlas, font, font2, balance, scale, texts, storage)
 
 
         Gdx.input.inputProcessor = multiplexer

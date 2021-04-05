@@ -4,29 +4,31 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.Touchable
-import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction
-import com.badlogic.gdx.scenes.scene2d.actions.DelayAction
-import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
-import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction
+import com.badlogic.gdx.scenes.scene2d.actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.account.dto.PersonageExperienceResult
 import com.game7th.metagame.account.RewardData
+import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.GdxGameContext
+import com.game7th.swipe.TutorialKeys
 import com.game7th.swipe.campaign.inventory.ItemView
 import com.game7th.swipe.campaign.inventory.ItemViewAdapter
 import com.game7th.swipe.campaign.party.ExperienceBar
 import com.game7th.swipe.campaign.reward.CurrencyRewardView
+import com.game7th.swipe.dialog.DismissStrategy
+import com.game7th.swipe.util.bounds
 import ktx.actors.alpha
 import kotlin.math.min
 
-class GameFinishedDialog(
+class BattleFinishedDialog(
         private val context: GdxGameContext,
         private val text: String,
         private val expResult: List<PersonageExperienceResult>,
         private val rewards: List<RewardData>,
+        private val screen: BaseScreen,
         callback: () -> Unit
         ) : Group() {
 
@@ -109,7 +111,7 @@ class GameFinishedDialog(
         x = 10f * context.scale
         y = 70f * context.scale
         zIndex = 16
-        this@GameFinishedDialog.addActor(this)
+        this@BattleFinishedDialog.addActor(this)
         isVisible = false
     }
 
@@ -154,6 +156,26 @@ class GameFinishedDialog(
                     })
                 }
             }
+        }
+
+        if (context.storage.get(TutorialKeys.ACT1_FIRST_REWARD_DIALOG_SHOWN)?.toBoolean() != true) {
+            addAction(DelayAction(1f).apply {
+                action = RunnableAction().apply {
+                    setRunnable {
+                        screen.showFocusView("ttr_reward_1", experienceBar.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                            screen.showFocusView("ttr_reward_2", newLevelText.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                screen.showFocusView("ttr_reward_3", statsText.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                    screen.showFocusView("ttr_reward_4", rewardsRoot.getChild(0).bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                        screen.showFocusView("ttr_reward_5", rewardsRoot.getChild(1).bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                            context.storage.put(TutorialKeys.ACT1_FIRST_REWARD_DIALOG_SHOWN, true.toString())
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            })
         }
     }
 

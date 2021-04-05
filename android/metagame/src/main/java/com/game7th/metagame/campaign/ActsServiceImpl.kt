@@ -11,6 +11,8 @@ import com.game7th.metagame.dto.ActProgressState
 import com.game7th.metagame.dto.LocationProgressState
 import com.game7th.metagame.dto.UnitConfig
 import com.game7th.metagame.dto.UnitType
+import com.game7th.metagame.inventory.dto.InventoryItem
+import com.game7th.metagame.inventory.dto.ItemNode
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.gson.Gson
 import kotlin.math.max
@@ -122,10 +124,18 @@ class ActsServiceImpl(
             val maxArtifactLevel = it.waves.flatten().maxBy { it.level }?.level ?: 1 + (starCount - 1) * 3
 
             val rewards = mutableListOf<RewardData>()
-            val r1 = min(maxArtifactLevel, Random.nextInt(totalPoints) + 1)
-            gearService.getArtifactReward(r1)?.let { rewards.add(it) }
+            val r1 = if (actId == 0 && locationId == 0 && starCount == 1) {
+                rewards.add(RewardData.ArtifactRewardData(InventoryItem(gbFlatBody = 1, level = 1, node = ItemNode.FOOT, rarity = 0, name = "LEGGINGS")))
+                1
+            } else {
+                val r1 = min(maxArtifactLevel, Random.nextInt(totalPoints) + 1)
+                gearService.getArtifactReward(r1)?.let { rewards.add(it) }
+                r1
+            }
             val goldAmount = max(100, (totalPoints - r1) * 100)
-            rewards.add(RewardData.CurrencyRewardData(Currency.GOLD, goldAmount))
+            if (goldAmount > 0) {
+                rewards.add(RewardData.CurrencyRewardData(Currency.GOLD, goldAmount))
+            }
 
             gearService.addRewards(rewards)
             accountService.addRewards(rewards)

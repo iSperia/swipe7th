@@ -3,6 +3,7 @@ package com.game7th.swipe
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.game7th.battle.dto.SwipeBalance
+import com.game7th.metagame.PersistentStorage
 
 data class GdxGameContext(
         val battleAtlas: TextureAtlas,
@@ -11,5 +12,6 @@ data class GdxGameContext(
         val font2: BitmapFont,
         val balance: SwipeBalance,
         val scale: Float,
-        val texts: Map<String, String>
+        val texts: Map<String, String>,
+        val storage: PersistentStorage
 )

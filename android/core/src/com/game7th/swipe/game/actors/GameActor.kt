@@ -22,7 +22,8 @@ import com.game7th.metagame.inventory.dto.FlaskStackDto
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.alchemy.AlchemyPanel
 import com.game7th.swipe.alchemy.AlchemyPanelMode
-import com.game7th.swipe.game.actors.ui.GameFinishedDialog
+import com.game7th.swipe.game.GameScreen
+import com.game7th.swipe.game.actors.ui.BattleFinishedDialog
 import com.game7th.swipe.util.IconTextButton
 import com.game7th.swipe.util.animateHideToBottom
 import com.game7th.swipe.util.animateShowFromBottom
@@ -33,6 +34,7 @@ import kotlin.math.min
 class GameActor(
         private val context: GdxGameContext,
         private val gearService: GearService,
+        private val screen: GameScreen,
         private val usePotionCallback: (FlaskStackDto) -> Unit,
         private val rewardCallback: () -> List<RewardData>,
         private val finishCallback: (Boolean) -> Unit
@@ -135,7 +137,7 @@ class GameActor(
         tileField.touchable = Touchable.disabled
 
 //        Gdx.audio.newMusic(Gdx.files.internal("sounds/defeat.ogg")).let { it.play() }
-        GameFinishedDialog(context, "Defeat", emptyList(), emptyList()) {
+        BattleFinishedDialog(context, "Defeat", emptyList(), emptyList(), screen) {
             finishCallback(false)
         }.apply {
             x = 40f * context.scale
@@ -154,7 +156,7 @@ class GameActor(
     fun showVictory(expResult: List<PersonageExperienceResult>) {
 //        Gdx.audio.newMusic(Gdx.files.internal("sounds/victory.ogg")).let { it.play() }
         val rewards = rewardCallback()
-        GameFinishedDialog(context, "Victory", expResult, rewards) {
+        BattleFinishedDialog(context, "Victory", expResult, rewards, screen) {
             finishCallback(true)
         }.apply {
             x = 40f * context.scale

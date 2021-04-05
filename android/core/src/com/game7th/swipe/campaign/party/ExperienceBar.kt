@@ -43,6 +43,8 @@ class ExperienceBar(
     }
 
     init {
+        width = bg.width
+        height = bg.height
         addActor(bg)
         addActor(fg)
         if (showInitAnimation) {
