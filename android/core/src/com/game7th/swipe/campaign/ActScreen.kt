@@ -101,7 +101,7 @@ class ActScreen(
     private var shopUi: ShopPanel? = null
     private var alchUi: AlchemyPanel? = null
 
-    private var isScrollEnabled = true
+    var isScrollEnabled = true
 
     lateinit var backgroundMusic: Music
 

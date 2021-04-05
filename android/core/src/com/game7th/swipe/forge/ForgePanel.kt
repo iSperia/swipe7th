@@ -13,6 +13,7 @@ import com.game7th.metagame.inventory.dto.InventoryItem
 import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.TutorialKeys
+import com.game7th.swipe.campaign.ActScreen
 import com.game7th.swipe.campaign.inventory.ItemDetailPanel
 import com.game7th.swipe.campaign.inventory.ItemView
 import com.game7th.swipe.campaign.inventory.ItemViewAdapter
@@ -85,6 +86,8 @@ class ForgePanel(
                                     screen.showFocusView("ttr_forge_4", detail.actionGroup.getChild(4).bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
                                         screen.showFocusView("ttr_forge_5", detail.actionGroup.getChild(0).bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
                                             context.storage.put(TutorialKeys.TUTORIAL_FORGE, "true")
+                                            screen.dismissFocusView()
+                                            (screen as? ActScreen)?.isScrollEnabled = true
                                         }
                                     }
                                 }
