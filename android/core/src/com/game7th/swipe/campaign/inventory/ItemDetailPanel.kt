@@ -31,10 +31,9 @@ class ItemDetailPanel(
         }
     }
 
-    val itemView = ItemView(context, item, false).apply {
+    val itemView = ItemView(context, item, false, 140f * context.scale).apply {
         x = 10f * context.scale
         y = h - 160f * context.scale
-        setScale(140f/60f)
         touchable = Touchable.disabled
     }
 

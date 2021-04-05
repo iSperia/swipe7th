@@ -48,7 +48,7 @@ class FocusView(
     private val mask = TextureRegionDrawable(context.uiAtlas.findRegion("panel_modal"))
 
     private val textLabel = Label(text, Label.LabelStyle(context.font, Color.WHITE)).apply {
-        val w = min(480f * context.scale, max(200f * context.scale, 480f * context.scale - rect.x))
+        val w = min(480f * context.scale, max(300f * context.scale, 480f * context.scale - rect.x))
         val bottom = rect.y + rect.height + 60f > Gdx.graphics.height
         x = max(0f, min(rect.x, 480f * context.scale - w))
         y = if (bottom) {

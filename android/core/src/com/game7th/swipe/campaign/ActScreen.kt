@@ -25,6 +25,7 @@ import com.game7th.swipe.TutorialKeys
 import com.game7th.swipe.alchemy.AlchemyPanel
 import com.game7th.swipe.alchemy.AlchemyPanelMode
 import com.game7th.swipe.campaign.bottom_menu.BottomMenu
+import com.game7th.swipe.campaign.inventory.ItemView
 import com.game7th.swipe.campaign.party.PartyView
 import com.game7th.swipe.campaign.prepare.BattlePrepareDialog
 import com.game7th.swipe.campaign.top_menu.CurrencyPanel
@@ -33,14 +34,18 @@ import com.game7th.swipe.forge.ForgePanel
 import com.game7th.swipe.shop.ShopPanel
 import com.game7th.swipe.util.animateHideToBottom
 import com.game7th.swipe.util.animateShowFromBottom
+import com.game7th.swipe.util.bounds
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import ktx.async.KtxAsync
 import kotlin.math.*
 
 sealed class UiState {
     object Hidden : UiState()
     object PartyUi : UiState()
-    object ForgeUi: UiState()
-    object ShopUi: UiState()
-    object AlchUi: UiState()
+    object ForgeUi : UiState()
+    object ShopUi : UiState()
+    object AlchUi : UiState()
     data class BattlePreparation(
             val node: LocationConfig
     ) : UiState()
@@ -186,22 +191,9 @@ class ActScreen(
             isLooping = true
             play()
         }
-    }
 
-    private fun processBattlePrepareDialogShown(dialog: BattlePrepareDialog) {
-        if (battlePreparationTutorialHook) {
-            dismissFocusView()
-            showFocusView("ttr_intro_8", dialog.getPersonageRowBounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                showFocusView("ttr_intro_9", dialog.getEnemyRowBounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                    showFocusView("ttr_intro_10", dialog.getDifficultyBounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                        showFocusView("ttr_intro_11",  dialog.getStartButtonBounds(), DismissStrategy.DISMISS_ON_INSIDE) {
-                            dismissFocusView()
-                            battlePrepareDialog?.startBattle()
-                            storage.put(TutorialKeys.ACT1_INTRO_SHOWN, true.toString())
-                        }
-                    }
-                }
-            }
+        if (actId == 0 && locationCache.size == 2 && locationCache[0]?.stars == 1 && storage.get(TutorialKeys.ACT1_AFTER_FIRST_LEVEL_DONE)?.toBoolean() != true) {
+            showPartyTutorialScenario()
         }
     }
 
@@ -230,7 +222,7 @@ class ActScreen(
     }
 
     private fun onAlchButtonPressed() {
-        if  (uiState == UiState.AlchUi) return
+        if (uiState == UiState.AlchUi) return
         transiteUiState(UiState.AlchUi)
     }
 
@@ -490,6 +482,93 @@ class ActScreen(
         }
     }
 
+    private fun showPartyTutorialScenario() {
+        showFocusView("ttr_party_1", bottomMenu.buttonSquads.bounds(), DismissStrategy.DISMISS_ON_INSIDE) {
+            transiteUiState(UiState.PartyUi)
+            KtxAsync.launch {
+                delay(300)
+                partyUi?.let { party ->
+                    showFocusView("ttr_party_2", party.personagesView.getChild(0).bounds(), DismissStrategy.DISMISS_ON_INSIDE) {
+                        party.personagesView.selectionCallback?.invoke(0)
+                        KtxAsync.launch {
+                            delay(300)
+                            party.detailView?.let { details ->
+                                showFocusView("ttr_party_3", details.experienceBar.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                    showFocusView("ttr_party_4", details.attrsBg.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                        showFocusView("ttr_party_5", details.bodyLabel.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                            showFocusView("ttr_party_6", details.secondAttrsBody.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                showFocusView("ttr_party_7", details.spiritLabel.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                    showFocusView("ttr_party_8", details.secondAttrsSpirit.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                        showFocusView("ttr_party_9", details.mindLabel.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                            showFocusView("ttr_party_10", details.secondAttrsMind.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                                showFocusView("ttr_party_11", details.buttonGear.bounds(), DismissStrategy.DISMISS_ON_INSIDE) {
+                                                                    details.processGearButton()
+                                                                    KtxAsync.launch {
+                                                                        delay(300)
+                                                                        details.inventoryView?.let { inventory ->
+                                                                            showFocusView("ttr_party_12", inventory.panelScroller.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                                                showFocusView("ttr_party_13", inventory.panelItems.getChild(0).bounds(), DismissStrategy.DISMISS_ON_INSIDE) {
+                                                                                    (inventory.panelItems.getChild(0) as? ItemView)?.let { itemView ->
+                                                                                        inventory.processInventoryItemClick(game.gearService.listInventory()[0], itemView)
+                                                                                        KtxAsync.launch {
+                                                                                            delay(50)
+                                                                                            inventory.detailPanel?.let { detailPanel ->
+                                                                                                showFocusView("ttr_party_14", detailPanel.itemView.bg.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                                                                    showFocusView("ttr_party_15", detailPanel.affixText.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                                                                        showFocusView("ttr_party_16", detailPanel.actionGroup.getChild(0).bounds(), DismissStrategy.DISMISS_ON_INSIDE) {
+                                                                                                            storage.put(TutorialKeys.ACT1_AFTER_FIRST_LEVEL_DONE, "true")
+                                                                                                            inventory.equipFromDetailPanel(0, null)
+                                                                                                            showFocusView("ttr_party_17", inventory.equippedGroup.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                                                                                showFocusView("ttr_party_18", details.attrsBg.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                                                                                    dismissFocusView()
+                                                                                                                    isScrollEnabled = true
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun processBattlePrepareDialogShown(dialog: BattlePrepareDialog) {
+        if (battlePreparationTutorialHook) {
+            dismissFocusView()
+            showFocusView("ttr_intro_8", dialog.getPersonageRowBounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                showFocusView("ttr_intro_9", dialog.getEnemyRowBounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                    showFocusView("ttr_intro_10", dialog.getDifficultyBounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                        showFocusView("ttr_intro_11", dialog.getStartButtonBounds(), DismissStrategy.DISMISS_ON_INSIDE) {
+                            dismissFocusView()
+                            battlePrepareDialog?.startBattle()
+                            storage.put(TutorialKeys.ACT1_INTRO_SHOWN, true.toString())
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    
     override fun showFocusView(text: String, rect: Rectangle, strategy: DismissStrategy, dismissCallback: (() -> Unit)?) {
         isScrollEnabled = false
         super.showFocusView(text, rect, strategy, dismissCallback)

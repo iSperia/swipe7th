@@ -37,13 +37,13 @@ abstract class BaseScreen(
         focusShown++
     }
 
-    fun dismissFocusView() {
+    open fun dismissFocusView() {
         focusView?.let {
             it.remove()
             focusView = null
             it.forceDismiss()
         }
-        focusShown--
+        focusShown = 0
     }
 
     protected fun isFocusShown() = focusShown > 0

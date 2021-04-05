@@ -148,13 +148,17 @@ class PersonageDetailView(
 
         bg.onClick {  }
         buttonGear.onClick {
-            if (state == UiState.Gear) {
-                transiteUiState(UiState.Initial)
-            } else {
-                transiteUiState(UiState.Gear)
-            }
+            processGearButton()
         }
         refreshStats()
+    }
+
+    fun processGearButton() {
+        if (state == UiState.Gear) {
+            transiteUiState(UiState.Initial)
+        } else {
+            transiteUiState(UiState.Gear)
+        }
     }
 
     fun hide() {

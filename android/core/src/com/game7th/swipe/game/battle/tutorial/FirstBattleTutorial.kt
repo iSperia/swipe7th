@@ -36,22 +36,22 @@ class FirstBattleTutorial(
                                                         screen.showFocusView("ttr_a1l1_fb_11", screen.calcTileRect(9), DismissStrategy.DISMISS_ON_OUTSIDE) {
                                                             screen.showFocusView("ttr_a1l1_fb_12", screen.calcTileRect(17), DismissStrategy.DISMISS_ON_OUTSIDE) {
                                                                 screen.preventLeftSwipe = false
-                                                                screen.dismissOnSwipe = true
+                                                                screen.dismissFocusOnSwipe = true
                                                                 screen.showFingerAnimation(-1, 0)
                                                                 screen.showFocusView("ttr_a1l1_fb_13", screen.calcTileFieldRect(), DismissStrategy.DISMISS_FORCED) {
                                                                     screen.dismissFingerAnimation()
                                                                     screen.preventLeftSwipe = true
-                                                                    screen.dismissOnSwipe = false
+                                                                    screen.dismissFocusOnSwipe = false
                                                                     screen.showFocusView("ttr_a1l1_fb_14", screen.calcTileRect(5), DismissStrategy.DISMISS_ON_OUTSIDE) {
                                                                         screen.showFocusView("ttr_a1l1_fb_15", screen.calcComboRect(), DismissStrategy.DISMISS_ON_OUTSIDE) {
                                                                             screen.showFocusView("ttr_a1l1_fb_16", screen.calcTileRect(13), DismissStrategy.DISMISS_ON_OUTSIDE) {
                                                                                 screen.showFocusView("ttr_a1l1_fb_17", screen.calcRightPersonageSkillRect(), DismissStrategy.DISMISS_ON_OUTSIDE)
                                                                                 screen.preventBottomSwipe = false
-                                                                                screen.dismissOnSwipe = true
+                                                                                screen.dismissFocusOnSwipe = true
                                                                                 screen.showFingerAnimation(0, -1)
                                                                                 screen.showFocusView("ttr_a1l1_fb_18", screen.calcTileFieldRect(), DismissStrategy.DISMISS_FORCED) {
                                                                                     screen.dismissFingerAnimation()
-                                                                                    screen.dismissOnSwipe = false
+                                                                                    screen.dismissFocusOnSwipe = false
                                                                                     screen.preventBottomSwipe = true
                                                                                     screen.showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l1_fb_19"]!!) {
                                                                                         screen.showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l1_fb_20"]!!) {

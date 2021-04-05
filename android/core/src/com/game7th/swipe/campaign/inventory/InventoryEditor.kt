@@ -31,9 +31,11 @@ class InventoryEditor(
         y = 10f * context.scale
     }
 
-    private val equippedGroup = Group().apply {
+    val equippedGroup = Group().apply {
         x = personageBgs.x
         y = personageBgs.y
+        width = 120f * context.scale
+        height = 180f * context.scale
     }
 
     private val textures = listOf("ui_item_bg_book", "ui_item_bg_boots", "ui_item_bg_ring", "ui_item_bg_body", "ui_item_bg_hand", "ui_item_bg_hat")
@@ -95,17 +97,7 @@ class InventoryEditor(
                 y = (120f - (index % 3) * 60f) * context.scale
             }
             itemView.onClick {
-                dismissDetailPanel()
-                detailPanel = ItemDetailPanel(
-                        context,
-                        ItemViewAdapter.InventoryItemAdapter(item),
-                        listOf(InventoryAction.StringAction("Put on")),
-                        this@InventoryEditor::dismissDetailPanel,
-                        this@InventoryEditor::equipFromDetailPanel).apply {
-                    x = min(context.scale * 340f, panelScroller.x + itemView.x - panelScroller.scrollX)
-                    y = panelScroller.y + itemView.y
-                }
-                this@InventoryEditor.addActor(detailPanel)
+                processInventoryItemClick(item, itemView)
             }
             panelItems.addActor(itemView)
         }
@@ -142,12 +134,26 @@ class InventoryEditor(
         }
     }
 
+    fun processInventoryItemClick(item: InventoryItem, itemView: ItemView) {
+        dismissDetailPanel()
+        detailPanel = ItemDetailPanel(
+                context,
+                ItemViewAdapter.InventoryItemAdapter(item),
+                listOf(InventoryAction.StringAction("Put on")),
+                this@InventoryEditor::dismissDetailPanel,
+                this@InventoryEditor::equipFromDetailPanel).apply {
+            x = min(context.scale * 340f, panelScroller.x + itemView.x - panelScroller.scrollX)
+            y = panelScroller.y + itemView.y
+        }
+        this@InventoryEditor.addActor(detailPanel)
+    }
+
     private fun dismissDetailPanel() {
         detailPanel?.remove()
         detailPanel = null
     }
 
-    private fun equipFromDetailPanel( actionIndex: Int, meta: String?) {
+    fun equipFromDetailPanel(actionIndex: Int, meta: String?) {
         (detailPanel?.item as? ItemViewAdapter.InventoryItemAdapter)?.item?.let { item ->
             accountService.equipItem(personageId, item)
             dismissDetailPanel()

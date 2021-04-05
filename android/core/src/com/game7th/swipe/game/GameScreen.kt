@@ -75,7 +75,7 @@ class GameScreen(private val game: SwipeGameGdx,
     var preventRightSwipe = false
     var preventBottomSwipe = false
     var preventTopSwipe = false
-    var dismissOnSwipe = false
+    var dismissFocusOnSwipe = false
 
     override fun show() {
         super.show()
@@ -157,7 +157,7 @@ class GameScreen(private val game: SwipeGameGdx,
 
     private fun processSwipe(dx: Int, dy: Int, prevent: Boolean) {
         KtxAsync.launch {
-            if (dismissOnSwipe) {
+            if (dismissFocusOnSwipe) {
                 dismissFocusView()
             }
             if (!gameEnded && !prevent) {
