@@ -43,7 +43,6 @@ class TileView(
 
     var tx: Int = 0
     var ty: Int = 0
-    var uvm: TileViewModel? = null
     var removed = false
 
     private val bufferVector = Vector2()

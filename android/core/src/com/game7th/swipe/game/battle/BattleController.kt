@@ -192,6 +192,7 @@ class BattleController(
                         Color.RED
                 )
                 figure.switchPose(FigurePose.POSE_DAMAGE)
+                figure.viewModel = event.personage
                 controllers.add(controller)
             }
             Unit

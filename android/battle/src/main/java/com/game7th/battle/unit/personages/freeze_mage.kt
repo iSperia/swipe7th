@@ -53,8 +53,8 @@ fun produceFreezeMage(balance: SwipeBalance, unitId: Int, unitStats: UnitStats) 
                     preprocessIncomingDamage {
                         targetId = unitId
                         processor = { battle, unit, damage ->
-                            val magicPerStack = (unit.stats.spirit * balance.freeze_mage.k3).toInt()
-                            val physicPerStack = (unit.stats.body * balance.freeze_mage.k3).toInt()
+                            val magicPerStack = max(1, (unit.stats.spirit * balance.freeze_mage.k3).toInt())
+                            val physicPerStack = max(1, (unit.stats.body * balance.freeze_mage.k3).toInt())
                             val stackNeeded = max(damage.magical / magicPerStack, damage.physical / physicPerStack)
                             val stacks = battle.tileField.tiles.entries.filter { it.value.type.skin == TileNames.FREEZE_MAGE_ARMOR }.sortedBy { it.value.stackSize }
                             var targetStack = stacks.firstOrNull { it.value.stackSize >= stackNeeded } ?: stacks.lastOrNull()
