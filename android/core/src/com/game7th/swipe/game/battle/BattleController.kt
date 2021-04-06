@@ -396,7 +396,7 @@ class BattleController(
         val totalWidthLeftNotScaled = (leftFigures.sumByDouble { it.figureModel.scale * it.figureModel.width.toDouble() } + (maxLeft - leftFigures.size + 1) * 80f).toFloat()
         val totalWidthRightNotScaled = (rightFigures.sumByDouble { it.figureModel.scale * it.figureModel.width.toDouble() } + (maxRight - rightFigures.size + 1) * 80f).toFloat()
 
-        toScale = min(3f, (Gdx.graphics.width - 4 * padding) / (totalWidthLeftNotScaled + totalWidthRightNotScaled))
+        toScale = min((Gdx.graphics.height - y) / 384f, (Gdx.graphics.width - 4 * padding) / (totalWidthLeftNotScaled + totalWidthRightNotScaled))
         if (scale == 1f) {
             scale = toScale
         }
