@@ -4,6 +4,8 @@
       "name": "personage_gladiator",
       "atlas": "personage_gladiator",
       "height": 205,
+      "width": 90,
+      "scale": 1,
       "body": "body_gladiator",
       "poses": [
         {"name": "attack", "start":  1, "end": 19, "triggers": [14]},
@@ -29,6 +31,8 @@
       "name": "poison_archer",
       "atlas": "poison_archer",
       "height": 205,
+      "width": 90,
+      "scale": 1,
       "body": "poison_archer_body",
       "poses": [
         {"name": "attack", "start":  1, "end": 44, "triggers": [34]},
@@ -51,6 +55,8 @@
       "name": "freeze_mage",
       "atlas": "freeze_mage",
       "height": 205,
+      "width": 100,
+      "scale": 1,
       "body": "freeze_mage_body",
       "poses": [
         {"name": "attack", "start":  1, "end": 24, "triggers": [20]},
@@ -83,6 +89,7 @@
       "name": "dryad",
       "atlas": "dryad",
       "height": 230,
+      "width": 110,
       "scale": 0.75,
       "body": "dryad_body",
       "poses": [
@@ -106,6 +113,7 @@
       "name": "dryad_queen",
       "atlas": "dryad_queen",
       "height": 230,
+      "width": 110,
       "scale": 0.75,
       "body": "dryad_queen_body",
       "poses": [
@@ -130,6 +138,8 @@
       "name": "slime",
       "atlas": "slime",
       "height": 94,
+      "width": 100,
+      "scale": 1,
       "body": "slime_body",
       "poses": [
         {"name":  "attack", "start":  1, "end":  35, "triggers": [23]},
@@ -146,6 +156,7 @@
       "name": "slime_armored",
       "atlas": "slime_armored",
       "height": 94,
+      "width": 100,
       "scale": 1.1,
       "body": "slime_armored_body",
       "poses": [
@@ -163,6 +174,7 @@
       "name": "slime_boss",
       "atlas": "slime_boss",
       "height": 250,
+      "width": 220,
       "scale": 1.2,
       "body": "slime_boss",
       "poses": [
@@ -187,6 +199,8 @@
       "name": "slime_red",
       "atlas": "slime_red",
       "height": 94,
+      "width": 100,
+      "scale": 1,
       "body": "slime_red_body",
       "poses": [
         {"name":  "attack", "start":  1, "end":  35, "triggers": [23]},
@@ -205,6 +219,7 @@
       "scale": 0.8,
       "dependencies": ["slime"],
       "height": 210,
+      "width": 240,
       "body": "slime_mother_body",
       "poses": [
         {"name":  "attack", "start":  1, "end":  34, "triggers": [27]},
@@ -222,6 +237,7 @@
       "scale": 1,
       "dependencies": ["slime_red", "slime_armored", "slime_boss"],
       "height": 210,
+      "width": 120,
       "body": "bhastuse_jolly_body",
       "poses": [
         {"name":  "attack", "start":  1, "end":  18, "triggers": [14]},
@@ -238,6 +254,7 @@
       "atlas": "slime_father",
       "scale": 0.8,
       "height": 210,
+      "width": 240,
       "body": "slime_father_body",
       "poses": [
         {"name":  "attack", "start":  1, "end":  34, "triggers": [27]},

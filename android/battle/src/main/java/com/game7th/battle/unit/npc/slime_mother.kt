@@ -23,7 +23,7 @@ fun produceSlimeMother(balance: SwipeBalance, level: Int): UnitStats {
                 }
             }
             bodies[TickerEntry(balance.mother_slime.w2, balance.mother_slime.t2, "summon")] = { battle, unit ->
-                val position = battle.calculateFreeNpcPosition()
+                val position = battle.calculateFreeNpcPosition(4)
                 if (position > 0) {
                     val personageId = battle.newPersonageId()
                     val producedUnit = UnitFactory.produce(UnitType.GREEN_SLIME, balance,personageId, unit.stats.level, null)

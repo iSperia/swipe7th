@@ -18,7 +18,6 @@ class PersonageHealthbarController(
     var timePassed: Float = 0f
     var timeHpActual: Float = timePassed
     var timeRsActual: Float = timePassed
-    val healthBarWidth = 96f * battle.scale - 12f
 
     var lastKnownValue: Float = figure.viewModel.stats.health.toFloat()
     var displayedValue: Float = lastKnownValue
@@ -27,11 +26,6 @@ class PersonageHealthbarController(
     var lastKnownResist: Float = figure.viewModel.stats.resist.toFloat()
     var displayedResist: Float = lastKnownResist
     var lastDisplayedResist: Float = displayedResist
-
-    private var distance: Float = (healthBarWidth - 4f) * 100f / figure.viewModel.stats.maxHealth.toFloat()
-    private var isBigHealth = distance <= healthBarWidth / 25
-    private val hei: Float = 16f * battle.scale
-    private val sectorHei: Float = (hei - 4f) / 2f
 
     override fun render(batch: SpriteBatch, delta: Float) {
         timePassed += delta * battle.timeScale()
@@ -51,6 +45,12 @@ class PersonageHealthbarController(
 
         val sx = figure.x - 48f * battle.scale
         val sy = figure.y - 15f * battle.scale
+
+        val healthBarWidth = 96f * battle.scale - 12f
+        val distance: Float = (healthBarWidth - 4f) * 100f / figure.viewModel.stats.maxHealth.toFloat()
+        val isBigHealth = distance <= healthBarWidth / 25
+        val hei: Float = 16f * battle.scale
+        val sectorHei: Float = (hei - 4f) / 2f
 
         healthBarBackground.draw(batch, sx, sy, 96f * battle.scale, hei)
         healthBarForeground.draw(batch, sx + 6f, sy + 2f, healthBarWidth * percent, hei - 4f)

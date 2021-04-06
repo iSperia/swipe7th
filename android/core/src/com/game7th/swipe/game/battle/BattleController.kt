@@ -35,10 +35,13 @@ class BattleController(
     private val foregroundTexture = context.gameContext.battleAtlas.findRegion("battle_fg", bgIndex)
     private val foregroundRatio = foregroundTexture.originalHeight / foregroundTexture.originalWidth.toFloat()
 
+    val padding = 0.05f * Gdx.graphics.width
+
     var effectId = 100000
     var hudId = 300000
     var fgId = 200000
-    val scale = 0.85f * context.scale
+    var scale = 1f
+    var toScale = 1f
 
     val controllersToRemove = mutableListOf<ElementController>()
 
@@ -66,6 +69,14 @@ class BattleController(
         timePassed += delta * timeScale()
         timeShift = max(timePassed, timeShift)
 
+        if (scale != toScale) {
+            if (toScale / scale < 1.05f) {
+                scale = toScale
+            } else {
+                scale += (toScale - scale) * 0.05f
+            }
+        }
+
         if (!isSpeechLocked) {
             actions.forEachIndexed { index, (timestamp, action) ->
                 if (timestamp < timePassed) {
@@ -73,16 +84,20 @@ class BattleController(
                 }
             }
 
+            val needRecalc = controllersToRemove.firstOrNull { it is FigureController } != null
+
             controllers.removeAll(controllersToRemove)
             controllersToRemove.clear()
             actions.removeAll { it.first < timePassed }
 
             actions.addAll(scheduledActions)
             scheduledActions.clear()
+
+            if (needRecalc) {
+                recalculateScale()
+            }
         }
     }
-
-    private val paddingSide = context.width * 0.05f
 
     private fun playSound(sound: String) {
         sounds[sound]?.play()
@@ -125,6 +140,9 @@ class BattleController(
             is BattleEvent.PersonageUpdateEvent -> {
                 schedulePersonageUpdateViewModel(event)
             }
+            is BattleEvent.NewWaveEvent -> {
+                timeShift += 1
+            }
         }
     }
 
@@ -139,7 +157,15 @@ class BattleController(
         scheduledActions.add(Pair(timeShift) {
             findFigure(event.source.id)?.let { figure ->
                 context.gdxModel.figure(event.source.skin)?.let { gdxModel ->
-                    val targetPosition = paddingSide + (context.width - 2 * paddingSide) * 0.2f * (0.5f + event.target)
+                    var targetPosition = if (figure.flipped) Gdx.graphics.width - padding else padding
+                    val flipFactor = if (figure.flipped) -1 else 1
+                    var lastSum = 0f
+                    (0..event.target).forEach { positionIndex ->
+                        val figure = controllers.filter { it is FigureController && it.flipped == figure.flipped && it.position == positionIndex }.firstOrNull() as? FigureController
+                        lastSum = (figure?.let { it.figureModel.scale * it.figureModel.width * scale } ?: (80f * scale))
+                        targetPosition += flipFactor * lastSum
+                    }
+                    targetPosition -= flipFactor * lastSum / 2f
                     moveAndPunch(gdxModel, figure, targetPosition)
                 }
             }
@@ -293,6 +319,7 @@ class BattleController(
     private fun schedulePersonageDeath(event: BattleEvent.PersonageDeadEvent) {
         println(">>> DEATH: $timePassed, $timeShift")
         val figure = findFigure(event.personage.id)
+
         actions.add(Pair(timeShift) {
             figure?.let {
                 it.switchPose(FigurePose.POSE_DEATH)
@@ -339,16 +366,14 @@ class BattleController(
     private fun scheduleCreatePersonage(event: BattleEvent.CreatePersonageEvent) {
         println(">>> CREATE: $timePassed, $timeShift")
         actions.add(Pair(timeShift) {
-            val x = calculatePosition(event.position)
             FigureController(context,
                     this@BattleController,
                     event.personage.id,
+                    y + 45f * context.scale,
                     context.gdxModel.figure(event.personage.skin)!!,
                     event.personage,
-                    x,
-                    y + 45f * scale,
-                    scale,
                     this::playSound).let {
+                it.position = event.position
                 controllers.add(it)
                 PersonageHealthbarController(context, this@BattleController, hudId++, it).let {
                     controllers.add(it)
@@ -358,10 +383,51 @@ class BattleController(
                 }
             }
             timeShift += 0.2f
+            recalculateScale()
         })
     }
 
-    private fun calculatePosition(position: Int) = paddingSide + (context.width - 2 * paddingSide) * 0.2f * (0.5f + position)
+    private fun recalculateScale() {
+        val figures = controllers.filterIsInstance<FigureController>()
+        val leftFigures = figures.filter { !it.flipped }
+        val rightFigures = figures.filter { it.flipped && it.pose != FigurePose.POSE_DEATH }
+
+        val maxLeft = leftFigures.maxBy { it.position }?.position ?: 0
+        val maxRight = rightFigures.maxBy { it.position }?.position ?: 0
+
+        val totalWidthLeftNotScaled = (leftFigures.sumByDouble { it.figureModel.scale * it.figureModel.width.toDouble() } + (maxLeft - leftFigures.size + 1) * 80f).toFloat()
+        val totalWidthRightNotScaled = (rightFigures.sumByDouble { it.figureModel.scale * it.figureModel.width.toDouble() } + (maxRight - rightFigures.size + 1) * 80f).toFloat()
+
+        toScale = min(3f, (Gdx.graphics.width - 4 * padding) / (totalWidthLeftNotScaled + totalWidthRightNotScaled))
+        if (scale == 1f) {
+            scale = toScale
+        }
+
+        println("SSCALE $scale ${rightFigures.map { it.position }} $totalWidthRightNotScaled")
+
+        var x = padding
+        (0..maxLeft).forEach { position ->
+            val figures = leftFigures.filter { it.position == position }
+            figures.forEach { figure ->
+                figure.moveOrigin(x + toScale * figure.figureModel.scale * figure.figureModel.width / 2f, figure.originY, 1f)
+                x += toScale * figure.figureModel.width * figure.figureModel.scale
+            }
+            if (figures.isEmpty()) {
+                x += 80f * toScale
+            }
+        }
+        x = Gdx.graphics.width - padding
+        (0..maxRight).forEach { position ->
+            val figures = rightFigures.filter { it.position == position }
+            figures.forEach { figure ->
+                figure.moveOrigin( x - toScale * figure.figureModel.scale * figure.figureModel.width / 2f, figure.originY, 1f)
+                x -= toScale * figure.figureModel.width * figure.figureModel.scale
+            }
+            if (figures.isEmpty()) {
+                x -= 80f * toScale
+            }
+        }
+    }
 
     fun removeController(controller: ElementController) {
         controller.dispose()

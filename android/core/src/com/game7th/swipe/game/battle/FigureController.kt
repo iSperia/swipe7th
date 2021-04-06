@@ -25,13 +25,15 @@ class FigureController(
         context: GameContextWrapper,
         battle: BattleController,
         id: Int,
+        y: Float,
         val figureModel: FigureGdxModel,
         var viewModel: PersonageViewModel,
-        val originX: Float,
-        val originY: Float,
-        private val scale: Float,
         val player: (String) -> Unit
 ) : ElementController(context, battle, id) {
+
+    var originX: Float = 0f
+
+    val originY: Float = y
 
     var x = originX
     var y = originY
@@ -54,11 +56,11 @@ class FigureController(
 
     var isDead = false
 
-    val bodyScale = scale * if (figureModel.scale > 0f) figureModel.scale else 1f
-
     lateinit var pose: FigurePose
     val flipped = viewModel.team > 0
     private val flipMultiplier = if (flipped) -1 else 1
+
+    var position: Int = 0
 
     init {
         switchPose(FigurePose.POSE_IDLE)
@@ -78,6 +80,7 @@ class FigureController(
             }
         }
 
+        val bodyScale = battle.scale * if (figureModel.scale > 0f) figureModel.scale else 1f
         animation?.let { animation ->
             if (pose != FigurePose.POSE_DEATH || !animation.isAnimationFinished(timePassed - timePoseStarted)) {
                 batch.draw(animation.getKeyFrame(timePassed - timePoseStarted, true),
@@ -131,6 +134,20 @@ class FigureController(
         this.targetY = targetY
         this.fromX = x
         this.fromY = y
+    }
+
+    fun moveOrigin(targetX: Float, targetY: Float, duration: Float) {
+        val needFastMove = originX > 0f
+
+        originX = targetX
+
+        if (needFastMove) {
+            move(originX, targetY, duration)
+        } else {
+            x = originX
+            fromX = originX
+            this.targetX = originX
+        }
     }
 
     companion object {

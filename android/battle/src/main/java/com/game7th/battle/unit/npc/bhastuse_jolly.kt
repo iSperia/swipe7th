@@ -30,7 +30,7 @@ fun produceBhastuseJolly(balance: SwipeBalance, unitId: Int, level: Int): UnitSt
 
         ticker {
             bodies[TickerEntry(balance.bhastuse_jolly.w1, balance.bhastuse_jolly.t1, "leaf")] = { battle, unit ->
-                val position = battle.calculateFreeNpcPosition()
+                val position = battle.calculateFreeNpcPosition(4)
                 if (position > 0) {
                     val personageId = battle.newPersonageId()
                     val producedUnit = UnitFactory.produce(UnitType.PURPLE_SLIME, balance,personageId, (unit.stats.level * balance.bhastuse_jolly.k1).toInt() + 1, null)
@@ -41,7 +41,7 @@ fun produceBhastuseJolly(balance: SwipeBalance, unitId: Int, level: Int): UnitSt
                 }
             }
             bodies[TickerEntry(balance.bhastuse_jolly.w2, balance.bhastuse_jolly.t2, "summon")] = { battle, unit ->
-                val position = battle.calculateFreeNpcPosition()
+                val position = battle.calculateFreeNpcPosition(4)
                 if (position > 0) {
                     val personageId = battle.newPersonageId()
                     val producedUnit = UnitFactory.produce(UnitType.SLIME_ARMORED, balance,personageId, (unit.stats.level * balance.bhastuse_jolly.k2).toInt() + 1, null)

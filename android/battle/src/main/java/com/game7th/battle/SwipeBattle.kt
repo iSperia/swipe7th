@@ -141,10 +141,10 @@ class SwipeBattle(
 
     private suspend fun generateNpcs(config: BattleConfig) {
         notifyEvent(BattleEvent.NewWaveEvent(wave))
-        config.waves[wave].withIndex().forEach {
+        config.waves[wave].withIndex().forEach { indexedConfig ->
             val personageId = newPersonageId()
-            val unitStats = UnitFactory.produce(it.value.name, balance, personageId, it.value.level, null)
-            val position = 4 - it.index
+            val unitStats = UnitFactory.produce(indexedConfig.value.name, balance, personageId, indexedConfig.value.level, null)
+            val position = indexedConfig.index
             unitStats?.let { stats ->
                 val unit = BattleUnit(personageId, position, stats, Team.RIGHT)
                 units.add(unit)
@@ -352,7 +352,7 @@ class SwipeBattle(
     }
 
     fun findClosestAliveEnemy(unit: BattleUnit): BattleUnit? {
-        return aliveUnits().filter { it.team != unit.team }.minBy { abs(it.position - unit.position) }
+        return aliveUnits().filter { it.team != unit.team }.minBy { -it.position - unit.position }
     }
 
     fun aliveEnemies(unit: BattleUnit): List<BattleUnit> {
@@ -372,8 +372,8 @@ class SwipeBattle(
         notifyEvent(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
     }
 
-    fun calculateFreeNpcPosition(): Int {
-        return (4 downTo 1).firstOrNull { index -> aliveUnits().firstOrNull { it.position == index } == null}?.let { it } ?: -1
+    fun calculateFreeNpcPosition(threshold: Int): Int {
+        return (0 until threshold).firstOrNull { index -> aliveUnits().firstOrNull { it.position == index && it.team == Team.RIGHT } == null}?.let { it } ?: -1
     }
 
     fun aliveAllies(unit: BattleUnit): List<BattleUnit> {
