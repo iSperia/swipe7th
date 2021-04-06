@@ -125,6 +125,7 @@ class GameScreen(private val game: SwipeGameGdx,
                 }
             }
         }
+        gdxModel.figures.firstOrNull { it.name == "slime" }?.let { loadResources(it) }
 
         val scale = game.context.scale
         battleController = BattleController(GameContextWrapper(
