@@ -22,7 +22,7 @@ fun produceBhastuseJolly(balance: SwipeBalance, unitId: Int, level: Int): UnitSt
                     val newUnit = produceSlimeBoss(balance, unit.stats.level)
                     val battleUnit = BattleUnit(battle.newPersonageId(), unit.position, newUnit, unit.team)
                     battle.units.add(battleUnit)
-                    battle.notifyEvent(BattleEvent.CreatePersonageEvent(battleUnit.toViewModel(), battleUnit.position))
+                    battle.notifyEvent(BattleEvent.CreatePersonageEvent(battleUnit.toViewModel(), battleUnit.position, 1))
                     battle.notifyEvent(BattleEvent.ShowSpeech("vp_slime_boss", "ued_bhastuse_jolly_phase_transmute", "BHASTUSE_JELLY"))
                 }
             }
@@ -37,7 +37,7 @@ fun produceBhastuseJolly(balance: SwipeBalance, unitId: Int, level: Int): UnitSt
                     val battleUnit = BattleUnit(personageId, position, producedUnit!!, Team.RIGHT)
                     battle.units.add(battleUnit)
                     battle.notifyEvent(BattleEvent.PersonagePositionedAbilityEvent(unit.toViewModel(), position, 0))
-                    battle.notifyEvent(BattleEvent.CreatePersonageEvent(battleUnit.toViewModel(), battleUnit.position))
+                    battle.notifyEvent(BattleEvent.CreatePersonageEvent(battleUnit.toViewModel(), battleUnit.position, 1))
                 }
             }
             bodies[TickerEntry(balance.bhastuse_jolly.w2, balance.bhastuse_jolly.t2, "summon")] = { battle, unit ->
@@ -48,7 +48,7 @@ fun produceBhastuseJolly(balance: SwipeBalance, unitId: Int, level: Int): UnitSt
                     val battleUnit = BattleUnit(personageId, position, producedUnit!!, Team.RIGHT)
                     battle.units.add(battleUnit)
                     battle.notifyEvent(BattleEvent.PersonagePositionedAbilityEvent(unit.toViewModel(), position, 0))
-                    battle.notifyEvent(BattleEvent.CreatePersonageEvent(battleUnit.toViewModel(), battleUnit.position))
+                    battle.notifyEvent(BattleEvent.CreatePersonageEvent(battleUnit.toViewModel(), battleUnit.position, 1))
                 }
             }
         }

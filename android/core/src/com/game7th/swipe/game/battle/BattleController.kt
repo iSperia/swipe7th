@@ -141,7 +141,9 @@ class BattleController(
                 schedulePersonageUpdateViewModel(event)
             }
             is BattleEvent.NewWaveEvent -> {
-                timeShift += 1
+                if (event.wave > 0) {
+                    timeShift += 1
+                }
             }
         }
     }
@@ -370,6 +372,7 @@ class BattleController(
                     this@BattleController,
                     event.personage.id,
                     y + 45f * context.scale,
+                    event.appearStrategy,
                     context.gdxModel.figure(event.personage.skin)!!,
                     event.personage,
                     this::playSound).let {

@@ -131,7 +131,7 @@ class SwipeBattle(
             unitStats?.let { stats ->
                 val unit = BattleUnit(unitId, it.index, stats, Team.LEFT)
                 units.add(unit)
-                notifyEvent(BattleEvent.CreatePersonageEvent(unit.toViewModel(), it.index))
+                notifyEvent(BattleEvent.CreatePersonageEvent(unit.toViewModel(), it.index, 0))
             }
         }
 
@@ -148,7 +148,7 @@ class SwipeBattle(
             unitStats?.let { stats ->
                 val unit = BattleUnit(personageId, position, stats, Team.RIGHT)
                 units.add(unit)
-                notifyEvent(BattleEvent.CreatePersonageEvent(unit.toViewModel(), position))
+                notifyEvent(BattleEvent.CreatePersonageEvent(unit.toViewModel(), position,0))
             }
         }
     }

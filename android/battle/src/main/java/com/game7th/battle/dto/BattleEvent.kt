@@ -48,7 +48,8 @@ sealed class BattleEvent {
 
     data class CreatePersonageEvent(
             val personage: PersonageViewModel,
-            val position: Int
+            val position: Int,
+            val appearStrategy: Int
     ) : BattleEvent()
 
     data class PersonageAttackEvent(

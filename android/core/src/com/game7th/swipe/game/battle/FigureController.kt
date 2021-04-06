@@ -2,6 +2,7 @@
 
 package com.game7th.swipe.game.battle
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
@@ -26,6 +27,7 @@ class FigureController(
         battle: BattleController,
         id: Int,
         y: Float,
+        val appearStrategy: Int,
         val figureModel: FigureGdxModel,
         var viewModel: PersonageViewModel,
         val player: (String) -> Unit
@@ -144,9 +146,14 @@ class FigureController(
         if (needFastMove) {
             move(originX, targetY, duration)
         } else {
-            x = originX
-            fromX = originX
-            this.targetX = originX
+            if (appearStrategy == 0) {
+                x = if (flipped) Gdx.graphics.width + figureModel.width * figureModel.scale * battle.scale * 2f else -2f * figureModel.width * figureModel.scale * battle.scale
+                move(originX, originY, 2f / (position + 1))
+            } else {
+                x = originX
+                fromX = originX
+                this.targetX = originX
+            }
         }
     }
 

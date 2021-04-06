@@ -30,7 +30,7 @@ fun produceSlimeMother(balance: SwipeBalance, level: Int): UnitStats {
                     val battleUnit = BattleUnit(personageId, position, producedUnit!!, Team.RIGHT)
                     battle.units.add(battleUnit)
                     battle.notifyEvent(BattleEvent.PersonagePositionedAbilityEvent(unit.toViewModel(), position, 0))
-                    battle.notifyEvent(BattleEvent.CreatePersonageEvent(battleUnit.toViewModel(), battleUnit.position))
+                    battle.notifyEvent(BattleEvent.CreatePersonageEvent(battleUnit.toViewModel(), battleUnit.position, 1))
                 }
             }
             bodies[TickerEntry(balance.mother_slime.w3, balance.mother_slime.t3, "leaf")] = { battle, unit ->
