@@ -84,8 +84,10 @@ class InventoryEditor(
         panelItems.height = 180f * context.scale
         panelScroller.actor = panelItems
 
-        panelItems.children.forEach { it.remove() }
-        equippedGroup.children.forEach { it.remove() }
+        panelItems.children.forEach { it.clearActions() }
+        equippedGroup.children.forEach { it.clearActions() }
+        panelItems.clearChildren()
+        equippedGroup.clearChildren()
 
         dismissDetailPanel()
 

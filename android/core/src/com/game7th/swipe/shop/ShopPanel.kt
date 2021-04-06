@@ -42,7 +42,7 @@ class ShopPanel(
     }
 
     private fun reloadData() {
-        while (panelItems.hasChildren()) panelItems.removeActorAt(0, true)
+        panelItems.clearChildren()
         balanceRefresher()
 
         shopItems = shopService.listItems()

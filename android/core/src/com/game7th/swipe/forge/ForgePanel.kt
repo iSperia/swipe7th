@@ -112,7 +112,8 @@ class ForgePanel(
 
         dustLabel.setText((accountService.getBalance().currencies[Currency.DUST] ?: 0).toString())
 
-        panelItems.children.forEach { it.remove() }
+        panelItems.children.forEach { it.clearActions() }
+        panelItems.clearChildren()
 
         dismissDetailPanel()
 

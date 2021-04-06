@@ -55,7 +55,8 @@ class AlchemyPanel(
         panelItems.height = 240 * context.scale
         panelScroller.actor = panelItems
 
-        panelItems.children.forEach { it.remove() }
+        panelItems.children.forEach { it.clearActions() }
+        panelItems.clearChildren()
 
         val emptyItems = max(15 - flasks.size, 3 - flasks.size % 3)
 
