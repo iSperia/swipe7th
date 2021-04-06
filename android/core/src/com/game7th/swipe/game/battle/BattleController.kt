@@ -140,11 +140,6 @@ class BattleController(
             is BattleEvent.PersonageUpdateEvent -> {
                 schedulePersonageUpdateViewModel(event)
             }
-            is BattleEvent.NewWaveEvent -> {
-                if (event.wave > 0) {
-                    timeShift += 1
-                }
-            }
         }
     }
 

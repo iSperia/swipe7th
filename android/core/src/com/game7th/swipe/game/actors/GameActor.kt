@@ -7,10 +7,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Touchable
-import com.badlogic.gdx.scenes.scene2d.actions.DelayAction
-import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction
-import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
+import com.badlogic.gdx.scenes.scene2d.actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
@@ -51,6 +48,7 @@ class GameActor(
     val tileFieldBorder: Image
     val bottomSheetBg: Image
     val comboParticles: ParticleEffect
+    val uiGroup = Group()
 
     var fingerActor: Image? = null
 
@@ -127,6 +125,8 @@ class GameActor(
         labelComboWrapper.addActor(labelCombo)
         addActor(labelComboWrapper)
 
+        addActor(uiGroup)
+
         comboParticles = ParticleEffect()
         comboParticles.load(Gdx.files.internal("particles_0"), context.battleAtlas)
         comboParticles.setPosition(labelComboWrapper.x, labelComboWrapper.y + labelCombo.y - 10f * context.scale)
@@ -181,6 +181,26 @@ class GameActor(
                     comboParticles.reset()
                     comboParticles.scaleEffect(3f + min(8, combo) * 0.2f)
                 }
+            }
+            is BattleEvent.NewWaveEvent -> {
+                val waveText = Label("WAVE ${event.wave+1}", Label.LabelStyle(context.font2, Color.YELLOW)).apply {
+                    y = Gdx.graphics.height / 2f - 50f * context.scale
+                    x = 0f
+                    width = 480f * context.scale
+                    height = 100f * context.scale
+                    setAlignment(Align.center)
+                    setFontScale(100f * context.scale / 36f)
+                }
+                uiGroup.addActor(waveText)
+                waveText.addAction(SequenceAction(
+                        ParallelAction(
+                                MoveByAction().apply { setAmount(0f, 100f * context.scale);duration=2f },
+                                AlphaAction().apply { alpha = 0f;duration=2f }
+                        ),
+                        RunnableAction().apply { setRunnable {
+                            waveText.remove()
+                        } }
+                ))
             }
         }
     }
