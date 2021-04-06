@@ -31,9 +31,7 @@ class AccountServiceImpl(
 //                        currencies[Currency.DUST] = 10000
                     }
         } else {
-            gson.fromJson<PersonageBalance>(balanceString, PersonageBalance::class.java).apply {
-                currencies[Currency.GOLD] = 100000
-            }
+            gson.fromJson<PersonageBalance>(balanceString, PersonageBalance::class.java)
         }
         val dataString = storage.get(KEY_PERSONAGES)
         pool = if (dataString == null) {
