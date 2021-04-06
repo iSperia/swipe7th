@@ -140,6 +140,9 @@ class ItemDetailPanel(
                 if (item.potion.template.fbRemoveStun > 0) {
                     texts.add(context.texts["flask_affix_remove_stun"].toString())
                 }
+                if (item.potion.template.fbSummonSlime > 0) {
+                    texts.add(context.texts["flask_affix_summon_slime"].toString())
+                }
             }
         }
 

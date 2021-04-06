@@ -195,9 +195,10 @@ class GameScreen(private val game: SwipeGameGdx,
 
     private fun usePotion(flask: FlaskStackDto) {
         KtxAsync.launch {
-            game.gearService.removeFlask(flask.template)
             gameActor.refreshAlchemy()
-            battle.useFlask(BattleFlaskDto(flask.template.fbFlatHeal, flask.template.fbRemoveStun))
+            if (battle.useFlask(BattleFlaskDto(flask.template.fbFlatHeal, flask.template.fbRemoveStun, flask.template.fbSummonSlime))) {
+                game.gearService.removeFlask(flask.template)
+            }
             gameActor.hideAlchemy()
         }
     }

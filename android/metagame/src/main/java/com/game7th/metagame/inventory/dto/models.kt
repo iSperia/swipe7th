@@ -49,7 +49,8 @@ data class InventoryPool(
 data class FlaskTemplate(
         val name: String,
         val fbFlatHeal: Int,
-        val fbRemoveStun: Int
+        val fbRemoveStun: Int,
+        val fbSummonSlime: Int = 0
 )
 
 data class FlaskStackDto(

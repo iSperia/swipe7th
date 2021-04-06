@@ -91,7 +91,7 @@ class FigureController(
                         512f * bodyScale * flipMultiplier,
                         512f * bodyScale)
             } else if (pose == FigurePose.POSE_DEATH) {
-                if (flipped) {
+                if (flipped || position > 0) {
                     battle.removeController(this)
                 } else {
                     batch.draw(animation.keyFrames.last(),

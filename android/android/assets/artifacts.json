@@ -163,6 +163,12 @@
       "dropWeight": 2,
       "gold": 2000,
       "rarity": 0
+    },
+    {
+      "template": {"name":  "SLIME_FLASK", "fbSummonSlime": 1},
+      "droWeight": 1,
+      "gold": 4000,
+      "rarity": 0
     }
   ]
 }

@@ -8,6 +8,7 @@ import com.game7th.battle.tilefield.TileFieldEvent
 import com.game7th.battle.tilefield.TileFieldMerger
 import com.game7th.battle.tilefield.tile.*
 import com.game7th.battle.unit.*
+import com.game7th.metagame.dto.UnitType
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -372,6 +373,10 @@ class SwipeBattle(
         notifyEvent(BattleEvent.PersonageUpdateEvent(unit.toViewModel()))
     }
 
+    fun calculateFreeLeftPosition(threshold: Int): Int {
+        return (0 until threshold).firstOrNull { index -> aliveUnits().firstOrNull { it.position == index && it.team == Team.LEFT } == null}?.let { it } ?: -1
+    }
+
     fun calculateFreeNpcPosition(threshold: Int): Int {
         return (0 until threshold).firstOrNull { index -> aliveUnits().firstOrNull { it.position == index && it.team == Team.RIGHT } == null}?.let { it } ?: -1
     }
@@ -380,12 +385,14 @@ class SwipeBattle(
         return units.filter { it.isAlive() && it.team == unit.team && it.id != unit.id }
     }
 
-    suspend fun useFlask(battleFlaskDto: BattleFlaskDto) = withContext(coroutineContext) {
+    suspend fun useFlask(battleFlaskDto: BattleFlaskDto): Boolean = withContext(coroutineContext) {
+        var used = false
         units.filter { it.isAlive() && it.team == Team.LEFT }.firstOrNull()?.let { unit ->
             if (battleFlaskDto.flatHeal > 0) {
                 //heal
                 processHeal(unit, battleFlaskDto.flatHeal)
                 notifyEvent(BattleEvent.ShowAilmentEffect(unit.id, "ailment_heal"))
+                used = true
             }
             if (battleFlaskDto.removeStun > 0) {
                 tileField.tiles.entries.toList().forEach { (position, tile) ->
@@ -396,8 +403,23 @@ class SwipeBattle(
                     }
                 }
                 notifyEvent(BattleEvent.ShowAilmentEffect(unit.id, "ailment_heal"))
+                used = true
+            }
+            if (battleFlaskDto.summonGreenSlime > 0) {
+                val position = calculateFreeLeftPosition(3)
+                if (position >= 0) {
+                    val level = aliveUnits().firstOrNull { it.team == Team.LEFT }?.stats?.level ?: 5
+                    val personageId = newPersonageId()
+                    UnitFactory.produce(UnitType.GREEN_SLIME, balance, personageId, level, null)?.let { stats ->
+                        val unit = BattleUnit(personageId, position, stats, Team.LEFT)
+                        units.add(unit)
+                        notifyEvent(BattleEvent.CreatePersonageEvent(unit.toViewModel(), position, 0))
+                        used = true
+                    }
+                }
             }
         }
+        used
     }
 
     suspend fun destroyUnit(unit: BattleUnit) {

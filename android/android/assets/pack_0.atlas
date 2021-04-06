@@ -599,6 +599,13 @@ shop_beginner_potion_pack
   orig: 72, 72
   offset: 0, 0
   index: -1
+slime_flask
+  rotate: false
+  xy: 1370, 208
+  size: 64, 65
+  orig: 64, 65
+  offset: 0, 0
+  index: -1
 slime_splash
   rotate: false
   xy: 1846, 339
