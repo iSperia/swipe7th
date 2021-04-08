@@ -9,5 +9,4 @@ import com.game7th.metagame.campaign.ActsService
  */
 class GameService(
         private val actsService: ActsService
-) : ActsService by actsService{
-}
+) : ActsService by actsService
