@@ -10,6 +10,9 @@ buildscript {
         jcenter()
         google()
         maven { url 'https://maven.google.com' }
+        flatDir {
+            dirs 'lib'
+        }
     }
 
     ext.kotlin_version = '1.3.72'
@@ -118,7 +121,14 @@ project(":ios") {
 project(":core") {
     apply plugin: "kotlin"
 
+    repositories {
+        flatDir {
+            dirs '../lib'
+        }
+    }
+
     dependencies {
+        api(name: "api-0.0.1", ext: "jar")
         implementation project(":battle")
         implementation project(":metagame")
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
