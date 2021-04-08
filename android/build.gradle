@@ -75,6 +75,8 @@ project(":android") {
         api project(":metagame")
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
+        implementation 'com.google.firebase:firebase-installations:16.3.5'
+
         api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
@@ -122,6 +124,9 @@ project(":core") {
         implementation project(":metagame")
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
         implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines"
+
+        implementation "io.ktor:ktor-client-core:1.5.1"
+        implementation "io.ktor:ktor-client-apache:1.5.1"
 
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"

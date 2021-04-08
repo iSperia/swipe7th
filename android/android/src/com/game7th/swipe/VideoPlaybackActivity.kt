@@ -16,7 +16,7 @@ class VideoPlaybackActivity : AppCompatActivity() {
         videoView.setMediaController(MediaController(this))
         videoView.setOnCompletionListener {
             val storage = AndroidStorage(applicationContext)
-            storage.put(AndroidLaunchActivity.KEY_INTRO_SHOWN, true.toString())
+            storage.put(GdxGameActivity.KEY_INTRO_SHOWN, true.toString())
 
             finish()
         }

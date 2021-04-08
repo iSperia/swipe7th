@@ -4,9 +4,8 @@ import android.os.Bundle
 import android.view.View
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
-import com.google.firebase.installations.FirebaseInstallations
 
-class AndroidLaunchActivity : AndroidApplication() {
+class GdxGameActivity : AndroidApplication() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.decorView.apply {
@@ -22,18 +21,12 @@ class AndroidLaunchActivity : AndroidApplication() {
         }
 
         val storage = AndroidStorage(applicationContext)
-        FirebaseInstallations.getInstance().let { installations ->
-            installations.getToken(false).addOnCompleteListener {
-                initialize(SwipeGameGdx(storage, it.result?.token, BuildConfig.ENDPOINT), config)
-            }
-        }
 
-//        if (storage.get(KEY_INTRO_SHOWN)?.toBoolean() != true) {
-//            startActivity(Intent(this@AndroidLaunchActivity, VideoPlaybackActivity::class.java))
-//        }
+        initialize(SwipeGameGdx(storage, intent.getStringExtra(ARG_INSTANCE_ID)!!, BuildConfig.ENDPOINT), config)
     }
 
     companion object {
         const val KEY_INTRO_SHOWN = "intro.shown"
+        const val ARG_INSTANCE_ID = "arg.instance_id"
     }
 }
