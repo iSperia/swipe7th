@@ -25,7 +25,10 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import ktx.async.KtxAsync
 
-class SwipeGameGdx(val storage: PersistentStorage) : Game() {
+class SwipeGameGdx(
+        val storage: PersistentStorage,
+        val installationId: String?,
+        val endpoint: String) : Game() {
 
     val multiplexer = InputMultiplexer()
     val gson = Gson()
@@ -50,41 +53,43 @@ class SwipeGameGdx(val storage: PersistentStorage) : Game() {
     }
 
     override fun create() {
-        KtxAsync.initiate()
+        if (installationId != null) {
+            KtxAsync.initiate()
 
-        initializeGearService()
-        initializeAccountService()
-        initializeActService()
-        initializeShopService()
-        service = GameService(actService)
+            initializeGearService()
+            initializeAccountService()
+            initializeActService()
+            initializeShopService()
+            service = GameService(actService)
 
-        width = Gdx.graphics.width.toFloat()
-        height = Gdx.graphics.height.toFloat()
-        scale = Gdx.graphics.width / 480f
+            width = Gdx.graphics.width.toFloat()
+            height = Gdx.graphics.height.toFloat()
+            scale = Gdx.graphics.width / 480f
 
-        val uiAtlas = TextureAtlas(Gdx.files.internal("ui.atlas"))
-        val atlas = TextureAtlas(Gdx.files.internal("pack_0.atlas"))
-        val font = BitmapFont(Gdx.files.internal("atarian.fnt"), Gdx.files.internal("atarian_0.png"), false).apply {
-            color = Color.WHITE
+            val uiAtlas = TextureAtlas(Gdx.files.internal("ui.atlas"))
+            val atlas = TextureAtlas(Gdx.files.internal("pack_0.atlas"))
+            val font = BitmapFont(Gdx.files.internal("atarian.fnt"), Gdx.files.internal("atarian_0.png"), false).apply {
+                color = Color.WHITE
+            }
+            val font2 = BitmapFont(Gdx.files.internal("anglodavek.fnt"), Gdx.files.internal("anglodavek_0.png"), false).apply {
+                color = Color.WHITE
+            }
+            val balanceFile = Gdx.files.internal("balance.json")
+            val balanceText = balanceFile.readString()
+            val balance = Gson().fromJson<SwipeBalance>(balanceText, SwipeBalance::class.java)
+
+            val textsFile = Gdx.files.internal("strings.json")
+            val textsText = textsFile.readString()
+            val token = object : TypeToken<Map<String, String>>() {}.type
+            val texts = gson.fromJson<Map<String, String>>(textsText, token)
+
+            context = GdxGameContext(atlas, uiAtlas, font, font2, balance, scale, texts, storage)
+
+
+            Gdx.input.inputProcessor = multiplexer
+
+            setScreen(ActScreen(this, actService, 0, context, storage))
         }
-        val font2 = BitmapFont(Gdx.files.internal("anglodavek.fnt"), Gdx.files.internal("anglodavek_0.png"), false).apply {
-            color = Color.WHITE
-        }
-        val balanceFile = Gdx.files.internal("balance.json")
-        val balanceText = balanceFile.readString()
-        val balance = Gson().fromJson<SwipeBalance>(balanceText, SwipeBalance::class.java)
-
-        val textsFile = Gdx.files.internal("strings.json")
-        val textsText = textsFile.readString()
-        val token = object : TypeToken<Map<String, String>>() {}.type
-        val texts = gson.fromJson<Map<String, String>>(textsText, token)
-
-        context = GdxGameContext(atlas, uiAtlas, font, font2, balance, scale, texts, storage)
-
-
-        Gdx.input.inputProcessor = multiplexer
-
-        setScreen(ActScreen(this, actService, 0, context, storage))
     }
 
     private fun initializeGearService() {

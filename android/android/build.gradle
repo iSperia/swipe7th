@@ -1,3 +1,19 @@
+apply plugin: 'com.android.application'
+// Add this line
+apply plugin: 'com.google.gms.google-services'
+
+dependencies {
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:26.8.0')
+
+    // Add the dependency for the Firebase SDK for Google Analytics
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    // Add the dependencies for any other desired Firebase products
+    // https://firebase.google.com/docs/android/setup#available-libraries
+}
+
 android {
     buildToolsVersion "30.0.3"
     compileSdkVersion 30
@@ -18,10 +34,10 @@ android {
     }
     defaultConfig {
         applicationId "com.game7th.swipe"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 30
-        versionCode 16
-        versionName "0.0.16 Rob Bott"
+        versionCode 19
+        versionName "0.0.19 Tenzo"
     }
     buildTypes {
         release {
@@ -29,8 +45,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
+    flavorDimensions "environment"
 
+    productFlavors {
+        localhost {
+            dimension "environment"
+            buildConfigField('String', 'ENDPOINT', '"localhost:8080"')
+        }
+        heroku_qa {
+            dimension "environment"
+            buildConfigField('String', 'ENDPOINT', '"https://swipe-battles.herokuapp.com"')
+        }
+    }
+}
 
 // called every time gradle gets executed, takes the native dependencies of
 // the natives configuration, and extracts them to the proper libs/ folders
@@ -89,4 +116,3 @@ task run(type: Exec) {
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.game7th.swipe/com.game7th.swipe.AndroidLauncher'
 }
 
-eclipse.project.name = appName + "-android"
