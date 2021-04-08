@@ -27,14 +27,14 @@ class IconTextButton(
     }
 
     val icon = Image(context.uiAtlas.findRegion(iconTexture)).apply {
-        x = btn.x
-        y = btn.y
-        width = context.scale * 48f
-        height = context.scale * 48f
+        x = btn.x + context.scale * 8f
+        y = btn.y + context.scale * 8f
+        width = context.scale * 32f
+        height = context.scale * 32f
         touchable = Touchable.disabled
     }
 
-    val labelForge = Label(labelText, Label.LabelStyle(context.font, Color.BLACK)).apply {
+    val labelForge = Label(labelText, Label.LabelStyle(context.font, Color.WHITE)).apply {
         x = btn.x + context.scale * 52f
         y = btn.y + context.scale * 12f
         setAlignment(Align.left)

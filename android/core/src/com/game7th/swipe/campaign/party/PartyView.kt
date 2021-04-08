@@ -29,7 +29,7 @@ class PartyView(
         width = 460f * context.scale
         height = 150f * context.scale
     }
-    val personagesBg = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
+    val personagesBg = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
         width = 480 * context.scale
         height = 170 * context.scale
     }

@@ -15,7 +15,7 @@ class BottomMenu(
     var onShopButtonPressed: (() -> Unit)? = null
     var onAlchButtonPressed: (() -> Unit)? = null
 
-    val bg = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
+    val bg = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
         x = 0f
         y = 0f
         width = Gdx.graphics.width.toFloat()
@@ -32,7 +32,7 @@ class BottomMenu(
         x = buttonSquads.x + buttonSquads.width
     }
 
-    val buttonShop = IconTextButton(context, "ui_currency_gold", "Shop") {
+    val buttonShop = IconTextButton(context, "icon_shop", "Shop") {
         onShopButtonPressed?.invoke()
     }.apply {
         x = buttonForge.x + buttonForge.width

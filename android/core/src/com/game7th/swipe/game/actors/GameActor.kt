@@ -59,14 +59,13 @@ class GameActor(
     private var potionPanel: AlchemyPanel? = null
 
     init {
-        Image(context.uiAtlas.findRegion("ui_dialog")).apply {
+        Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
             x = 0f
             y = 48f * context.scale
             width = Gdx.graphics.width.toFloat()
             height = Gdx.graphics.height - Gdx.graphics.width * 0.8f - 48f * context.scale
-            color = Color.GRAY
         }.let { addActor(it) }
-        tileFieldZoneBorder = Image(context.uiAtlas.createPatch("bg_brass")).apply {
+        tileFieldZoneBorder = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
             x = 0f
             y = 48f * context.scale
             width = Gdx.graphics.width.toFloat()
@@ -87,7 +86,7 @@ class GameActor(
         }
         addActor(tileFieldBorder)
 
-        bottomSheetBg = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
+        bottomSheetBg = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
             x = 0f
             y = 0f
             width = Gdx.graphics.width.toFloat()
@@ -95,11 +94,12 @@ class GameActor(
         }
         addActor(bottomSheetBg)
 
-        buttonConcede = Label("Concede", Label.LabelStyle(context.font, Color.BLACK)).apply {
+        buttonConcede = Label("Concede", Label.LabelStyle(context.font, Color.WHITE)).apply {
             setFontScale(22f * context.scale / 36f)
             width = 100f * context.scale
+            height = 48f * context.scale
             x = Gdx.graphics.width - width - 10f * context.scale
-            y = 30f
+            y = 0f
             setAlignment(Align.center)
         }
         buttonConcede.onClick {

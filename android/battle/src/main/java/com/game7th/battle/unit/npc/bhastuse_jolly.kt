@@ -29,7 +29,7 @@ fun produceBhastuseJolly(balance: SwipeBalance, unitId: Int, level: Int): UnitSt
         }
 
         ticker {
-            bodies[TickerEntry(balance.bhastuse_jolly.w1, balance.bhastuse_jolly.t1, "leaf")] = { battle, unit ->
+            bodies[TickerEntry(balance.bhastuse_jolly.w1, balance.bhastuse_jolly.t1, "slime")] = { battle, unit ->
                 val position = battle.calculateFreeNpcPosition(4)
                 if (position > 0) {
                     val personageId = battle.newPersonageId()
@@ -40,7 +40,7 @@ fun produceBhastuseJolly(balance: SwipeBalance, unitId: Int, level: Int): UnitSt
                     battle.notifyEvent(BattleEvent.CreatePersonageEvent(battleUnit.toViewModel(), battleUnit.position, 1))
                 }
             }
-            bodies[TickerEntry(balance.bhastuse_jolly.w2, balance.bhastuse_jolly.t2, "summon")] = { battle, unit ->
+            bodies[TickerEntry(balance.bhastuse_jolly.w2, balance.bhastuse_jolly.t2, "shield")] = { battle, unit ->
                 val position = battle.calculateFreeNpcPosition(4)
                 if (position > 0) {
                     val personageId = battle.newPersonageId()

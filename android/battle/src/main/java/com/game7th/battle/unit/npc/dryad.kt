@@ -14,7 +14,7 @@ fun produceDryad(balance: SwipeBalance, level: Int): UnitStats {
     val slime = UnitStats(UnitType.DRYAD, level = level, health = CappedStat(hp, hp), resistMax = resist.toInt(), resist = resist.toInt())
     slime += ability {
         ticker {
-            bodies[TickerEntry(balance.dryad.w1, balance.dryad.t1, "sword")] = { battle, unit ->
+            bodies[TickerEntry(balance.dryad.w1, balance.dryad.t1, "magic")] = { battle, unit ->
                 val damage = (unit.stats.level * balance.dryad.k1).toInt()
                 if (damage > 0) {
                     val target = battle.aliveEnemies(unit).let { if (it.isEmpty()) emptyList() else listOf(it.random()) }

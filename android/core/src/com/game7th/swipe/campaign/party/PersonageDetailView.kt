@@ -36,7 +36,7 @@ class PersonageDetailView(
 
     private val personage = accountService.getPersonages().first { it.id == personageId }
 
-    val bg = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
+    val bg = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
         width = 480f * context.scale
         height = 240f * context.scale
     }
@@ -85,7 +85,7 @@ class PersonageDetailView(
         setFontScale(ah / 36f)
     }
 
-    val secondAttrsBody = Label("", Label.LabelStyle(context.font, Color.SALMON)).apply {
+    val secondAttrsBody = Label("", Label.LabelStyle(context.font, Color(0xff2626ff.toInt()))).apply {
         y = attrsBg.y + 2 * sh
         x = attrsBg.x + attrsBg.width + context.scale * 0.1f
         width = 140f * context.scale
@@ -94,7 +94,7 @@ class PersonageDetailView(
         setAlignment(Align.left)
     }
 
-    val secondAttrsSpirit = Label("", Label.LabelStyle(context.font, Color.LIME)).apply {
+    val secondAttrsSpirit = Label("", Label.LabelStyle(context.font, Color(0x00B200ff))).apply {
         y = attrsBg.y + sh
         x = attrsBg.x + attrsBg.width + context.scale * 0.1f
         width = 140f * context.scale
@@ -103,7 +103,7 @@ class PersonageDetailView(
         setAlignment(Align.left)
     }
 
-    val secondAttrsMind = Label("", Label.LabelStyle(context.font, Color.BLUE)).apply {
+    val secondAttrsMind = Label("", Label.LabelStyle(context.font, Color(0x00A3D9ff))).apply {
         y = attrsBg.y
         x = attrsBg.x + attrsBg.width + context.scale * 0.1f
         width = 140f * context.scale
@@ -122,9 +122,9 @@ class PersonageDetailView(
 
     val buttonGear = Image(context.uiAtlas.findRegion("icon_gear")).apply {
         x = attrsBg.x
-        y = 200f * context.scale
-        width = 30f * context.scale
-        height = 30f * context.scale
+        y = 182f * context.scale
+        width = 48f * context.scale
+        height = 48f * context.scale
     }
 
     var inventoryView: InventoryEditor? = null

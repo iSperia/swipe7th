@@ -29,7 +29,7 @@ fun produceSlimeBoss(balance: SwipeBalance, level: Int): UnitStats {
                     }
                 }
             }
-            bodies[TickerEntry(balance.slime_boss.w2, balance.slime_boss.t2, "leaf")] = { battle, unit ->
+            bodies[TickerEntry(balance.slime_boss.w2, balance.slime_boss.t2, "magic")] = { battle, unit ->
                 val damage = (unit.stats.level * balance.slime_boss.k2).toInt()
                 if (damage > 0) {
                     //physical attack

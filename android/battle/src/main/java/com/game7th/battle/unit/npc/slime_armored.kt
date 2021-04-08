@@ -26,7 +26,7 @@ fun produceSlimeArmored(balance: SwipeBalance, level: Int): UnitStats {
                     }
                 }
             }
-            bodies[TickerEntry(balance.slime_armored.w2, balance.slime_armored.t2, "leaf")] = { battle, unit ->
+            bodies[TickerEntry(balance.slime_armored.w2, balance.slime_armored.t2, "slime")] = { battle, unit ->
                 battle.tileField.calculateFreePosition()?.let { position ->
                     val tile = SwipeTile(TileTemplate("slime_splash", 0), battle.tileField.newTileId(), balance.slime_armored.d2, true)
                     battle.tileField.tiles[position] = tile

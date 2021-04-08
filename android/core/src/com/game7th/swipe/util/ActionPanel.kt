@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.Button
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.account.dto.Currency
@@ -34,8 +35,8 @@ class ActionPanel(
 
             when (action) {
                 is InventoryAction.StringAction -> {
-                    val button = Button(Button.ButtonStyle(TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_simple")),
-                            TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_pressed")), null)).apply {
+                    val button = Button(Button.ButtonStyle(NinePatchDrawable(context.uiAtlas.createPatch("ui_button_simple")),
+                            NinePatchDrawable(context.uiAtlas.createPatch("ui_button_pressed")), null)).apply {
                         y = index * 40f * context.scale
                         width = buttonWidth
                         height = 30f * context.scale
@@ -56,8 +57,8 @@ class ActionPanel(
                 }
 
                 is InventoryAction.IconAction -> {
-                    val button = Button(Button.ButtonStyle(TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_simple")),
-                            TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_pressed")), null)).apply {
+                    val button = Button(Button.ButtonStyle(NinePatchDrawable(context.uiAtlas.createPatch("ui_button_simple")),
+                            NinePatchDrawable(context.uiAtlas.createPatch("ui_button_pressed")), null)).apply {
                         y = index * 40f * context.scale
                         width = buttonWidth
                         height = 30f * context.scale

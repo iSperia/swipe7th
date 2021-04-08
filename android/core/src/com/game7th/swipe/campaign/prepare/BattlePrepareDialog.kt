@@ -13,6 +13,7 @@ import ktx.actors.onClick
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.campaign.ActsService
@@ -76,7 +77,7 @@ class BattlePrepareDialog(
                                 ScaleToAction().apply { setScale(1f); duration = 0.3f }
                         ), RunnableAction().apply { setRunnable { shownCallback(this@BattlePrepareDialog) } }))
 
-        background = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
+        background = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
             width = this@BattlePrepareDialog.width
             height = this@BattlePrepareDialog.height
         }
@@ -84,8 +85,8 @@ class BattlePrepareDialog(
         addActor(background)
 
         buttonStart = TextButton("Start", TextButton.TextButtonStyle(
-                TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_simple")),
-                TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_pressed")),
+                NinePatchDrawable(context.uiAtlas.createPatch("ui_button_simple")),
+                NinePatchDrawable(context.uiAtlas.createPatch("ui_button_pressed")),
                 null,
                 context.font
         )).apply {

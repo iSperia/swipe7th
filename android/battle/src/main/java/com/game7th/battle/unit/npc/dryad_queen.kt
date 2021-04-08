@@ -19,7 +19,7 @@ fun produceDryadQueen(balance: SwipeBalance, level: Int): UnitStats {
     val slime = UnitStats(UnitType.DRYAD_QUEEN, level = level, health = CappedStat(hp, hp), resistMax = resist.toInt(), resist = resist.toInt())
     slime += ability {
         ticker {
-            bodies[TickerEntry(balance.dryad_queen.w1, balance.dryad_queen.t1, "sword")] = { battle, unit ->
+            bodies[TickerEntry(balance.dryad_queen.w1, balance.dryad_queen.t1, "magic")] = { battle, unit ->
                 val damage = (unit.stats.level * balance.dryad_queen.k1).toInt()
                 if (damage > 0) {
                     val target = battle.aliveEnemies(unit).let { if (it.isEmpty()) emptyList() else listOf(it.random()) }
@@ -29,7 +29,7 @@ fun produceDryadQueen(balance: SwipeBalance, level: Int): UnitStats {
                     }
                 }
             }
-            bodies[TickerEntry(balance.dryad_queen.w2, balance.dryad_queen.t2, "leaf")] = { battle, unit ->
+            bodies[TickerEntry(balance.dryad_queen.w2, balance.dryad_queen.t2, "debuff")] = { battle, unit ->
                 battle.notifyEvent(BattleEvent.PersonagePositionedAbilityEvent(unit.toViewModel(), unit.position, 0))
                 val row = Random.nextInt(5)
                 val column = Random.nextInt(5)

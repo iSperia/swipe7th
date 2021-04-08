@@ -24,7 +24,7 @@ fun produceSlimeFather(balance: SwipeBalance, level: Int): UnitStats {
                     }
                 }
             }
-            bodies[TickerEntry(balance.father_slime.w2, balance.father_slime.t2, "leaf")] = { battle, unit ->
+            bodies[TickerEntry(balance.father_slime.w2, balance.father_slime.t2, "debuff")] = { battle, unit ->
                 battle.findClosestAliveEnemy(unit)?.let { target ->
                     battle.notifyEvent(BattleEvent.PersonagePositionedAbilityEvent(unit.toViewModel(), unit.position, 0))
                     battle.applyStun(target, max(1, (balance.father_slime.k2 * unit.stats.level.toFloat() / target.stats.level).toInt()))

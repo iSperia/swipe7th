@@ -54,16 +54,27 @@ class ItemView(
 
     val image: Image? = item.getIcon()?.let {
         Image(context.battleAtlas.findRegion(it)).apply {
-            width = size
-            height = size
+            width = size * 0.9f
+            height = size * 0.9f
+            x = size * 0.05f
+            y = size * 0.05f
         }
     }
 
     val lvlLabel = Label(item.getLabel(), Label.LabelStyle(context.font, Color.WHITE)).apply {
-        x = 25f * context.scale
-        y = 5f
-        width = size / 2
-        height = size / 2
+        x = size * 0.5f
+        y = size * 0.1f
+        width = size / 3
+        height = size / 3
+        setAlignment(Align.bottomRight)
+        setFontScale(size / 3 / 36f)
+    }
+
+    val lvlLabelShadow = Label(item.getLabel(), Label.LabelStyle(context.font, Color.BLACK)).apply {
+        x = lvlLabel.x + 1f * context.scale
+        y = lvlLabel.y - 1f * context.scale
+        width = lvlLabel.width
+        height = lvlLabel.height
         setAlignment(Align.bottomRight)
         setFontScale(size / 3 / 36f)
     }
@@ -71,6 +82,7 @@ class ItemView(
     init {
         addActor(bg)
         image?.let { addActor(it) }
+        addActor(lvlLabelShadow)
         addActor(lvlLabel)
 
         width = size

@@ -21,7 +21,7 @@ class InventoryEditor(
         private val refresher: () -> Unit
 ) : Group() {
 
-    private val bg = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
+    private val bg = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
         width = context.scale * 480f
         height = context.scale * 200f
     }

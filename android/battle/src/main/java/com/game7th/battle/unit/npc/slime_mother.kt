@@ -22,7 +22,7 @@ fun produceSlimeMother(balance: SwipeBalance, level: Int): UnitStats {
                     }
                 }
             }
-            bodies[TickerEntry(balance.mother_slime.w2, balance.mother_slime.t2, "summon")] = { battle, unit ->
+            bodies[TickerEntry(balance.mother_slime.w2, balance.mother_slime.t2, "slime")] = { battle, unit ->
                 val position = battle.calculateFreeNpcPosition(4)
                 if (position > 0) {
                     val personageId = battle.newPersonageId()
@@ -33,7 +33,7 @@ fun produceSlimeMother(balance: SwipeBalance, level: Int): UnitStats {
                     battle.notifyEvent(BattleEvent.CreatePersonageEvent(battleUnit.toViewModel(), battleUnit.position, 1))
                 }
             }
-            bodies[TickerEntry(balance.mother_slime.w3, balance.mother_slime.t3, "leaf")] = { battle, unit ->
+            bodies[TickerEntry(balance.mother_slime.w3, balance.mother_slime.t3, "shield")] = { battle, unit ->
                 val healAmount = balance.mother_slime.k3.toInt() * unit.stats.level
                 battle.notifyEvent(BattleEvent.PersonagePositionedAbilityEvent(unit.toViewModel(), unit.position, 0))
                 battle.notifyEvent(BattleEvent.ShowAilmentEffect(unit.id, "ailment_heal"))

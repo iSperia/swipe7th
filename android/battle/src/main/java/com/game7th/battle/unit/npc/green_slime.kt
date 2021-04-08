@@ -26,7 +26,7 @@ fun produceGreenSlime(balance: SwipeBalance, level: Int): UnitStats {
                     }
                 }
             }
-            bodies[TickerEntry(balance.slime.w2, balance.slime.t2, "leaf")] = { battle, unit ->
+            bodies[TickerEntry(balance.slime.w2, balance.slime.t2, "slime")] = { battle, unit ->
                 battle.tileField.calculateFreePosition()?.let { position ->
                     val tile = SwipeTile(TileTemplate("slime_splash", 0), battle.tileField.newTileId(), balance.slime.d2, true)
                     battle.tileField.tiles[position] = tile

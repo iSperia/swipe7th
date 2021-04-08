@@ -32,14 +32,14 @@ class BattleFinishedDialog(
         callback: () -> Unit
         ) : Group() {
 
-    val background = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
+    val background = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
         width = 400f * context.scale
         height = 300f * context.scale
         zIndex = 5
         addActor(this)
     }
 
-    val buttonClose = Image(context.uiAtlas.findRegion("ui_button_simple")).apply {
+    val buttonClose = Image(context.uiAtlas.createPatch("ui_button_simple")).apply {
         width = 120f * context.scale
         height = 20f * context.scale
         zIndex = 6

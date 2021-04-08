@@ -23,7 +23,7 @@ class ItemDetailPanel(
 
     var meta: String? = null
 
-    val bg = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
+    val bg = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
         width = context.scale * 160f
         height = h
         onClick {
@@ -37,7 +37,7 @@ class ItemDetailPanel(
         touchable = Touchable.disabled
     }
 
-    val nameLabel = Label(context.texts[item.getName()] ?: item.getName(), Label.LabelStyle(context.font, Color.BLACK)).apply {
+    val nameLabel = Label(context.texts[item.getName()] ?: item.getName(), Label.LabelStyle(context.font, Color.YELLOW)).apply {
         x = 10f * context.scale
         y = h - 180f * context.scale
         setFontScale(18f * context.scale / 36f)
@@ -47,7 +47,7 @@ class ItemDetailPanel(
         touchable = Touchable.disabled
     }
 
-    val affixText = Label("", Label.LabelStyle(context.font, Color.BLUE)).apply {
+    val affixText = Label("", Label.LabelStyle(context.font, Color.WHITE)).apply {
         x = 10f * context.scale
         y = h - 210f * context.scale
         width = 140f * context.scale
