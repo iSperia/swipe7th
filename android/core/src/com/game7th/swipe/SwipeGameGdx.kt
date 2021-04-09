@@ -21,8 +21,11 @@ import com.game7th.metagame.inventory.GearServiceImpl
 import com.game7th.metagame.shop.ShopService
 import com.game7th.metagame.shop.ShopServiceImpl
 import com.game7th.swipe.campaign.ActScreen
+import com.game7th.metagame.network.CloudApi
+import com.game7th.metagame.network.NetworkError
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.launch
 import ktx.async.KtxAsync
 
 class SwipeGameGdx(
@@ -32,6 +35,8 @@ class SwipeGameGdx(
 
     val multiplexer = InputMultiplexer()
     val gson = Gson()
+
+    val api: CloudApi = CloudApi(endpoint, installationId)
 
     var servicesInitialized = false
     lateinit var context: GdxGameContext
@@ -56,6 +61,46 @@ class SwipeGameGdx(
     override fun create() {
         KtxAsync.initiate()
 
+//        showGameScreen()
+
+        KtxAsync.launch {
+            val token = storage.get(KEY_TOKEN)
+            var needRequestToken = false
+            var tokenReceived = false
+            if (!token.isNullOrEmpty()) {
+                api.token = token
+                //validate token
+                try {
+                    api.validateToken()
+                } catch (e: NetworkError) {
+                    storage.put(token, "")
+                    needRequestToken = true
+                }
+            } else {
+                needRequestToken = true
+            }
+
+            if (needRequestToken) {
+                try {
+                    val token = api.requestToken().token
+                    api.token = token
+                    storage.put(KEY_TOKEN, token)
+                    tokenReceived = true
+                } catch (e: NetworkError) {
+                    e.printStackTrace()
+                    tokenReceived = false
+                }
+            } else {
+                tokenReceived = true
+            }
+
+            if (tokenReceived) {
+                showGameScreen()
+            }
+       }
+    }
+
+    private fun showGameScreen() {
         initializeServices()
         service = GameService(actService)
 
@@ -85,7 +130,7 @@ class SwipeGameGdx(
 
         Gdx.input.inputProcessor = multiplexer
 
-        setScreen(ActScreen(this, actService, 0, context, storage))
+        setScreen(ActScreen(this@SwipeGameGdx, actService, 0, context, storage))
     }
 
     private fun initializeServices() {
@@ -139,5 +184,9 @@ class SwipeGameGdx(
     fun switchScreen(screen: Screen) {
         this.screen.dispose()
         setScreen(screen)
+    }
+
+    companion object {
+        const val KEY_TOKEN = "auth.token"
     }
 }

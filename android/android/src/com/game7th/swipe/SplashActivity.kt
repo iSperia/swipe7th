@@ -13,6 +13,7 @@ class SplashActivity : AppCompatActivity() {
 
         FirebaseInstallations.getInstance().id.addOnCompleteListener { task ->
             if (task.isSuccessful) {
+                finish()
                 startActivity(Intent(this@SplashActivity, GdxGameActivity::class.java).apply {
                     putExtra(GdxGameActivity.ARG_INSTANCE_ID, task.result)
                 })

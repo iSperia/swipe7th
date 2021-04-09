@@ -31,9 +31,19 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/robovm/ios/robovm.xml'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude("META-INF/*.kotlin_module")
     }
     defaultConfig {
         applicationId "com.game7th.swipe"
+        multiDexEnabled true
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 19
@@ -50,7 +60,7 @@ android {
     productFlavors {
         localhost {
             dimension "environment"
-            buildConfigField('String', 'ENDPOINT', '"localhost:8080"')
+            buildConfigField('String', 'ENDPOINT', '"http://192.168.1.65:8080"')
         }
         heroku_qa {
             dimension "environment"
