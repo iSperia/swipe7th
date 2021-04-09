@@ -150,7 +150,7 @@ class ActScreen(
                 return super.tap(x, y, count, button)
             }
         })
-        game.multiplexer.addProcessor(0, gestureDetector)
+        game.multiplexer.addProcessor(1, gestureDetector)
 
         val texture = getTextureForCircle(CampaignNodeType.FARM)
         circleScale = game.width / 8 / texture.regionWidth
