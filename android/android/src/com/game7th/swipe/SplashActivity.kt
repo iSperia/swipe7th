@@ -16,6 +16,8 @@ class SplashActivity : AppCompatActivity() {
                 finish()
                 startActivity(Intent(this@SplashActivity, GdxGameActivity::class.java).apply {
                     putExtra(GdxGameActivity.ARG_INSTANCE_ID, task.result)
+                    addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                    overridePendingTransition(0, 0)
                 })
             } else {
                 Toast.makeText(this@SplashActivity, "Failed to get installation id", Toast.LENGTH_LONG)

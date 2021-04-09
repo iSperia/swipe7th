@@ -10,11 +10,6 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.content.*
 import io.ktor.http.*
-import io.ktor.network.tls.*
-import java.security.SecureRandom
-import java.security.cert.X509Certificate
-import javax.net.ssl.TrustManager
-import javax.net.ssl.X509TrustManager
 
 enum class NetworkErrorStatus {
     CONNECTION_ERROR,

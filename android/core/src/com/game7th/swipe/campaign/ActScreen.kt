@@ -56,12 +56,12 @@ sealed class UiState {
  */
 @Suppress("NAME_SHADOWING")
 class ActScreen(
-        private val game: SwipeGameGdx,
+        game: SwipeGameGdx,
         private val actsService: ActsService,
         private val actId: Int,
         context: GdxGameContext,
         private val storage: PersistentStorage
-) : BaseScreen(context) {
+) : BaseScreen(context, game) {
 
     private val batch = SpriteBatch()
     private lateinit var actConfig: ActConfig
@@ -163,8 +163,6 @@ class ActScreen(
         val lockTexture = atlas.findRegion("lock")
         lockScale = game.width / 10 / lockTexture.regionWidth
         lockOffset = game.width / 20
-
-        game.multiplexer.addProcessor(0, stage)
 
         bottomMenu = BottomMenu(context).apply {
             onPartyButtonPressed = this@ActScreen::onPartyButtonPressed

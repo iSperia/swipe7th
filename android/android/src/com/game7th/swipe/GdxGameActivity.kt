@@ -1,7 +1,11 @@
 package com.game7th.swipe
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ImageView
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
 
@@ -22,7 +26,7 @@ class GdxGameActivity : AndroidApplication() {
 
         val storage = AndroidStorage(applicationContext)
 
-        initialize(SwipeGameGdx(storage, intent.getStringExtra(ARG_INSTANCE_ID)!!, BuildConfig.ENDPOINT), config)
+        initialize(SwipeGameGdx(storage, intent.getStringExtra(ARG_INSTANCE_ID)!!, BuildConfig.ENDPOINT) { finish() }, config)
     }
 
     companion object {

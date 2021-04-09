@@ -38,7 +38,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ktx.async.KtxAsync
 
-class GameScreen(private val game: SwipeGameGdx,
+class GameScreen(game: SwipeGameGdx,
                  private val actId: Int,
                  private val locationId: Int,
                  private val difficulty: Int,
@@ -46,7 +46,7 @@ class GameScreen(private val game: SwipeGameGdx,
                  private val actService: ActsService,
                  private val storage: PersistentStorage,
                  gdxGameContext: GdxGameContext
-) : BaseScreen(gdxGameContext) {
+) : BaseScreen(gdxGameContext, game) {
 
     lateinit var viewport: Viewport
 

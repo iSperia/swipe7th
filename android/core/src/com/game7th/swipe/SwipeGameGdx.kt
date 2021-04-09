@@ -6,11 +6,13 @@ import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.game7th.battle.dto.SwipeBalance
 import com.game7th.metagame.FileProvider
-import com.game7th.metagame.GameService
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.account.AccountServiceImpl
@@ -23,6 +25,8 @@ import com.game7th.metagame.shop.ShopServiceImpl
 import com.game7th.swipe.campaign.ActScreen
 import com.game7th.metagame.network.CloudApi
 import com.game7th.metagame.network.NetworkError
+import com.game7th.metagame.network.NetworkErrorStatus
+import com.game7th.swipe.network.NetworkErrorScreen
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
@@ -31,7 +35,8 @@ import ktx.async.KtxAsync
 class SwipeGameGdx(
         val storage: PersistentStorage,
         val installationId: String,
-        val endpoint: String) : Game() {
+        val endpoint: String,
+        val quitCallback: () -> Unit) : Game() {
 
     val multiplexer = InputMultiplexer()
     val gson = Gson()
@@ -44,7 +49,6 @@ class SwipeGameGdx(
     lateinit var actService: ActsService
     lateinit var shopService: ShopService
     lateinit var accountService: AccountService
-    lateinit var service: GameService
 
     lateinit var uiAtlas: TextureAtlas
 
@@ -60,8 +64,7 @@ class SwipeGameGdx(
 
     override fun create() {
         KtxAsync.initiate()
-
-//        showGameScreen()
+        initializeContext()
 
         KtxAsync.launch {
             val token = storage.get(KEY_TOKEN)
@@ -89,6 +92,7 @@ class SwipeGameGdx(
                 } catch (e: NetworkError) {
                     e.printStackTrace()
                     tokenReceived = false
+                    processNetworkError(e)
                 }
             } else {
                 tokenReceived = true
@@ -97,13 +101,21 @@ class SwipeGameGdx(
             if (tokenReceived) {
                 showGameScreen()
             }
-       }
+        }
+    }
+
+    private fun processNetworkError(error: NetworkError) {
+        if (error.status == NetworkErrorStatus.CONNECTION_ERROR || error.status == NetworkErrorStatus.UNKNOWN_ERROR) {
+            switchScreen(NetworkErrorScreen(context, this@SwipeGameGdx, error.message ?: "Network error") { quitCallback() })
+        }
     }
 
     private fun showGameScreen() {
         initializeServices()
-        service = GameService(actService)
+        setScreen(ActScreen(this@SwipeGameGdx, actService, 0, context, storage))
+    }
 
+    private fun initializeContext() {
         width = Gdx.graphics.width.toFloat()
         height = Gdx.graphics.height.toFloat()
         scale = Gdx.graphics.width / 480f
@@ -127,10 +139,7 @@ class SwipeGameGdx(
 
         context = GdxGameContext(atlas, uiAtlas, font, font2, balance, scale, texts, storage)
 
-
         Gdx.input.inputProcessor = multiplexer
-
-        setScreen(ActScreen(this@SwipeGameGdx, actService, 0, context, storage))
     }
 
     private fun initializeServices() {
@@ -161,7 +170,7 @@ class SwipeGameGdx(
 
     override fun render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT or (if (Gdx.graphics.getBufferFormat().coverageSampling) GL20.GL_COVERAGE_BUFFER_BIT_NV else 0))
-//        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
+//        Gdx.gl.glClearColor(0f, 0f, 1f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         super.render()
@@ -182,7 +191,7 @@ class SwipeGameGdx(
     }
 
     fun switchScreen(screen: Screen) {
-        this.screen.dispose()
+        this.screen?.dispose()
         setScreen(screen)
     }
 
