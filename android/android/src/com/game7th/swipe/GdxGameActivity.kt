@@ -10,6 +10,7 @@ import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
 
 class GdxGameActivity : AndroidApplication() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.decorView.apply {
@@ -25,6 +26,8 @@ class GdxGameActivity : AndroidApplication() {
         }
 
         val storage = AndroidStorage(applicationContext)
+
+        setLogLevel(LOG_NONE)
 
         initialize(SwipeGameGdx(storage, intent.getStringExtra(ARG_INSTANCE_ID)!!, BuildConfig.ENDPOINT) { finish() }, config)
     }
