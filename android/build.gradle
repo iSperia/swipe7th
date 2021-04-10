@@ -105,6 +105,7 @@ project(":ios") {
 
     dependencies {
         implementation project(":core")
+        api project(":metagame")
         api "com.mobidevelop.robovm:robovm-rt:$roboVMVersion"
         api "com.mobidevelop.robovm:robovm-cocoatouch:$roboVMVersion"
         api "com.badlogicgames.gdx:gdx-backend-robovm:$gdxVersion"

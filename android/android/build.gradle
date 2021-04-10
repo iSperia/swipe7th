@@ -20,8 +20,8 @@ android {
         applicationId "com.game7th.swipe"
         minSdkVersion 14
         targetSdkVersion 30
-        versionCode 16
-        versionName "0.0.16 Rob Bott"
+        versionCode 20
+        versionName "0.0.20 Fountain Trust"
     }
     buildTypes {
         release {
