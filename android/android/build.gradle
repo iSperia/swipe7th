@@ -1,3 +1,19 @@
+apply plugin: 'com.android.application'
+// Add this line
+apply plugin: 'com.google.gms.google-services'
+
+dependencies {
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:26.8.0')
+
+    // Add the dependency for the Firebase SDK for Google Analytics
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    // Add the dependencies for any other desired Firebase products
+    // https://firebase.google.com/docs/android/setup#available-libraries
+}
+
 android {
     buildToolsVersion "30.0.3"
     compileSdkVersion 30
@@ -15,13 +31,23 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/robovm/ios/robovm.xml'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude("META-INF/*.kotlin_module")
     }
     defaultConfig {
         applicationId "com.game7th.swipe"
-        minSdkVersion 14
+        multiDexEnabled true
+        minSdkVersion 16
         targetSdkVersion 30
-        versionCode 20
-        versionName "0.0.20 Fountain Trust"
+        versionCode 19
+        versionName "0.0.19 Tenzo"
     }
     buildTypes {
         release {
@@ -29,8 +55,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
+    flavorDimensions "environment"
 
+    productFlavors {
+        localhost {
+            dimension "environment"
+            buildConfigField('String', 'ENDPOINT', '"http://192.168.1.65:8080"')
+        }
+        heroku_qa {
+            dimension "environment"
+            buildConfigField('String', 'ENDPOINT', '"https://swipe-battles.herokuapp.com"')
+        }
+    }
+}
 
 // called every time gradle gets executed, takes the native dependencies of
 // the natives configuration, and extracts them to the proper libs/ folders
@@ -89,4 +126,3 @@ task run(type: Exec) {
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.game7th.swipe/com.game7th.swipe.AndroidLauncher'
 }
 
-eclipse.project.name = appName + "-android"

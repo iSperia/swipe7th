@@ -6,6 +6,8 @@ import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.account.RewardData
 import com.game7th.metagame.account.dto.Currency
 import com.game7th.metagame.campaign.dto.ActConfig
+import com.game7th.metagame.campaign.dto.CampaignNodeType
+import com.game7th.metagame.campaign.dto.LocationConfig
 import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.dto.ActProgressState
 import com.game7th.metagame.dto.LocationProgressState
@@ -13,6 +15,9 @@ import com.game7th.metagame.dto.UnitConfig
 import com.game7th.metagame.dto.UnitType
 import com.game7th.metagame.inventory.dto.InventoryItem
 import com.game7th.metagame.inventory.dto.ItemNode
+import com.game7th.metagame.network.CloudApi
+import com.game7th.metagame.network.NetworkError
+import com.game7th.swiped.api.LocationProgressDto
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.gson.Gson
 import kotlin.math.max
@@ -24,6 +29,7 @@ import kotlin.random.Random
  */
 class ActsServiceImpl(
         private val gson: Gson,
+        private val api: CloudApi,
         private val storage: PersistentStorage,
         private val fileProvider: FileProvider,
         private val gearService: GearService,
@@ -32,9 +38,9 @@ class ActsServiceImpl(
 
     val csvReader = csvReader()
 
-    val progressCache = mutableMapOf<Int, ActProgressState>()
+    val progressCache = mutableMapOf<String, ActProgressState>()
 
-    val actCache = mutableMapOf<Int, ActConfig>()
+    val actCache = mutableMapOf<String, ActConfig>()
 
     private data class NpcEntry(
             val level: Int,
@@ -44,59 +50,35 @@ class ActsServiceImpl(
             val unitLevel: Int
     )
 
-    override fun getActConfig(id: Int): ActConfig {
-        if (actCache.containsKey(id)) return actCache[id]!!
+    @Throws(NetworkError::class)
+    override suspend fun getActConfig(name: String): ActConfig {
+        if (actCache.containsKey(name)) return actCache[name]!!
 
-        val actConfig = gson.fromJson<ActConfig>(
-                fileProvider.getFileContent("campaign_$id.json"),
-                ActConfig::class.java)
+        val act = api.getAct(name)
+        val config =  ActConfig(act.texture, act.locations.mapIndexed { index, location ->
+            LocationConfig(index, CampaignNodeType.REGULAR, location.x.toFloat(), location.y.toFloat(), location.unlock, location.waves.map {
+                it.monsters.map { UnitConfig(UnitType.valueOf(it.name), it.level) }
+            })
+        })
+        actCache.put(name, config)
 
-        val npcEntries = csvReader.readAllWithHeader(fileProvider.getFileContent("act_$id.csv")!!).map {
-            NpcEntry(
-                    level = it["level"]!!.toInt() - 1,
-                    wave = it["wave"]!!.toInt(),
-                    order = it["order"]!!.toInt(),
-                    unitType = UnitType.valueOf(it["unit_type"]!!),
-                    unitLevel = it["unit_level"]!!.toInt()
-            )
-        }
-
-        val npcByLevel = npcEntries.groupBy { it.level }
-
-        val config = actConfig.copy(texture = actConfig.texture,
-                nodes = actConfig.nodes.map { locationConfig ->
-                    if (npcByLevel.containsKey(locationConfig.id)) {
-                        locationConfig.copy(waves =
-                        npcByLevel[locationConfig.id]!!
-                                .groupBy { it.wave }
-                                .toSortedMap()
-                                .entries
-                                .map {
-                                    it.value.sortedBy { it.order }.map { entry ->
-                                        UnitConfig(entry.unitType, entry.unitLevel)
-                                    }
-                                })
-                    } else locationConfig
-                })
-        actCache[id] = config
-
-//        (0..13).forEach { markLocationComplete(0, it, 1) }
         return config
     }
 
-    override fun getActProgress(id: Int): ActProgressState {
-        //TODO: check if act is locked or not
-        progressCache[id]?.let { return it }
+    override suspend fun getActProgress(actName: String): ActProgressState {
+        progressCache[actName]?.let { return it }
 
-        val data = storage.get("$STATE_ACT-$id")
-        val stateFromStorage = data?.let { gson.fromJson<ActProgressState>(it, ActProgressState::class.java) }
-        val result = stateFromStorage ?: createDefaultActProgress(id)
-        progressCache[id] = result
-        return result
+        val progress = api.getActProgress(actName)
+        val state = ActProgressState(actName, progress.map { LocationProgressState(it.locationId, it.starsComplete) })
+
+        progressCache[actName] = state
+        return state
     }
 
-    override fun markLocationComplete(actId: Int, locationId: Int, starCount: Int): List<RewardData> {
-        val currentState = getActProgress(actId)
+    override suspend fun markLocationComplete(name: String, locationId: Int, starCount: Int): List<RewardData> {
+        api.markLocationComplete(name, locationId, starCount)
+
+        val currentState = getActProgress(name)
         val prevStars = currentState.locations.firstOrNull { it.id == locationId }?.stars
         if ((prevStars ?: 0) >= starCount) return emptyList()
 
@@ -105,26 +87,25 @@ class ActsServiceImpl(
                 .filter { it.id != locationId }
                 .plus(LocationProgressState(locationId, starCount))
                 .toList()
-                .let { ActProgressState(actId, it) }
+                .let { ActProgressState(name, it) }
 
-        getActConfig(actId).nodes.firstOrNull { it.id == locationId }?.let { location ->
+        getActConfig(name).nodes.firstOrNull { it.id == locationId }?.let { location ->
             location.unlock.forEach { unlockLocationId ->
-                actProgressState = unlockLocation(actProgressState, actId, unlockLocationId)
+                actProgressState = unlockLocation(actProgressState, name, unlockLocationId)
             }
         }
 
-        progressCache[actId] = actProgressState
-        storage.put("$STATE_ACT-$actId", gson.toJson(actProgressState))
+        progressCache[name] = actProgressState
 
         //ok, we have some rewards
-        val config = getActConfig(actId)
+        val config = getActConfig(name)
         val location = config.nodes.firstOrNull { it.id == locationId }
         location?.let {
             val totalPoints = it.waves.flatten().sumBy { it.level + (starCount - 1) * 3  }
             val maxArtifactLevel = it.waves.flatten().maxBy { it.level }?.level ?: 1 + (starCount - 1) * 3
 
             val rewards = mutableListOf<RewardData>()
-            val r1 = if (actId == 0 && locationId == 0 && starCount == 1) {
+            val r1 = if (name == "act_0" && locationId == 0 && starCount == 1) {
                 rewards.add(RewardData.ArtifactRewardData(InventoryItem(gbFlatBody = 1, level = 1, node = ItemNode.FOOT, rarity = 0, name = "LEGGINGS")))
                 1
             } else {
@@ -145,19 +126,15 @@ class ActsServiceImpl(
         return emptyList()
     }
 
-    override fun unlockLocation(currentState: ActProgressState, actId: Int, locationId: Int): ActProgressState {
+    override suspend fun unlockLocation(currentState: ActProgressState, name: String, locationId: Int): ActProgressState {
         val isLocked = currentState.locations.count { it.id == locationId } == 0
         if (isLocked) {
             return currentState.locations
                     .plus(LocationProgressState(locationId, 0))
-                    .let { ActProgressState(actId, it) }
+                    .let { ActProgressState(name, it) }
         }
         return currentState
     }
-
-    private fun createDefaultActProgress(id: Int) = ActProgressState(
-            id = id,
-            locations = listOf(LocationProgressState(0, 0)))
 
     companion object {
         const val STATE_ACT = "acts_progress"

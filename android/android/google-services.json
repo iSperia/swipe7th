@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "209375345595",
+    "project_id": "swiped-310023",
+    "storage_bucket": "swiped-310023.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209375345595:android:93d313a19f287cd55ea29e",
+        "android_client_info": {
+          "package_name": "com.game7th.swipe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "209375345595-6grheq95rpteeda9d2jgsll0htr2t3i1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.game7th.swipe",
+            "certificate_hash": "d623659a3f850b942f9f07c24c57c630f655f684"
+          }
+        },
+        {
+          "client_id": "209375345595-dehahgpdmj61graos5qjs485mj6q65nm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCf9OB8wwNsjss5T77VnrOPRrd9Ur0EQMc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "209375345595-dehahgpdmj61graos5qjs485mj6q65nm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

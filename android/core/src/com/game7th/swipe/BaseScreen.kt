@@ -9,7 +9,8 @@ import com.game7th.swipe.dialog.DismissStrategy
 import com.game7th.swipe.dialog.FocusView
 
 abstract class BaseScreen(
-    protected val context: GdxGameContext
+    protected val context: GdxGameContext,
+    protected val game: SwipeGameGdx
 ) : Screen {
 
     lateinit protected var stage: Stage
@@ -19,6 +20,7 @@ abstract class BaseScreen(
 
     override fun show() {
         stage = Stage(ScreenViewport())
+        game.multiplexer.addProcessor(0, stage)
     }
 
     override fun render(delta: Float) {
@@ -47,4 +49,14 @@ abstract class BaseScreen(
     }
 
     protected fun isFocusShown() = focusShown > 0
+
+    override fun resize(width: Int, height: Int) {}
+
+    override fun pause() {}
+
+    override fun resume() {}
+
+    override fun hide() {}
+
+    override fun dispose() {}
 }

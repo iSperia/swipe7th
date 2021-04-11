@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.game7th.swipe" >
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_sphere"
@@ -9,13 +12,17 @@
         android:appCategory="game"
         android:label="@string/app_name"
         android:theme="@style/GdxTheme" >
-        <activity android:name=".AndroidLaunchActivity"
+        <activity android:name=".SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/GdxTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".GdxGameActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/GdxTheme">
         </activity>
         <activity android:name=".VideoPlaybackActivity"
             android:screenOrientation="landscape"

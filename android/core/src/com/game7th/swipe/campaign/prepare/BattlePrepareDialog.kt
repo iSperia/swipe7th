@@ -29,7 +29,7 @@ import com.game7th.swipe.game.GameScreen
 class BattlePrepareDialog(
         private val game: SwipeGameGdx,
         private val context: GdxGameContext,
-        private val actId: Int,
+        private val actId: String,
         private val locationId: Int,
         private val config: LocationConfig,
         private val actsService: ActsService,

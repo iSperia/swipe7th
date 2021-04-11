@@ -3,14 +3,28 @@ plugins {
     id 'kotlin'
 }
 
+repositories {
+    flatDir {
+        dirs '../lib'
+    }
+}
+
 java {
     sourceCompatibility = JavaVersion.VERSION_1_7
     targetCompatibility = JavaVersion.VERSION_1_7
 }
 
 dependencies {
+    implementation(name: "api-0.0.1", ext: "jar")
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'com.google.code.gson:gson:2.8.5'
+
+    implementation("io.ktor:ktor-client-core:1.5.1")
+    implementation "io.ktor:ktor-client-apache:1.5.1"
+    implementation "io.ktor:ktor-client-cio:1.5.1"
+    implementation "io.ktor:ktor-client-gson:1.5.1"
+    implementation("ch.qos.logback:logback-classic:1.2.3")
+    implementation("io.ktor:ktor-client-logging:1.5.1")
 
     //gradle kotlin DSL
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.0")

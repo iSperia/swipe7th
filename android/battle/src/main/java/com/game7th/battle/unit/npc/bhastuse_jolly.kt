@@ -33,7 +33,7 @@ fun produceBhastuseJolly(balance: SwipeBalance, unitId: Int, level: Int): UnitSt
                 val position = battle.calculateFreeNpcPosition(4)
                 if (position > 0) {
                     val personageId = battle.newPersonageId()
-                    val producedUnit = UnitFactory.produce(UnitType.PURPLE_SLIME, balance,personageId, (unit.stats.level * balance.bhastuse_jolly.k1).toInt() + 1, null)
+                    val producedUnit = UnitFactory.produce(UnitType.SLIME_PURPLE, balance,personageId, (unit.stats.level * balance.bhastuse_jolly.k1).toInt() + 1, null)
                     val battleUnit = BattleUnit(personageId, position, producedUnit!!, Team.RIGHT)
                     battle.units.add(battleUnit)
                     battle.notifyEvent(BattleEvent.PersonagePositionedAbilityEvent(unit.toViewModel(), position, 0))

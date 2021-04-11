@@ -14,7 +14,7 @@ import com.game7th.metagame.dto.UnitType
 
 fun producePurpleSlime(balance: SwipeBalance, level: Int): UnitStats {
     val hp = balance.red_slime.hp * level
-    val slime = UnitStats(UnitType.PURPLE_SLIME, level = level, health = CappedStat(hp, hp))
+    val slime = UnitStats(UnitType.SLIME_PURPLE, level = level, health = CappedStat(hp, hp))
     slime += ability {
         ticker {
             bodies[TickerEntry(balance.red_slime.w1, balance.red_slime.t1, "sword")] = { battle, unit ->

@@ -7,7 +7,7 @@ enum class UnitType(val bodyWeight: Int, val spiritWeight: Int, val mindWeight: 
     MACHINE_GUNNER(2, 1, 3),
 
     GREEN_SLIME(0,0,0),
-    PURPLE_SLIME(0,0,0),
+    SLIME_PURPLE(0,0,0),
     SLIME_MOTHER(0,0,0),
     SLIME_FATHER(0,0,0),
     SLIME_BOSS(0,0,0),
@@ -26,7 +26,7 @@ enum class UnitType(val bodyWeight: Int, val spiritWeight: Int, val mindWeight: 
         GREEN_SLIME -> "slime"
         SLIME_MOTHER -> "slime_mother"
         SLIME_FATHER -> "slime_father"
-        PURPLE_SLIME -> "slime_red"
+        SLIME_PURPLE -> "slime_red"
         SLIME_BOSS -> "slime_boss"
         DRYAD -> "dryad"
         DRYAD_QUEEN -> "dryad_queen"
@@ -39,7 +39,7 @@ enum class UnitType(val bodyWeight: Int, val spiritWeight: Int, val mindWeight: 
         GLADIATOR -> "portrait_gladiator"
         GREEN_SLIME -> "portrait_slime"
         FREEZE_MAGE -> "freeze_mage"
-        PURPLE_SLIME -> "portrait_slime_red"
+        SLIME_PURPLE -> "portrait_slime_red"
         SLIME_MOTHER -> "portrait_slime_mother"
         SLIME_FATHER -> "portrait_slime_father"
         POISON_ARCHER -> "portrait_poison_archer"
