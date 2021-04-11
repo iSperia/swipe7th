@@ -4,6 +4,7 @@ import com.game7th.metagame.account.RewardData
 import com.game7th.metagame.campaign.dto.ActConfig
 import com.game7th.metagame.dto.ActProgressState
 import com.game7th.metagame.network.NetworkError
+import com.game7th.swiped.api.LocationProgressDto
 
 interface ActsService {
 

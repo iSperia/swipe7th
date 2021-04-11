@@ -203,6 +203,8 @@ class ActScreen(
     private fun updateLocationProgressCache(progressState: ActProgressState) {
         locationCache.clear()
         locationCache.putAll(progressState.asMap())
+        val maxKey = locationCache.keys.max() ?: -1
+        locationCache[maxKey + 1] = LocationProgressState(maxKey + 1, 0)
     }
 
     private fun normalizeScroll() {

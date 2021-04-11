@@ -17,6 +17,7 @@ import com.game7th.metagame.inventory.dto.InventoryItem
 import com.game7th.metagame.inventory.dto.ItemNode
 import com.game7th.metagame.network.CloudApi
 import com.game7th.metagame.network.NetworkError
+import com.game7th.swiped.api.LocationProgressDto
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.gson.Gson
 import kotlin.math.max
@@ -64,18 +65,19 @@ class ActsServiceImpl(
         return config
     }
 
-    override suspend fun getActProgress(name: String): ActProgressState {
-        //TODO: check if act is locked or not
-        progressCache[name]?.let { return it }
+    override suspend fun getActProgress(actName: String): ActProgressState {
+        progressCache[actName]?.let { return it }
 
-        val data = storage.get("$STATE_ACT-$name")
-        val stateFromStorage = data?.let { gson.fromJson<ActProgressState>(it, ActProgressState::class.java) }
-        val result = stateFromStorage ?: createDefaultActProgress(name)
-        progressCache[name] = result
-        return result
+        val progress = api.getActProgress(actName)
+        val state = ActProgressState(actName, progress.map { LocationProgressState(it.locationId, it.starsComplete) })
+
+        progressCache[actName] = state
+        return state
     }
 
     override suspend fun markLocationComplete(name: String, locationId: Int, starCount: Int): List<RewardData> {
+        api.markLocationComplete(name, locationId, starCount)
+
         val currentState = getActProgress(name)
         val prevStars = currentState.locations.firstOrNull { it.id == locationId }?.stars
         if ((prevStars ?: 0) >= starCount) return emptyList()
@@ -94,7 +96,6 @@ class ActsServiceImpl(
         }
 
         progressCache[name] = actProgressState
-        storage.put("$STATE_ACT-$name", gson.toJson(actProgressState))
 
         //ok, we have some rewards
         val config = getActConfig(name)
@@ -134,10 +135,6 @@ class ActsServiceImpl(
         }
         return currentState
     }
-
-    private fun createDefaultActProgress(name: String) = ActProgressState(
-            name = name,
-            locations = listOf(LocationProgressState(0, 0)))
 
     companion object {
         const val STATE_ACT = "acts_progress"

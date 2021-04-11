@@ -2,6 +2,7 @@ package com.game7th.metagame.network
 
 import com.game7th.swiped.api.ActDto
 import com.game7th.swiped.api.AuthSuccess
+import com.game7th.swiped.api.LocationProgressDto
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.features.*
@@ -83,6 +84,12 @@ class CloudApi(
     suspend fun listActs(): List<ActDto> = client.get("$baseUrl/acts") { sign() }
 
     suspend fun getAct(actName: String): ActDto = client.get("$baseUrl/acts/$actName") { sign() }
+
+    suspend fun markLocationComplete(actName: String, locationId: Int, difficulty: Int) {
+        client.post<Unit>("$baseUrl/acts/$actName/$locationId/markComplete?difficulty=$difficulty") { sign() }
+    }
+
+    suspend fun getActProgress(actName: String): List<LocationProgressDto> = client.get("$baseUrl/acts/$actName/progress") { sign() }
 
     private fun HttpRequestBuilder.sign() {
         headers {
