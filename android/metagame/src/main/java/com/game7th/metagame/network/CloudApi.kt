@@ -1,5 +1,6 @@
 package com.game7th.metagame.network
 
+import com.game7th.swiped.api.ActDto
 import com.game7th.swiped.api.AuthSuccess
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -78,6 +79,10 @@ class CloudApi(
     }
 
     suspend fun validateToken(): String = client.get("$baseUrl/account/id") { sign() }
+
+    suspend fun listActs(): List<ActDto> = client.get("$baseUrl/acts") { sign() }
+
+    suspend fun getAct(actName: String): ActDto = client.get("$baseUrl/acts/$actName") { sign() }
 
     private fun HttpRequestBuilder.sign() {
         headers {

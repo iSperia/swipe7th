@@ -112,7 +112,7 @@ class SwipeGameGdx(
 
     private fun showGameScreen() {
         initializeServices()
-        setScreen(ActScreen(this@SwipeGameGdx, actService, 0, context, storage))
+        setScreen(ActScreen(this@SwipeGameGdx, actService, "act_0", context, storage))
     }
 
     private fun initializeContext() {
@@ -157,7 +157,7 @@ class SwipeGameGdx(
     }
 
     private fun initializeActService() {
-        actService = ActsServiceImpl(gson, storage, fileProvider, gearService, accountService)
+        actService = ActsServiceImpl(gson, api, storage, fileProvider, gearService, accountService)
     }
 
     private fun initializeShopService() {

@@ -24,8 +24,10 @@ import com.game7th.swipe.game.actors.ui.BattleFinishedDialog
 import com.game7th.swipe.util.IconTextButton
 import com.game7th.swipe.util.animateHideToBottom
 import com.game7th.swipe.util.animateShowFromBottom
+import kotlinx.coroutines.launch
 import ktx.actors.onClick
 import ktx.actors.repeatForever
+import ktx.async.KtxAsync
 import kotlin.math.min
 
 class GameActor(
@@ -33,7 +35,7 @@ class GameActor(
         private val gearService: GearService,
         private val screen: GameScreen,
         private val usePotionCallback: (FlaskStackDto) -> Unit,
-        private val rewardCallback: () -> List<RewardData>,
+        private val rewardCallback: suspend () -> List<RewardData>,
         private val finishCallback: (Boolean) -> Unit
 ) : Group() {
 
@@ -155,13 +157,15 @@ class GameActor(
 
     fun showVictory(expResult: List<PersonageExperienceResult>) {
 //        Gdx.audio.newMusic(Gdx.files.internal("sounds/victory.ogg")).let { it.play() }
-        val rewards = rewardCallback()
-        BattleFinishedDialog(context, "Victory", expResult, rewards, screen) {
-            finishCallback(true)
-        }.apply {
-            x = 40f * context.scale
-            y = 220f * context.scale
-            this@GameActor.addActor(this)
+        KtxAsync.launch {
+            val rewards = rewardCallback()
+            BattleFinishedDialog(context, "Victory", expResult, rewards, screen) {
+                finishCallback(true)
+            }.apply {
+                x = 40f * context.scale
+                y = 220f * context.scale
+                this@GameActor.addActor(this)
+            }
         }
     }
 

@@ -3,20 +3,22 @@ package com.game7th.metagame.campaign
 import com.game7th.metagame.account.RewardData
 import com.game7th.metagame.campaign.dto.ActConfig
 import com.game7th.metagame.dto.ActProgressState
+import com.game7th.metagame.network.NetworkError
 
 interface ActsService {
 
-    fun getActConfig(id: Int): ActConfig
+    @Throws(NetworkError::class)
+    suspend fun getActConfig(actName: String): ActConfig
 
-    fun getActProgress(id: Int): ActProgressState
+    suspend fun getActProgress(actName: String): ActProgressState
 
     /**
      * Mark user completed some location with some stars involved
      */
-    fun markLocationComplete(actId: Int, locationId: Int, starCount: Int): List<RewardData>
+    suspend fun markLocationComplete(actName: String, locationId: Int, starCount: Int): List<RewardData>
 
     /**
      * Unlocks location so player may play this level
      */
-    fun unlockLocation(currentState: ActProgressState, actId: Int, locationId: Int): ActProgressState
+    suspend fun unlockLocation(currentState: ActProgressState, actName: String, locationId: Int): ActProgressState
 }

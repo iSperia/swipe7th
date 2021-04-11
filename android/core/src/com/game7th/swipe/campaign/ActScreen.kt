@@ -58,7 +58,7 @@ sealed class UiState {
 class ActScreen(
         game: SwipeGameGdx,
         private val actsService: ActsService,
-        private val actId: Int,
+        private val actId: String,
         context: GdxGameContext,
         private val storage: PersistentStorage
 ) : BaseScreen(context, game) {
@@ -106,92 +106,97 @@ class ActScreen(
     lateinit var backgroundMusic: Music
 
     private var battlePreparationTutorialHook = false
+    private var readyToRender = false
 
     override fun show() {
         super.show()
-        config = actsService.getActConfig(actId)
-        val progressState: ActProgressState = actsService.getActProgress(actId)
+        KtxAsync.launch {
+            config = actsService.getActConfig(actId)
+            val progressState: ActProgressState = actsService.getActProgress(actId)
 
-        updateLocationProgressCache(progressState)
-        actConfig = actsService.getActConfig(actId)
-        backgroundTexture = Texture(Gdx.files.internal(actConfig.texture))
+            updateLocationProgressCache(progressState)
+            actConfig = actsService.getActConfig(actId)
+            backgroundTexture = Texture(Gdx.files.internal(actConfig.texture))
 
-        gestureDetector = GestureDetector(game.width / 12f, 0.4f, 1.1f, Float.MAX_VALUE, object : GestureDetector.GestureAdapter() {
-            override fun pan(x: Float, y: Float, deltaX: Float, deltaY: Float): Boolean {
-                if (isScrollEnabled) {
-                    closeOverlay()
-                    scrollImpulse = 0f
-                    scroll += deltaY
-                    normalizeScroll()
-                }
-                return super.pan(x, y, deltaX, deltaY)
-            }
-
-            override fun fling(velocityX: Float, velocityY: Float, button: Int): Boolean {
-                if (isScrollEnabled) {
-                    closeOverlay()
-                    scrollImpulse = velocityY
-                }
-                return super.fling(velocityX, velocityY, button)
-            }
-
-            override fun tap(x: Float, y: Float, count: Int, button: Int): Boolean {
-                if (isFocusShown()) return false
-                closeOverlay()
-                val wy = (game.height - y + scroll - mapBottomOffset) / game.scale
-                val wx = x / game.scale
-                actConfig.nodes.forEach { node ->
-                    val rect = Rectangle(node.x - 30, node.y - 30, 60f, 60f)
-                    if (rect.contains(wx, wy) && locationCache.containsKey(node.id)) {
-                        transiteUiState(UiState.BattlePreparation(node))
-                        return true
+            gestureDetector = GestureDetector(game.width / 12f, 0.4f, 1.1f, Float.MAX_VALUE, object : GestureDetector.GestureAdapter() {
+                override fun pan(x: Float, y: Float, deltaX: Float, deltaY: Float): Boolean {
+                    if (isScrollEnabled) {
+                        closeOverlay()
+                        scrollImpulse = 0f
+                        scroll += deltaY
+                        normalizeScroll()
                     }
+                    return super.pan(x, y, deltaX, deltaY)
                 }
-                return super.tap(x, y, count, button)
+
+                override fun fling(velocityX: Float, velocityY: Float, button: Int): Boolean {
+                    if (isScrollEnabled) {
+                        closeOverlay()
+                        scrollImpulse = velocityY
+                    }
+                    return super.fling(velocityX, velocityY, button)
+                }
+
+                override fun tap(x: Float, y: Float, count: Int, button: Int): Boolean {
+                    if (isFocusShown()) return false
+                    closeOverlay()
+                    val wy = (game.height - y + scroll - mapBottomOffset) / game.scale
+                    val wx = x / game.scale
+                    actConfig.nodes.forEach { node ->
+                        val rect = Rectangle(node.x - 30, node.y - 30, 60f, 60f)
+                        if (rect.contains(wx, wy) && locationCache.containsKey(node.id)) {
+                            transiteUiState(UiState.BattlePreparation(node))
+                            return true
+                        }
+                    }
+                    return super.tap(x, y, count, button)
+                }
+            })
+            game.multiplexer.addProcessor(1, gestureDetector)
+
+            val texture = getTextureForCircle(CampaignNodeType.FARM)
+            circleScale = game.width / 8 / texture.regionWidth
+            circleOffset = game.width / 16
+
+            val greyStarTexture = atlas.findRegion("star_grey")
+            starScale = game.width / 24 / greyStarTexture.regionWidth
+            starOffset = game.width / 48
+
+            val lockTexture = atlas.findRegion("lock")
+            lockScale = game.width / 10 / lockTexture.regionWidth
+            lockOffset = game.width / 20
+
+            bottomMenu = BottomMenu(context).apply {
+                onPartyButtonPressed = this@ActScreen::onPartyButtonPressed
+                onForgeButtonPressed = this@ActScreen::onForgeButtonPressed
+                onShopButtonPressed = this@ActScreen::onShopButtonPressed
+                onAlchButtonPressed = this@ActScreen::onAlchButtonPressed
             }
-        })
-        game.multiplexer.addProcessor(1, gestureDetector)
+            stage.addActor(bottomMenu)
 
-        val texture = getTextureForCircle(CampaignNodeType.FARM)
-        circleScale = game.width / 8 / texture.regionWidth
-        circleOffset = game.width / 16
+            currencyView = CurrencyPanel(context, game.accountService).apply {
+                y = game.height - 34f * context.scale
+            }
+            stage.addActor(currencyView)
 
-        val greyStarTexture = atlas.findRegion("star_grey")
-        starScale = game.width / 24 / greyStarTexture.regionWidth
-        starOffset = game.width / 48
+            bottomMenu.zIndex = 100
+            mapBottomOffset = context.scale * 48f
 
-        val lockTexture = atlas.findRegion("lock")
-        lockScale = game.width / 10 / lockTexture.regionWidth
-        lockOffset = game.width / 20
+            if (actId == "act_0" && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_INTRO_SHOWN)?.toBoolean() != true) {
+                showIntro()
+            }
 
-        bottomMenu = BottomMenu(context).apply {
-            onPartyButtonPressed = this@ActScreen::onPartyButtonPressed
-            onForgeButtonPressed = this@ActScreen::onForgeButtonPressed
-            onShopButtonPressed = this@ActScreen::onShopButtonPressed
-            onAlchButtonPressed = this@ActScreen::onAlchButtonPressed
-        }
-        stage.addActor(bottomMenu)
+            backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sb_indreams.ogg")).apply {
+                volume = 0.5f
+                isLooping = true
+                play()
+            }
 
-        currencyView = CurrencyPanel(context, game.accountService).apply {
-            y = game.height - 34f * context.scale
-        }
-        stage.addActor(currencyView)
+            if (actId == "act_0" && locationCache.size == 2 && locationCache[0]?.stars == 1 && storage.get(TutorialKeys.ACT1_AFTER_FIRST_LEVEL_DONE)?.toBoolean() != true) {
+                showPartyTutorialScenario()
+            }
 
-        bottomMenu.zIndex = 100
-        mapBottomOffset = context.scale * 48f
-
-        if (actId == 0 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_INTRO_SHOWN)?.toBoolean() != true) {
-            showIntro()
-        }
-
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sb_indreams.ogg")).apply {
-            volume = 0.5f
-            isLooping = true
-            play()
-        }
-
-        if (actId == 0 && locationCache.size == 2 && locationCache[0]?.stars == 1 && storage.get(TutorialKeys.ACT1_AFTER_FIRST_LEVEL_DONE)?.toBoolean() != true) {
-            showPartyTutorialScenario()
+            readyToRender = true
         }
     }
 
@@ -229,6 +234,7 @@ class ActScreen(
     }
 
     override fun render(delta: Float) {
+        if (!readyToRender) return
         if (scrollImpulse != 0f) {
             scroll += scrollImpulse * delta
             scrollImpulse *= 1 - 2f * delta

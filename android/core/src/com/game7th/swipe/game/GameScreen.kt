@@ -16,6 +16,7 @@ import com.game7th.battle.ability.AbilityTrigger
 import com.game7th.battle.dto.BattleEvent
 import com.game7th.battle.dto.BattleFlaskDto
 import com.game7th.metagame.PersistentStorage
+import com.game7th.metagame.account.RewardData
 import com.game7th.metagame.account.dto.PersonageAttributeStats
 import com.game7th.metagame.account.dto.PersonageData
 import com.game7th.metagame.campaign.ActsService
@@ -39,7 +40,7 @@ import kotlinx.coroutines.launch
 import ktx.async.KtxAsync
 
 class GameScreen(game: SwipeGameGdx,
-                 private val actId: Int,
+                 private val actId: String,
                  private val locationId: Int,
                  private val difficulty: Int,
                  private val personage: PersonageData,
@@ -86,73 +87,75 @@ class GameScreen(game: SwipeGameGdx,
         processor = createSwipeDetector()
         game.multiplexer.addProcessor(0, processor)
 
-        config = BattleConfig(
-                personages = listOf(
-                        PersonageConfig(personage.unit, personage.level, personage.stats, game.context.balance.produceGearStats(personage))
-                ),
-                waves = actService.getActConfig(actId).findNode(locationId)?.waves?.map {
-                    it.map { PersonageConfig(it.unitType, it.level + (difficulty - 1) * 3, PersonageAttributeStats(0, 0, 0), null) }
-                } ?: emptyList()
-        )
+        KtxAsync.launch {
+            config = BattleConfig(
+                    personages = listOf(
+                            PersonageConfig(personage.unit, personage.level, personage.stats, game.context.balance.produceGearStats(personage))
+                    ),
+                    waves = actService.getActConfig(actId).findNode(locationId)?.waves?.map {
+                        it.map { PersonageConfig(it.unitType, it.level + (difficulty - 1) * 3, PersonageAttributeStats(0, 0, 0), null) }
+                    } ?: emptyList()
+            )
 
-        swipeFlow = MutableSharedFlow()
-        battle = SwipeBattle(game.context.balance, swipeFlow, produceTutorials())
-        initializeBattle()
-        listenEvents()
+            swipeFlow = MutableSharedFlow()
+            battle = SwipeBattle(game.context.balance, swipeFlow, produceTutorials())
+            initializeBattle()
+            listenEvents()
 
-        gameActor = GameActor(
-                game.context, game.gearService, this@GameScreen, this:: usePotion, this::claimRewards) { _ ->
-            game.switchScreen(ActScreen(game, game.actService, actId, game.context, game.storage))
-        }
-
-        stage.addActor(gameActor)
-
-        game.multiplexer.addProcessor(stage)
-
-        atlases["ailments"] = TextureAtlas(Gdx.files.internal("ailments.atlas"))
-        listOf("wind").forEach {
-            sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/$it.ogg"))
-        }
-        config.personages.forEach { personageConfig ->
-            gdxModel.figures.firstOrNull { it.name == personageConfig.name.getSkin() }?.let {
-                loadResources(it)
+            gameActor = GameActor(
+                    game.context, game.gearService, this@GameScreen, this@GameScreen::usePotion, this@GameScreen::claimRewards) { _ ->
+                game.switchScreen(ActScreen(game, game.actService, actId, game.context, game.storage))
             }
-        }
-        config.waves.forEach {
-            it.forEach { npc ->
-                gdxModel.figures.firstOrNull { it.name == npc.name.getSkin() }?.let { gdxFigure ->
-                    loadResources(gdxFigure)
+
+            stage.addActor(gameActor)
+
+            game.multiplexer.addProcessor(stage)
+
+            atlases["ailments"] = TextureAtlas(Gdx.files.internal("ailments.atlas"))
+            listOf("wind").forEach {
+                sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/$it.ogg"))
+            }
+            config.personages.forEach { personageConfig ->
+                gdxModel.figures.firstOrNull { it.name == personageConfig.name.getSkin() }?.let {
+                    loadResources(it)
                 }
             }
-        }
-        gdxModel.figures.firstOrNull { it.name == "slime" }?.let { loadResources(it) }
-
-        val scale = game.context.scale
-        battleController = BattleController(GameContextWrapper(
-                gameContext = game.context,
-                scale = scale,
-                gdxModel = gdxModel,
-                width = Gdx.graphics.width.toFloat(),
-                height = Gdx.graphics.height.toFloat(),
-                atlases = atlases
-        ), this@GameScreen, Gdx.graphics.height - (Gdx.graphics.width.toFloat() / 1.25f), sounds) {
-            if (it is BattleEvent.VictoryEvent) {
-                val experience = config.waves.sumBy {
-                    it.sumBy { it.level * 50 }
+            config.waves.forEach {
+                it.forEach { npc ->
+                    gdxModel.figures.firstOrNull { it.name == npc.name.getSkin() }?.let { gdxFigure ->
+                        loadResources(gdxFigure)
+                    }
                 }
-                val expResult = game.accountService.addPersonageExperience(personage.id, experience)
-                gameActor.showVictory(expResult)
-                backgroundMusic.pause()
-            } else {
-                gameActor.showDefeat()
-                backgroundMusic.pause()
             }
-        }
+            gdxModel.figures.firstOrNull { it.name == "slime" }?.let { loadResources(it) }
 
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sb_chase.ogg")).apply {
-            volume = 0.5f
-            isLooping = true
-            play()
+            val scale = game.context.scale
+            battleController = BattleController(GameContextWrapper(
+                    gameContext = game.context,
+                    scale = scale,
+                    gdxModel = gdxModel,
+                    width = Gdx.graphics.width.toFloat(),
+                    height = Gdx.graphics.height.toFloat(),
+                    atlases = atlases
+            ), this@GameScreen, Gdx.graphics.height - (Gdx.graphics.width.toFloat() / 1.25f), sounds) {
+                if (it is BattleEvent.VictoryEvent) {
+                    val experience = config.waves.sumBy {
+                        it.sumBy { it.level * 50 }
+                    }
+                    val expResult = game.accountService.addPersonageExperience(personage.id, experience)
+                    gameActor.showVictory(expResult)
+                    backgroundMusic.pause()
+                } else {
+                    gameActor.showDefeat()
+                    backgroundMusic.pause()
+                }
+            }
+
+            backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sb_chase.ogg")).apply {
+                volume = 0.5f
+                isLooping = true
+                play()
+            }
         }
     }
 
@@ -204,7 +207,9 @@ class GameScreen(game: SwipeGameGdx,
         }
     }
 
-    private fun claimRewards() = actService.markLocationComplete(actId, locationId, difficulty)
+    private suspend fun claimRewards(): List<RewardData> {
+        return actService.markLocationComplete(actId, locationId, difficulty)
+    }
 
     private fun initializeBattle() {
         KtxAsync.launch {
@@ -227,7 +232,7 @@ class GameScreen(game: SwipeGameGdx,
 
     private fun onGameEnded(victory: Boolean) {
         gameEnded = true
-        if (actId == 0 && locationId == 0) {
+        if (actId == "act_0" && locationId == 0) {
             storage.put(TutorialKeys.ACT1_FIRST_BATTLE_INTRO_SHOWN, true.toString())
         }
     }
@@ -265,15 +270,15 @@ class GameScreen(game: SwipeGameGdx,
 
     private fun produceTutorials(): List<AbilityTrigger> {
         val result = mutableListOf<AbilityTrigger>()
-        if (actId == 0 && locationId == 0 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_FIRST_BATTLE_INTRO_SHOWN)?.toBoolean() != true) { result.add(FirstBattleTutorial(this, game)) }
-        if (actId == 0 && locationId == 2 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L3_TALK)?.toBoolean() != true) { result.add(Act1L3Talk(this, game)) }
-        if (actId == 0 && locationId == 3 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L4_TALK)?.toBoolean() != true) { result.add(Act1L4Talk(this, game)) }
-        if (actId == 0 && locationId == 4 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L5_TALK)?.toBoolean() != true) { result.add(Act1L5Talk(this, game)) }
-        if (actId == 0 && locationId == 6 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L7_TALK)?.toBoolean() != true) { result.add(Act1L7Talk(this, game)) }
-        if (actId == 0 && locationId == 7 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L8_TALK)?.toBoolean() != true) { result.add(Act1L8Talk(this, game)) }
-        if (actId == 0 && locationId == 8 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L9_TALK)?.toBoolean() != true) { result.add(Act1L9Talk(this, game)) }
-        if (actId == 0 && locationId == 10 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L11_TALK)?.toBoolean() != true) { result.add(Act1L11Talk(this, game)) }
-        if (actId == 0 && locationId == 13 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L14_TALK)?.toBoolean() != true) { result.add(Act1L14Talk(this, game)) }
+        if (actId == "act_0" && locationId == 0 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_FIRST_BATTLE_INTRO_SHOWN)?.toBoolean() != true) { result.add(FirstBattleTutorial(this, game)) }
+        if (actId == "act_0" && locationId == 2 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L3_TALK)?.toBoolean() != true) { result.add(Act1L3Talk(this, game)) }
+        if (actId == "act_0" && locationId == 3 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L4_TALK)?.toBoolean() != true) { result.add(Act1L4Talk(this, game)) }
+        if (actId == "act_0" && locationId == 4 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L5_TALK)?.toBoolean() != true) { result.add(Act1L5Talk(this, game)) }
+        if (actId == "act_0" && locationId == 6 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L7_TALK)?.toBoolean() != true) { result.add(Act1L7Talk(this, game)) }
+        if (actId == "act_0" && locationId == 7 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L8_TALK)?.toBoolean() != true) { result.add(Act1L8Talk(this, game)) }
+        if (actId == "act_0" && locationId == 8 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L9_TALK)?.toBoolean() != true) { result.add(Act1L9Talk(this, game)) }
+        if (actId == "act_0" && locationId == 10 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L11_TALK)?.toBoolean() != true) { result.add(Act1L11Talk(this, game)) }
+        if (actId == "act_0" && locationId == 13 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L14_TALK)?.toBoolean() != true) { result.add(Act1L14Talk(this, game)) }
         return result
     }
 

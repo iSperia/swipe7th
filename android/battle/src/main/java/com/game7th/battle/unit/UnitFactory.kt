@@ -16,7 +16,7 @@ object UnitFactory {
             UnitType.FREEZE_MAGE -> produceFreezeMage(balance, unitId, unitStats!!)
             UnitType.GREEN_SLIME -> produceGreenSlime(balance, level)
             UnitType.SLIME_ARMORED -> produceSlimeArmored(balance, level)
-            UnitType.PURPLE_SLIME -> producePurpleSlime(balance, level)
+            UnitType.SLIME_PURPLE -> producePurpleSlime(balance, level)
             UnitType.SLIME_MOTHER -> produceSlimeMother(balance, level)
             UnitType.SLIME_FATHER -> produceSlimeFather(balance, level)
             UnitType.SLIME_BOSS -> produceSlimeBoss(balance, level)
