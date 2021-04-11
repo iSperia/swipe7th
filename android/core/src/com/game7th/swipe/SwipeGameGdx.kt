@@ -64,7 +64,7 @@ class SwipeGameGdx(val storage: PersistentStorage) : Game() {
 
         val uiAtlas = TextureAtlas(Gdx.files.internal("ui.atlas"))
         val atlas = TextureAtlas(Gdx.files.internal("pack_0.atlas"))
-        val font = BitmapFont(Gdx.files.internal("atarian.fnt"), Gdx.files.internal("atarian_0.png"), false).apply {
+        val font = BitmapFont(Gdx.files.internal("cuprum.fnt"), Gdx.files.internal("cuprum_0.png"), false).apply {
             color = Color.WHITE
         }
         val font2 = BitmapFont(Gdx.files.internal("anglodavek.fnt"), Gdx.files.internal("anglodavek_0.png"), false).apply {
@@ -74,7 +74,7 @@ class SwipeGameGdx(val storage: PersistentStorage) : Game() {
         val balanceText = balanceFile.readString()
         val balance = Gson().fromJson<SwipeBalance>(balanceText, SwipeBalance::class.java)
 
-        val textsFile = Gdx.files.internal("strings.json")
+        val textsFile = Gdx.files.internal("strings-ru.json")
         val textsText = textsFile.readString()
         val token = object : TypeToken<Map<String, String>>() {}.type
         val texts = gson.fromJson<Map<String, String>>(textsText, token)

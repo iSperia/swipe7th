@@ -22,23 +22,23 @@ class BottomMenu(
         height = context.scale * 48f
     }
 
-    val buttonSquads = IconTextButton(context, "icon_squads", "Party") {
+    val buttonSquads = IconTextButton(context, "icon_squads", context.texts["button_party"]!!) {
         onPartyButtonPressed?.invoke()
     }
 
-    val buttonForge = IconTextButton(context, "icon_forge", "Forge") {
+    val buttonForge = IconTextButton(context, "icon_forge", context.texts["button_forge"]!!) {
         onForgeButtonPressed?.invoke()
     }.apply {
         x = buttonSquads.x + buttonSquads.width
     }
 
-    val buttonShop = IconTextButton(context, "icon_shop", "Shop") {
+    val buttonShop = IconTextButton(context, "icon_shop", context.texts["button_shop"]!!) {
         onShopButtonPressed?.invoke()
     }.apply {
         x = buttonForge.x + buttonForge.width
     }
 
-    val buttonAlch = IconTextButton(context, "icon_alch", "Lab") {
+    val buttonAlch = IconTextButton(context, "icon_alch", context.texts["button_lab"]!!) {
         onAlchButtonPressed?.invoke()
     }.apply {
         x = buttonShop.x + buttonShop.width
