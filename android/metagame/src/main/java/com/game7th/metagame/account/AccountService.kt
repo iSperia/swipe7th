@@ -1,11 +1,11 @@
 package com.game7th.metagame.account
 
 import com.game7th.metagame.account.dto.PersonageBalance
-import com.game7th.metagame.account.dto.Currency
 import com.game7th.metagame.account.dto.PersonageData
 import com.game7th.metagame.account.dto.PersonageExperienceResult
 import com.game7th.metagame.dto.UnitType
-import com.game7th.metagame.inventory.dto.InventoryItem
+import com.game7th.swiped.api.Currency
+import com.game7th.swiped.api.InventoryItemFullInfoDto
 
 interface AccountService {
 
@@ -17,9 +17,9 @@ interface AccountService {
 
     fun addRewards(rewards: List<RewardData>): Unit
 
-    fun equipItem(personageId: Int, item: InventoryItem)
+    fun equipItem(personageId: Int, item: InventoryItemFullInfoDto)
 
-    fun dequipItem(personageId: Int, item: InventoryItem)
+    fun dequipItem(personageId: Int, item: InventoryItemFullInfoDto)
 
     fun getBalance(): PersonageBalance
 

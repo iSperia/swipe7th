@@ -3,7 +3,6 @@ package com.game7th.metagame.shop
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.account.RewardData
-import com.game7th.metagame.account.dto.Currency
 import com.game7th.metagame.dto.UnitType
 import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.inventory.GearServiceImpl
@@ -31,7 +30,7 @@ class ShopServiceImpl(
     } ?: emptyList()
 
     private var packs = listOf(
-            ShopItem.PackShopItem("SHOP_BEGINNER_POTION_PACK", listOf(PaymentOption(5000, Currency.GOLD), PaymentOption(150, Currency.GEMS)), "_p_0")
+            ShopItem.PackShopItem("SHOP_BEGINNER_POTION_PACK", listOf(PaymentOption(5000, com.game7th.swiped.api.Currency.GOLD), PaymentOption(150, com.game7th.swiped.api.Currency.GEMS)), "_p_0")
     )
 
     init {
@@ -43,19 +42,10 @@ class ShopServiceImpl(
         val timeForUpdate = storage.get(KEY_NEXT_TIME_SHOP_UPDATE)?.toLong() ?: 0
         if (time > timeForUpdate) {
             storage.put(KEY_NEXT_TIME_SHOP_UPDATE, (time + (SHOP_UPDATE_TIME - time % SHOP_UPDATE_TIME)).toString())
-            //update shop
-            cachedGearItems = listOf(1, 1, 1, 2, 2, 3, 5).map {
-                gearService.getArtifactReward(it)?.item?.let { item ->
-                    ShopItem.GearShopItem(item, listOf(
-                            PaymentOption(item.level * 500, Currency.GOLD),
-                            PaymentOption(item.level * 10, Currency.GEMS)
-                    ), UUID.randomUUID().toString())
-                } ?: null
-            }.filterNotNull()
 
             cachedPersonages = listOf(
-                    ShopItem.PersonageShopItem(UnitType.POISON_ARCHER.toString(), listOf(PaymentOption(5000, Currency.GOLD), PaymentOption(300, Currency.GEMS)), UUID.randomUUID().toString()),
-                    ShopItem.PersonageShopItem(UnitType.FREEZE_MAGE.toString(), listOf(PaymentOption(5000, Currency.GOLD), PaymentOption(300, Currency.GEMS)), UUID.randomUUID().toString())
+                    ShopItem.PersonageShopItem(UnitType.POISON_ARCHER.toString(), listOf(PaymentOption(5000, com.game7th.swiped.api.Currency.GOLD), PaymentOption(300, com.game7th.swiped.api.Currency.GEMS)), UUID.randomUUID().toString()),
+                    ShopItem.PersonageShopItem(UnitType.FREEZE_MAGE.toString(), listOf(PaymentOption(5000, com.game7th.swiped.api.Currency.GOLD), PaymentOption(300,  com.game7th.swiped.api.Currency.GEMS)), UUID.randomUUID().toString())
             )
             storage.put(KEY_GEAR_ITEMS, gson.toJson(cachedGearItems))
             storage.put(KEY_PERSONAGES, gson.toJson(cachedPersonages))

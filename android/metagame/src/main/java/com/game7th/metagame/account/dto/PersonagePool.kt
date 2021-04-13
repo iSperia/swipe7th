@@ -1,7 +1,7 @@
 package com.game7th.metagame.account.dto
 
-import com.game7th.metagame.inventory.dto.InventoryItem
 import com.game7th.metagame.dto.UnitType
+import com.game7th.swiped.api.InventoryItemFullInfoDto
 
 data class PersonageAttributeStats(
         val body: Int,
@@ -19,7 +19,7 @@ data class PersonageData(
         val experience: Int,
         val stats: PersonageAttributeStats,
         val id: Int,
-        val items: MutableList<InventoryItem>
+        val items: MutableList<InventoryItemFullInfoDto>
 )
 
 data class PersonageExperienceResult(

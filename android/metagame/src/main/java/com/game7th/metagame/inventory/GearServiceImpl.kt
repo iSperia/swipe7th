@@ -4,6 +4,7 @@ import com.game7th.metagame.FileProvider
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.account.RewardData
 import com.game7th.metagame.inventory.dto.*
+import com.game7th.swiped.api.InventoryItemFullInfoDto
 import com.google.gson.Gson
 import kotlin.random.Random
 
@@ -32,19 +33,6 @@ class GearServiceImpl(
         gearConfig = gson.fromJson<GearConfig>(files.getFileContent("artifacts.json"), GearConfig::class.java)
     }
 
-    override fun getArtifactReward(level: Int): RewardData.ArtifactRewardData? {
-        val filteredArtifacts = gearConfig.items.filter { it.maxLevel >= level && it.minLevel <= level && it.template.rarity == 0 }
-        val totalWeight = filteredArtifacts.sumBy { it.weight }
-        val roll = Random.nextInt(1, totalWeight + 1)
-        var sum = 0
-        return filteredArtifacts.firstOrNull {
-            sum += it.weight
-            sum >= roll
-        }?.let {
-            RewardData.ArtifactRewardData(it.template.copy(level = level))
-        }
-    }
-
     override fun addRewards(rewards: List<RewardData>) {
         rewards.forEach {
             when (it) {
@@ -58,16 +46,16 @@ class GearServiceImpl(
 
     override fun listInventory() = inventory.items
 
-    override fun equipItem(personageId: Int, item: InventoryItem) {
+    override fun equipItem(personageId: Int, item: InventoryItemFullInfoDto) {
 
     }
 
-    override fun removeItem(item: InventoryItem) {
+    override fun removeItem(item: InventoryItemFullInfoDto) {
         inventory.items.remove(item)
         storage.put(KEY_INVENTORY, gson.toJson(inventory))
     }
 
-    override fun upgradeItem(item: InventoryItem) {
+    override fun upgradeItem(item: InventoryItemFullInfoDto) {
         val newItem = item.copy(level = item.level + 1)
         inventory.items.remove(item)
         inventory.items.add(newItem)

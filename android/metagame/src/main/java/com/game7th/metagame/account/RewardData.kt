@@ -1,15 +1,13 @@
 package com.game7th.metagame.account
 
-import com.game7th.metagame.account.dto.Currency
-import com.game7th.metagame.inventory.dto.FlaskDto
 import com.game7th.metagame.inventory.dto.FlaskTemplate
-import com.game7th.metagame.inventory.dto.InventoryItem
+import com.game7th.swiped.api.InventoryItemFullInfoDto
 
 sealed class RewardData {
 
-    data class ArtifactRewardData(val item: InventoryItem) : RewardData()
+    data class ArtifactRewardData(val item: InventoryItemFullInfoDto) : RewardData()
 
     data class FlaskRewardData(val flask: FlaskTemplate): RewardData()
 
-    data class CurrencyRewardData(val currency: Currency, val amount: Int): RewardData()
+    data class CurrencyRewardData(val currency: com.game7th.swiped.api.Currency, val amount: Int): RewardData()
 }

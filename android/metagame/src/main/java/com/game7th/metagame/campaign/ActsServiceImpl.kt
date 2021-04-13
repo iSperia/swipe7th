@@ -4,7 +4,6 @@ import com.game7th.metagame.FileProvider
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.account.RewardData
-import com.game7th.metagame.account.dto.Currency
 import com.game7th.metagame.campaign.dto.ActConfig
 import com.game7th.metagame.campaign.dto.CampaignNodeType
 import com.game7th.metagame.campaign.dto.LocationConfig
@@ -13,16 +12,10 @@ import com.game7th.metagame.dto.ActProgressState
 import com.game7th.metagame.dto.LocationProgressState
 import com.game7th.metagame.dto.UnitConfig
 import com.game7th.metagame.dto.UnitType
-import com.game7th.metagame.inventory.dto.InventoryItem
-import com.game7th.metagame.inventory.dto.ItemNode
 import com.game7th.metagame.network.CloudApi
 import com.game7th.metagame.network.NetworkError
-import com.game7th.swiped.api.LocationProgressDto
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.gson.Gson
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.random.Random
 
 /**
  * View model for campaign stuff
@@ -76,7 +69,7 @@ class ActsServiceImpl(
     }
 
     override suspend fun markLocationComplete(name: String, locationId: Int, starCount: Int): List<RewardData> {
-        api.markLocationComplete(name, locationId, starCount)
+        val rewards = api.markLocationComplete(name, locationId, starCount)
 
         val currentState = getActProgress(name)
         val prevStars = currentState.locations.firstOrNull { it.id == locationId }?.stars
@@ -97,33 +90,12 @@ class ActsServiceImpl(
 
         progressCache[name] = actProgressState
 
-        //ok, we have some rewards
-        val config = getActConfig(name)
-        val location = config.nodes.firstOrNull { it.id == locationId }
-        location?.let {
-            val totalPoints = it.waves.flatten().sumBy { it.level + (starCount - 1) * 3  }
-            val maxArtifactLevel = it.waves.flatten().maxBy { it.level }?.level ?: 1 + (starCount - 1) * 3
+        val result = mutableListOf<RewardData>()
 
-            val rewards = mutableListOf<RewardData>()
-            val r1 = if (name == "act_0" && locationId == 0 && starCount == 1) {
-                rewards.add(RewardData.ArtifactRewardData(InventoryItem(gbFlatBody = 1, level = 1, node = ItemNode.FOOT, rarity = 0, name = "LEGGINGS")))
-                1
-            } else {
-                val r1 = min(maxArtifactLevel, Random.nextInt(totalPoints) + 1)
-                gearService.getArtifactReward(r1)?.let { rewards.add(it) }
-                r1
-            }
-            val goldAmount = max(100, (totalPoints - r1) * 100)
-            if (goldAmount > 0) {
-                rewards.add(RewardData.CurrencyRewardData(Currency.GOLD, goldAmount))
-            }
+        result.addAll(rewards.gear.map { RewardData.ArtifactRewardData(it.item) })
+        result.addAll(rewards.currency.map { RewardData.CurrencyRewardData(it.currency, it.amount) })
 
-            gearService.addRewards(rewards)
-            accountService.addRewards(rewards)
-            return rewards
-        }
-
-        return emptyList()
+        return result
     }
 
     override suspend fun unlockLocation(currentState: ActProgressState, name: String, locationId: Int): ActProgressState {

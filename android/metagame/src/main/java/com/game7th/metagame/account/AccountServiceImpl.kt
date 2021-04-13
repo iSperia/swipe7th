@@ -4,8 +4,9 @@ import com.game7th.metagame.FileProvider
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.account.dto.*
 import com.game7th.metagame.inventory.GearService
-import com.game7th.metagame.inventory.dto.InventoryItem
 import com.game7th.metagame.dto.UnitType
+import com.game7th.swiped.api.Currency
+import com.game7th.swiped.api.InventoryItemFullInfoDto
 import com.google.gson.Gson
 import kotlin.math.exp
 import kotlin.random.Random
@@ -133,9 +134,9 @@ class AccountServiceImpl(
         return result
     }
 
-    override fun equipItem(personageId: Int, item: InventoryItem) {
+    override fun equipItem(personageId: Int, item: InventoryItemFullInfoDto) {
         pool.personages.firstOrNull { it.id == personageId }?.let { personage ->
-            val itemToReplace = personage.items.firstOrNull { it.node == item.node }
+            val itemToReplace = personage.items.firstOrNull { it.template.node == item.template.node }
             itemToReplace?.let {
                 personage.items.remove(it)
                 gearService.addRewards(listOf(RewardData.ArtifactRewardData(it)))
@@ -146,7 +147,7 @@ class AccountServiceImpl(
         }
     }
 
-    override fun dequipItem(personageId: Int, item: InventoryItem) {
+    override fun dequipItem(personageId: Int, item: InventoryItemFullInfoDto) {
         pool.personages.firstOrNull { it.id == personageId }?.let { personage ->
             if (personage.items.remove(item)) {
                 gearService.addRewards(listOf(RewardData.ArtifactRewardData(item)))
@@ -159,7 +160,7 @@ class AccountServiceImpl(
         return personageBalance.copy()
     }
 
-    override fun fund(currency: Currency, amount: Int): PersonageBalance {
+    override fun fund(currency: com.game7th.swiped.api.Currency, amount: Int): PersonageBalance {
         personageBalance.currencies[currency] = (personageBalance.currencies[currency] ?: 0) + amount
         saveBalance()
         return getBalance()

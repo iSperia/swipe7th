@@ -78,59 +78,59 @@ class ItemDetailPanel(
         val texts = mutableListOf<String?>()
         when (item) {
             is ItemViewAdapter.InventoryItemAdapter -> {
-                if (item.item.gbFlatBody > 0) {
-                    texts.add(context.texts["inv_affix_flat_body"]?.replace("$", (item.item.gbFlatBody * item.item.level).toString()))
+                if (item.item.template.gbFlatBody?: 0f > 0) {
+                    texts.add(context.texts["inv_affix_flat_body"]?.replace("$", ((item.item.template.gbFlatBody ?: 0f).toInt() * item.item.level).toString()))
                 }
-                if (item.item.gbPercBody > 0) {
-                    texts.add(context.texts["inv_affix_perc_body"]?.replace("$", (item.item.gbPercBody * item.item.level).toString()))
+                if (item.item.template.gbPercBody?: 0f > 0) {
+                    texts.add(context.texts["inv_affix_perc_body"]?.replace("$", ((item.item.template.gbPercBody ?: 0f).toInt() * item.item.level).toString()))
                 }
-                if (item.item.gbFlatSpirit > 0) {
-                    texts.add(context.texts["inv_affix_flat_spirit"]?.replace("$", (item.item.gbFlatSpirit * item.item.level).toString()))
+                if (item.item.template.gbFlatSpirit?: 0f > 0) {
+                    texts.add(context.texts["inv_affix_flat_spirit"]?.replace("$", ((item.item.template.gbFlatSpirit ?: 0f).toInt() * item.item.level).toString()))
                 }
-                if (item.item.gbPercSpirit > 0) {
-                    texts.add(context.texts["inv_affix_perc_spirit"]?.replace("$", (item.item.gbPercSpirit * item.item.level).toString()))
+                if (item.item.template.gbPercSpirit?: 0f > 0) {
+                    texts.add(context.texts["inv_affix_perc_spirit"]?.replace("$", ((item.item.template.gbPercSpirit ?: 0f).toInt() * item.item.level).toString()))
                 }
-                if (item.item.gbFlatMind > 0) {
-                    texts.add(context.texts["inv_affix_flat_mind"]?.replace("$", (item.item.gbFlatMind * item.item.level).toString()))
+                if (item.item.template.gbFlatMind?: 0f > 0) {
+                    texts.add(context.texts["inv_affix_flat_mind"]?.replace("$", ((item.item.template.gbFlatMind ?: 0f).toInt() * item.item.level).toString()))
                 }
-                if (item.item.gbPercMind > 0) {
-                    texts.add(context.texts["inv_affix_perc_mind"]?.replace("$", (item.item.gbPercMind * item.item.level).toString()))
+                if (item.item.template.gbPercMind?: 0f > 0) {
+                    texts.add(context.texts["inv_affix_perc_mind"]?.replace("$", ((item.item.template.gbPercMind ?: 0f).toInt() * item.item.level).toString()))
                 }
-                if (item.item.gbFlatArmor > 0) {
-                    texts.add(context.texts["inv_affix_flat_armor"]?.replace("$", (item.item.gbFlatArmor * item.item.level).toString()))
+                if (item.item.template.gbFlatArmor?: 0f > 0) {
+                    texts.add(context.texts["inv_affix_flat_armor"]?.replace("$", ((item.item.template.gbFlatArmor ?: 0f).toInt() * item.item.level).toString()))
                 }
-                if (item.item.gbPercArmor > 0) {
-                    texts.add(context.texts["inv_affix_perc_armor"]?.replace("$", (item.item.gbPercArmor * item.item.level).toString()))
+                if (item.item.template.gbPercArmor?: 0f > 0) {
+                    texts.add(context.texts["inv_affix_perc_armor"]?.replace("$", ((item.item.template.gbPercArmor ?: 0f).toInt() * item.item.level).toString()))
                 }
-                if (item.item.gbFlatHp > 0) {
-                    texts.add(context.texts["inv_affix_flat_hp"]?.replace("$", (item.item.gbFlatHp * item.item.level).toString()))
+                if (item.item.template.gbFlatHp?: 0f > 0) {
+                    texts.add(context.texts["inv_affix_flat_hp"]?.replace("$", ((item.item.template.gbFlatHp ?: 0f).toInt() * item.item.level).toString()))
                 }
-                if (item.item.gbPercHp > 0) {
-                    texts.add(context.texts["inv_affix_perc_hp"]?.replace("$", (item.item.gbPercHp * item.item.level).toString()))
+                if (item.item.template.gbPercHp?: 0f > 0) {
+                    texts.add(context.texts["inv_affix_perc_hp"]?.replace("$", ((item.item.template.gbPercHp ?: 0f).toInt() * item.item.level).toString()))
                 }
-                if (item.item.gbFlatEvasion > 0) {
-                    texts.add(context.texts["inv_affix_flat_evasion"]?.replace("$", (item.item.gbFlatEvasion * item.item.level).toString()))
+                if (item.item.template.gbFlatEvasion?: 0f > 0) {
+                    texts.add(context.texts["inv_affix_flat_evasion"]?.replace("$", ((item.item.template.gbFlatEvasion ?: 0f).toInt() * item.item.level).toString()))
                 }
-                if (item.item.gbPercEvasion > 0) {
-                    texts.add(context.texts["inv_affix_perc_evasion"]?.replace("$", (item.item.gbPercEvasion * item.item.level).toString()))
+                if (item.item.template.gbPercEvasion?: 0f > 0) {
+                    texts.add(context.texts["inv_affix_perc_evasion"]?.replace("$", ((item.item.template.gbPercEvasion ?: 0f).toInt() * item.item.level).toString()))
                 }
-                if (item.item.gbFlatRegeneration > 0) {
-                    texts.add(context.texts["inv_affix_flat_regeneration"]?.replace("$", (item.item.gbFlatRegeneration * item.item.level).toString()))
+                if (item.item.template.gbFlatRegeneration?: 0f > 0) {
+                    texts.add(context.texts["inv_affix_flat_regeneration"]?.replace("$", ((item.item.template.gbFlatRegeneration ?: 0f).toInt() * item.item.level).toString()))
                 }
-                if (item.item.gbPercRegeneration > 0) {
-                    texts.add(context.texts["inv_affix_perc_regeneration"]?.replace("$", (item.item.gbPercRegeneration * item.item.level).toString()))
+                if (item.item.template.gbPercRegeneration?: 0f > 0) {
+                    texts.add(context.texts["inv_affix_perc_regeneration"]?.replace("$", ((item.item.template.gbPercRegeneration ?: 0f).toInt() * item.item.level).toString()))
                 }
-                if (item.item.gbFlatResist > 0) {
-                    texts.add(context.texts["inv_affix_flat_resist"]?.replace("$", (item.item.gbFlatResist * item.item.level).toString()))
+                if (item.item.template.gbFlatResist?: 0f > 0) {
+                    texts.add(context.texts["inv_affix_flat_resist"]?.replace("$", ((item.item.template.gbFlatResist ?: 0f).toInt() * item.item.level).toString()))
                 }
-                if (item.item.gbPercResist > 0) {
-                    texts.add(context.texts["inv_affix_perc_resist"]?.replace("$", (item.item.gbPercResist * item.item.level).toString()))
+                if (item.item.template.gbPercResist?: 0f > 0) {
+                    texts.add(context.texts["inv_affix_perc_resist"]?.replace("$", ((item.item.template.gbPercResist ?: 0f).toInt() * item.item.level).toString()))
                 }
-                if (item.item.gbFlatWisdom > 0) {
-                    texts.add(context.texts["inv_affix_flat_wisdom"]?.replace("$", (item.item.gbFlatWisdom * item.item.level).toString()))
+                if (item.item.template.gbFlatWisdom?: 0f > 0) {
+                    texts.add(context.texts["inv_affix_flat_wisdom"]?.replace("$", ((item.item.template.gbFlatWisdom ?: 0f).toInt() * item.item.level).toString()))
                 }
-                if (item.item.gbPercWisdom > 0) {
-                    texts.add(context.texts["inv_affix_perc_wisdom"]?.replace("$", (item.item.gbPercWisdom * item.item.level).toString()))
+                if (item.item.template.gbPercWisdom?: 0f > 0) {
+                    texts.add(context.texts["inv_affix_perc_wisdom"]?.replace("$", ((item.item.template.gbPercWisdom ?: 0f).toInt() * item.item.level).toString()))
                 }
             }
             is ItemViewAdapter.PotionItemAdater -> {

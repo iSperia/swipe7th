@@ -1,7 +1,7 @@
 package com.game7th.metagame.shop.dto
 
-import com.game7th.metagame.account.dto.Currency
-import com.game7th.metagame.inventory.dto.InventoryItem
+import com.game7th.swiped.api.Currency
+import com.game7th.swiped.api.InventoryItemFullInfoDto
 
 data class PaymentOption(
         val amount: Int,
@@ -11,7 +11,7 @@ data class PaymentOption(
 sealed class ShopItem(val id: String, val paymentOptions: List<PaymentOption>) {
 
     class GearShopItem(
-        val item: InventoryItem,
+        val item: InventoryItemFullInfoDto,
         paymentOptions: List<PaymentOption>,
         id: String
     ): ShopItem(id, paymentOptions)

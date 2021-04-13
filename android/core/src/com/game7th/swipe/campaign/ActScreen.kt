@@ -26,6 +26,7 @@ import com.game7th.swipe.alchemy.AlchemyPanel
 import com.game7th.swipe.alchemy.AlchemyPanelMode
 import com.game7th.swipe.campaign.bottom_menu.BottomMenu
 import com.game7th.swipe.campaign.inventory.ItemView
+import com.game7th.swipe.campaign.inventory.ItemViewAdapter
 import com.game7th.swipe.campaign.party.PartyView
 import com.game7th.swipe.campaign.prepare.BattlePrepareDialog
 import com.game7th.swipe.campaign.top_menu.CurrencyPanel
@@ -513,21 +514,23 @@ class ActScreen(
                                                                         delay(300)
                                                                         details.inventoryView?.let { inventory ->
                                                                             showFocusView("ttr_party_12", inventory.panelScroller.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                                                showFocusView("ttr_party_13", inventory.panelItems.getChild(0).bounds(), DismissStrategy.DISMISS_ON_INSIDE) {
-                                                                                    (inventory.panelItems.getChild(0) as? ItemView)?.let { itemView ->
-                                                                                        inventory.processInventoryItemClick(game.gearService.listInventory()[0], itemView)
-                                                                                        KtxAsync.launch {
-                                                                                            delay(50)
-                                                                                            inventory.detailPanel?.let { detailPanel ->
-                                                                                                showFocusView("ttr_party_14", detailPanel.itemView.bg.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                                                                    showFocusView("ttr_party_15", detailPanel.affixText.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                                                                        showFocusView("ttr_party_16", detailPanel.actionGroup.getChild(0).bounds(), DismissStrategy.DISMISS_ON_INSIDE) {
-                                                                                                            storage.put(TutorialKeys.ACT1_AFTER_FIRST_LEVEL_DONE, "true")
-                                                                                                            inventory.equipFromDetailPanel(0, null)
-                                                                                                            showFocusView("ttr_party_17", inventory.equippedGroup.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                                                                                showFocusView("ttr_party_18", details.attrsBg.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                                                                                    dismissFocusView()
-                                                                                                                    isScrollEnabled = true
+                                                                                if ((inventory.panelItems.getChild(0) as ItemView).item is ItemViewAdapter.InventoryItemAdapter) {
+                                                                                    showFocusView("ttr_party_13", inventory.panelItems.getChild(0).bounds(), DismissStrategy.DISMISS_ON_INSIDE) {
+                                                                                        (inventory.panelItems.getChild(0) as? ItemView)?.let { itemView ->
+                                                                                            inventory.processInventoryItemClick(game.gearService.listInventory()[0], itemView)
+                                                                                            KtxAsync.launch {
+                                                                                                delay(50)
+                                                                                                inventory.detailPanel?.let { detailPanel ->
+                                                                                                    showFocusView("ttr_party_14", detailPanel.itemView.bg.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                                                                        showFocusView("ttr_party_15", detailPanel.affixText.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                                                                            showFocusView("ttr_party_16", detailPanel.actionGroup.getChild(0).bounds(), DismissStrategy.DISMISS_ON_INSIDE) {
+                                                                                                                storage.put(TutorialKeys.ACT1_AFTER_FIRST_LEVEL_DONE, "true")
+                                                                                                                inventory.equipFromDetailPanel(0, null)
+                                                                                                                showFocusView("ttr_party_17", inventory.equippedGroup.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                                                                                    showFocusView("ttr_party_18", details.attrsBg.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                                                                                        dismissFocusView()
+                                                                                                                        isScrollEnabled = true
+                                                                                                                    }
                                                                                                                 }
                                                                                                             }
                                                                                                         }
@@ -536,6 +539,11 @@ class ActScreen(
                                                                                             }
                                                                                         }
                                                                                     }
+                                                                                } else {
+                                                                                    storage.put(TutorialKeys.ACT1_AFTER_FIRST_LEVEL_DONE, "true")
+                                                                                    inventory.equipFromDetailPanel(0, null)
+                                                                                    dismissFocusView()
+                                                                                    isScrollEnabled = true
                                                                                 }
                                                                             }
                                                                         }

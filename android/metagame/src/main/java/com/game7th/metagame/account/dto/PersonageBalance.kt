@@ -1,8 +1,7 @@
 package com.game7th.metagame.account.dto
 
-enum class Currency {
-    GOLD, GEMS, DUST
-}
+import com.game7th.swiped.api.Currency
+
 
 data class PersonageBalance(
         val currencies: MutableMap<Currency, Int>

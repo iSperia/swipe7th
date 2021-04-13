@@ -65,12 +65,12 @@ data class SwipeBalance(
     }
 
     fun produceGearStats(p: PersonageData): UnitStats {
-        val flatBody = p.items.sumBy { it.gbFlatBody * it.level }
-        val flatSpirit = p.items.sumBy { it.gbFlatSpirit * it.level }
-        val flatMind = p.items.sumBy { it.gbFlatMind * it.level }
-        val percBody = p.items.sumBy { it.gbPercBody * it.level }
-        val percSpirit = p.items.sumBy { it.gbPercSpirit * it.level }
-        val percMind = p.items.sumBy { it.gbPercMind * it.level }
+        val flatBody = p.items.sumBy { ((it.template.gbFlatBody ?: 0f) * it.level).toInt() }
+        val flatSpirit = p.items.sumBy { ((it.template.gbFlatSpirit ?: 0f) * it.level).toInt() }
+        val flatMind = p.items.sumBy { ((it.template.gbFlatMind?:0f) * it.level).toInt() }
+        val percBody = p.items.sumBy { ((it.template.gbPercBody?:0f) * it.level).toInt() }
+        val percSpirit = p.items.sumBy { ((it.template.gbPercSpirit?:0f) * it.level).toInt() }
+        val percMind = p.items.sumBy { ((it.template.gbPercMind?:0f) * it.level).toInt() }
 
         val _body = updated(p.stats.body, flatBody, percBody)
         val _spirit = updated(p.stats.spirit, flatSpirit, percSpirit)
@@ -78,19 +78,19 @@ data class SwipeBalance(
 
         val _p = p.copy(stats = PersonageAttributeStats(_body, _spirit, _mind))
 
-        val flatHp = p.items.sumBy { it.gbFlatHp * it.level }
-        val flatArmor = p.items.sumBy { it.gbFlatArmor * it.level }
-        val flatRegeneration = p.items.sumBy { it.gbFlatRegeneration * it.level }
-        val flatEvasion = p.items.sumBy { it.gbFlatEvasion * it.level }
-        val flatResist = p.items.sumBy { it.gbFlatResist * it.level }
-        val flatWisdom = p.items.sumBy { it.gbFlatWisdom * it.level }
+        val flatHp = p.items.sumBy { ((it.template.gbFlatHp?:0f) * it.level).toInt() }
+        val flatArmor = p.items.sumBy { ((it.template.gbFlatArmor?:0f) * it.level).toInt() }
+        val flatRegeneration = p.items.sumBy { ((it.template.gbFlatRegeneration?:0f) * it.level).toInt() }
+        val flatEvasion = p.items.sumBy { ((it.template.gbFlatEvasion?:0f) * it.level).toInt() }
+        val flatResist = p.items.sumBy { ((it.template.gbFlatResist?:0f) * it.level).toInt() }
+        val flatWisdom = p.items.sumBy { ((it.template.gbFlatWisdom?:0f) * it.level).toInt() }
 
-        val percHp = p.items.sumBy { it.gbPercHp * it.level }
-        val percArmor = p.items.sumBy { it.gbPercArmor * it.level }
-        val percRegeneration = p.items.sumBy { it.gbPercRegeneration * it.level }
-        val percEvasion = p.items.sumBy { it.gbPercEvasion * it.level }
-        val percResist = p.items.sumBy { it.gbPercResist * it.level }
-        val percWisdom = p.items.sumBy { it.gbPercWisdom * it.level }
+        val percHp = p.items.sumBy { ((it.template.gbPercHp?:0f) * it.level).toInt() }
+        val percArmor = p.items.sumBy { ((it.template.gbPercArmor?:0f) * it.level).toInt() }
+        val percRegeneration = p.items.sumBy { ((it.template.gbPercRegeneration?:0f) * it.level).toInt() }
+        val percEvasion = p.items.sumBy { ((it.template.gbPercEvasion?:0f) * it.level).toInt() }
+        val percResist = p.items.sumBy { ((it.template.gbPercResist?:0f) * it.level).toInt() }
+        val percWisdom = p.items.sumBy { ((it.template.gbPercWisdom?:0f) * it.level).toInt() }
 
         val resist = updated(calculateResist(_p), flatResist, percResist)
 

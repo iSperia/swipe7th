@@ -5,10 +5,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.inventory.GearService
-import com.game7th.metagame.inventory.dto.InventoryItem
-import com.game7th.metagame.inventory.dto.ItemNode
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.util.InventoryAction
+import com.game7th.swiped.api.InventoryItemFullInfoDto
+import com.game7th.swiped.api.ItemNode
 import ktx.actors.onClick
 import kotlin.math.max
 import kotlin.math.min
@@ -116,8 +116,8 @@ class InventoryEditor(
             println(personage.items)
             personage.items.forEach { item ->
                 val itemView = ItemView(context, ItemViewAdapter.InventoryItemAdapter(item), false)
-                itemView.x = context.scale * 60f * xs[item.node]!!
-                itemView.y = context.scale * 60f * ys[item.node]!!
+                itemView.x = context.scale * 60f * xs[item.template.node]!!
+                itemView.y = context.scale * 60f * ys[item.template.node]!!
                 equippedGroup.addActor(itemView)
                 itemView.onClick {
                     dismissDetailPanel()
@@ -136,7 +136,7 @@ class InventoryEditor(
         }
     }
 
-    fun processInventoryItemClick(item: InventoryItem, itemView: ItemView) {
+    fun processInventoryItemClick(item: InventoryItemFullInfoDto, itemView: ItemView) {
         dismissDetailPanel()
         detailPanel = ItemDetailPanel(
                 context,

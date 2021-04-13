@@ -7,11 +7,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
-import com.game7th.metagame.account.dto.Currency
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.campaign.reward.CurrencyRewardView
+import com.game7th.swiped.api.Currency
 import ktx.actors.onClick
 
 sealed class InventoryAction {

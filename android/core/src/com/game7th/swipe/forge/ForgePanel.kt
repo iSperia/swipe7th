@@ -7,9 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.account.AccountService
-import com.game7th.metagame.account.dto.Currency
 import com.game7th.metagame.inventory.GearService
-import com.game7th.metagame.inventory.dto.InventoryItem
 import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.TutorialKeys
@@ -20,6 +18,8 @@ import com.game7th.swipe.campaign.inventory.ItemViewAdapter
 import com.game7th.swipe.dialog.DismissStrategy
 import com.game7th.swipe.util.InventoryAction
 import com.game7th.swipe.util.bounds
+import com.game7th.swiped.api.Currency
+import com.game7th.swiped.api.InventoryItemFullInfoDto
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ktx.actors.onClick
@@ -139,7 +139,7 @@ class ForgePanel(
         }
     }
 
-    private fun processItemClicked(item: InventoryItem, itemView: ItemView) {
+    private fun processItemClicked(item: InventoryItemFullInfoDto, itemView: ItemView) {
         dismissDetailPanel()
         detailPanel = ItemDetailPanel(
                 context,

@@ -6,8 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.account.AccountService
-import com.game7th.metagame.account.dto.Currency
 import com.game7th.swipe.GdxGameContext
+import com.game7th.swiped.api.Currency
 
 class CurrencyPanel(
         private val context: GdxGameContext,
