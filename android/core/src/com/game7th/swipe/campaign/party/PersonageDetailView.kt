@@ -13,38 +13,39 @@ import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.dto.UnitConfig
+import com.game7th.metagame.dto.UnitType
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.campaign.inventory.InventoryEditor
 import com.game7th.swipe.campaign.plist.PersonageVerticalPortrait
 import com.game7th.swipe.campaign.plist.toPortraitConfig
+import com.game7th.swiped.api.PersonageDto
+import kotlinx.coroutines.launch
 import ktx.actors.onClick
+import ktx.async.KtxAsync
 import kotlin.math.exp
 
 sealed class UiState {
     object Initial : UiState()
-    object Gear: UiState()
+    object Gear : UiState()
 }
 
 class PersonageDetailView(
         private val context: GdxGameContext,
         private val accountService: AccountService,
         private val gearService: GearService,
-        private val personageId: Int
+        private val personageId: String
 ) : Group() {
 
     var state: UiState = UiState.Initial
 
-    private val personage = accountService.getPersonages().first { it.id == personageId }
+    lateinit var personage: PersonageDto
 
     val bg = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
         width = 480f * context.scale
         height = 240f * context.scale
     }
 
-    val portrait = PersonageVerticalPortrait(context, UnitConfig(personage.unit, personage.level).toPortraitConfig(), 180f * context.scale).apply {
-        x = 10f * context.scale
-        y = 10f * context.scale
-    }
+    lateinit var portrait: PersonageVerticalPortrait
 
     val attrsBg = Image(context.uiAtlas.findRegion("ui_attrs_tree")).apply {
         x = 140f * context.scale
@@ -112,13 +113,10 @@ class PersonageDetailView(
         setAlignment(Align.left)
     }
 
-    val nextLevelExp = ((personage.level - 1) + exp(personage.level * 0.1f)).toInt() * personage.level * 50
+    var nextLevelExp: Int = 0
 
-    val experienceBar = ExperienceBar(context, 120f * context.scale, 30f * context.scale, personage.experience, nextLevelExp).apply {
-        x = 10f * context.scale
-        y = 200f * context.scale
-        touchable = Touchable.disabled
-    }
+    lateinit var experienceBar: ExperienceBar
+
 
     val buttonGear = Image(context.uiAtlas.findRegion("icon_gear")).apply {
         x = attrsBg.x
@@ -130,27 +128,43 @@ class PersonageDetailView(
     var inventoryView: InventoryEditor? = null
 
     init {
-        addActor(bg)
-        addActor(portrait)
-        addActor(attrsBg)
+        KtxAsync.launch {
+            personage = accountService.getPersonages().first { it.id == personageId }
 
-        addActor(bodyLabel)
-        addActor(spiritLabel)
-        addActor(mindLabel)
+            portrait = PersonageVerticalPortrait(context, UnitConfig(UnitType.valueOf(personage.unit), personage.level).toPortraitConfig(), 180f * context.scale).apply {
+                x = 10f * context.scale
+                y = 10f * context.scale
+            }
 
-        addActor(secondAttrsBody)
-        addActor(secondAttrsSpirit)
-        addActor(secondAttrsMind)
+            nextLevelExp = ((personage.level - 1) + exp(personage.level * 0.1f)).toInt() * personage.level * 50
+            experienceBar = ExperienceBar(context, 120f * context.scale, 30f * context.scale, personage.experience, nextLevelExp).apply {
+                x = 10f * context.scale
+                y = 200f * context.scale
+                touchable = Touchable.disabled
+            }
 
-        addActor(experienceBar)
+            addActor(bg)
+            addActor(portrait)
+            addActor(attrsBg)
 
-        addActor(buttonGear)
+            addActor(bodyLabel)
+            addActor(spiritLabel)
+            addActor(mindLabel)
 
-        bg.onClick {  }
-        buttonGear.onClick {
-            processGearButton()
+            addActor(secondAttrsBody)
+            addActor(secondAttrsSpirit)
+            addActor(secondAttrsMind)
+
+            addActor(experienceBar)
+
+            addActor(buttonGear)
+
+            bg.onClick { }
+            buttonGear.onClick {
+                processGearButton()
+            }
+            refreshStats()
         }
-        refreshStats()
     }
 
     fun processGearButton() {
@@ -190,15 +204,16 @@ class PersonageDetailView(
     private fun hideGear() {
         buttonGear.drawable = TextureRegionDrawable(context.uiAtlas.findRegion("icon_gear"))
         inventoryView?.let { inventory ->
-             inventory.addAction(SequenceAction(
-                MoveByAction().apply { amountY = -200f * context.scale; duration = 0.2f },
-                RunnableAction().apply { setRunnable { inventory.remove() } }
-        )) }
+            inventory.addAction(SequenceAction(
+                    MoveByAction().apply { amountY = -200f * context.scale; duration = 0.2f },
+                    RunnableAction().apply { setRunnable { inventory.remove() } }
+            ))
+        }
     }
 
     private fun refreshStats() {
         val baseStats = context.balance.produceBaseStats(personage)
-        val gearStats = context.balance.produceGearStats(personage)
+        val gearStats = context.balance.produceGearStats(personage, personage.items)
 
         gearStats.body.toString().let { bodyLabel.setText(it) }
         gearStats.spirit.toString().let { spiritLabel.setText(it) }

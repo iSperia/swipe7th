@@ -12,8 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.game7th.battle.dto.BattleEvent
-import com.game7th.metagame.account.dto.PersonageExperienceResult
-import com.game7th.metagame.account.RewardData
 import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.inventory.dto.FlaskStackDto
 import com.game7th.swipe.GdxGameContext
@@ -24,6 +22,8 @@ import com.game7th.swipe.game.actors.ui.BattleFinishedDialog
 import com.game7th.swipe.util.IconTextButton
 import com.game7th.swipe.util.animateHideToBottom
 import com.game7th.swipe.util.animateShowFromBottom
+import com.game7th.swiped.api.LocationCompleteResponseDto
+import com.game7th.swiped.api.RewardListDto
 import kotlinx.coroutines.launch
 import ktx.actors.onClick
 import ktx.actors.repeatForever
@@ -35,7 +35,7 @@ class GameActor(
         private val gearService: GearService,
         private val screen: GameScreen,
         private val usePotionCallback: (FlaskStackDto) -> Unit,
-        private val rewardCallback: suspend () -> List<RewardData>,
+        private val rewardCallback: suspend () -> LocationCompleteResponseDto,
         private val finishCallback: (Boolean) -> Unit
 ) : Group() {
 
@@ -139,7 +139,7 @@ class GameActor(
         tileField.touchable = Touchable.disabled
 
 //        Gdx.audio.newMusic(Gdx.files.internal("sounds/defeat.ogg")).let { it.play() }
-        BattleFinishedDialog(context, "Defeat", emptyList(), emptyList(), screen) {
+        BattleFinishedDialog(context, "Defeat", LocationCompleteResponseDto(RewardListDto(emptyList(), emptyList()), emptyList()), screen) {
             finishCallback(false)
         }.apply {
             x = 40f * context.scale
@@ -155,11 +155,11 @@ class GameActor(
         super.draw(batch, parentAlpha)
     }
 
-    fun showVictory(expResult: List<PersonageExperienceResult>) {
+    fun showVictory() {
 //        Gdx.audio.newMusic(Gdx.files.internal("sounds/victory.ogg")).let { it.play() }
         KtxAsync.launch {
             val rewards = rewardCallback()
-            BattleFinishedDialog(context, "Victory", expResult, rewards, screen) {
+            BattleFinishedDialog(context, "Victory", rewards, screen) {
                 finishCallback(true)
             }.apply {
                 x = 40f * context.scale

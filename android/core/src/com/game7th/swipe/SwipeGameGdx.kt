@@ -99,6 +99,7 @@ class SwipeGameGdx(
             }
 
             if (tokenReceived) {
+                initializeServices()
                 showGameScreen()
             }
         }
@@ -111,7 +112,6 @@ class SwipeGameGdx(
     }
 
     private fun showGameScreen() {
-        initializeServices()
         setScreen(ActScreen(this@SwipeGameGdx, actService, "act_0", context, storage))
     }
 
@@ -142,7 +142,7 @@ class SwipeGameGdx(
         Gdx.input.inputProcessor = multiplexer
     }
 
-    private fun initializeServices() {
+    private suspend fun initializeServices() {
         if (!servicesInitialized) {
             initializeGearService()
             initializeAccountService()
@@ -157,15 +157,16 @@ class SwipeGameGdx(
     }
 
     private fun initializeActService() {
-        actService = ActsServiceImpl(gson, api, storage, fileProvider, gearService, accountService)
+        actService = ActsServiceImpl(api)
     }
 
     private fun initializeShopService() {
         shopService = ShopServiceImpl(storage, gearService, accountService, gson)
     }
 
-    private fun initializeAccountService() {
-        accountService = AccountServiceImpl(gson, storage, fileProvider, gearService)
+    private suspend fun initializeAccountService() {
+        accountService = AccountServiceImpl(api)
+        accountService.init()
     }
 
     override fun render() {

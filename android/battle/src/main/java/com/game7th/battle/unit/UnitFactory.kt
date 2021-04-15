@@ -5,8 +5,8 @@ import com.game7th.battle.unit.npc.*
 import com.game7th.battle.unit.personages.produceFreezeMage
 import com.game7th.battle.unit.personages.produceGladiator
 import com.game7th.battle.unit.personages.produceToxicArcher
-import com.game7th.metagame.account.dto.PersonageAttributeStats
 import com.game7th.metagame.dto.UnitType
+import com.game7th.swiped.api.PersonageAttributeStatsDto
 
 object UnitFactory {
     fun produce(type: UnitType, balance: SwipeBalance, unitId: Int, level: Int, unitStats: UnitStats?): UnitStats? {
@@ -31,7 +31,7 @@ object UnitFactory {
             b: SwipeBalance,
             unitType: UnitType,
             level: Int,
-            stats: PersonageAttributeStats,
+            stats: PersonageAttributeStatsDto,
             processor: (UnitStats) -> Unit
     ): UnitStats {
         val body = stats.body

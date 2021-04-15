@@ -9,7 +9,9 @@ import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.util.InventoryAction
 import com.game7th.swiped.api.InventoryItemFullInfoDto
 import com.game7th.swiped.api.ItemNode
+import kotlinx.coroutines.launch
 import ktx.actors.onClick
+import ktx.async.KtxAsync
 import kotlin.math.max
 import kotlin.math.min
 
@@ -17,7 +19,7 @@ class InventoryEditor(
         private val context: GdxGameContext,
         private val accountService: AccountService,
         private val gearService: GearService,
-        private val personageId: Int,
+        private val personageId: String,
         private val refresher: () -> Unit
 ) : Group() {
 
@@ -112,25 +114,27 @@ class InventoryEditor(
             panelItems.addActor(itemView)
         }
 
-        accountService.getPersonages().firstOrNull { it.id == personageId }?.let { personage ->
-            println(personage.items)
-            personage.items.forEach { item ->
-                val itemView = ItemView(context, ItemViewAdapter.InventoryItemAdapter(item), false)
-                itemView.x = context.scale * 60f * xs[item.template.node]!!
-                itemView.y = context.scale * 60f * ys[item.template.node]!!
-                equippedGroup.addActor(itemView)
-                itemView.onClick {
-                    dismissDetailPanel()
-                    detailPanel = ItemDetailPanel(
-                            context,
-                            ItemViewAdapter.InventoryItemAdapter(item),
-                            listOf(com.game7th.swipe.util.InventoryAction.StringAction("Wear off")),
-                            this@InventoryEditor::dismissDetailPanel,
-                            this@InventoryEditor::dequipFromEquipped).apply {
-                        x = min(context.scale * 340f, equippedGroup.x + itemView.x)
-                        y = equippedGroup.y + itemView.y
+        KtxAsync.launch {
+            accountService.getPersonages().firstOrNull { it.id == personageId }?.let { personage ->
+                println(personage.items)
+                personage.items.forEach { item ->
+                    val itemView = ItemView(context, ItemViewAdapter.InventoryItemAdapter(item), false)
+                    itemView.x = context.scale * 60f * xs[item.template.node]!!
+                    itemView.y = context.scale * 60f * ys[item.template.node]!!
+                    equippedGroup.addActor(itemView)
+                    itemView.onClick {
+                        dismissDetailPanel()
+                        detailPanel = ItemDetailPanel(
+                                context,
+                                ItemViewAdapter.InventoryItemAdapter(item),
+                                listOf(com.game7th.swipe.util.InventoryAction.StringAction("Wear off")),
+                                this@InventoryEditor::dismissDetailPanel,
+                                this@InventoryEditor::dequipFromEquipped).apply {
+                            x = min(context.scale * 340f, equippedGroup.x + itemView.x)
+                            y = equippedGroup.y + itemView.y
+                        }
+                        this@InventoryEditor.addActor(detailPanel)
                     }
-                    this@InventoryEditor.addActor(detailPanel)
                 }
             }
         }
@@ -157,7 +161,7 @@ class InventoryEditor(
 
     fun equipFromDetailPanel(actionIndex: Int, meta: String?) {
         (detailPanel?.item as? ItemViewAdapter.InventoryItemAdapter)?.item?.let { item ->
-            accountService.equipItem(personageId, item)
+//            accountService.equipItem(personageId, item)
             dismissDetailPanel()
             dirty = true
             refresher()
@@ -166,7 +170,7 @@ class InventoryEditor(
 
     private fun dequipFromEquipped(actionIndex: Int, meta: String?) {
         (detailPanel?.item as? ItemViewAdapter.InventoryItemAdapter)?.item?.let { item ->
-            accountService.dequipItem(personageId, item)
+//            accountService.dequipItem(personageId, item)
             dismissDetailPanel()
             dirty = true
             refresher()

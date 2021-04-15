@@ -36,6 +36,7 @@ import com.game7th.swipe.shop.ShopPanel
 import com.game7th.swipe.util.animateHideToBottom
 import com.game7th.swipe.util.animateShowFromBottom
 import com.game7th.swipe.util.bounds
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ktx.async.KtxAsync
@@ -112,6 +113,7 @@ class ActScreen(
     override fun show() {
         super.show()
         KtxAsync.launch {
+
             config = actsService.getActConfig(actId)
             val progressState: ActProgressState = actsService.getActProgress(actId)
 
@@ -198,6 +200,11 @@ class ActScreen(
             }
 
             readyToRender = true
+
+            async {
+                game.accountService.refreshBalance()
+                currencyView.refreshBalance()
+            }
         }
     }
 
@@ -496,8 +503,8 @@ class ActScreen(
                 delay(300)
                 partyUi?.let { party ->
                     showFocusView("ttr_party_2", party.personagesView.getChild(0).bounds(), DismissStrategy.DISMISS_ON_INSIDE) {
-                        party.personagesView.selectionCallback?.invoke(0)
                         KtxAsync.launch {
+                            party.personagesView.selectionCallback?.invoke(0)
                             delay(300)
                             party.detailView?.let { details ->
                                 showFocusView("ttr_party_3", details.experienceBar.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {

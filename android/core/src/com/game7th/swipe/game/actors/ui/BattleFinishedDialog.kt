@@ -9,8 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Align
-import com.game7th.metagame.account.dto.PersonageExperienceResult
-import com.game7th.metagame.account.RewardData
 import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.TutorialKeys
@@ -20,14 +18,15 @@ import com.game7th.swipe.campaign.party.ExperienceBar
 import com.game7th.swipe.campaign.reward.CurrencyRewardView
 import com.game7th.swipe.dialog.DismissStrategy
 import com.game7th.swipe.util.bounds
+import com.game7th.swiped.api.LocationCompleteResponseDto
+import com.game7th.swiped.api.RewardDto
 import ktx.actors.alpha
 import kotlin.math.min
 
 class BattleFinishedDialog(
         private val context: GdxGameContext,
         private val text: String,
-        private val expResult: List<PersonageExperienceResult>,
-        private val rewards: List<RewardData>,
+        private val rewards: LocationCompleteResponseDto,
         private val screen: BaseScreen,
         callback: () -> Unit
         ) : Group() {
@@ -78,7 +77,7 @@ class BattleFinishedDialog(
         addActor(this)
     }
 
-    val experienceBar = ExperienceBar(context, 380f * context.scale, 40f * context.scale, expResult.firstOrNull()?.oldExp ?: 0, expResult.firstOrNull()?.maxExp ?: 100, false).apply {
+    val experienceBar = ExperienceBar(context, 380f * context.scale, 40f * context.scale, rewards.experience.firstOrNull()?.oldExp ?: 0, rewards.experience.firstOrNull()?.maxExp ?: 100, false).apply {
         x = 10f * context.scale
         y = 220f * context.scale
         touchable = Touchable.disabled
@@ -118,14 +117,15 @@ class BattleFinishedDialog(
     var timePassed = 0f
 
     init {
-        expResult.firstOrNull()?.let {
+        rewards.experience.firstOrNull()?.let {
             addActor(experienceBar)
         }
 
         rewardsRoot.isVisible = true
-        rewards.forEachIndexed { index, reward ->
+        val fullRewards: List<RewardDto> = rewards.rewards.gear + rewards.rewards.currency
+        fullRewards.forEachIndexed { index, reward ->
             when (reward) {
-                is RewardData.ArtifactRewardData -> {
+                is RewardDto.InventoryItemRewardDto -> {
                     val artifact = ItemView(context, ItemViewAdapter.InventoryItemAdapter(reward.item), true, 70 * context.scale).apply {
                         x = 80f * index * context.scale
                         y = 0f
@@ -140,13 +140,14 @@ class BattleFinishedDialog(
                             )
                     })
                 }
-                is RewardData.CurrencyRewardData -> {
+                is RewardDto.CurrencyRewardDto -> {
                     val reward = CurrencyRewardView(context, reward.currency, reward.amount, 70 * context.scale).apply {
                         x = 80f * index * context.scale
                         y = 0f
                         setScale(2f)
                         alpha = 0f
                     }
+
                     rewardsRoot.addActor(reward)
                     reward.addAction(DelayAction(index * 0.1f).apply { action =
                             ParallelAction(
@@ -185,22 +186,22 @@ class BattleFinishedDialog(
         super.act(delta)
 
         timePassed += delta
-        var shownExpStep = min(expResult.size, (timePassed / 1.1f).toInt())
+        var shownExpStep = min(rewards.experience.size, (timePassed / 1.1f).toInt())
         if (shownExpStep > activeExpResultStep) {
             if (activeExpResultStep >= 0) {
-                if (expResult[activeExpResultStep].levelUp) {
+                if (rewards.experience[activeExpResultStep].levelUp) {
                     //show level up
-                    newLevelText.setText("NEW LEVEL ${expResult[activeExpResultStep].newLevel}")
+                    newLevelText.setText("NEW LEVEL ${rewards.experience[activeExpResultStep].newLevel}")
                     newLevelText.setScale(1.5f)
                     newLevelText.addAction(ScaleToAction().apply { setScale(1f); duration=0.25f })
 
-                    statsText.setText(expResult[activeExpResultStep].gainedStats.toString())
+                    statsText.setText(rewards.experience[activeExpResultStep].gainedStats.toString())
                 }
             }
 
             activeExpResultStep = shownExpStep
-            if (shownExpStep < expResult.size) {
-                experienceBar.animateProgress(expResult[shownExpStep].oldExp, expResult[shownExpStep].maxExp, expResult[shownExpStep].newExp)
+            if (shownExpStep < rewards.experience.size) {
+                experienceBar.animateProgress(rewards.experience[shownExpStep].oldExp, rewards.experience[shownExpStep].maxExp, rewards.experience[shownExpStep].newExp)
             }
         }
     }

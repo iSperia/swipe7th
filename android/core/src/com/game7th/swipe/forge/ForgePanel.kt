@@ -41,7 +41,7 @@ class ForgePanel(
         height = 24f * context.scale
     }
 
-    val dustLabel = Label((accountService.getBalance().currencies[Currency.DUST] ?: 0).toString(), Label.LabelStyle(context.font, Color.WHITE)).apply {
+    val dustLabel = Label("?", Label.LabelStyle(context.font, Color.WHITE)).apply {
         x = 69f * context.scale
         y = dustIcon.y
         width = 72f * context.scale
@@ -110,7 +110,9 @@ class ForgePanel(
         panelItems.height = 240 * context.scale
         panelScroller.actor = panelItems
 
-        dustLabel.setText((accountService.getBalance().currencies[Currency.DUST] ?: 0).toString())
+        KtxAsync.launch {
+            dustLabel.setText((accountService.getBalance()[Currency.DUST.toString()] ?: 0).toString())
+        }
 
         panelItems.children.forEach { it.clearActions() }
         panelItems.clearChildren()
@@ -157,14 +159,16 @@ class ForgePanel(
         (detailPanel?.item as? ItemViewAdapter.InventoryItemAdapter)?.item?.let { item ->
             when (index) {
                 0 -> { //to dust!
-                    accountService.fund(Currency.DUST, item.level * 100)
+//                    accountService.fund(Currency.DUST, item.level * 100)
                     gearService.removeItem(item)
                 }
                 1 -> { //level up
                     val dustNeeded = 100 * item.level
-                    if ((accountService.getBalance().currencies[Currency.DUST] ?: 0) >= dustNeeded) {
-                        accountService.spend(Currency.DUST, dustNeeded)
-                        gearService.upgradeItem(item)
+                    KtxAsync.launch {
+                        if ((accountService.getBalance()[Currency.DUST.toString()] ?: 0) >= dustNeeded) {
+//                        accountService.spend(Currency.DUST, dustNeeded)
+                            gearService.upgradeItem(item)
+                        }
                     }
                 }
             }

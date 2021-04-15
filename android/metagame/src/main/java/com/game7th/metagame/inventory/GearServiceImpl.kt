@@ -2,7 +2,6 @@ package com.game7th.metagame.inventory
 
 import com.game7th.metagame.FileProvider
 import com.game7th.metagame.PersistentStorage
-import com.game7th.metagame.account.RewardData
 import com.game7th.metagame.inventory.dto.*
 import com.game7th.swiped.api.InventoryItemFullInfoDto
 import com.google.gson.Gson
@@ -31,17 +30,6 @@ class GearServiceImpl(
         }
 
         gearConfig = gson.fromJson<GearConfig>(files.getFileContent("artifacts.json"), GearConfig::class.java)
-    }
-
-    override fun addRewards(rewards: List<RewardData>) {
-        rewards.forEach {
-            when (it) {
-                is RewardData.ArtifactRewardData -> {
-                    inventory.items.add(it.item)
-                }
-            }
-        }
-        storage.put(KEY_INVENTORY, gson.toJson(inventory)) //save inventory to storage
     }
 
     override fun listInventory() = inventory.items
@@ -85,19 +73,6 @@ class GearServiceImpl(
             stack.amount++
         }
         storage.put(KEY_INVENTORY, gson.toJson(inventory))
-    }
-
-    override fun generateFlaskReward(): RewardData.FlaskRewardData? {
-        val filteredFlasks = gearConfig.flasks
-        val totalWeight = filteredFlasks.sumBy { it.dropWeight }
-        val roll = Random.nextInt(1, totalWeight + 1)
-        var sum = 0
-        return filteredFlasks.firstOrNull {
-            sum += it.dropWeight
-            sum >= roll
-        }?.let {
-            RewardData.FlaskRewardData(it.template.copy())
-        }
     }
 
     companion object {

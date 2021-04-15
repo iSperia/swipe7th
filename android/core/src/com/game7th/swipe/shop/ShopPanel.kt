@@ -12,6 +12,8 @@ import com.game7th.swipe.campaign.inventory.ItemDetailPanel
 import com.game7th.swipe.campaign.inventory.ItemViewAdapter
 import com.game7th.swipe.campaign.reward.CurrencyRewardView
 import com.game7th.swipe.util.InventoryAction
+import kotlinx.coroutines.launch
+import ktx.async.KtxAsync
 
 class ShopPanel(
         private val context: GdxGameContext,
@@ -45,53 +47,55 @@ class ShopPanel(
         panelItems.clearChildren()
         balanceRefresher()
 
-        shopItems = shopService.listItems()
+        KtxAsync.launch {
+            shopItems = shopService.listItems()
 
-        var offset = 0f
-        shopItems.forEachIndexed { index, shopItem ->
-            when (shopItem) {
-                is ShopItem.GearShopItem -> {
-                    val panel = ItemDetailPanel(context, ItemViewAdapter.InventoryItemAdapter(shopItem.item), shopItem.paymentOptions
-                            .map {
-                                InventoryAction.IconAction("-${it.amount}", CurrencyRewardView.getTextureName(it.currency), it.currency)
-                            }, {}, this::processGearAcquisition).apply {
-                        meta = shopItem.id
-                        bg.touchable = Touchable.disabled
-                        x = offset + 5f * context.scale
+            var offset = 0f
+            shopItems.forEachIndexed { index, shopItem ->
+                when (shopItem) {
+                    is ShopItem.GearShopItem -> {
+                        val panel = ItemDetailPanel(context, ItemViewAdapter.InventoryItemAdapter(shopItem.item), shopItem.paymentOptions
+                                .map {
+                                    InventoryAction.IconAction("-${it.amount}", CurrencyRewardView.getTextureName(it.currency), it.currency)
+                                }, {}, this@ShopPanel::processGearAcquisition).apply {
+                            meta = shopItem.id
+                            bg.touchable = Touchable.disabled
+                            x = offset + 5f * context.scale
+                        }
+                        offset += panel.width + 5f * context.scale
+                        panelItems.addActor(panel)
                     }
-                    offset += panel.width + 5f * context.scale
-                    panelItems.addActor(panel)
-                }
 
-                is ShopItem.PersonageShopItem -> {
-                    val panel = PersonageShopPanel(context, UnitType.valueOf(shopItem.personage), shopItem.id, shopItem.paymentOptions.map {
-                        InventoryAction.IconAction("-${it.amount}", CurrencyRewardView.getTextureName(it.currency), it.currency)
-                    }, this::processPersonageAcquisition).apply {
-                        bg.touchable = Touchable.disabled
-                        x = offset + 5f * context.scale
+                    is ShopItem.PersonageShopItem -> {
+                        val panel = PersonageShopPanel(context, UnitType.valueOf(shopItem.personage), shopItem.id, shopItem.paymentOptions.map {
+                            InventoryAction.IconAction("-${it.amount}", CurrencyRewardView.getTextureName(it.currency), it.currency)
+                        }, this@ShopPanel::processPersonageAcquisition).apply {
+                            bg.touchable = Touchable.disabled
+                            x = offset + 5f * context.scale
+                        }
+                        offset += panel.width + 5f * context.scale
+                        panelItems.addActor(panel)
                     }
-                    offset += panel.width + 5f * context.scale
-                    panelItems.addActor(panel)
-                }
 
-                is ShopItem.PackShopItem -> {
-                    val panel = ItemDetailPanel(context, ItemViewAdapter.PackItemAdapter(shopItem.name), shopItem.paymentOptions
-                            .map {
-                                InventoryAction.IconAction("-${it.amount}", CurrencyRewardView.getTextureName(it.currency), it.currency)
-                            }, {}, this::processPackAcquisition).apply {
-                        meta = shopItem.id
-                        bg.touchable = Touchable.disabled
-                        x = offset + 5f * context.scale
+                    is ShopItem.PackShopItem -> {
+                        val panel = ItemDetailPanel(context, ItemViewAdapter.PackItemAdapter(shopItem.name), shopItem.paymentOptions
+                                .map {
+                                    InventoryAction.IconAction("-${it.amount}", CurrencyRewardView.getTextureName(it.currency), it.currency)
+                                }, {}, this@ShopPanel::processPackAcquisition).apply {
+                            meta = shopItem.id
+                            bg.touchable = Touchable.disabled
+                            x = offset + 5f * context.scale
+                        }
+                        offset += panel.width + 5f * context.scale
+                        panelItems.addActor(panel)
                     }
-                    offset += panel.width + 5f * context.scale
-                    panelItems.addActor(panel)
                 }
             }
-        }
 
-        panelItems.width = offset
-        panelItems.height = 310f * context.scale
-        panelScroller.actor = panelItems
+            panelItems.width = offset
+            panelItems.height = 310f * context.scale
+            panelScroller.actor = panelItems
+        }
     }
 
     private fun processGearAcquisition(actionIndex: Int, meta: String?) {

@@ -3,7 +3,9 @@ package com.game7th.swipe.campaign.plist
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.game7th.metagame.dto.UnitConfig
 import com.game7th.swipe.GdxGameContext
+import kotlinx.coroutines.launch
 import ktx.actors.onClick
+import ktx.async.KtxAsync
 
 class PersonageScrollActor(
         private val context: GdxGameContext,
@@ -16,7 +18,7 @@ class PersonageScrollActor(
     private val ratio = 1 / 1.5f
     private val elementWidth = h * ratio
 
-    var selectionCallback: ((Int) -> Unit)? = null
+    var selectionCallback: (suspend (Int) -> Unit)? = null
 
     var selectedIndex = if (indexSelectable) defaultIndex else -1
 
@@ -45,7 +47,7 @@ class PersonageScrollActor(
                 if (indexSelectable) {
                     selectedIndex = index
                     applySelection()
-                    selectionCallback?.invoke(index)
+                    KtxAsync.launch { selectionCallback?.invoke(index) }
                 }
             }
         }

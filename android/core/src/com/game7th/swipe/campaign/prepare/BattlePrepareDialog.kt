@@ -19,9 +19,13 @@ import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.campaign.ActsService
 import com.game7th.metagame.campaign.dto.LocationConfig
 import com.game7th.metagame.dto.UnitConfig
+import com.game7th.metagame.dto.UnitType
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.campaign.plist.PersonageScrollActor
 import com.game7th.swipe.game.GameScreen
+import com.game7th.swiped.api.PersonageDto
+import kotlinx.coroutines.launch
+import ktx.async.KtxAsync
 
 /**
  * Dialog is shown before battle is started after player clicked some unlocked location
@@ -46,8 +50,8 @@ class BattlePrepareDialog(
     val buttonStart: TextButton
     val vsIcon: Image
 
-    val scrollPersonages: ScrollPane
-    val personagesGroup: PersonageScrollActor
+    lateinit var scrollPersonages: ScrollPane
+    lateinit var personagesGroup: PersonageScrollActor
 
     val npcPersonages: ScrollPane
     val npcGroup: PersonageScrollActor
@@ -57,7 +61,7 @@ class BattlePrepareDialog(
 
     var difficulty = 1
 
-    private val personages = game.accountService.getPersonages()
+    lateinit var personages: List<PersonageDto>
 
     init {
         w = scale * 420f
@@ -104,14 +108,18 @@ class BattlePrepareDialog(
 
         val scrollHeight = 150f * context.scale
 
-        personagesGroup = PersonageScrollActor(context, personages.map { UnitConfig(it.unit, it.level) }, scrollHeight, true)
-        scrollPersonages = ScrollPane(personagesGroup).apply {
-            x = 20f * context.scale
-            width = 380f * context.scale
-            y = 220f * context.scale
-            height = scrollHeight
+        KtxAsync.launch {
+            personages = game.accountService.getPersonages()
+            personagesGroup = PersonageScrollActor(context, personages.map { UnitConfig(UnitType.valueOf(it.unit), it.level) }, scrollHeight, true)
+            scrollPersonages = ScrollPane(personagesGroup).apply {
+                x = 20f * context.scale
+                width = 380f * context.scale
+                y = 220f * context.scale
+                height = scrollHeight
+            }
+            addActor(scrollPersonages)
         }
-        addActor(scrollPersonages)
+
 
         npcGroup = PersonageScrollActor(context, mapNpcWaves(), scrollHeight, false)
         npcPersonages = ScrollPane(npcGroup).apply {

@@ -2,10 +2,8 @@ package com.game7th.metagame.shop
 
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.account.AccountService
-import com.game7th.metagame.account.RewardData
 import com.game7th.metagame.dto.UnitType
 import com.game7th.metagame.inventory.GearService
-import com.game7th.metagame.inventory.GearServiceImpl
 import com.game7th.metagame.shop.dto.PaymentOption
 import com.game7th.metagame.shop.dto.ShopItem
 import com.google.gson.Gson
@@ -52,60 +50,58 @@ class ShopServiceImpl(
         }
     }
 
-    override fun listItems(): List<ShopItem> {
+    override suspend fun listItems(): List<ShopItem> {
         checkShopRefreshed()
         val personages = accountService.getPersonages()
         return cachedPersonages.filter{ cached -> personages.count { it.unit.toString() == cached.personage } == 0} + cachedGearItems + packs
     }
 
     override fun acquireItem(id: String, paymentOption: PaymentOption): Boolean {
-        listItems().firstOrNull { it.id == id }?.let { shopItem ->
-            when (shopItem) {
-                is ShopItem.GearShopItem -> {
-                    if (shopItem.paymentOptions.contains(paymentOption)) {
-                        val balance = accountService.getBalance()
-                        if (balance.currencies[paymentOption.currency] ?: 0 >= paymentOption.amount) {
-                            accountService.spend(paymentOption.currency, paymentOption.amount)
-                            gearService.addRewards(listOf(RewardData.ArtifactRewardData(shopItem.item)))
-
-                            cachedGearItems = cachedGearItems.filter { it.id != id }
-                            storage.put(KEY_GEAR_ITEMS, gson.toJson(cachedGearItems))
-                            return true
-                        }
-                    }
-                }
-                is ShopItem.PersonageShopItem -> {
-                    if (shopItem.paymentOptions.contains(paymentOption)) {
-                        val balance = accountService.getBalance()
-                        val hasPersonage = accountService.getPersonages().firstOrNull { it.unit.toString() == shopItem.personage }
-                        if (balance.currencies[paymentOption.currency] ?: 0 >= paymentOption.amount && hasPersonage == null) {
-                            accountService.spend(paymentOption.currency, paymentOption.amount)
-                            accountService.addPersonage(UnitType.valueOf(shopItem.personage))
-
-                            cachedPersonages = cachedPersonages.filter { it.id != id }
-                            storage.put(KEY_PERSONAGES, gson.toJson(cachedPersonages))
-                            return true
-                        }
-                    }
-                }
-                is ShopItem.PackShopItem -> {
-                    val balance = accountService.getBalance()
-                    if (balance.currencies[paymentOption.currency] ?: 0 >= paymentOption.amount) {
-                        accountService.spend(paymentOption.currency, paymentOption.amount)
-                        when (shopItem.name) {
-                            "SHOP_BEGINNER_POTION_PACK" -> {
-                                (gearService as? GearServiceImpl)?.let { gearService ->
-                                    gearService.gearConfig.flasks.forEach {
-                                        gearService.addFlask(it.template)
-                                    }
-                                }
-                            }
-                        }
-                        return true
-                    }
-                }
-            }
-        }
+//        listItems().firstOrNull { it.id == id }?.let { shopItem ->
+//            when (shopItem) {
+//                is ShopItem.GearShopItem -> {
+//                    if (shopItem.paymentOptions.contains(paymentOption)) {
+//                        val balance = accountService.getBalance()
+//                        if (balance[paymentOption.currency.toString()] ?: 0 >= paymentOption.amount) {
+//                            gearService.addRewards(listOf(RewardData.ArtifactRewardData(shopItem.item)))
+//
+//                            cachedGearItems = cachedGearItems.filter { it.id != id }
+//                            storage.put(KEY_GEAR_ITEMS, gson.toJson(cachedGearItems))
+//                            return true
+//                        }
+//                    }
+//                }
+//                is ShopItem.PersonageShopItem -> {
+//                    if (shopItem.paymentOptions.contains(paymentOption)) {
+//                        val balance = accountService.getBalance()
+//                        val hasPersonage = accountService.getPersonages().firstOrNull { it.unit.toString() == shopItem.personage }
+//                        if (balance[paymentOption.currency.toString()] ?: 0 >= paymentOption.amount && hasPersonage == null) {
+////                            accountService.spend(paymentOption.currency, paymentOption.amount)
+////                            accountService.addPersonage(UnitType.valueOf(shopItem.personage))
+//
+//                            cachedPersonages = cachedPersonages.filter { it.id != id }
+//                            storage.put(KEY_PERSONAGES, gson.toJson(cachedPersonages))
+//                            return true
+//                        }
+//                    }
+//                }
+//                is ShopItem.PackShopItem -> {
+//                    val balance = accountService.getBalance()
+//                    if (balance[paymentOption.currency.toString()] ?: 0 >= paymentOption.amount) {
+//                        when (shopItem.name) {
+//                            "SHOP_BEGINNER_POTION_PACK" -> {
+//                                (gearService as? GearServiceImpl)?.let { gearService ->
+//                                    gearService.gearConfig.flasks.forEach {
+//                                        gearService.addFlask(it.template)
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        return true
+//                    }
+//                }
+//            }
+//        }
         return false
     }
 

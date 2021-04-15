@@ -1,9 +1,6 @@
 package com.game7th.metagame.network
 
-import com.game7th.swiped.api.ActDto
-import com.game7th.swiped.api.AuthSuccess
-import com.game7th.swiped.api.LocationProgressDto
-import com.game7th.swiped.api.RewardListDto
+import com.game7th.swiped.api.*
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.features.*
@@ -23,13 +20,15 @@ data class NetworkError(
         val status: NetworkErrorStatus,
         val details: String,
         val errorCause: Throwable? = null
-): RuntimeException("Network error $status", errorCause)
+) : RuntimeException("Network error $status", errorCause)
 
 class CloudApi(
         private val baseUrl: String,
         private val instanceId: String) {
 
     var token: String? = null
+
+    val json = defaultSerializer()
 
     private val client = HttpClient(CIO) {
         engine {
@@ -82,13 +81,21 @@ class CloudApi(
 
     suspend fun validateToken(): String = client.get("$baseUrl/account/id") { sign() }
 
+    suspend fun getAccount(): AccountDto = client.get("$baseUrl/account/info") { sign() }
+
+    suspend fun getPersonages(): List<PersonageDto> = client.get("$baseUrl/account/personages") { sign() }
+
     suspend fun listActs(): List<ActDto> = client.get("$baseUrl/acts") { sign() }
 
     suspend fun getAct(actName: String): ActDto = client.get("$baseUrl/acts/$actName") { sign() }
 
-    suspend fun markLocationComplete(actName: String, locationId: Int, difficulty: Int): RewardListDto = client.post("$baseUrl/acts/$actName/$locationId/markComplete?difficulty=$difficulty") { sign() }
+    suspend fun markLocationComplete(actName: String, locationId: Int, difficulty: Int, personageId: String): LocationCompleteResponseDto = client.post("$baseUrl/acts/$actName/$locationId/markComplete?difficulty=$difficulty&personageId=$personageId") { sign() }
 
     suspend fun getActProgress(actName: String): List<LocationProgressDto> = client.get("$baseUrl/acts/$actName/progress") { sign() }
+
+    suspend fun getGearInfo(items: List<String>): List<InventoryItemFullInfoDto> = client.get("$baseUrl/gear/info") {
+        body = json.write(items)
+    }
 
     private fun HttpRequestBuilder.sign() {
         headers {

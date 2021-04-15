@@ -16,10 +16,8 @@ import com.game7th.battle.ability.AbilityTrigger
 import com.game7th.battle.dto.BattleEvent
 import com.game7th.battle.dto.BattleFlaskDto
 import com.game7th.metagame.PersistentStorage
-import com.game7th.metagame.account.RewardData
-import com.game7th.metagame.account.dto.PersonageAttributeStats
-import com.game7th.metagame.account.dto.PersonageData
 import com.game7th.metagame.campaign.ActsService
+import com.game7th.metagame.dto.UnitType
 import com.game7th.metagame.inventory.dto.FlaskStackDto
 import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.GdxGameContext
@@ -32,6 +30,9 @@ import com.game7th.swipe.game.battle.model.FigureGdxModel
 import com.game7th.swipe.game.battle.model.GdxModel
 import com.game7th.swipe.game.battle.tutorial.*
 import com.game7th.swipe.gestures.SimpleDirectionGestureDetector
+import com.game7th.swiped.api.LocationCompleteResponseDto
+import com.game7th.swiped.api.PersonageAttributeStatsDto
+import com.game7th.swiped.api.PersonageDto
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -43,7 +44,7 @@ class GameScreen(game: SwipeGameGdx,
                  private val actId: String,
                  private val locationId: Int,
                  private val difficulty: Int,
-                 private val personage: PersonageData,
+                 private val personage: PersonageDto,
                  private val actService: ActsService,
                  private val storage: PersistentStorage,
                  gdxGameContext: GdxGameContext
@@ -90,10 +91,10 @@ class GameScreen(game: SwipeGameGdx,
         KtxAsync.launch {
             config = BattleConfig(
                     personages = listOf(
-                            PersonageConfig(personage.unit, personage.level, personage.stats, game.context.balance.produceGearStats(personage))
+                            PersonageConfig(UnitType.valueOf(personage.unit), personage.level, personage.stats, game.context.balance.produceGearStats(personage, personage.items))
                     ),
                     waves = actService.getActConfig(actId).findNode(locationId)?.waves?.map {
-                        it.map { PersonageConfig(it.unitType, it.level + (difficulty - 1) * 3, PersonageAttributeStats(0, 0, 0), null) }
+                        it.map { PersonageConfig(it.unitType, it.level + (difficulty - 1) * 3, PersonageAttributeStatsDto(0, 0, 0), null) }
                     } ?: emptyList()
             )
 
@@ -139,11 +140,7 @@ class GameScreen(game: SwipeGameGdx,
                     atlases = atlases
             ), this@GameScreen, Gdx.graphics.height - (Gdx.graphics.width.toFloat() / 1.25f), sounds) {
                 if (it is BattleEvent.VictoryEvent) {
-                    val experience = config.waves.sumBy {
-                        it.sumBy { it.level * 50 }
-                    }
-                    val expResult = game.accountService.addPersonageExperience(personage.id, experience)
-                    gameActor.showVictory(expResult)
+                    gameActor.showVictory()
                     backgroundMusic.pause()
                 } else {
                     gameActor.showDefeat()
@@ -207,8 +204,9 @@ class GameScreen(game: SwipeGameGdx,
         }
     }
 
-    private suspend fun claimRewards(): List<RewardData> {
-        return actService.markLocationComplete(actId, locationId, difficulty)
+    private suspend fun claimRewards(): LocationCompleteResponseDto {
+        game.accountService.refreshPersonages()
+        return actService.markLocationComplete(actId, locationId, difficulty, personage.id)
     }
 
     private fun initializeBattle() {

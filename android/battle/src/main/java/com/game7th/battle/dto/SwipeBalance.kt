@@ -2,8 +2,10 @@ package com.game7th.battle.dto
 
 import com.game7th.battle.unit.CappedStat
 import com.game7th.battle.unit.UnitStats
-import com.game7th.metagame.account.dto.PersonageAttributeStats
-import com.game7th.metagame.account.dto.PersonageData
+import com.game7th.metagame.dto.UnitType
+import com.game7th.swiped.api.InventoryItemFullInfoDto
+import com.game7th.swiped.api.PersonageAttributeStatsDto
+import com.game7th.swiped.api.PersonageDto
 
 data class StatBalance(
         val baseHealth: Int,
@@ -52,49 +54,49 @@ data class SwipeBalance(
         val dryad: PersonageBalance,
         val dryad_queen: PersonageBalance
 ) {
-    private fun calculateHealth(p: PersonageData) = p.level * stats.healthPerLevel + p.stats.body * stats.healthPerBody
-    private fun calculateArmor(p: PersonageData) = p.stats.body * stats.armorPerBody
-    private fun calculateRegeneration(p: PersonageData) = (p.stats.spirit * stats.regenerationPerSpirit).toInt()
-    private fun calculateEvasion(p: PersonageData) = p.stats.spirit * stats.evasionPerSpirit
-    private fun calculateResist(p: PersonageData) = p.stats.mind * stats.resistPerMind
-    private fun calculateWisdom(p: PersonageData) = p.stats.mind * stats.wizdomMultiplier
+    private fun calculateHealth(p: PersonageDto) = p.level * stats.healthPerLevel + p.stats.body * stats.healthPerBody
+    private fun calculateArmor(p: PersonageDto) = p.stats.body * stats.armorPerBody
+    private fun calculateRegeneration(p: PersonageDto) = (p.stats.spirit * stats.regenerationPerSpirit).toInt()
+    private fun calculateEvasion(p: PersonageDto) = p.stats.spirit * stats.evasionPerSpirit
+    private fun calculateResist(p: PersonageDto) = p.stats.mind * stats.resistPerMind
+    private fun calculateWisdom(p: PersonageDto) = p.stats.mind * stats.wizdomMultiplier
 
-    fun produceBaseStats(p: PersonageData): UnitStats {
-        return UnitStats(p.unit, p.level, p.stats.body, p.stats.spirit, p.stats.mind, calculateHealth(p).let { CappedStat(it, it) },
+    fun produceBaseStats(p: PersonageDto): UnitStats {
+        return UnitStats(UnitType.valueOf(p.unit), p.level, p.stats.body, p.stats.spirit, p.stats.mind, calculateHealth(p).let { CappedStat(it, it) },
             calculateArmor(p), calculateResist(p), calculateResist(p), calculateEvasion(p), calculateRegeneration(p), calculateWisdom(p))
     }
 
-    fun produceGearStats(p: PersonageData): UnitStats {
-        val flatBody = p.items.sumBy { ((it.template.gbFlatBody ?: 0f) * it.level).toInt() }
-        val flatSpirit = p.items.sumBy { ((it.template.gbFlatSpirit ?: 0f) * it.level).toInt() }
-        val flatMind = p.items.sumBy { ((it.template.gbFlatMind?:0f) * it.level).toInt() }
-        val percBody = p.items.sumBy { ((it.template.gbPercBody?:0f) * it.level).toInt() }
-        val percSpirit = p.items.sumBy { ((it.template.gbPercSpirit?:0f) * it.level).toInt() }
-        val percMind = p.items.sumBy { ((it.template.gbPercMind?:0f) * it.level).toInt() }
+    fun produceGearStats(p: PersonageDto, items: List<InventoryItemFullInfoDto>): UnitStats {
+        val flatBody = items.sumBy { ((it.template.gbFlatBody ?: 0f) * it.level).toInt() }
+        val flatSpirit = items.sumBy { ((it.template.gbFlatSpirit ?: 0f) * it.level).toInt() }
+        val flatMind = items.sumBy { ((it.template.gbFlatMind?:0f) * it.level).toInt() }
+        val percBody = items.sumBy { ((it.template.gbPercBody?:0f) * it.level).toInt() }
+        val percSpirit = items.sumBy { ((it.template.gbPercSpirit?:0f) * it.level).toInt() }
+        val percMind = items.sumBy { ((it.template.gbPercMind?:0f) * it.level).toInt() }
 
         val _body = updated(p.stats.body, flatBody, percBody)
         val _spirit = updated(p.stats.spirit, flatSpirit, percSpirit)
         val _mind = updated(p.stats.mind, flatMind, percMind)
 
-        val _p = p.copy(stats = PersonageAttributeStats(_body, _spirit, _mind))
+        val _p = p.copy(stats = PersonageAttributeStatsDto(_body, _spirit, _mind))
 
-        val flatHp = p.items.sumBy { ((it.template.gbFlatHp?:0f) * it.level).toInt() }
-        val flatArmor = p.items.sumBy { ((it.template.gbFlatArmor?:0f) * it.level).toInt() }
-        val flatRegeneration = p.items.sumBy { ((it.template.gbFlatRegeneration?:0f) * it.level).toInt() }
-        val flatEvasion = p.items.sumBy { ((it.template.gbFlatEvasion?:0f) * it.level).toInt() }
-        val flatResist = p.items.sumBy { ((it.template.gbFlatResist?:0f) * it.level).toInt() }
-        val flatWisdom = p.items.sumBy { ((it.template.gbFlatWisdom?:0f) * it.level).toInt() }
+        val flatHp = items.sumBy { ((it.template.gbFlatHp?:0f) * it.level).toInt() }
+        val flatArmor = items.sumBy { ((it.template.gbFlatArmor?:0f) * it.level).toInt() }
+        val flatRegeneration = items.sumBy { ((it.template.gbFlatRegeneration?:0f) * it.level).toInt() }
+        val flatEvasion = items.sumBy { ((it.template.gbFlatEvasion?:0f) * it.level).toInt() }
+        val flatResist = items.sumBy { ((it.template.gbFlatResist?:0f) * it.level).toInt() }
+        val flatWisdom = items.sumBy { ((it.template.gbFlatWisdom?:0f) * it.level).toInt() }
 
-        val percHp = p.items.sumBy { ((it.template.gbPercHp?:0f) * it.level).toInt() }
-        val percArmor = p.items.sumBy { ((it.template.gbPercArmor?:0f) * it.level).toInt() }
-        val percRegeneration = p.items.sumBy { ((it.template.gbPercRegeneration?:0f) * it.level).toInt() }
-        val percEvasion = p.items.sumBy { ((it.template.gbPercEvasion?:0f) * it.level).toInt() }
-        val percResist = p.items.sumBy { ((it.template.gbPercResist?:0f) * it.level).toInt() }
-        val percWisdom = p.items.sumBy { ((it.template.gbPercWisdom?:0f) * it.level).toInt() }
+        val percHp = items.sumBy { ((it.template.gbPercHp?:0f) * it.level).toInt() }
+        val percArmor = items.sumBy { ((it.template.gbPercArmor?:0f) * it.level).toInt() }
+        val percRegeneration = items.sumBy { ((it.template.gbPercRegeneration?:0f) * it.level).toInt() }
+        val percEvasion = items.sumBy { ((it.template.gbPercEvasion?:0f) * it.level).toInt() }
+        val percResist = items.sumBy { ((it.template.gbPercResist?:0f) * it.level).toInt() }
+        val percWisdom = items.sumBy { ((it.template.gbPercWisdom?:0f) * it.level).toInt() }
 
         val resist = updated(calculateResist(_p), flatResist, percResist)
 
-        return UnitStats(_p.unit, _p.level, _body, _mind, _spirit,
+        return UnitStats(UnitType.valueOf(_p.unit), _p.level, _body, _mind, _spirit,
             updated(calculateHealth(_p), flatHp, percHp).let { CappedStat(it, it) },
             updated(calculateArmor(_p), flatArmor, percArmor),
                 resist,

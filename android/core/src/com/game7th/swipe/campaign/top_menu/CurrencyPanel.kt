@@ -8,6 +8,8 @@ import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.account.AccountService
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swiped.api.Currency
+import kotlinx.coroutines.launch
+import ktx.async.KtxAsync
 
 class CurrencyPanel(
         private val context: GdxGameContext,
@@ -33,37 +35,45 @@ class CurrencyPanel(
         y = 5f * context.scale
     }
 
-    var balance = accountService.getBalance()
-
-    val labelGold = Label((balance.currencies[Currency.GOLD] ?: 0).toString(), Label.LabelStyle(context.font, Color.WHITE)).apply {
-        x = 34f * context.scale
-        y = 5f * context.scale
-        width = 62f * context.scale
-        height = 24f * context.scale
-        setAlignment(Align.left)
-        setFontScale(20f * context.scale / 36f)
-    }
-
-    val labelGems = Label((balance.currencies[Currency.GEMS] ?: 0).toString(), Label.LabelStyle(context.font, Color.WHITE)).apply {
-        x = 130f * context.scale
-        y = 5f * context.scale
-        width = 38f * context.scale
-        height = 24f * context.scale
-        setAlignment(Align.left)
-        setFontScale(20f * context.scale / 36f)
-    }
+    lateinit var balance: Map<String, Int>
+    lateinit var labelGold: Label
+    lateinit var labelGems: Label
 
     init {
         addActor(background)
         addActor(iconGold)
         addActor(iconGems)
-        addActor(labelGold)
-        addActor(labelGems)
+
+        KtxAsync.launch {
+            balance = accountService.getBalance()
+
+            labelGold = Label((balance[Currency.GOLD.toString()] ?: 0).toString(), Label.LabelStyle(context.font, Color.WHITE)).apply {
+                x = 34f * context.scale
+                y = 5f * context.scale
+                width = 62f * context.scale
+                height = 24f * context.scale
+                setAlignment(Align.left)
+                setFontScale(20f * context.scale / 36f)
+            }
+
+            labelGems = Label((balance[Currency.GEMS.toString()] ?: 0).toString(), Label.LabelStyle(context.font, Color.WHITE)).apply {
+                x = 130f * context.scale
+                y = 5f * context.scale
+                width = 38f * context.scale
+                height = 24f * context.scale
+                setAlignment(Align.left)
+                setFontScale(20f * context.scale / 36f)
+            }
+            addActor(labelGold)
+            addActor(labelGems)
+        }
     }
 
     fun refreshBalance() {
-        balance = accountService.getBalance()
-        labelGold.setText((balance.currencies[Currency.GOLD] ?: 0).toString())
-        labelGems.setText((balance.currencies[Currency.GEMS] ?: 0).toString())
+        KtxAsync.launch {
+            balance = accountService.getBalance()
+            labelGold.setText((balance[Currency.GOLD.toString()] ?: 0).toString())
+            labelGems.setText((balance[Currency.GEMS.toString()] ?: 0).toString())
+        }
     }
 }

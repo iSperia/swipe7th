@@ -5,7 +5,7 @@ import com.game7th.metagame.shop.dto.ShopItem
 
 interface ShopService {
 
-    fun listItems(): List<ShopItem>
+    suspend fun listItems(): List<ShopItem>
 
     fun acquireItem(id: String, paymentOption: PaymentOption): Boolean
 }

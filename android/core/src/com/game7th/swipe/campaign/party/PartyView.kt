@@ -9,8 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.dto.UnitConfig
+import com.game7th.metagame.dto.UnitType
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.campaign.plist.PersonageScrollActor
+import kotlinx.coroutines.launch
+import ktx.async.KtxAsync
 
 class PartyView(
         private val context: GdxGameContext,
@@ -19,16 +22,10 @@ class PartyView(
 ) : Group() {
 
     val browserHeight = context.scale * 150f
-    val personagesView = PersonageScrollActor(context, accountService.getPersonages().map { UnitConfig(it.unit, it.level) }, browserHeight, true, -1).apply {
-        y = 10f * context.scale
-        x = 10f * context.scale
-    }
-    val personagesScroll = ScrollPane(personagesView).apply {
-        y = 10f * context.scale
-        x = 10f * context.scale
-        width = 460f * context.scale
-        height = 150f * context.scale
-    }
+
+    lateinit var personagesView:PersonageScrollActor
+    lateinit var personagesScroll: ScrollPane
+
     val personagesBg = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
         width = 480 * context.scale
         height = 170 * context.scale
@@ -40,35 +37,48 @@ class PartyView(
     var detailView: PersonageDetailView? = null
 
     init {
-        addActor(personagesBg)
-        addActor(personagesScroll)
+        KtxAsync.launch {
+            personagesView = PersonageScrollActor(context, accountService.getPersonages().map { UnitConfig(UnitType.valueOf(it.unit), it.level) }, browserHeight, true, -1).apply {
+                y = 10f * context.scale
+                x = 10f * context.scale
+            }
+            personagesScroll = ScrollPane(personagesView).apply {
+                y = 10f * context.scale
+                x = 10f * context.scale
+                width = 460f * context.scale
+                height = 150f * context.scale
+            }
 
-        personagesView.selectionCallback = { index ->
-            //show details or hide details
-            //we are probably show detailView
-            val needAnimation = detailView == null
-            detailView?.remove()
-            detailView = PersonageDetailView(context, accountService, gearService, accountService.getPersonages()[index].id)
-            addActor(detailView)
-            isDetailsShown = true
+            addActor(personagesBg)
+            addActor(personagesScroll)
 
-            detailView?.let { detailView ->
-                if (needAnimation) {
-                    detailView.y = -240f * context.scale
-                    detailView.addAction(MoveByAction().apply {
-                        amountY = 240f * context.scale
-                        duration = 0.25f
-                    })
-                    personagesScroll.y = 10f * context.scale
-                    personagesBg.y = 0f
-                    personagesScroll.addAction(MoveByAction().apply {
-                        amountY = 240f * context.scale
-                        duration = 0.25f
-                    })
-                    personagesBg.addAction(MoveByAction().apply {
-                        amountY = 240f * context.scale
-                        duration = 0.25f
-                    })
+            personagesView.selectionCallback = { index ->
+                //show details or hide details
+                //we are probably show detailView
+                val needAnimation = detailView == null
+                detailView?.remove()
+                detailView = PersonageDetailView(context, accountService, gearService, accountService.getPersonages()[index].id)
+                addActor(detailView)
+                isDetailsShown = true
+
+                detailView?.let { detailView ->
+                    if (needAnimation) {
+                        detailView.y = -240f * context.scale
+                        detailView.addAction(MoveByAction().apply {
+                            amountY = 240f * context.scale
+                            duration = 0.25f
+                        })
+                        personagesScroll.y = 10f * context.scale
+                        personagesBg.y = 0f
+                        personagesScroll.addAction(MoveByAction().apply {
+                            amountY = 240f * context.scale
+                            duration = 0.25f
+                        })
+                        personagesBg.addAction(MoveByAction().apply {
+                            amountY = 240f * context.scale
+                            duration = 0.25f
+                        })
+                    }
                 }
             }
         }

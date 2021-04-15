@@ -1,8 +1,8 @@
 package com.game7th.battle.dto
 
 import com.game7th.battle.unit.UnitStats
-import com.game7th.metagame.account.dto.PersonageAttributeStats
 import com.game7th.metagame.dto.UnitType
+import com.game7th.swiped.api.PersonageAttributeStatsDto
 
 data class BattleConfig(
         val personages: List<PersonageConfig>,
@@ -12,6 +12,6 @@ data class BattleConfig(
 data class PersonageConfig(
         val name: UnitType,
         val level: Int,
-        val stats: PersonageAttributeStats,
+        val stats: PersonageAttributeStatsDto,
         val unitStats: UnitStats?
 )

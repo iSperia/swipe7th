@@ -1,29 +1,16 @@
 package com.game7th.metagame.account
 
-import com.game7th.metagame.account.dto.PersonageBalance
-import com.game7th.metagame.account.dto.PersonageData
-import com.game7th.metagame.account.dto.PersonageExperienceResult
-import com.game7th.metagame.dto.UnitType
-import com.game7th.swiped.api.Currency
-import com.game7th.swiped.api.InventoryItemFullInfoDto
+import com.game7th.swiped.api.PersonageDto
 
 interface AccountService {
 
-    fun getPersonages(): List<PersonageData>
+    suspend fun init(): Unit
 
-    fun addPersonage(personage: UnitType): Unit
+    suspend fun getPersonages(): List<PersonageDto>
 
-    fun addPersonageExperience(personageId: Int, experience: Int) : List<PersonageExperienceResult>
+    suspend fun refreshPersonages()
 
-    fun addRewards(rewards: List<RewardData>): Unit
+    suspend fun getBalance(): Map<String, Int>
 
-    fun equipItem(personageId: Int, item: InventoryItemFullInfoDto)
-
-    fun dequipItem(personageId: Int, item: InventoryItemFullInfoDto)
-
-    fun getBalance(): PersonageBalance
-
-    fun fund(currency: Currency, amount: Int): PersonageBalance
-
-    fun spend(currency: Currency, amount: Int): PersonageBalance
+    suspend fun refreshBalance()
 }
