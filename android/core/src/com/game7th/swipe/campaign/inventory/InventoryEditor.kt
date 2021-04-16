@@ -81,43 +81,42 @@ class InventoryEditor(
     }
 
     private fun reloadData() {
-        val items = gearService.listInventory()
-        panelItems.width = context.scale * 60f * max((items.size - 1) / 3 + 1, 5)
-        panelItems.height = 180f * context.scale
-        panelScroller.actor = panelItems
-
-        panelItems.children.forEach { it.clearActions() }
-        equippedGroup.children.forEach { it.clearActions() }
-        panelItems.clearChildren()
-        equippedGroup.clearChildren()
-
-        dismissDetailPanel()
-
-        val emptyItems = max(15 - items.size, 3 - items.size % 3)
-
-        items.forEachIndexed { index, item ->
-            val itemView = ItemView(context, ItemViewAdapter.InventoryItemAdapter(item), true).apply {
-                x = (index / 3) * 60f * context.scale
-                y = (120f - (index % 3) * 60f) * context.scale
-            }
-            itemView.onClick {
-                processInventoryItemClick(item, itemView)
-            }
-            panelItems.addActor(itemView)
-        }
-        (1..emptyItems).forEach {
-            val itemView = ItemView(context, ItemViewAdapter.EmptyAdapter, true).apply {
-                val index = items.size + it - 1
-                x = (index / 3) * 60f * context.scale
-                y = (120f - (index % 3) * 60f) * context.scale
-            }
-            panelItems.addActor(itemView)
-        }
-
         KtxAsync.launch {
+            val items = gearService.listInventory().filter { it.personageId == null }
+            panelItems.width = context.scale * 60f * max((items.size - 1) / 3 + 1, 5)
+            panelItems.height = 180f * context.scale
+            panelScroller.actor = panelItems
+
+            panelItems.children.forEach { it.clearActions() }
+            equippedGroup.children.forEach { it.clearActions() }
+            panelItems.clearChildren()
+            equippedGroup.clearChildren()
+
+            dismissDetailPanel()
+
+            val emptyItems = max(15 - items.size, 3 - items.size % 3)
+
+            items.forEachIndexed { index, item ->
+                val itemView = ItemView(context, ItemViewAdapter.InventoryItemAdapter(item), true).apply {
+                    x = (index / 3) * 60f * context.scale
+                    y = (120f - (index % 3) * 60f) * context.scale
+                }
+                itemView.onClick {
+                    processInventoryItemClick(item, itemView)
+                }
+                panelItems.addActor(itemView)
+            }
+            (1..emptyItems).forEach {
+                val itemView = ItemView(context, ItemViewAdapter.EmptyAdapter, true).apply {
+                    val index = items.size + it - 1
+                    x = (index / 3) * 60f * context.scale
+                    y = (120f - (index % 3) * 60f) * context.scale
+                }
+                panelItems.addActor(itemView)
+            }
+
             accountService.getPersonages().firstOrNull { it.id == personageId }?.let { personage ->
-                println(personage.items)
-                personage.items.forEach { item ->
+                gearService.listInventory().filter { it.personageId == personage.id }.forEach { item ->
                     val itemView = ItemView(context, ItemViewAdapter.InventoryItemAdapter(item), false)
                     itemView.x = context.scale * 60f * xs[item.template.node]!!
                     itemView.y = context.scale * 60f * ys[item.template.node]!!
@@ -161,19 +160,23 @@ class InventoryEditor(
 
     fun equipFromDetailPanel(actionIndex: Int, meta: String?) {
         (detailPanel?.item as? ItemViewAdapter.InventoryItemAdapter)?.item?.let { item ->
-//            accountService.equipItem(personageId, item)
-            dismissDetailPanel()
-            dirty = true
-            refresher()
+            KtxAsync.launch {
+                gearService.equipItem(personageId, item)
+                dismissDetailPanel()
+                dirty = true
+                refresher()
+            }
         }
     }
 
     private fun dequipFromEquipped(actionIndex: Int, meta: String?) {
         (detailPanel?.item as? ItemViewAdapter.InventoryItemAdapter)?.item?.let { item ->
-//            accountService.dequipItem(personageId, item)
-            dismissDetailPanel()
-            dirty = true
-            refresher()
+            KtxAsync.launch {
+                gearService.dequipItem(personageId, item)
+                dismissDetailPanel()
+                dirty = true
+                refresher()
+            }
         }
     }
 

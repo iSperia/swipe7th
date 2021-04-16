@@ -97,6 +97,12 @@ class CloudApi(
         body = json.write(items)
     }
 
+    suspend fun getInventory(): List<InventoryItemFullInfoDto> = client.get<InventoryPoolDto> ("$baseUrl/gear/inventory") { sign() }.items
+
+    suspend fun putItemOn(personageId: String, item: InventoryItemFullInfoDto): Unit = client.post("$baseUrl/gear/putOn?personageId=$personageId&itemName=${item.template.name}&itemLevel=${item.level}") { sign() }
+
+    suspend fun putItemOff(personageId: String, item: InventoryItemFullInfoDto): Unit = client.post("$baseUrl/gear/putOff?personageId=$personageId&itemName=${item.template.name}&itemLevel=${item.level}") { sign() }
+
     private fun HttpRequestBuilder.sign() {
         headers {
             token?.let { token -> set("Authorization", "Bearer $token") }

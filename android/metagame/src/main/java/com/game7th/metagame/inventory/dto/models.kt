@@ -6,7 +6,6 @@ data class GearConfig(
 )
 
 data class InventoryPool(
-        val items: MutableList<InventoryItemFullInfoDto>,
         val flasks: MutableList<FlaskStackDto>
 )
 

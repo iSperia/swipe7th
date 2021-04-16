@@ -524,8 +524,8 @@ class ActScreen(
                                                                                 if ((inventory.panelItems.getChild(0) as ItemView).item is ItemViewAdapter.InventoryItemAdapter) {
                                                                                     showFocusView("ttr_party_13", inventory.panelItems.getChild(0).bounds(), DismissStrategy.DISMISS_ON_INSIDE) {
                                                                                         (inventory.panelItems.getChild(0) as? ItemView)?.let { itemView ->
-                                                                                            inventory.processInventoryItemClick(game.gearService.listInventory()[0], itemView)
                                                                                             KtxAsync.launch {
+                                                                                                inventory.processInventoryItemClick(game.gearService.listInventory()[0], itemView)
                                                                                                 delay(50)
                                                                                                 inventory.detailPanel?.let { detailPanel ->
                                                                                                     showFocusView("ttr_party_14", detailPanel.itemView.bg.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {

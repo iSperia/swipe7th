@@ -18,6 +18,7 @@ import com.game7th.battle.dto.BattleFlaskDto
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.campaign.ActsService
 import com.game7th.metagame.dto.UnitType
+import com.game7th.metagame.inventory.GearService
 import com.game7th.metagame.inventory.dto.FlaskStackDto
 import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.GdxGameContext
@@ -46,6 +47,7 @@ class GameScreen(game: SwipeGameGdx,
                  private val difficulty: Int,
                  private val personage: PersonageDto,
                  private val actService: ActsService,
+                 private val gearService: GearService,
                  private val storage: PersistentStorage,
                  gdxGameContext: GdxGameContext
 ) : BaseScreen(gdxGameContext, game) {
@@ -91,7 +93,7 @@ class GameScreen(game: SwipeGameGdx,
         KtxAsync.launch {
             config = BattleConfig(
                     personages = listOf(
-                            PersonageConfig(UnitType.valueOf(personage.unit), personage.level, personage.stats, game.context.balance.produceGearStats(personage, personage.items))
+                            PersonageConfig(UnitType.valueOf(personage.unit), personage.level, personage.stats, game.context.balance.produceGearStats(personage, gearService.listInventory().filter { it.personageId == personage.id }))
                     ),
                     waves = actService.getActConfig(actId).findNode(locationId)?.waves?.map {
                         it.map { PersonageConfig(it.unitType, it.level + (difficulty - 1) * 3, PersonageAttributeStatsDto(0, 0, 0), null) }

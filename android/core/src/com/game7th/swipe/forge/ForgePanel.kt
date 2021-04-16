@@ -72,9 +72,9 @@ class ForgePanel(
         addActor(dustLabel)
         reloadData()
 
-        val items = gearService.listInventory()
-        if (items.isNotEmpty() && context.storage.get(TutorialKeys.TUTORIAL_FORGE)?.toBoolean() != true) {
-            KtxAsync.launch {
+        KtxAsync.launch {
+            val items = gearService.listInventory()
+            if (items.isNotEmpty() && context.storage.get(TutorialKeys.TUTORIAL_FORGE)?.toBoolean() != true) {
                 delay(300)
                 screen.showFocusView("ttr_forge_1", bg.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
                     screen.showFocusView("ttr_forge_2", dustLabel.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
@@ -105,39 +105,40 @@ class ForgePanel(
     }
 
     private fun reloadData() {
-        val items = gearService.listInventory()
-        panelItems.width = context.scale * 80 * max((items.size - 1) / 3 + 1, 5)
-        panelItems.height = 240 * context.scale
-        panelScroller.actor = panelItems
-
         KtxAsync.launch {
-            dustLabel.setText((accountService.getBalance()[Currency.DUST.toString()] ?: 0).toString())
-        }
+            val items = gearService.listInventory()
+            panelItems.width = context.scale * 80 * max((items.size - 1) / 3 + 1, 5)
+            panelItems.height = 240 * context.scale
+            panelScroller.actor = panelItems
 
-        panelItems.children.forEach { it.clearActions() }
-        panelItems.clearChildren()
+            dustLabel.setText((accountService.getBalance()[Currency.DUST.toString()]
+                    ?: 0).toString())
 
-        dismissDetailPanel()
+            panelItems.children.forEach { it.clearActions() }
+            panelItems.clearChildren()
 
-        val emptyItems = max(15 - items.size, 3 - items.size % 3)
+            dismissDetailPanel()
 
-        items.forEachIndexed { index, item ->
-            val itemView = ItemView(context, ItemViewAdapter.InventoryItemAdapter(item), true, 80f * context.scale).apply {
-                x = (index / 3) * 80f * context.scale
-                y = (160f - (index % 3) * 80f) * context.scale
+            val emptyItems = max(15 - items.size, 3 - items.size % 3)
+
+            items.forEachIndexed { index, item ->
+                val itemView = ItemView(context, ItemViewAdapter.InventoryItemAdapter(item), true, 80f * context.scale).apply {
+                    x = (index / 3) * 80f * context.scale
+                    y = (160f - (index % 3) * 80f) * context.scale
+                }
+                itemView.onClick {
+                    processItemClicked(item, itemView)
+                }
+                panelItems.addActor(itemView)
             }
-            itemView.onClick {
-                processItemClicked(item, itemView)
+            (1..emptyItems).forEach {
+                val itemView = ItemView(context, ItemViewAdapter.EmptyAdapter, true, 80f * context.scale).apply {
+                    val index = items.size + it - 1
+                    x = (index / 3) * 80f * context.scale
+                    y = (160f - (index % 3) * 80f) * context.scale
+                }
+                panelItems.addActor(itemView)
             }
-            panelItems.addActor(itemView)
-        }
-        (1..emptyItems).forEach {
-            val itemView = ItemView(context, ItemViewAdapter.EmptyAdapter, true, 80f * context.scale).apply {
-                val index = items.size + it - 1
-                x = (index / 3) * 80f * context.scale
-                y = (160f - (index % 3) * 80f) * context.scale
-            }
-            panelItems.addActor(itemView)
         }
     }
 
@@ -160,12 +161,13 @@ class ForgePanel(
             when (index) {
                 0 -> { //to dust!
 //                    accountService.fund(Currency.DUST, item.level * 100)
-                    gearService.removeItem(item)
+//                    gearService.dequipItem(item)
                 }
                 1 -> { //level up
                     val dustNeeded = 100 * item.level
                     KtxAsync.launch {
-                        if ((accountService.getBalance()[Currency.DUST.toString()] ?: 0) >= dustNeeded) {
+                        if ((accountService.getBalance()[Currency.DUST.toString()]
+                                        ?: 0) >= dustNeeded) {
 //                        accountService.spend(Currency.DUST, dustNeeded)
                             gearService.upgradeItem(item)
                         }

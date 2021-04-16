@@ -3,25 +3,29 @@ package com.game7th.metagame.inventory
 import com.game7th.metagame.FileProvider
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.inventory.dto.*
+import com.game7th.metagame.network.CloudApi
 import com.game7th.swiped.api.InventoryItemFullInfoDto
 import com.google.gson.Gson
-import kotlin.random.Random
 
 class GearServiceImpl(
         private val gson: Gson,
         private val storage: PersistentStorage,
-        private val files: FileProvider
+        private val files: FileProvider,
+        private val api: CloudApi
 ) : GearService {
 
     val gearConfig: GearConfig
 
     var inventory: InventoryPool
 
+    var itemsCache: List<InventoryItemFullInfoDto> = emptyList()
+
+    var dirty = true
+
     init {
         val inventoryString = storage.get(KEY_INVENTORY)
         inventory = if (inventoryString == null) {
             val initialData = InventoryPool(
-                    items = mutableListOf(),
                     flasks = mutableListOf(FlaskStackDto(FlaskTemplate("LIFE_FLASK_SMALL", 100, 0), 5), FlaskStackDto(FlaskTemplate("LIFE_FLASK_MEDIUM", 200,0), 5))
             )
             initialData
@@ -32,21 +36,27 @@ class GearServiceImpl(
         gearConfig = gson.fromJson<GearConfig>(files.getFileContent("artifacts.json"), GearConfig::class.java)
     }
 
-    override fun listInventory() = inventory.items
-
-    override fun equipItem(personageId: Int, item: InventoryItemFullInfoDto) {
-
+    override suspend fun listInventory(): List<InventoryItemFullInfoDto> {
+        if (dirty) {
+            itemsCache = api.getInventory()
+        }
+        return itemsCache
     }
 
-    override fun removeItem(item: InventoryItemFullInfoDto) {
-        inventory.items.remove(item)
-        storage.put(KEY_INVENTORY, gson.toJson(inventory))
+    override suspend fun equipItem(personageId: String, item: InventoryItemFullInfoDto) {
+        api.putItemOn(personageId, item)
+        dirty = true
+    }
+
+    override suspend fun dequipItem(personageId: String, item: InventoryItemFullInfoDto) {
+        api.putItemOff(personageId, item)
+        dirty = true
     }
 
     override fun upgradeItem(item: InventoryItemFullInfoDto) {
-        val newItem = item.copy(level = item.level + 1)
-        inventory.items.remove(item)
-        inventory.items.add(newItem)
+//        val newItem = item.copy(level = item.level + 1)
+//        inventory.items.remove(item)
+//        inventory.items.add(newItem)
     }
 
     override fun listFlasks(): List<FlaskStackDto> {

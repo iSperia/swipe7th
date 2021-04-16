@@ -177,6 +177,7 @@ class BattlePrepareDialog(
                 difficulty,
                 personages[personagesGroup.selectedIndex % personages.size],
                 actsService,
+                game.gearService,
                 game.storage,
                 game.context
         ))
