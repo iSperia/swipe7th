@@ -64,6 +64,7 @@ class ActsServiceImpl(
         val rewards = api.markLocationComplete(name, locationId, starCount, personageId)
 
         reloadActProgress(name)
+        progressCache.remove(name)
 
         return rewards
     }

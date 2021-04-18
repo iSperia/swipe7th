@@ -160,22 +160,26 @@ class ForgePanel(
         (detailPanel?.item as? ItemViewAdapter.InventoryItemAdapter)?.item?.let { item ->
             when (index) {
                 0 -> { //to dust!
-//                    accountService.fund(Currency.DUST, item.level * 100)
-//                    gearService.dequipItem(item)
+                    KtxAsync.launch {
+                        if (gearService.dustItem(item)) {
+                            accountService.refreshBalance()
+                            reloadData()
+                        }
+                    }
                 }
                 1 -> { //level up
-                    val dustNeeded = 100 * item.level
+                    val dustNeeded = item.template.rarity.scale * item.level
                     KtxAsync.launch {
-                        if ((accountService.getBalance()[Currency.DUST.toString()]
-                                        ?: 0) >= dustNeeded) {
-//                        accountService.spend(Currency.DUST, dustNeeded)
-                            gearService.upgradeItem(item)
+                        if ((accountService.getBalance()[Currency.DUST.toString()] ?: 0) >= dustNeeded) {
+                            if (gearService.pumpItem(item)) {
+                                accountService.refreshBalance()
+                                reloadData()
+                            }
                         }
                     }
                 }
             }
             dismissDetailPanel()
-            reloadData()
         }
     }
 

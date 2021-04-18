@@ -99,9 +99,13 @@ class CloudApi(
 
     suspend fun getInventory(): List<InventoryItemFullInfoDto> = client.get<InventoryPoolDto> ("$baseUrl/gear/inventory") { sign() }.items
 
-    suspend fun putItemOn(personageId: String, item: InventoryItemFullInfoDto): Unit = client.post("$baseUrl/gear/putOn?personageId=$personageId&itemName=${item.template.name}&itemLevel=${item.level}") { sign() }
+    suspend fun putItemOn(personageId: String, item: InventoryItemFullInfoDto): Unit = client.post("$baseUrl/gear/putOn?personageId=$personageId&itemId=${item.id}") { sign() }
 
-    suspend fun putItemOff(personageId: String, item: InventoryItemFullInfoDto): Unit = client.post("$baseUrl/gear/putOff?personageId=$personageId&itemName=${item.template.name}&itemLevel=${item.level}") { sign() }
+    suspend fun putItemOff(personageId: String, item: InventoryItemFullInfoDto): Unit = client.post("$baseUrl/gear/putOff?personageId=$personageId&itemId=${item.id}") { sign() }
+
+    suspend fun dustItem(item: InventoryItemFullInfoDto): Unit = client.post("$baseUrl/gear/dust?itemId=${item.id}") { sign() }
+
+    suspend fun pumpItem(item: InventoryItemFullInfoDto): Unit = client.post("$baseUrl/gear/pump?itemId=${item.id}") { sign() }
 
     private fun HttpRequestBuilder.sign() {
         headers {

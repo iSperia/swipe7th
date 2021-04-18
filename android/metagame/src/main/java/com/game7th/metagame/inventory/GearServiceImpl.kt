@@ -4,6 +4,7 @@ import com.game7th.metagame.FileProvider
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.inventory.dto.*
 import com.game7th.metagame.network.CloudApi
+import com.game7th.metagame.network.NetworkError
 import com.game7th.swiped.api.InventoryItemFullInfoDto
 import com.google.gson.Gson
 
@@ -39,6 +40,7 @@ class GearServiceImpl(
     override suspend fun listInventory(): List<InventoryItemFullInfoDto> {
         if (dirty) {
             itemsCache = api.getInventory()
+            dirty = false
         }
         return itemsCache
     }
@@ -53,10 +55,29 @@ class GearServiceImpl(
         dirty = true
     }
 
-    override fun upgradeItem(item: InventoryItemFullInfoDto) {
-//        val newItem = item.copy(level = item.level + 1)
-//        inventory.items.remove(item)
-//        inventory.items.add(newItem)
+    override suspend fun reloadData() {
+        dirty = true
+    }
+
+
+    override suspend fun dustItem(item: InventoryItemFullInfoDto): Boolean {
+        try {
+            api.dustItem(item)
+            reloadData()
+            return true
+        } catch (e: NetworkError) {
+            return false
+        }
+    }
+
+    override suspend fun pumpItem(item: InventoryItemFullInfoDto): Boolean {
+        try {
+            api.pumpItem(item)
+            reloadData()
+            return true
+        } catch (e: NetworkError) {
+            return false
+        }
     }
 
     override fun listFlasks(): List<FlaskStackDto> {

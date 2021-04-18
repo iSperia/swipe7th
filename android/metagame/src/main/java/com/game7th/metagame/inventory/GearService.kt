@@ -8,7 +8,9 @@ interface GearService {
     suspend fun listInventory(): List<InventoryItemFullInfoDto>
     suspend fun equipItem(personageId: String, item: InventoryItemFullInfoDto)
     suspend fun dequipItem(personageId: String, item: InventoryItemFullInfoDto)
-    fun upgradeItem(item: InventoryItemFullInfoDto)
+    suspend fun reloadData()
+    suspend fun dustItem(item: InventoryItemFullInfoDto): Boolean
+    suspend fun pumpItem(item: InventoryItemFullInfoDto): Boolean
     fun listFlasks(): List<FlaskStackDto>
     fun removeFlask(flask: FlaskTemplate)
     fun addFlask(flask: FlaskTemplate)

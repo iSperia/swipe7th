@@ -10,7 +10,7 @@ import com.game7th.swipe.dialog.FocusView
 
 abstract class BaseScreen(
     protected val context: GdxGameContext,
-    protected val game: SwipeGameGdx
+    val game: SwipeGameGdx
 ) : Screen {
 
     lateinit protected var stage: Stage

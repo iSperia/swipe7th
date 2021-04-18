@@ -81,6 +81,8 @@ class GameScreen(game: SwipeGameGdx,
     var preventTopSwipe = false
     var dismissFocusOnSwipe = false
 
+    var ready = false
+
     override fun show() {
         super.show()
         viewport = ScreenViewport()
@@ -107,6 +109,9 @@ class GameScreen(game: SwipeGameGdx,
 
             gameActor = GameActor(
                     game.context, game.gearService, this@GameScreen, this@GameScreen::usePotion, this@GameScreen::claimRewards) { _ ->
+                KtxAsync.launch {
+                    game.gearService.reloadData()
+                }
                 game.switchScreen(ActScreen(game, game.actService, actId, game.context, game.storage))
             }
 
@@ -155,6 +160,8 @@ class GameScreen(game: SwipeGameGdx,
                 isLooping = true
                 play()
             }
+
+            ready = true
         }
     }
 
@@ -238,9 +245,11 @@ class GameScreen(game: SwipeGameGdx,
     }
 
     override fun render(delta: Float) {
-        batch.begin()
-        battleController.act(batch, delta)
-        batch.end()
+        if (ready) {
+            batch.begin()
+            battleController.act(batch, delta)
+            batch.end()
+        }
 
         super.render(delta)
     }
