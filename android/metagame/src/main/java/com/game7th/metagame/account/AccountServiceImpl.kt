@@ -38,6 +38,7 @@ class AccountServiceImpl(
     override suspend fun getPersonages(): List<PersonageDto> {
         if (dirty) {
             reloadPersonages()
+            dirty = false
         }
         return pool
     }
