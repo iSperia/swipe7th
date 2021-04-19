@@ -46,8 +46,8 @@ android {
         multiDexEnabled true
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 21
-        versionName "0.1.0 Nuadha"
+        versionCode 22
+        versionName "0.1.1 Satisha"
     }
     buildTypes {
         release {
@@ -61,6 +61,8 @@ android {
         localhost {
             dimension "environment"
             buildConfigField('String', 'ENDPOINT', '"http://192.168.1.65:8080"')
+            debuggable true
+            minifyEnabled false
         }
         heroku_qa {
             dimension "environment"

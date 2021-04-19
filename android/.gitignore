@@ -26,6 +26,8 @@ www-test/
 /android/gen/
 /android/release/
 .idea/
+/android/localhost/release/
+/android/heroku_qa/release/
 *.ipr
 *.iws
 *.iml

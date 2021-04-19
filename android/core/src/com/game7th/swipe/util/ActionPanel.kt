@@ -15,7 +15,7 @@ import ktx.actors.onClick
 
 sealed class InventoryAction {
     data class StringAction(val text: String): InventoryAction()
-    data class IconAction(val text: String, val icon: String, val currency: Currency): InventoryAction()
+    data class IconAction(val text: String, val icon: String, val currency: Currency?): InventoryAction()
 }
 
 class ActionPanel(
@@ -85,12 +85,14 @@ class ActionPanel(
                     }
                     addActor(actionIcon)
 
-                    val currencyIcon = Image(context.uiAtlas.findRegion(CurrencyRewardView.getTextureName(action.currency))).apply {
-                        x = label.x + label.width + 20f * context.scale
-                        y = button.y
-                        touchable = Touchable.disabled
+                    if (action.currency != null) {
+                        val currencyIcon = Image(context.uiAtlas.findRegion(CurrencyRewardView.getTextureName(action.currency))).apply {
+                            x = label.x + label.width + 20f * context.scale
+                            y = button.y
+                            touchable = Touchable.disabled
+                        }
+                        addActor(currencyIcon)
                     }
-                    addActor(currencyIcon)
                 }
             }
 

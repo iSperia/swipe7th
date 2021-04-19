@@ -6,10 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import com.android.billingclient.api.*
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
+import com.game7th.metagame.shop.PurchaseItemInfo
+import com.game7th.metagame.shop.PurchaseItemMapper
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
+
+enum class BillingState {
+    NOT_READY, READY
+}
 
 class GdxGameActivity : AndroidApplication() {
+
+    lateinit var purchasesUpdatedListener: PurchasesUpdatedListener
+    lateinit var billingClient: BillingClient
+
+    var state = BillingState.NOT_READY
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +43,49 @@ class GdxGameActivity : AndroidApplication() {
 
         setLogLevel(LOG_NONE)
 
-        initialize(SwipeGameGdx(storage, intent.getStringExtra(ARG_INSTANCE_ID)!!, BuildConfig.ENDPOINT) { finish() }, config)
+        initialize(SwipeGameGdx(storage, intent.getStringExtra(ARG_INSTANCE_ID)!!, BuildConfig.ENDPOINT, object: PurchaseItemMapper {
+            override suspend fun mapItems(ids: List<String>): List<PurchaseItemInfo> {
+                return if (state == BillingState.READY) {
+                    val params = SkuDetailsParams.newBuilder().setSkusList(ids).setType(BillingClient.SkuType.INAPP)
+                    suspendCoroutine { continuation ->
+                        billingClient.querySkuDetailsAsync(params.build()) { result, details ->
+                            if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                                continuation.resume(details?.map {
+                                    PurchaseItemInfo(it.sku, it.title, it.price, it.priceCurrencyCode)
+                                } ?: emptyList())
+                            } else {
+                                continuation.resume(emptyList())
+                            }
+                        }
+                    }
+                } else {
+                    emptyList()
+                }
+            }
+        }) { finish() }, config)
+
+        purchasesUpdatedListener = PurchasesUpdatedListener { billingResult, purchases ->
+
+        }
+        initBillingClient()
+    }
+
+    private fun initBillingClient() {
+        billingClient = BillingClient.newBuilder(this)
+                .setListener(purchasesUpdatedListener)
+                .enablePendingPurchases()
+                .build()
+        billingClient.startConnection(object : BillingClientStateListener {
+            override fun onBillingSetupFinished(billingResult: BillingResult) {
+                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                    state = BillingState.READY
+                }
+            }
+
+            override fun onBillingServiceDisconnected() {
+                state = BillingState.NOT_READY
+            }
+        })
     }
 
     companion object {

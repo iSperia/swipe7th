@@ -6,11 +6,8 @@ import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.game7th.battle.dto.SwipeBalance
 import com.game7th.metagame.FileProvider
 import com.game7th.metagame.PersistentStorage
@@ -26,6 +23,7 @@ import com.game7th.swipe.campaign.ActScreen
 import com.game7th.metagame.network.CloudApi
 import com.game7th.metagame.network.NetworkError
 import com.game7th.metagame.network.NetworkErrorStatus
+import com.game7th.metagame.shop.PurchaseItemMapper
 import com.game7th.swipe.network.NetworkErrorScreen
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -36,6 +34,7 @@ class SwipeGameGdx(
         val storage: PersistentStorage,
         val installationId: String,
         val endpoint: String,
+        val mapper: PurchaseItemMapper,
         val quitCallback: () -> Unit) : Game() {
 
     val multiplexer = InputMultiplexer()
@@ -161,7 +160,7 @@ class SwipeGameGdx(
     }
 
     private fun initializeShopService() {
-        shopService = ShopServiceImpl(storage, gearService, accountService, gson)
+        shopService = ShopServiceImpl(mapper)
     }
 
     private suspend fun initializeAccountService() {

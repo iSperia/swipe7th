@@ -28,10 +28,10 @@ sealed class ItemViewAdapter {
         override fun getName() = ""
     }
 
-    data class PackItemAdapter(val packName: String): ItemViewAdapter() {
+    data class PackItemAdapter(val packId: String, val packName: String): ItemViewAdapter() {
         override fun getName() = packName
-        override fun getIcon() = packName.toLowerCase()
-        override fun getLabel() = "PACK!"
+        override fun getIcon() = "inapp_$packId"
+        override fun getLabel() = ""
     }
 
     abstract fun getName(): String

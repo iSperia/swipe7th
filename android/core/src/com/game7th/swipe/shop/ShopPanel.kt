@@ -56,7 +56,7 @@ class ShopPanel(
                     is ShopItem.GearShopItem -> {
                         val panel = ItemDetailPanel(context, ItemViewAdapter.InventoryItemAdapter(shopItem.item), shopItem.paymentOptions
                                 .map {
-                                    InventoryAction.IconAction("-${it.amount}", CurrencyRewardView.getTextureName(it.currency), it.currency)
+                                    InventoryAction.IconAction("${it.getActionTitle()}", it.getActionTexture(), it.getActionCurrency())
                                 }, {}, this@ShopPanel::processGearAcquisition).apply {
                             meta = shopItem.id
                             bg.touchable = Touchable.disabled
@@ -68,7 +68,7 @@ class ShopPanel(
 
                     is ShopItem.PersonageShopItem -> {
                         val panel = PersonageShopPanel(context, UnitType.valueOf(shopItem.personage), shopItem.id, shopItem.paymentOptions.map {
-                            InventoryAction.IconAction("-${it.amount}", CurrencyRewardView.getTextureName(it.currency), it.currency)
+                            InventoryAction.IconAction("${it.getActionTitle()}", it.getActionTexture(), it.getActionCurrency())
                         }, this@ShopPanel::processPersonageAcquisition).apply {
                             bg.touchable = Touchable.disabled
                             x = offset + 5f * context.scale
@@ -78,9 +78,9 @@ class ShopPanel(
                     }
 
                     is ShopItem.PackShopItem -> {
-                        val panel = ItemDetailPanel(context, ItemViewAdapter.PackItemAdapter(shopItem.name), shopItem.paymentOptions
+                        val panel = ItemDetailPanel(context, ItemViewAdapter.PackItemAdapter(shopItem.id, shopItem.name), shopItem.paymentOptions
                                 .map {
-                                    InventoryAction.IconAction("-${it.amount}", CurrencyRewardView.getTextureName(it.currency), it.currency)
+                                    InventoryAction.IconAction("${it.getActionTitle()}", it.getActionTexture(), it.getActionCurrency())
                                 }, {}, this@ShopPanel::processPackAcquisition).apply {
                             meta = shopItem.id
                             bg.touchable = Touchable.disabled
@@ -102,8 +102,8 @@ class ShopPanel(
         shopItems.firstOrNull { it.id == meta }?.let { shopItem ->
             when (shopItem) {
                 is ShopItem.GearShopItem -> {
-                    val acquireResult = shopService.acquireItem(shopItem.id, shopItem.paymentOptions[actionIndex])
-                    if (acquireResult) reloadData()
+//                    val acquireResult = shopService.acquireItem(shopItem.id, shopItem.paymentOptions[actionIndex])
+//                    if (acquireResult) reloadData()
                 }
             }
         }
@@ -113,8 +113,8 @@ class ShopPanel(
         shopItems.firstOrNull { it.id == meta }?.let { shopItem ->
             when (shopItem) {
                 is ShopItem.PackShopItem -> {
-                    val acquireResult = shopService.acquireItem(shopItem.id, shopItem.paymentOptions[actionIndex])
-                    if (acquireResult) reloadData()
+//                    val acquireResult = shopService.acquireItem(shopItem.id, shopItem.paymentOptions[actionIndex])
+//                    if (acquireResult) reloadData()
                 }
             }
         }
@@ -124,8 +124,8 @@ class ShopPanel(
         shopItems.firstOrNull { it.id == id }?.let { shopItem ->
             when (shopItem) {
                 is ShopItem.PersonageShopItem -> {
-                    val acquireResult = shopService.acquireItem(shopItem.id, shopItem.paymentOptions[actionIndex])
-                    if (acquireResult) reloadData()
+//                    val acquireResult = shopService.acquireItem(shopItem.id, shopItem.paymentOptions[actionIndex])
+//                    if (acquireResult) reloadData()
                 }
             }
         }
