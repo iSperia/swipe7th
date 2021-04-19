@@ -15,6 +15,14 @@ dependencies {
 }
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('C:\\Users\\User\\Documents\\swiped.keystore')
+            storePassword 'game7thGame7th'
+            keyAlias 'gladiator'
+            keyPassword 'game7thGame7th'
+        }
+    }
     buildToolsVersion "30.0.3"
     compileSdkVersion 30
     sourceSets {
@@ -48,27 +56,29 @@ android {
         targetSdkVersion 30
         versionCode 22
         versionName "0.1.1 Satisha"
+        signingConfig signingConfigs.release
     }
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    flavorDimensions "environment"
-
     productFlavors {
         localhost {
             dimension "environment"
             buildConfigField('String', 'ENDPOINT', '"http://192.168.1.65:8080"')
-            debuggable true
-            minifyEnabled false
         }
         heroku_qa {
             dimension "environment"
             buildConfigField('String', 'ENDPOINT', '"https://swipe-battles.herokuapp.com"')
         }
     }
+    buildTypes {
+        release {
+            debuggable true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    flavorDimensions "environment"
+
+
 }
 
 // called every time gradle gets executed, takes the native dependencies of

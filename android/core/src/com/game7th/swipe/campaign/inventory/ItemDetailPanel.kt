@@ -44,6 +44,7 @@ class ItemDetailPanel(
         width = 140f * context.scale
         height = 20f * context.scale
         setAlignment(Align.center)
+        wrap = true
         touchable = Touchable.disabled
     }
 

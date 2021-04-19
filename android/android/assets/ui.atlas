@@ -96,20 +96,20 @@ icon_squads
   orig: 64, 64
   offset: 0, 0
   index: -1
-inapp_crystals
-  rotate: false
-  xy: 385, 11
-  size: 144, 144
-  orig: 144, 144
-  offset: 0, 0
-  index: 100
-inapp_crystals
+inapp_crystals100
   rotate: false
   xy: 1067, 76
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
-  index: 500
+  index: -1
+inapp_crystals500
+  rotate: false
+  xy: 385, 11
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
 panel_blue
   rotate: false
   xy: 921, 76

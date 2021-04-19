@@ -30,7 +30,7 @@ sealed class ItemViewAdapter {
 
     data class PackItemAdapter(val packId: String, val packName: String): ItemViewAdapter() {
         override fun getName() = packName
-        override fun getIcon() = "inapp_$packId"
+        override fun getIcon() = "inapp_${packId.replace("_", "")}"
         override fun getLabel() = ""
     }
 
@@ -53,7 +53,7 @@ class ItemView(
     }
 
     val image: Image? = item.getIcon()?.let {
-        Image(context.battleAtlas.findRegion(it)).apply {
+        Image(context.uiAtlas.findRegion(it)).apply {
             width = size * 0.9f
             height = size * 0.9f
             x = size * 0.05f

@@ -17,7 +17,7 @@ sealed class PaymentOption {
     data class PurchaseOption(
             val item: PurchaseItemInfo
     ): PaymentOption() {
-        override fun getActionTitle() = "${item.price} ${item.priceCurrency}"
+        override fun getActionTitle() = "${item.price}"
         override fun getActionTexture() = "ui_currency_gold"
         override fun getActionCurrency(): Currency? = null
     }

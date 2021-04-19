@@ -107,6 +107,8 @@ class CloudApi(
 
     suspend fun pumpItem(item: InventoryItemFullInfoDto): Unit = client.post("$baseUrl/gear/pump?itemId=${item.id}") { sign() }
 
+    suspend fun validateGooglePurchase(token: String, shopItemId: String): Unit = client.post("$baseUrl/shop/google_inapp_purchase?token=$token&shopItemId=$shopItemId") { sign() }
+
     private fun HttpRequestBuilder.sign() {
         headers {
             token?.let { token -> set("Authorization", "Bearer $token") }

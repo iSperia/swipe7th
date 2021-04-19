@@ -160,7 +160,7 @@ class SwipeGameGdx(
     }
 
     private fun initializeShopService() {
-        shopService = ShopServiceImpl(mapper)
+        shopService = ShopServiceImpl(mapper, api)
     }
 
     private suspend fun initializeAccountService() {
@@ -193,6 +193,14 @@ class SwipeGameGdx(
     fun switchScreen(screen: Screen) {
         this.screen?.dispose()
         setScreen(screen)
+    }
+
+    fun restorePurchase(sku: String?, purchaseToken: String?) {
+        sku ?: return
+        purchaseToken ?: return
+        KtxAsync.launch {
+            shopService.restorePurchase(sku, purchaseToken)
+        }
     }
 
     companion object {

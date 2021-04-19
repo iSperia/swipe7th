@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.game7th.metagame.dto.UnitType
 import com.game7th.metagame.shop.ShopService
+import com.game7th.metagame.shop.dto.PaymentOption
 import com.game7th.metagame.shop.dto.ShopItem
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.campaign.inventory.ItemDetailPanel
@@ -111,10 +112,14 @@ class ShopPanel(
 
     private fun processPackAcquisition(actionIndex: Int, meta: String?) {
         shopItems.firstOrNull { it.id == meta }?.let { shopItem ->
-            when (shopItem) {
-                is ShopItem.PackShopItem -> {
-//                    val acquireResult = shopService.acquireItem(shopItem.id, shopItem.paymentOptions[actionIndex])
-//                    if (acquireResult) reloadData()
+            if (shopItem is ShopItem.PackShopItem) {
+                val paymentOption = shopItem.paymentOptions[actionIndex]
+                when (paymentOption) {
+                    is PaymentOption.PurchaseOption -> {
+                        KtxAsync.launch {
+                            shopService.purchase(shopItem.id)
+                        }
+                    }
                 }
             }
         }
