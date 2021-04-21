@@ -53,7 +53,7 @@ class ItemView(
     }
 
     val image: Image? = item.getIcon()?.let {
-        Image(context.uiAtlas.findRegion(it)).apply {
+        Image(context.uiAtlas.findRegion(it) ?: context.battleAtlas.findRegion(it)).apply {
             width = size * 0.9f
             height = size * 0.9f
             x = size * 0.05f
