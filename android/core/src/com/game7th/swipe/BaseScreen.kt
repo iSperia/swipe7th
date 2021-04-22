@@ -7,6 +7,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.game7th.swipe.dialog.SpeechView
 import com.game7th.swipe.dialog.DismissStrategy
 import com.game7th.swipe.dialog.FocusView
+import com.game7th.swipe.reward.RewardCollectionView
+import com.game7th.swiped.api.PackEntryDto
 
 abstract class BaseScreen(
     protected val context: GdxGameContext,
@@ -30,6 +32,11 @@ abstract class BaseScreen(
 
     fun showDialog(portrait: String, name: String, text: String, dismisser: () -> Unit) {
         SpeechView(context, name, text, portrait, dismisser).let { dialog -> stage.addActor(dialog) }
+    }
+
+    fun showRewardDialog(title: String, rewards: List<PackEntryDto>) {
+        val dialog = RewardCollectionView(context, this@BaseScreen, rewards, title)
+        stage.addActor(dialog)
     }
 
     open fun showFocusView(text: String, rect: Rectangle, strategy: DismissStrategy, dismissCallback: (() -> Unit)? = null) {
@@ -59,4 +66,11 @@ abstract class BaseScreen(
     override fun hide() {}
 
     override fun dispose() {}
+
+    open fun currencyUpdated() {
+    }
+
+    open fun inventoryUpdated() {}
+
+    open fun personagesUpdated() {}
 }

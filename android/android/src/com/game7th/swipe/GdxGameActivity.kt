@@ -1,11 +1,7 @@
 package com.game7th.swipe
 
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.ImageView
 import com.android.billingclient.api.*
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
@@ -81,7 +77,7 @@ class GdxGameActivity : AndroidApplication() {
                             if (result.responseCode == BillingClient.BillingResponseCode.OK) {
                                 continuation.resume(details?.map {
                                     PurchaseItemInfo(it.sku, it.title, it.price, it.priceCurrencyCode)
-                                } ?: emptyList())
+                                }?.sortedBy { ids.indexOf(it.id) } ?: emptyList())
                             } else {
                                 continuation.resume(emptyList())
                             }

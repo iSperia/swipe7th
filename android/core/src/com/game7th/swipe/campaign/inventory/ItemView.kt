@@ -28,9 +28,9 @@ sealed class ItemViewAdapter {
         override fun getName() = ""
     }
 
-    data class PackItemAdapter(val packId: String, val packName: String): ItemViewAdapter() {
+    data class PackItemAdapter(val packId: String, val texture: String, val packName: String): ItemViewAdapter() {
         override fun getName() = packName
-        override fun getIcon() = "inapp_${packId.replace("_", "")}"
+        override fun getIcon() = texture
         override fun getLabel() = ""
     }
 

@@ -424,7 +424,7 @@ class ActScreen(
     }
 
     private fun showShopUi() {
-        shopUi = ShopPanel(context, game.shopService, currencyView::refreshBalance).apply {
+        shopUi = ShopPanel(context, this@ActScreen, game.shopService, currencyView::refreshBalance).apply {
             y = context.scale * 48f
         }
         stage.addActor(shopUi)
@@ -589,9 +589,18 @@ class ActScreen(
         }
     }
 
-
     override fun showFocusView(text: String, rect: Rectangle, strategy: DismissStrategy, dismissCallback: (() -> Unit)?) {
         isScrollEnabled = false
         super.showFocusView(text, rect, strategy, dismissCallback)
+    }
+
+    override fun currencyUpdated() {
+        super.currencyUpdated()
+        currencyView.refreshBalance()
+    }
+
+    override fun personagesUpdated() {
+        super.personagesUpdated()
+        KtxAsync.launch { game.accountService.refreshPersonages() }
     }
 }

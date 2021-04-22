@@ -107,13 +107,21 @@ class CloudApi(
 
     suspend fun pumpItem(item: InventoryItemFullInfoDto): Unit = client.post("$baseUrl/gear/pump?itemId=${item.id}") { sign() }
 
-    suspend fun validateGooglePurchase(token: String, shopItemId: String): Unit = client.post("$baseUrl/shop/google_inapp_purchase?token=$token&shopItemId=$shopItemId") { sign() }
+    suspend fun listShopDisplay(): ShopDisplayDto = client.get("$baseUrl/shop/display") { sign() }
+
+    suspend fun validateGooglePurchase(token: String, shopItemId: String): List<PackEntryDto> = client.post("$baseUrl/shop/google_inapp_purchase?token=$token&shopItemId=$shopItemId") { sign() }
+
+    suspend fun internalPurchase(request: PurchaseRequestDto): List<PackEntryDto> = client.post("$baseUrl/shop/acquire") {
+        body = request
+        sign()
+    }
 
     private fun HttpRequestBuilder.sign() {
         headers {
             token?.let { token -> set("Authorization", "Bearer $token") }
             set("Accept", "*/*")
             set("User-Agent", "swipe-client")
+            set("Content-Type", "application/json")
         }
     }
 

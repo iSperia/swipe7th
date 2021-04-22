@@ -152,5 +152,8 @@
   "LIFE_FLASK_LARGE": "Large Life Flask",
   "LIFE_FLASK_GREATER": "Greater Life Flask",
   "LIFE_FLASK_GRAND": "Grand Life Flask",
-  "SHOP_BEGINNER_POTION_PACK": "Beginner's potions"
+  "SHOP_BEGINNER_POTION_PACK": "Beginner's potions",
+
+  "REWARDS_TITLE_PURCHASED": "Successful Purchase!",
+  "REWARDS_TITLE_CAMPAIGN": "Mission reward!"
 }

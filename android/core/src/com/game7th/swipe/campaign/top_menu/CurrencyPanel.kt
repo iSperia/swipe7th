@@ -71,6 +71,7 @@ class CurrencyPanel(
 
     fun refreshBalance() {
         KtxAsync.launch {
+            accountService.refreshBalance()
             balance = accountService.getBalance()
             labelGold.setText((balance[Currency.GOLD.toString()] ?: 0).toString())
             labelGems.setText((balance[Currency.GEMS.toString()] ?: 0).toString())
