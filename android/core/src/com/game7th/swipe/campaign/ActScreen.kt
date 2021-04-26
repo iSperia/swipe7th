@@ -603,4 +603,11 @@ class ActScreen(
         super.personagesUpdated()
         KtxAsync.launch { game.accountService.refreshPersonages() }
     }
+
+    override fun inventoryUpdated() {
+        super.inventoryUpdated()
+        KtxAsync.launch {
+            game.gearService.reloadData()
+        }
+    }
 }

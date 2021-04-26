@@ -97,11 +97,13 @@ class CloudApi(
         body = json.write(items)
     }
 
-    suspend fun getInventory(): List<InventoryItemFullInfoDto> = client.get<InventoryPoolDto> ("$baseUrl/gear/inventory") { sign() }.items
+    suspend fun getInventory(): InventoryPoolDto = client.get<InventoryPoolDto> ("$baseUrl/gear/inventory") { sign() }
 
     suspend fun putItemOn(personageId: String, item: InventoryItemFullInfoDto): Unit = client.post("$baseUrl/gear/putOn?personageId=$personageId&itemId=${item.id}") { sign() }
 
     suspend fun putItemOff(personageId: String, item: InventoryItemFullInfoDto): Unit = client.post("$baseUrl/gear/putOff?personageId=$personageId&itemId=${item.id}") { sign() }
+
+    suspend fun consumeFlask(itemId: String): Unit = client.post("$baseUrl/gear/consumeFlask?flaskId=$itemId") { sign() }
 
     suspend fun dustItem(item: InventoryItemFullInfoDto): Unit = client.post("$baseUrl/gear/dust?itemId=${item.id}") { sign() }
 

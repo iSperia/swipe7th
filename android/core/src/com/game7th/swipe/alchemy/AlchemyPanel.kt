@@ -4,21 +4,23 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.game7th.metagame.inventory.GearService
-import com.game7th.metagame.inventory.dto.FlaskStackDto
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.campaign.inventory.ItemDetailPanel
 import com.game7th.swipe.campaign.inventory.ItemView
 import com.game7th.swipe.campaign.inventory.ItemViewAdapter
 import com.game7th.swipe.forge.ForgePanel
 import com.game7th.swipe.util.InventoryAction
+import com.game7th.swiped.api.FlaskItemFullInfoDto
+import kotlinx.coroutines.launch
 import ktx.actors.onClick
+import ktx.async.KtxAsync
 import kotlin.math.max
 import kotlin.math.min
 
 sealed class AlchemyPanelMode {
     object CraftMode: AlchemyPanelMode()
     class DrinkMode(
-            val useFlaskCallback: ((FlaskStackDto) -> Unit)
+            val useFlaskCallback: ((FlaskItemFullInfoDto) -> Unit)
     ): AlchemyPanelMode()
 }
 
@@ -50,43 +52,45 @@ class AlchemyPanel(
     }
 
     fun reloadData() {
-        val flasks = gearService.listFlasks()
-        panelItems.width = context.scale * 80 * max((flasks.size - 1) / 3 + 1, 5)
-        panelItems.height = 240 * context.scale
-        panelScroller.actor = panelItems
+        KtxAsync.launch {
+            val flasks = gearService.listFlasks()
+            panelItems.width = context.scale * 80 * max((flasks.size - 1) / 3 + 1, 5)
+            panelItems.height = 240 * context.scale
+            panelScroller.actor = panelItems
 
-        panelItems.children.forEach { it.clearActions() }
-        panelItems.clearChildren()
+            panelItems.children.forEach { it.clearActions() }
+            panelItems.clearChildren()
 
-        val emptyItems = max(15 - flasks.size, 3 - flasks.size % 3)
+            val emptyItems = max(15 - flasks.size, 3 - flasks.size % 3)
 
-        flasks.forEachIndexed { index, flask ->
-            val itemView = ItemView(context, ItemViewAdapter.PotionItemAdater(flask), true, 80f * context.scale).apply {
-                x = (index / 3) * 80f * context.scale
-                y = (160f - (index % 3) * 80f) * context.scale
-            }
-            itemView.onClick {
-                dismissDetailPanel()
-                detailPanel = ItemDetailPanel(
-                        context,
-                        ItemViewAdapter.PotionItemAdater(flask),
-                        produceActions(),
-                        this@AlchemyPanel::dismissDetailPanel,
-                        this@AlchemyPanel::processAction).apply {
-                    x = min(context.scale * 320f, panelScroller.x + itemView.x)
-                    y = panelScroller.y + itemView.y
+            flasks.forEachIndexed { index, flask ->
+                val itemView = ItemView(context, ItemViewAdapter.PotionItemAdater(flask), true, 80f * context.scale).apply {
+                    x = (index / 3) * 80f * context.scale
+                    y = (160f - (index % 3) * 80f) * context.scale
                 }
-                this@AlchemyPanel.addActor(detailPanel)
+                itemView.onClick {
+                    dismissDetailPanel()
+                    detailPanel = ItemDetailPanel(
+                            context,
+                            ItemViewAdapter.PotionItemAdater(flask),
+                            produceActions(),
+                            this@AlchemyPanel::dismissDetailPanel,
+                            this@AlchemyPanel::processAction).apply {
+                        x = min(context.scale * 320f, panelScroller.x + itemView.x)
+                        y = panelScroller.y + itemView.y
+                    }
+                    this@AlchemyPanel.addActor(detailPanel)
+                }
+                panelItems.addActor(itemView)
             }
-            panelItems.addActor(itemView)
-        }
-        (1..emptyItems).forEach {
-            val itemView = ItemView(context, ItemViewAdapter.EmptyAdapter, true, 80f * context.scale).apply {
-                val index = flasks.size + it - 1
-                x = (index / 3) * 80f * context.scale
-                y = (160f - (index % 3) * 80f) * context.scale
+            (1..emptyItems).forEach {
+                val itemView = ItemView(context, ItemViewAdapter.EmptyAdapter, true, 80f * context.scale).apply {
+                    val index = flasks.size + it - 1
+                    x = (index / 3) * 80f * context.scale
+                    y = (160f - (index % 3) * 80f) * context.scale
+                }
+                panelItems.addActor(itemView)
             }
-            panelItems.addActor(itemView)
         }
     }
 

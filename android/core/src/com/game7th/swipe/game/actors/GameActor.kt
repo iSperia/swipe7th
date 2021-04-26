@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.game7th.battle.dto.BattleEvent
 import com.game7th.metagame.inventory.GearService
-import com.game7th.metagame.inventory.dto.FlaskStackDto
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.alchemy.AlchemyPanel
 import com.game7th.swipe.alchemy.AlchemyPanelMode
@@ -22,6 +21,7 @@ import com.game7th.swipe.game.actors.ui.BattleFinishedDialog
 import com.game7th.swipe.util.IconTextButton
 import com.game7th.swipe.util.animateHideToBottom
 import com.game7th.swipe.util.animateShowFromBottom
+import com.game7th.swiped.api.FlaskItemFullInfoDto
 import com.game7th.swiped.api.LocationCompleteResponseDto
 import com.game7th.swiped.api.RewardListDto
 import kotlinx.coroutines.launch
@@ -34,7 +34,7 @@ class GameActor(
         private val context: GdxGameContext,
         private val gearService: GearService,
         private val screen: GameScreen,
-        private val usePotionCallback: (FlaskStackDto) -> Unit,
+        private val usePotionCallback: (FlaskItemFullInfoDto) -> Unit,
         private val rewardCallback: suspend () -> LocationCompleteResponseDto,
         private val finishCallback: (Boolean) -> Unit
 ) : Group() {

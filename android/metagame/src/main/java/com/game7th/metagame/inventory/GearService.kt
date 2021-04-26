@@ -1,7 +1,6 @@
 package com.game7th.metagame.inventory
 
-import com.game7th.metagame.inventory.dto.FlaskStackDto
-import com.game7th.metagame.inventory.dto.FlaskTemplate
+import com.game7th.swiped.api.FlaskItemFullInfoDto
 import com.game7th.swiped.api.InventoryItemFullInfoDto
 
 interface GearService {
@@ -11,7 +10,6 @@ interface GearService {
     suspend fun reloadData()
     suspend fun dustItem(item: InventoryItemFullInfoDto): Boolean
     suspend fun pumpItem(item: InventoryItemFullInfoDto): Boolean
-    fun listFlasks(): List<FlaskStackDto>
-    fun removeFlask(flask: FlaskTemplate)
-    fun addFlask(flask: FlaskTemplate)
+    suspend fun listFlasks(): List<FlaskItemFullInfoDto>
+    suspend fun consumeFlask(flaskItemId: String)
 }

@@ -152,7 +152,7 @@ class SwipeGameGdx(
     }
 
     private fun initializeGearService() {
-        gearService = GearServiceImpl(gson, storage, fileProvider, api)
+        gearService = GearServiceImpl(gson, storage, api)
     }
 
     private fun initializeActService() {

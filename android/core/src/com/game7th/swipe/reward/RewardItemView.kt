@@ -21,6 +21,7 @@ class RewardItemView(
     val texture = when (item.entryType) {
         PackEntryType.CURRENCY -> context.uiAtlas.findRegion(CurrencyRewardView.getTextureName(Currency.valueOf(item.meta)))
         PackEntryType.ITEM -> context.battleAtlas.findRegion("art_${item.meta}")
+        PackEntryType.FLASK -> context.battleAtlas.findRegion(item.meta.toLowerCase())
         else -> context.uiAtlas.findRegion(CurrencyRewardView.getTextureName(Currency.GOLD))
     }
 
@@ -50,6 +51,7 @@ class RewardItemView(
         when (item.entryType) {
             PackEntryType.CURRENCY -> screen.currencyUpdated()
             PackEntryType.ITEM -> screen.inventoryUpdated()
+            PackEntryType.FLASK -> screen.inventoryUpdated()
         }
     }
 }

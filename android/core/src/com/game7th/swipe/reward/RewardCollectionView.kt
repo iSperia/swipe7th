@@ -57,7 +57,7 @@ class RewardCollectionView(
 
         rewards.forEachIndexed { index, packEntryDto ->
             when (packEntryDto.entryType) {
-                PackEntryType.ITEM, PackEntryType.CURRENCY -> {
+                PackEntryType.ITEM, PackEntryType.CURRENCY, PackEntryType.FLASK -> {
                     val packItemView = RewardItemView(context, screen, packEntryDto).apply {
                         x = padding + 6f * context.scale + 72f * index * context.scale
                         y = titleLabel.y - 120f * context.scale

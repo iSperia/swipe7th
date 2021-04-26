@@ -5,8 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
-import com.game7th.metagame.inventory.dto.FlaskStackDto
 import com.game7th.swipe.GdxGameContext
+import com.game7th.swiped.api.FlaskItemFullInfoDto
 import com.game7th.swiped.api.InventoryItemFullInfoDto
 
 sealed class ItemViewAdapter {
@@ -16,9 +16,9 @@ sealed class ItemViewAdapter {
         override fun getName() = item.template.name
     }
 
-    data class PotionItemAdater(val potion: FlaskStackDto): ItemViewAdapter() {
+    data class PotionItemAdater(val potion: FlaskItemFullInfoDto): ItemViewAdapter() {
         override fun getIcon() = "${potion.template.name.toLowerCase()}"
-        override fun getLabel() = "x${potion.amount}"
+        override fun getLabel() = "x${potion.stackSize}"
         override fun getName() = potion.template.name
     }
 

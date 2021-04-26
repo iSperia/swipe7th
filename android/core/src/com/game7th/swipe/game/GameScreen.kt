@@ -19,7 +19,6 @@ import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.campaign.ActsService
 import com.game7th.metagame.dto.UnitType
 import com.game7th.metagame.inventory.GearService
-import com.game7th.metagame.inventory.dto.FlaskStackDto
 import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.SwipeGameGdx
@@ -31,6 +30,7 @@ import com.game7th.swipe.game.battle.model.FigureGdxModel
 import com.game7th.swipe.game.battle.model.GdxModel
 import com.game7th.swipe.game.battle.tutorial.*
 import com.game7th.swipe.gestures.SimpleDirectionGestureDetector
+import com.game7th.swiped.api.FlaskItemFullInfoDto
 import com.game7th.swiped.api.LocationCompleteResponseDto
 import com.game7th.swiped.api.PersonageAttributeStatsDto
 import com.game7th.swiped.api.PersonageDto
@@ -203,11 +203,11 @@ class GameScreen(game: SwipeGameGdx,
         }
     }
 
-    private fun usePotion(flask: FlaskStackDto) {
+    private fun usePotion(flask: FlaskItemFullInfoDto) {
         KtxAsync.launch {
             gameActor.refreshAlchemy()
-            if (battle.useFlask(BattleFlaskDto(flask.template.fbFlatHeal, flask.template.fbRemoveStun, flask.template.fbSummonSlime))) {
-                game.gearService.removeFlask(flask.template)
+            if (battle.useFlask(BattleFlaskDto(flask.template.fbFlatHeal ?: 0, flask.template.fbRemoveStun ?: 0, 0))) {
+                flask.id?.let { flaskId -> game.gearService.consumeFlask(flaskId) }
             }
             gameActor.hideAlchemy()
         }
