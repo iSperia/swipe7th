@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
-import com.game7th.battle.dto.BattleEvent
 import com.game7th.metagame.inventory.GearService
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.alchemy.AlchemyPanel
@@ -24,6 +23,7 @@ import com.game7th.swipe.util.animateShowFromBottom
 import com.game7th.swiped.api.FlaskItemFullInfoDto
 import com.game7th.swiped.api.LocationCompleteResponseDto
 import com.game7th.swiped.api.RewardListDto
+import com.game7th.swiped.api.battle.BattleEvent
 import kotlinx.coroutines.launch
 import ktx.actors.onClick
 import ktx.actors.repeatForever

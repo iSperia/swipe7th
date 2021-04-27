@@ -1,8 +1,8 @@
 package com.game7th.swipe.game.battle.hud
 
 import com.badlogic.gdx.scenes.scene2d.Group
-import com.game7th.battle.personage.PersonageViewModel
 import com.game7th.swipe.GdxGameContext
+import com.game7th.swiped.api.battle.PersonageViewModel
 
 class HudGroup(private val context: GdxGameContext) : Group() {
 

@@ -5,10 +5,10 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
-import com.game7th.battle.dto.BattleEvent
-import com.game7th.battle.dto.TileViewModel
-import com.game7th.battle.tilefield.TileFieldEvent
 import com.game7th.swipe.GdxGameContext
+import com.game7th.swiped.api.battle.BattleEvent
+import com.game7th.swiped.api.battle.TileFieldEvent
+import com.game7th.swiped.api.battle.TileViewModel
 import ktx.actors.alpha
 import kotlin.random.Random
 

@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.game7th.battle.dto.SwipeBalance
 import com.game7th.metagame.FileProvider
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.account.AccountService
@@ -129,14 +128,13 @@ class SwipeGameGdx(
         }
         val balanceFile = Gdx.files.internal("balance.json")
         val balanceText = balanceFile.readString()
-        val balance = Gson().fromJson<SwipeBalance>(balanceText, SwipeBalance::class.java)
 
         val textsFile = Gdx.files.internal("strings.json")
         val textsText = textsFile.readString()
         val token = object : TypeToken<Map<String, String>>() {}.type
         val texts = gson.fromJson<Map<String, String>>(textsText, token)
 
-        context = GdxGameContext(atlas, uiAtlas, font, font2, balance, scale, texts, storage)
+        context = GdxGameContext(atlas, uiAtlas, font, font2, scale, texts, storage)
 
         Gdx.input.inputProcessor = multiplexer
     }

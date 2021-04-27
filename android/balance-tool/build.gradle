@@ -9,7 +9,6 @@ java {
 }
 
 dependencies {
-    implementation project(":battle")
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'com.google.code.gson:gson:2.8.5'
 

@@ -25,6 +25,7 @@ dependencies {
     implementation "io.ktor:ktor-client-gson:1.5.1"
     implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation("io.ktor:ktor-client-logging:1.5.1")
+    implementation("io.ktor:ktor-client-websockets:1.5.1")
 
     //gradle kotlin DSL
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.0")

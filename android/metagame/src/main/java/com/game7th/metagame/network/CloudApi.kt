@@ -1,15 +1,23 @@
 package com.game7th.metagame.network
 
 import com.game7th.swiped.api.*
+import com.game7th.swiped.api.battle.*
+import com.google.gson.Gson
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.features.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.logging.*
+import io.ktor.client.features.websocket.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.content.*
 import io.ktor.http.*
+import io.ktor.http.cio.websocket.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.receiveOrNull
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.onEach
 
 enum class NetworkErrorStatus {
     CONNECTION_ERROR,
@@ -30,7 +38,10 @@ class CloudApi(
 
     val json = defaultSerializer()
 
+    val gson = Gson()
+
     private val client = HttpClient(CIO) {
+        install(WebSockets)
         engine {
             // this: CIOEngineConfig
             maxConnectionsCount = 1000
@@ -116,6 +127,42 @@ class CloudApi(
     suspend fun internalPurchase(request: PurchaseRequestDto): List<PackEntryDto> = client.post("$baseUrl/shop/acquire") {
         body = request
         sign()
+    }
+
+    suspend fun encounterLocation(actId: String, locationId: Int, difficulty: Int, personageId: String): BattleResultDto = client.post("$baseUrl/encounter?actId=$actId&locationId=$locationId&difficulty=$difficulty&personageId=$personageId") { sign() }
+
+    suspend fun connectBattle(battleId: String, output: Flow<InputBattleEvent>, handler: suspend (BattleEvent) -> Unit) = client.ws(
+            method = HttpMethod.Get,
+            host = baseUrl.replace("http://", "").replace("https://", ""),
+            path = "/battle?battleId=$battleId",
+            request = {
+                this.headers.set("Authorization", "Bearer $token")
+            }
+    ) {
+        async {
+            output.onEach {
+                val name = it.javaClass.name
+                val payload = gson.toJson(it)
+                val frame = BattleFrame(name, payload)
+                val frameString = gson.toJson(frame)
+                outgoing.send(Frame.Text(frameString))
+            }
+        }
+        async {
+            var frame = incoming.receiveOrNull()
+            while (frame != null) {
+                when (frame) {
+                    is Frame.Text -> {
+                        val payload = frame.readText()
+                        val frame = gson.fromJson<BattleFrame>(payload, BattleFrame::class.java)
+                        val clazz = BattleEventType.valueOf(frame.name).clazz
+                        val event = gson.fromJson(frame.payload, clazz)
+                        handler.invoke(event)
+                    }
+                }
+                frame = incoming.receiveOrNull()
+            }
+        }
     }
 
     private fun HttpRequestBuilder.sign() {

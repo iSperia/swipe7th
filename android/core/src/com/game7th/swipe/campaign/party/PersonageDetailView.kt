@@ -213,16 +213,16 @@ class PersonageDetailView(
 
     private fun refreshStats() {
         KtxAsync.launch {
-            val baseStats = context.balance.produceBaseStats(personage)
-            val gearStats = context.balance.produceGearStats(personage, gearService.listInventory().filter { it.personageId == personage.id })
+//            val baseStats = context.balance.produceBaseStats(personage)
+//            val gearStats = context.balance.produceGearStats(personage, gearService.listInventory().filter { it.personageId == personage.id })
+//
+//            gearStats.body.toString().let { bodyLabel.setText(it) }
+//            gearStats.spirit.toString().let { spiritLabel.setText(it) }
+//            gearStats.mind.toString().let { mindLabel.setText(it) }
 
-            gearStats.body.toString().let { bodyLabel.setText(it) }
-            gearStats.spirit.toString().let { spiritLabel.setText(it) }
-            gearStats.mind.toString().let { mindLabel.setText(it) }
-
-            secondAttrsBody.setText("Health: ${gearStats.health.value}(${baseStats.health.value})\nArmor: ${gearStats.armor}(${baseStats.armor})")
-            secondAttrsSpirit.setText("Evasion: ${gearStats.evasion}(${baseStats.evasion})\nRegeneration: ${gearStats.regeneration}(${baseStats.regeneration})")
-            secondAttrsMind.setText("Resist: ${gearStats.resist}(${baseStats.resist})\nWisdom: ${gearStats.wisdom}(${baseStats.wisdom})")
+//            secondAttrsBody.setText("Health: ${gearStats.health.value}(${baseStats.health.value})\nArmor: ${gearStats.armor}(${baseStats.armor})")
+//            secondAttrsSpirit.setText("Evasion: ${gearStats.evasion}(${baseStats.evasion})\nRegeneration: ${gearStats.regeneration}(${baseStats.regeneration})")
+//            secondAttrsMind.setText("Resist: ${gearStats.resist}(${baseStats.resist})\nWisdom: ${gearStats.wisdom}(${baseStats.wisdom})")
         }
     }
 }

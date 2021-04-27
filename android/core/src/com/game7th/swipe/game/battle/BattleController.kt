@@ -7,11 +7,11 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
-import com.game7th.battle.dto.BattleEvent
 import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.game.GameContextWrapper
 import com.game7th.swipe.game.battle.model.FigureGdxModel
 import com.game7th.swipe.game.battle.model.GdxAttackType
+import com.game7th.swiped.api.battle.BattleEvent
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min

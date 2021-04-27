@@ -6,8 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
-import com.game7th.battle.personage.PersonageViewModel
 import com.game7th.swipe.GdxGameContext
+import com.game7th.swiped.api.battle.PersonageViewModel
 import ktx.actors.alpha
 
 class PersonageHud(

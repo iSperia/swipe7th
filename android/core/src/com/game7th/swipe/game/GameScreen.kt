@@ -9,15 +9,8 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.badlogic.gdx.utils.viewport.Viewport
-import com.game7th.battle.dto.BattleConfig
-import com.game7th.battle.dto.PersonageConfig
-import com.game7th.battle.SwipeBattle
-import com.game7th.battle.ability.AbilityTrigger
-import com.game7th.battle.dto.BattleEvent
-import com.game7th.battle.dto.BattleFlaskDto
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.campaign.ActsService
-import com.game7th.metagame.dto.UnitType
 import com.game7th.metagame.inventory.GearService
 import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.GdxGameContext
@@ -28,20 +21,21 @@ import com.game7th.swipe.game.actors.GameActor
 import com.game7th.swipe.game.battle.BattleController
 import com.game7th.swipe.game.battle.model.FigureGdxModel
 import com.game7th.swipe.game.battle.model.GdxModel
-import com.game7th.swipe.game.battle.tutorial.*
 import com.game7th.swipe.gestures.SimpleDirectionGestureDetector
 import com.game7th.swiped.api.FlaskItemFullInfoDto
 import com.game7th.swiped.api.LocationCompleteResponseDto
-import com.game7th.swiped.api.PersonageAttributeStatsDto
 import com.game7th.swiped.api.PersonageDto
+import com.game7th.swiped.api.battle.BattleEvent
+import com.game7th.swiped.api.battle.BattleResultDto
+import com.game7th.swiped.api.battle.InputBattleEvent
 import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ktx.async.KtxAsync
 
 class GameScreen(game: SwipeGameGdx,
+                 private val battleResources: BattleResultDto,
+                 private val battleId: String,
                  private val actId: String,
                  private val locationId: Int,
                  private val difficulty: Int,
@@ -59,11 +53,7 @@ class GameScreen(game: SwipeGameGdx,
     lateinit var batch: SpriteBatch
 
     lateinit var processor: SimpleDirectionGestureDetector
-    lateinit var battle: SwipeBattle
-    val handler = CoroutineExceptionHandler { _, exception ->
-        exception.printStackTrace()
-    }
-    lateinit var config: BattleConfig
+
     val gdxModel = Gson().fromJson<GdxModel>(Gdx.files.internal("figures.json").readString(), GdxModel::class.java)
 
     lateinit var gameActor: GameActor
@@ -72,7 +62,7 @@ class GameScreen(game: SwipeGameGdx,
 
     lateinit var backgroundMusic: Music
 
-    lateinit var swipeFlow: MutableSharedFlow<Pair<Int, Int>>
+    val swipeFlow = MutableSharedFlow<InputBattleEvent>()
 
     var gameEnded = false
     var preventLeftSwipe = false
@@ -93,18 +83,7 @@ class GameScreen(game: SwipeGameGdx,
         game.multiplexer.addProcessor(0, processor)
 
         KtxAsync.launch {
-            config = BattleConfig(
-                    personages = listOf(
-                            PersonageConfig(UnitType.valueOf(personage.unit), personage.level, personage.stats, game.context.balance.produceGearStats(personage, gearService.listInventory().filter { it.personageId == personage.id }))
-                    ),
-                    waves = actService.getActConfig(actId).findNode(locationId)?.waves?.map {
-                        it.map { PersonageConfig(it.unitType, it.level + (difficulty - 1) * 3, PersonageAttributeStatsDto(0, 0, 0), null) }
-                    } ?: emptyList()
-            )
 
-            swipeFlow = MutableSharedFlow()
-            battle = SwipeBattle(game.context.balance, swipeFlow, produceTutorials())
-            initializeBattle()
             listenEvents()
 
             gameActor = GameActor(
@@ -123,19 +102,11 @@ class GameScreen(game: SwipeGameGdx,
             listOf("wind").forEach {
                 sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/$it.ogg"))
             }
-            config.personages.forEach { personageConfig ->
-                gdxModel.figures.firstOrNull { it.name == personageConfig.name.getSkin() }?.let {
+            battleResources.figures.forEach { figureName ->
+                gdxModel.figures.firstOrNull { it.name == figureName }?.let {
                     loadResources(it)
                 }
             }
-            config.waves.forEach {
-                it.forEach { npc ->
-                    gdxModel.figures.firstOrNull { it.name == npc.name.getSkin() }?.let { gdxFigure ->
-                        loadResources(gdxFigure)
-                    }
-                }
-            }
-            gdxModel.figures.firstOrNull { it.name == "slime" }?.let { loadResources(it) }
 
             val scale = game.context.scale
             battleController = BattleController(GameContextWrapper(
@@ -172,7 +143,7 @@ class GameScreen(game: SwipeGameGdx,
             }
             if (!gameEnded && !prevent) {
                 gameActor.tileField.finalizeActions()
-                swipeFlow.emit(Pair(dx, dy))
+                swipeFlow.emit(InputBattleEvent.SwipeBattleEvent(dx, dy))
             }
         }
     }
@@ -206,9 +177,9 @@ class GameScreen(game: SwipeGameGdx,
     private fun usePotion(flask: FlaskItemFullInfoDto) {
         KtxAsync.launch {
             gameActor.refreshAlchemy()
-            if (battle.useFlask(BattleFlaskDto(flask.template.fbFlatHeal ?: 0, flask.template.fbRemoveStun ?: 0, 0))) {
-                flask.id?.let { flaskId -> game.gearService.consumeFlask(flaskId) }
-            }
+//            if (battle.useFlask(BattleFlaskDto(flask.template.fbFlatHeal ?: 0, flask.template.fbRemoveStun ?: 0, 0))) {
+//                flask.id?.let { flaskId -> game.gearService.consumeFlask(flaskId) }
+//            }
             gameActor.hideAlchemy()
         }
     }
@@ -218,18 +189,12 @@ class GameScreen(game: SwipeGameGdx,
         return actService.markLocationComplete(actId, locationId, difficulty, personage.id)
     }
 
-    private fun initializeBattle() {
-        KtxAsync.launch {
-            battle.initialize(config)
-        }
-    }
-
     private fun listenEvents() {
-        KtxAsync.launch(handler) {
-            battle.events.collect { event ->
-                gameActor.processAction(event)
-                battleController.processEvent(event)
-                when (event) {
+        KtxAsync.launch {
+            game.api.connectBattle(battleId, swipeFlow) {
+                gameActor.processAction(it)
+                battleController.processEvent(it)
+                when (it) {
                     is BattleEvent.VictoryEvent -> onGameEnded(true)
                     is BattleEvent.DefeatEvent -> onGameEnded(false)
                 }
@@ -277,19 +242,19 @@ class GameScreen(game: SwipeGameGdx,
         }
     }
 
-    private fun produceTutorials(): List<AbilityTrigger> {
-        val result = mutableListOf<AbilityTrigger>()
-        if (actId == "act_0" && locationId == 0 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_FIRST_BATTLE_INTRO_SHOWN)?.toBoolean() != true) { result.add(FirstBattleTutorial(this, game)) }
-        if (actId == "act_0" && locationId == 2 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L3_TALK)?.toBoolean() != true) { result.add(Act1L3Talk(this, game)) }
-        if (actId == "act_0" && locationId == 3 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L4_TALK)?.toBoolean() != true) { result.add(Act1L4Talk(this, game)) }
-        if (actId == "act_0" && locationId == 4 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L5_TALK)?.toBoolean() != true) { result.add(Act1L5Talk(this, game)) }
-        if (actId == "act_0" && locationId == 6 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L7_TALK)?.toBoolean() != true) { result.add(Act1L7Talk(this, game)) }
-        if (actId == "act_0" && locationId == 7 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L8_TALK)?.toBoolean() != true) { result.add(Act1L8Talk(this, game)) }
-        if (actId == "act_0" && locationId == 8 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L9_TALK)?.toBoolean() != true) { result.add(Act1L9Talk(this, game)) }
-        if (actId == "act_0" && locationId == 10 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L11_TALK)?.toBoolean() != true) { result.add(Act1L11Talk(this, game)) }
-        if (actId == "act_0" && locationId == 13 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L14_TALK)?.toBoolean() != true) { result.add(Act1L14Talk(this, game)) }
-        return result
-    }
+//    private fun produceTutorials(): List<AbilityTrigger> {
+//        val result = mutableListOf<AbilityTrigger>()
+//        if (actId == "act_0" && locationId == 0 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_FIRST_BATTLE_INTRO_SHOWN)?.toBoolean() != true) { result.add(FirstBattleTutorial(this, game)) }
+//        if (actId == "act_0" && locationId == 2 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L3_TALK)?.toBoolean() != true) { result.add(Act1L3Talk(this, game)) }
+//        if (actId == "act_0" && locationId == 3 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L4_TALK)?.toBoolean() != true) { result.add(Act1L4Talk(this, game)) }
+//        if (actId == "act_0" && locationId == 4 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L5_TALK)?.toBoolean() != true) { result.add(Act1L5Talk(this, game)) }
+//        if (actId == "act_0" && locationId == 6 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L7_TALK)?.toBoolean() != true) { result.add(Act1L7Talk(this, game)) }
+//        if (actId == "act_0" && locationId == 7 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L8_TALK)?.toBoolean() != true) { result.add(Act1L8Talk(this, game)) }
+//        if (actId == "act_0" && locationId == 8 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L9_TALK)?.toBoolean() != true) { result.add(Act1L9Talk(this, game)) }
+//        if (actId == "act_0" && locationId == 10 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L11_TALK)?.toBoolean() != true) { result.add(Act1L11Talk(this, game)) }
+//        if (actId == "act_0" && locationId == 13 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L14_TALK)?.toBoolean() != true) { result.add(Act1L14Talk(this, game)) }
+//        return result
+//    }
 
     fun calcLeftPersonageRect() = battleController.calcLeftPersonageRect()
     fun calcRightPersonageRect() = battleController.calcRightPersonageRect()

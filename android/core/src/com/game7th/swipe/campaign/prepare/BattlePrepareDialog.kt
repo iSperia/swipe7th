@@ -169,9 +169,12 @@ class BattlePrepareDialog(
 
     private fun mapNpcWaves() = config.waves.flatMap { it }.map { it.copy(level = it.level + (difficulty - 1) * 3) }
 
-    private fun showGameScreen() {
+    private suspend fun showGameScreen() {
+        val result = game.api.encounterLocation(actId, locationId, difficulty, personages[personagesGroup.selectedIndex % personages.size].id)
         game.switchScreen(GameScreen(
                 game,
+                result,
+                result.battleId,
                 actId,
                 locationId,
                 difficulty,
@@ -221,6 +224,8 @@ class BattlePrepareDialog(
 
     fun startBattle() {
         dismissCallback()
-        showGameScreen()
+        KtxAsync.launch {
+            showGameScreen()
+        }
     }
 }

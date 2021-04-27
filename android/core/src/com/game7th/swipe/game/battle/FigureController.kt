@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
-import com.game7th.battle.personage.PersonageViewModel
 import com.game7th.swipe.game.GameContextWrapper
 import com.game7th.swipe.game.battle.model.FigureGdxModel
+import com.game7th.swiped.api.battle.PersonageViewModel
 
 enum class FigurePose(val poseName: String) {
     POSE_IDLE("idle"),
