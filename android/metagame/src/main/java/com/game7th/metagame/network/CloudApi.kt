@@ -128,6 +128,8 @@ class CloudApi(
 
     suspend fun validateGooglePurchase(token: String, shopItemId: String): List<PackEntryDto> = client.post("$baseUrl/shop/google_inapp_purchase?token=$token&shopItemId=$shopItemId") { sign() }
 
+    suspend fun getPersonageGearedStats(personageId: String): PersonageAttributesDto = client.get("$baseUrl/account/personages/$personageId") { sign() }
+
     suspend fun internalPurchase(request: PurchaseRequestDto): List<PackEntryDto> = client.post("$baseUrl/shop/acquire") {
         body = request
         sign()
