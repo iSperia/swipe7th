@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swiped.api.battle.BattleEvent
 import com.game7th.swiped.api.battle.TileFieldEvent
+import com.game7th.swiped.api.battle.TileFieldEventType
 import com.game7th.swiped.api.battle.TileViewModel
 import ktx.actors.alpha
 import kotlin.random.Random
@@ -98,16 +99,15 @@ class TileFieldView(
             }
             is BattleEvent.SwipeMotionEvent -> {
                 for (event in action.events) {
-                    when (event) {
-                        is TileFieldEvent.MoveTileEvent -> {
+                    when (event.type) {
+                        TileFieldEventType.MOVE -> {
                             val id = event.id
                             val position = event.position
                             animatedMove(id, position)
                         }
-                        is TileFieldEvent.MergeTileEvent -> {
-                            val tile = event.tile
+                        TileFieldEventType.MERGE -> {
                             val position = event.position
-                            animatedMoveAndDestroy(event.id, position, tile)
+                            animatedMoveAndDestroy(event.id, position, event.tile!!)
                         }
                     }
                 }

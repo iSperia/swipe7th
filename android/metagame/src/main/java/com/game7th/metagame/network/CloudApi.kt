@@ -14,9 +14,13 @@ import io.ktor.client.statement.*
 import io.ktor.content.*
 import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.channels.mapNotNull
 import kotlinx.coroutines.channels.receiveOrNull
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.onEach
 
 enum class NetworkErrorStatus {
@@ -139,30 +143,44 @@ class CloudApi(
                 this.headers.set("Authorization", "Bearer $token")
             }
     ) {
-        async {
-            output.onEach {
-                val name = it.javaClass.name
-                val payload = gson.toJson(it)
-                val frame = BattleFrame(name, payload)
-                val frameString = gson.toJson(frame)
-                outgoing.send(Frame.Text(frameString))
+        val outputRoutine = launch {
+            try {
+                output.collect {
+                    val name = InputBattleEvent.getEventDtoType(it).toString()
+                    val payload = gson.toJson(it)
+                    val frame = BattleFrame(name, payload)
+                    val frameString = gson.toJson(frame)
+                    println("S7TH-WS-OUT: $frameString")
+                    outgoing.send(Frame.Text(frameString))
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
+
         }
-        async {
-            var frame = incoming.receiveOrNull()
-            while (frame != null) {
-                when (frame) {
-                    is Frame.Text -> {
-                        val payload = frame.readText()
-                        val frame = gson.fromJson<BattleFrame>(payload, BattleFrame::class.java)
-                        val clazz = BattleEventType.valueOf(frame.name).clazz
-                        val event = gson.fromJson(frame.payload, clazz)
-                        handler.invoke(event)
+        val inputRoutine = launch {
+            try {
+                for (frame in incoming) {
+                    when (frame) {
+                        is Frame.Text -> {
+                            val payload = frame.readText()
+                            println("S7TH-WS-IN: $payload")
+                            val frame = gson.fromJson<BattleFrame>(payload, BattleFrame::class.java)
+                            val clazz = BattleEventType.valueOf(frame.name).clazz
+                            val event = gson.fromJson(frame.payload, clazz)
+                            handler.invoke(event)
+                        }
                     }
                 }
-                frame = incoming.receiveOrNull()
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
+
+        inputRoutine.join()
+        outputRoutine.cancelAndJoin()
+        close()
+        println("S7TH-WS: Connection closed")
     }
 
     private fun HttpRequestBuilder.sign() {

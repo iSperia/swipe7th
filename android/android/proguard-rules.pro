@@ -47,7 +47,7 @@
 -keep public class com.game7th.metagame.inventory.dto.** { *; }
 -keep public class com.game7th.battle.dto.** { *; }
 -keep public class com.game7th.swipe.game.battle.model.** { *; }
-
+-keep public class com.game7th.swiped.api.** { *; }
 
 -keepclassmembers class com.game7th.metagame.account.dto.** { *; }
 -keepclassmembers public class com.game7th.metagame.shop.dto.** { *; }
@@ -56,4 +56,4 @@
 -keepclassmembers public class com.game7th.metagame.inventory.dto.** { *; }
 -keepclassmembers public class com.game7th.battle.dto.** { *; }
 -keepclassmembers public class com.game7th.swipe.game.battle.model.** { *; }
-
+-keepclassmembers public class com.game7th.swiped.api.** { *; }
