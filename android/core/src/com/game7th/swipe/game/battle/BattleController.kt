@@ -317,7 +317,7 @@ class BattleController(
         println(">>> DEATH: $timePassed, $timeShift")
         val figure = findFigure(event.personage.id)
 
-        actions.add(Pair(timeShift) {
+        scheduledActions.add(Pair(timeShift) {
             figure?.let {
                 it.switchPose(FigurePose.POSE_DEATH)
                 it.isDead = true
@@ -338,13 +338,13 @@ class BattleController(
     }
 
     private fun scheduleFinalEventPropagation(event: BattleEvent) {
-        actions.add(Pair(timeShift) {
+        scheduledActions.add(Pair(timeShift) {
             endEventHandler(event)
         })
     }
 
     private fun scheduleShowSpeech(event: BattleEvent.ShowSpeech) {
-        actions.add(Pair(timeShift) {
+        scheduledActions.add(Pair(timeShift) {
             speechLockStarted = timePassed
             isSpeechLocked = true
             screen.showDialog(event.portrait, event.name, context.gameContext.texts[event.text] ?: event.text) {
@@ -362,7 +362,7 @@ class BattleController(
 
     private fun scheduleCreatePersonage(event: BattleEvent.CreatePersonageEvent) {
         println(">>> CREATE: $timePassed, $timeShift")
-        actions.add(Pair(timeShift) {
+        scheduledActions.add(Pair(timeShift) {
             FigureController(context,
                     this@BattleController,
                     event.personage.id,

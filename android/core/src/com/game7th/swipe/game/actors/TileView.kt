@@ -43,6 +43,7 @@ class TileView(
 
     var tx: Int = 0
     var ty: Int = 0
+    var nextAction: Float = 0f
     var removed = false
 
     private val bufferVector = Vector2()
