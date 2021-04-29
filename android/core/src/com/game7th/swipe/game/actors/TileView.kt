@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
@@ -46,6 +47,7 @@ class TileView(
     var nextAction: Float = 0f
     var removed = false
 
+    val durationActionQueue = mutableListOf<Action>()
     private val bufferVector = Vector2()
 
     init {
@@ -59,6 +61,10 @@ class TileView(
         super.act(delta)
         sectorRotation += (45f + 90f * (vm?.stackSize?:0) / (vm?.maxStackSize?:0)) * delta
         sectorRotation %= 360f
+
+        if (!hasActions() && durationActionQueue.isNotEmpty()) {
+            addAction(durationActionQueue.removeAt(0))
+        }
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {

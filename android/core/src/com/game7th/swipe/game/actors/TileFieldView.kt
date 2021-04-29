@@ -7,11 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swiped.api.battle.BattleEvent
-import com.game7th.swiped.api.battle.TileFieldEvent
 import com.game7th.swiped.api.battle.TileFieldEventType
 import com.game7th.swiped.api.battle.TileViewModel
 import ktx.actors.alpha
-import kotlin.math.max
 import kotlin.random.Random
 
 class TileFieldView(
@@ -28,8 +26,6 @@ class TileFieldView(
     val tileSize = w / FIELD_WIDTH
 
     private val shapeRenderer = ShapeRenderer()
-
-    var timePassed = 0f
 
     init {
         backgroundGroup = Group().apply {
@@ -59,11 +55,6 @@ class TileFieldView(
         addActor(backgroundGroup)
         addActor(tileGroup)
         addActor(tileEffectGroup)
-    }
-
-    override fun act(delta: Float) {
-        super.act(delta)
-        timePassed += delta
     }
 
     fun processAction(action: BattleEvent) {
@@ -169,18 +160,10 @@ class TileFieldView(
         findActor<TileView>("$id")?.let { tile ->
             tile.tx = position % FIELD_WIDTH
             tile.ty = position / FIELD_WIDTH
-            val delay = max(0f, tile.nextAction - timePassed)
-            if (delay == 0f) tile.nextAction = timePassed + 0.01f
-            tile.addAction(
-                    DelayAction(delay).apply {
-                        action = SequenceAction(
-                                MoveToAction().apply {
-                                    setPosition(tileSize * (position % FIELD_WIDTH), tileSize * (FIELD_WIDTH - 1 - (position / FIELD_WIDTH)))
-                                    duration = MOVE_STEP_LENGTH
-                                }
-                        )
-                    })
-            tile.nextAction = tile.nextAction + MOVE_STEP_LENGTH
+            tile.durationActionQueue.add(MoveToAction().apply {
+                setPosition(tileSize * (position % FIELD_WIDTH), tileSize * (FIELD_WIDTH - 1 - (position / FIELD_WIDTH)))
+                duration = MOVE_STEP_LENGTH
+            })
         }
     }
 
@@ -189,44 +172,32 @@ class TileFieldView(
             tile.tx = position % FIELD_WIDTH
             tile.ty = position / FIELD_WIDTH
             tile.removed = true
-            val delay = max(0f, tile.nextAction - timePassed) + 0.02f
-            if (delay == 0f) tile.nextAction = timePassed
-            tile.addAction(
-                    DelayAction(delay).apply { action =  SequenceAction(
-                            ParallelAction(
-                                    RunnableAction().apply { setRunnable { tile.setScale(1.3f) } },
-                                    MoveToAction().apply {
-                                        setPosition(tileSize * (position % FIELD_WIDTH), tileSize * (FIELD_WIDTH - 1 - (position / FIELD_WIDTH)))
-                                        duration = MOVE_STEP_LENGTH
-                                    },
-                                    AlphaAction().apply {
-                                        alpha = 0f
-                                        duration = MOVE_STEP_LENGTH
-                                    },
-                                    ScaleToAction().apply {
-                                        setScale(0.7f)
-                                        duration = MOVE_STEP_LENGTH
-                                    }
-                            ),
-                            RunnableAction().apply {
-                                setRunnable {
-                                    val tileToUpdate = findActor<TileView>("${updateTile.id}")
-                                    tileToUpdate?.updateFrom(updateTile)
-                                    tile.clearActions()
-                                    tile.remove()
-                                }
+            tile.durationActionQueue.add(SequenceAction(
+                    ParallelAction(
+                            RunnableAction().apply { setRunnable { tile.setScale(1.3f) } },
+                            MoveToAction().apply {
+                                setPosition(tileSize * (position % FIELD_WIDTH), tileSize * (FIELD_WIDTH - 1 - (position / FIELD_WIDTH)))
+                                duration = MOVE_STEP_LENGTH
+                            },
+                            AlphaAction().apply {
+                                alpha = 0f
+                                duration = MOVE_STEP_LENGTH
+                            },
+                            ScaleToAction().apply {
+                                setScale(0.7f)
+                                duration = MOVE_STEP_LENGTH
                             }
-                    )})
-            tile.nextAction = tile.nextAction + MOVE_STEP_LENGTH
-        }
-
-        findActor<TileView>("${updateTile.id}")?.addAction(SequenceAction(
-                RunnableAction().apply {
-                    setRunnable {
-                        findActor<TileView>("${updateTile.id}").updateFrom(updateTile)
+                    ),
+                    RunnableAction().apply {
+                        setRunnable {
+                            val tileToUpdate = findActor<TileView>("${updateTile.id}")
+                            tileToUpdate?.updateFrom(updateTile)
+                            tile.clearActions()
+                            tile.remove()
+                        }
                     }
-                }
-        ))
+            ))
+        }
     }
 
     fun finalizeActions() {
@@ -253,6 +224,6 @@ class TileFieldView(
     companion object {
         const val TILE_BG_REGION = "tile_bg_grey"
         const val FIELD_WIDTH = 5
-        const val MOVE_STEP_LENGTH = 0.03f
+        const val MOVE_STEP_LENGTH = 0.05f
     }
 }
