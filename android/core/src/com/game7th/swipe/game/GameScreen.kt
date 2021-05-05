@@ -116,7 +116,7 @@ class GameScreen(game: SwipeGameGdx,
                     width = Gdx.graphics.width.toFloat(),
                     height = Gdx.graphics.height.toFloat(),
                     atlases = atlases
-            ), this@GameScreen, Gdx.graphics.height - (Gdx.graphics.width.toFloat() / 1.25f), sounds) {
+            ), this@GameScreen, 480f * context.scale, sounds) {
                 if (it is BattleEvent.VictoryEvent) {
                     gameActor.showVictory()
                     backgroundMusic.pause()
@@ -177,10 +177,6 @@ class GameScreen(game: SwipeGameGdx,
     private fun usePotion(flask: FlaskItemFullInfoDto) {
         KtxAsync.launch {
             gameActor.refreshAlchemy()
-//            if (battle.useFlask(BattleFlaskDto(flask.template.fbFlatHeal ?: 0, flask.template.fbRemoveStun ?: 0, 0))) {
-//                flask.id?.let { flaskId -> game.gearService.consumeFlask(flaskId) }
-//            }
-            gameActor.hideAlchemy()
         }
     }
 

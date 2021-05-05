@@ -28,6 +28,8 @@ class BattleController(
         private val endEventHandler: (event: BattleEvent) -> Unit
 ) {
 
+    private val h = Gdx.graphics.height - y
+
     private val controllers = mutableListOf<ElementController>()
 
     val bgIndex = 1 + Random.nextInt(3)
@@ -62,7 +64,7 @@ class BattleController(
     }
 
     fun act(batch: SpriteBatch, delta: Float) {
-        batch.draw(backgroundTexture, 0f, y, context.width, context.width / 1.25f)
+        batch.draw(backgroundTexture, 0f, y, context.width, h)
 
         controllers.sortedBy { it.id }.forEach { it.render(batch, delta) }
 

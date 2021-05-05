@@ -41,14 +41,22 @@ class GameActor(
 
     lateinit var atlas: TextureAtlas
     val tileField: TileFieldView
+    val flaskPanel = Group()
+    val tileFieldBackground = Image(context.battleAtlas.findRegion("tilefieldbg"))
+    val tileFieldForeground = Image(context.battleAtlas.findRegion("tilefield_border"))
 
-    val buttonConcede: Label
-    val buttonPotions = IconTextButton(context, "icon_alch", "Potions", this::switchPotions)
+    private val buttonConcede = BigButtonGroup(context, 80f * context.scale, 90f * context.scale, "btn_se_bg", "btn_se_bg_pressed", "btn_se_fg", "pic_concede", "pic_concede_pressed", Align.right) {
+        showDefeat()
+    }.apply {
+        x = context.scale * (480f - 80f)
+    }
+    private val buttonSettings = BigButtonGroup(context, 80f * context.scale, 90f * context.scale, "btn_sw_bg", "btn_sw_bg_pressed", "btn_sw_fg", "pic_settings", "pic_settings_pressed", Align.left) {
+
+    }
+
+    val bottomPanel = Image(context.battleAtlas.findRegion("flask_pane_bg"))
     val labelCombo: Label
     val labelComboWrapper: Group
-    val tileFieldZoneBorder: Image
-    val tileFieldBorder: Image
-    val bottomSheetBg: Image
     val comboParticles: ParticleEffect
     val uiGroup = Group()
 
@@ -56,60 +64,49 @@ class GameActor(
 
     private var combo = 0
 
-    val tileFieldAreaHeight = min(Gdx.graphics.width.toFloat(), Gdx.graphics.height - Gdx.graphics.width / 1.25f - 48f * context.scale) - 32f
-
-    private var potionPanel: AlchemyPanel? = null
+    val tileFieldAreaHeight = 400f * context.scale
 
     init {
-        Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
-            x = 0f
-            y = 48f * context.scale
-            width = Gdx.graphics.width.toFloat()
-            height = Gdx.graphics.height - Gdx.graphics.width * 0.8f - 48f * context.scale
-        }.let { addActor(it) }
-        tileFieldZoneBorder = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
-            x = 0f
-            y = 48f * context.scale
-            width = Gdx.graphics.width.toFloat()
-            height = Gdx.graphics.height - Gdx.graphics.width * 0.8f - 48f * context.scale
+        val bottomPanelHei = 480f * context.scale / 9.66f
+        bottomPanel.apply {
+            width = context.scale * 480f
+            height = bottomPanelHei
         }
-        addActor(tileFieldZoneBorder)
+        tileFieldForeground.apply {
+            y = bottomPanelHei - 24f * context.scale
+            width = context.scale * 480f
+            height = context.scale * 480f / 1.05f
+        }
 
         tileField = TileFieldView(context, tileFieldAreaHeight, tileFieldAreaHeight).apply {
             x = (Gdx.graphics.width - tileFieldAreaHeight) / 2f
-            y = 48f * context.scale + (Gdx.graphics.height - Gdx.graphics.width * 0.8f - 48f * context.scale - tileFieldAreaHeight) / 2
+            y = tileFieldForeground.y + 30f * context.scale
         }
+        tileFieldBackground.apply {
+            x = tileField.x - 20f * context.scale
+            y = tileField.y - 20f * context.scale
+            width = tileFieldAreaHeight + 40f * context.scale
+            height = tileFieldAreaHeight + 40f * context.scale
+        }
+
+        flaskPanel.apply {
+            x = 90f * context.scale
+            y = -5f * context.scale
+        }
+        (0..4).forEach { index ->
+            val nodeView = BoosterNodeView(context, 60f * context.scale)
+            nodeView.x = index * 60f * context.scale
+            flaskPanel.addActor(nodeView)
+        }
+
+        addActor(tileFieldBackground)
         addActor(tileField)
-        tileFieldBorder = Image(context.uiAtlas.createPatch("bg_brass")).apply {
-            x = tileField.x - 8f
-            y = tileField.y - 8f
-            width = tileFieldAreaHeight + 16f
-            height = tileFieldAreaHeight + 16f
-        }
-        addActor(tileFieldBorder)
-
-        bottomSheetBg = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
-            x = 0f
-            y = 0f
-            width = Gdx.graphics.width.toFloat()
-            height = 48f * context.scale
-        }
-        addActor(bottomSheetBg)
-
-        buttonConcede = Label("Concede", Label.LabelStyle(context.font, Color.WHITE)).apply {
-            setFontScale(22f * context.scale / 36f)
-            width = 100f * context.scale
-            height = 48f * context.scale
-            x = Gdx.graphics.width - width - 10f * context.scale
-            y = 0f
-            setAlignment(Align.center)
-        }
-        buttonConcede.onClick {
-            showDefeat()
-        }
+        addActor(tileFieldForeground)
+        addActor(bottomPanel)
+        addActor(flaskPanel)
         addActor(buttonConcede)
-
-        addActor(buttonPotions)
+        addActor(buttonSettings)
+        refreshAlchemy()
 
         labelCombo = Label("COMBO", Label.LabelStyle(context.font2, Color.SCARLET)).apply {
             x = -Gdx.graphics.width / 2f
@@ -233,24 +230,11 @@ class GameActor(
         fingerActor = null
     }
 
-    fun hideAlchemy() {
-        potionPanel?.animateHideToBottom(context, AlchemyPanel.h)
-        potionPanel = null
-    }
-
-    private fun switchPotions() {
-        if (potionPanel == null) {
-            potionPanel = AlchemyPanel(context, gearService, AlchemyPanelMode.DrinkMode(usePotionCallback)).apply {
-                y = 48f * context.scale
-            }
-            addActor(potionPanel)
-            potionPanel?.animateShowFromBottom(context, AlchemyPanel.h)
-        } else {
-            hideAlchemy()
-        }
-    }
-
     fun refreshAlchemy() {
-        potionPanel?.reloadData()
+        KtxAsync.launch {
+            gearService.listFlasks().take(5).forEachIndexed { index, flask ->
+                (flaskPanel.getChild(index) as BoosterNodeView).applyFlask(flask)
+            }
+        }
     }
 }

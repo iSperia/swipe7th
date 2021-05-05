@@ -137,10 +137,10 @@ class CloudApi(
 
     suspend fun encounterLocation(actId: String, locationId: Int, difficulty: Int, personageId: String): BattleResultDto = client.post("$baseUrl/encounter?actId=$actId&locationId=$locationId&difficulty=$difficulty&personageId=$personageId") { sign() }
 
-    suspend fun connectBattle(battleId: String, output: Flow<InputBattleEvent>, handler: suspend (BattleEvent) -> Unit) = client.wss(
+    suspend fun connectBattle(battleId: String, output: Flow<InputBattleEvent>, handler: suspend (BattleEvent) -> Unit) = client.ws(
             host = baseUrl.replace("http://", "").replace("https://", "").replace(":8080", ""),
             path = "/battle?battleId=$battleId",
-//            port = 8080,
+            port = 8080,
             request = {
                 this.headers.set("Authorization", "Bearer $token")
             }
