@@ -17,6 +17,7 @@ import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.SwipeGameGdx
 import com.game7th.swipe.TutorialKeys
 import com.game7th.swipe.campaign.ActScreen
+import com.game7th.swipe.dialog.DismissStrategy
 import com.game7th.swipe.game.actors.GameActor
 import com.game7th.swipe.game.battle.BattleController
 import com.game7th.swipe.game.battle.model.FigureGdxModel
@@ -185,6 +186,13 @@ class GameScreen(game: SwipeGameGdx,
         return actService.markLocationComplete(actId, locationId, difficulty, personage.id)
     }
 
+    //    private fun produceTutorials(): List<AbilityTrigger> {
+//        val result = mutableListOf<AbilityTrigger>()
+//        if (actId == "act_0" && locationId == 10 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L11_TALK)?.toBoolean() != true) { result.add(Act1L11Talk(this, game)) }
+//        if (actId == "act_0" && locationId == 13 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L14_TALK)?.toBoolean() != true) { result.add(Act1L14Talk(this, game)) }
+//        return result
+//    }
+
     private fun listenEvents() {
         KtxAsync.launch {
             game.api.connectBattle(battleId, swipeFlow) {
@@ -193,6 +201,292 @@ class GameScreen(game: SwipeGameGdx,
                 when (it) {
                     is BattleEvent.VictoryEvent -> onGameEnded(true)
                     is BattleEvent.DefeatEvent -> onGameEnded(false)
+                    is BattleEvent.NewWaveEvent -> {
+                        T_A0L1()
+                        T_A0L3()
+                        T_A0L4()
+                        T_A0L5()
+                        T_A0L7()
+                        T_A0L8(it)
+                        T_A0L9(it)
+                        T_A0L11(it)
+                        T_A0L14(it)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun T_A0L14(it: BattleEvent.NewWaveEvent) {
+        if (actId == "act_0" && locationId == 13 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L14_TALK)?.toBoolean() != true && it.wave == 0) {
+            preventBottomSwipe = true
+            preventTopSwipe = true
+            preventLeftSwipe = true
+            preventRightSwipe = true
+
+            showDialog("vp_bhastuse_jolly", "Bhastuse", game.context.texts["ttr_a1l14_fb_1"]!!) {
+                showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l14_fb_2"]!!) {
+                    showDialog("vp_bhastuse_jolly", "Bhastuse", game.context.texts["ttr_a1l14_fb_3"]!!) {
+                        preventBottomSwipe = false
+                        preventTopSwipe = false
+                        preventLeftSwipe = false
+                        preventRightSwipe = false
+                        game.storage.put(TutorialKeys.ACT1_L14_TALK, true.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun T_A0L11(it: BattleEvent.NewWaveEvent) {
+        if (actId == "act_0" && locationId == 10 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L11_TALK)?.toBoolean() != true && it.wave == 0) {
+            preventBottomSwipe = true
+            preventTopSwipe = true
+            preventLeftSwipe = true
+            preventRightSwipe = true
+
+            showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l11_fb_1"]!!) {
+                showDialog("vp_dryad", "Dryad", game.context.texts["ttr_a1l11_fb_2"]!!) {
+                    showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l11_fb_3"]!!) {
+                        showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l11_fb_4"]!!) {
+                            preventBottomSwipe = false
+                            preventTopSwipe = false
+                            preventLeftSwipe = false
+                            preventRightSwipe = false
+                            game.storage.put(TutorialKeys.ACT1_L11_TALK, true.toString())
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun T_A0L9(it: BattleEvent.NewWaveEvent) {
+        if (actId == "act_0" && locationId == 8 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L9_TALK)?.toBoolean() != true) {
+            if (it.wave == 0) {
+                preventBottomSwipe = true
+                preventTopSwipe = true
+                preventLeftSwipe = true
+                preventRightSwipe = true
+
+                showDialog("vp_bhastuse_jolly", "Bhastuse", game.context.texts["ttr_a1l9_fb_1"]!!) {
+                    showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l9_fb_2"]!!) {
+                        showDialog("vp_bhastuse_jolly", "Bhastuse", game.context.texts["ttr_a1l9_fb_3"]!!) {
+                            preventBottomSwipe = false
+                            preventTopSwipe = false
+                            preventLeftSwipe = false
+                            preventRightSwipe = false
+                        }
+                    }
+                }
+            } else if (it.wave == 1) {
+                preventBottomSwipe = true
+                preventTopSwipe = true
+                preventLeftSwipe = true
+                preventRightSwipe = true
+                showDialog("vp_bhastuse_jolly", "Bhastuse", game.context.texts["ttr_a1l9_fb_4"]!!) {
+                    preventBottomSwipe = false
+                    preventTopSwipe = false
+                    preventLeftSwipe = false
+                    preventRightSwipe = false
+                    game.storage.put(TutorialKeys.ACT1_L9_TALK, true.toString())
+                }
+            }
+        }
+    }
+
+    private fun T_A0L8(event: BattleEvent.NewWaveEvent) {
+        if (actId == "act_0" && locationId == 7 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L8_TALK)?.toBoolean() != true) {
+            if (event.wave == 0) {
+                preventBottomSwipe = true
+                preventTopSwipe = true
+                preventLeftSwipe = true
+                preventRightSwipe = true
+
+                showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l8_fb_1"]!!) {
+                    showDialog("vp_bhastuse_jolly", "Bhastuse", game.context.texts["ttr_a1l8_fb_2"]!!) {
+                        showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l8_fb_3"]!!) {
+                            preventBottomSwipe = false
+                            preventTopSwipe = false
+                            preventLeftSwipe = false
+                            preventRightSwipe = false
+                        }
+                    }
+                }
+            } else if (event.wave == 1) {
+                preventBottomSwipe = true
+                preventTopSwipe = true
+                preventLeftSwipe = true
+                preventRightSwipe = true
+                showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l8_fb_4"]!!) {
+                    showDialog("vp_personage_gladiator", "Strange Figure", game.context.texts["ttr_a1l8_fb_5"]!!) {
+                        preventBottomSwipe = false
+                        preventTopSwipe = false
+                        preventLeftSwipe = false
+                        preventRightSwipe = false
+                        game.storage.put(TutorialKeys.ACT1_L8_TALK, true.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun T_A0L7() {
+        if (actId == "act_0" && locationId == 6 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L7_TALK)?.toBoolean() != true) {
+            preventBottomSwipe = true
+            preventTopSwipe = true
+            preventLeftSwipe = true
+            preventRightSwipe = true
+
+            showDialog("vp_personage_gladiator", "Strange Figure", game.context.texts["ttr_a1l7_fb_1"]!!) {
+                showDialog("vp_bhastuse_jolly", "Bhastuse", game.context.texts["ttr_a1l7_fb_2"]!!) {
+                    showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l7_fb_3"]!!) {
+                        preventBottomSwipe = false
+                        preventTopSwipe = false
+                        preventLeftSwipe = false
+                        preventRightSwipe = false
+                        game.storage.put(TutorialKeys.ACT1_L7_TALK, true.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun T_A0L5() {
+        if (actId == "act_0" && locationId == 4 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L5_TALK)?.toBoolean() != true) {
+            preventBottomSwipe = true
+            preventTopSwipe = true
+            preventLeftSwipe = true
+            preventRightSwipe = true
+
+            showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l5_fb_1"]!!) {
+                showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l5_fb_2"]!!) {
+                    showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l5_fb_3"]!!) {
+                        showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l5_fb_4"]!!) {
+                            preventBottomSwipe = false
+                            preventTopSwipe = false
+                            preventLeftSwipe = false
+                            preventRightSwipe = false
+                            game.storage.put(TutorialKeys.ACT1_L5_TALK, true.toString())
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun T_A0L4() {
+        if (actId == "act_0" && locationId == 3 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L4_TALK)?.toBoolean() != true) {
+            preventBottomSwipe = true
+            preventTopSwipe = true
+            preventLeftSwipe = true
+            preventRightSwipe = true
+
+            showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l4_fb_1"]!!) {
+                showDialog("vp_strange_figure", "Strange figure", game.context.texts["ttr_a1l4_fb_2"]!!) {
+                    showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l4_fb_3"]!!) {
+                        showDialog("vp_strange_figure", "Strange figure", game.context.texts["ttr_a1l4_fb_4"]!!) {
+                            showDialog("vp_bhastuse_jolly", "Bhastuse", game.context.texts["ttr_a1l4_fb_5"]!!) {
+                                showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l4_fb_6"]!!) {
+                                    showDialog("vp_strange_figure", "Strange figure", game.context.texts["ttr_a1l4_fb_7"]!!) {
+                                        preventBottomSwipe = false
+                                        preventTopSwipe = false
+                                        preventLeftSwipe = false
+                                        preventRightSwipe = false
+                                        game.storage.put(TutorialKeys.ACT1_L4_TALK, true.toString())
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun T_A0L3() {
+        if (actId == "act_0" && locationId == 2 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L3_TALK)?.toBoolean() != true) {
+            preventBottomSwipe = true
+            preventTopSwipe = true
+            preventLeftSwipe = true
+            preventRightSwipe = true
+
+            showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l3_fb_1"]!!) {
+                showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l3_fb_2"]!!) {
+                    showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l3_fb_3"]!!) {
+                        preventBottomSwipe = false
+                        preventTopSwipe = false
+                        preventLeftSwipe = false
+                        preventRightSwipe = false
+                        game.storage.put(TutorialKeys.ACT1_L3_TALK, true.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun T_A0L1() {
+        if (actId == "act_0" && locationId == 0 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_FIRST_BATTLE_INTRO_SHOWN)?.toBoolean() != true) {
+            preventBottomSwipe = true
+            preventTopSwipe = true
+            preventLeftSwipe = true
+            preventRightSwipe = true
+
+            showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l1_fb_1"]!!) {
+                showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l1_fb_2"]!!) {
+                    showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l1_fb_3"]!!) {
+                        showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l1_fb_4"]!!) {
+                            showFocusView("ttr_a1l1_fb_5", calcLeftPersonageRect(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                showFocusView("ttr_a1l1_fb_6", calcRightPersonageRect(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                    showFocusView("ttr_a1l1_fb_7", calcLeftPersonageHpBarRect(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                        showFocusView("ttr_a1l1_fb_8", calcRightPersonageHpBarRect(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                            showFocusView("ttr_a1l1_fb_9", calcTileFieldRect(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                showFocusView("ttr_a1l1_fb_10", calcTileRect(7), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                    showFocusView("ttr_a1l1_fb_11", calcTileRect(9), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                        showFocusView("ttr_a1l1_fb_12", calcTileRect(17), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                            preventLeftSwipe = false
+                                                            dismissFocusOnSwipe = true
+                                                            showFingerAnimation(-1, 0)
+                                                            showFocusView("ttr_a1l1_fb_13", calcTileFieldRect(), DismissStrategy.DISMISS_FORCED) {
+                                                                dismissFingerAnimation()
+                                                                preventLeftSwipe = true
+                                                                dismissFocusOnSwipe = false
+                                                                showFocusView("ttr_a1l1_fb_14", calcTileRect(5), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                                    showFocusView("ttr_a1l1_fb_15", calcComboRect(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                                        showFocusView("ttr_a1l1_fb_16", calcTileRect(13), DismissStrategy.DISMISS_ON_OUTSIDE) {
+                                                                            showFocusView("ttr_a1l1_fb_17", calcRightPersonageSkillRect(), DismissStrategy.DISMISS_ON_OUTSIDE)
+                                                                            preventBottomSwipe = false
+                                                                            dismissFocusOnSwipe = true
+                                                                            showFingerAnimation(0, -1)
+                                                                            showFocusView("ttr_a1l1_fb_18", calcTileFieldRect(), DismissStrategy.DISMISS_FORCED) {
+                                                                                dismissFingerAnimation()
+                                                                                dismissFocusOnSwipe = false
+                                                                                preventBottomSwipe = true
+                                                                                showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l1_fb_19"]!!) {
+                                                                                    showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l1_fb_20"]!!) {
+                                                                                        showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l1_fb_21"]!!) {
+                                                                                            preventBottomSwipe = false
+                                                                                            preventTopSwipe = false
+                                                                                            preventLeftSwipe = false
+                                                                                            preventRightSwipe = false
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -238,19 +532,7 @@ class GameScreen(game: SwipeGameGdx,
         }
     }
 
-//    private fun produceTutorials(): List<AbilityTrigger> {
-//        val result = mutableListOf<AbilityTrigger>()
-//        if (actId == "act_0" && locationId == 0 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_FIRST_BATTLE_INTRO_SHOWN)?.toBoolean() != true) { result.add(FirstBattleTutorial(this, game)) }
-//        if (actId == "act_0" && locationId == 2 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L3_TALK)?.toBoolean() != true) { result.add(Act1L3Talk(this, game)) }
-//        if (actId == "act_0" && locationId == 3 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L4_TALK)?.toBoolean() != true) { result.add(Act1L4Talk(this, game)) }
-//        if (actId == "act_0" && locationId == 4 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L5_TALK)?.toBoolean() != true) { result.add(Act1L5Talk(this, game)) }
-//        if (actId == "act_0" && locationId == 6 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L7_TALK)?.toBoolean() != true) { result.add(Act1L7Talk(this, game)) }
-//        if (actId == "act_0" && locationId == 7 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L8_TALK)?.toBoolean() != true) { result.add(Act1L8Talk(this, game)) }
-//        if (actId == "act_0" && locationId == 8 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L9_TALK)?.toBoolean() != true) { result.add(Act1L9Talk(this, game)) }
-//        if (actId == "act_0" && locationId == 10 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L11_TALK)?.toBoolean() != true) { result.add(Act1L11Talk(this, game)) }
-//        if (actId == "act_0" && locationId == 13 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_L14_TALK)?.toBoolean() != true) { result.add(Act1L14Talk(this, game)) }
-//        return result
-//    }
+
 
     fun calcLeftPersonageRect() = battleController.calcLeftPersonageRect()
     fun calcRightPersonageRect() = battleController.calcRightPersonageRect()
