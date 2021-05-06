@@ -137,53 +137,103 @@ class CloudApi(
 
     suspend fun encounterLocation(actId: String, locationId: Int, difficulty: Int, personageId: String): BattleResultDto = client.post("$baseUrl/encounter?actId=$actId&locationId=$locationId&difficulty=$difficulty&personageId=$personageId") { sign() }
 
-    suspend fun connectBattle(battleId: String, output: Flow<InputBattleEvent>, handler: suspend (BattleEvent) -> Unit) = client.ws(
-            host = baseUrl.replace("http://", "").replace("https://", "").replace(":8080", ""),
-            path = "/battle?battleId=$battleId",
-            port = 8080,
-            request = {
-                this.headers.set("Authorization", "Bearer $token")
-            }
-    ) {
-        val outputRoutine = launch {
-            try {
-                output.collect {
-                    val name = InputBattleEvent.getEventDtoType(it).toString()
-                    val payload = gson.toJson(it)
-                    val frame = BattleFrame(name, payload)
-                    val frameString = gson.toJson(frame)
-                    println("S7TH-WS-OUT: $frameString")
-                    outgoing.send(Frame.Text(frameString))
+    suspend fun connectBattle(battleId: String, output: Flow<InputBattleEvent>, handler: suspend (BattleEvent) -> Unit) = if (baseUrl.contains("https")) {
+        client.wss(
+                host = baseUrl.replace("http://", "").replace("https://", "").replace(":8080", ""),
+                path = "/battle?battleId=$battleId",
+                request = {
+                    this.headers.set("Authorization", "Bearer $token")
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+        ) {
+            val outputRoutine = launch {
+                try {
+                    output.collect {
+                        val name = InputBattleEvent.getEventDtoType(it).toString()
+                        val payload = gson.toJson(it)
+                        val frame = BattleFrame(name, payload)
+                        val frameString = gson.toJson(frame)
+                        println("S7TH-WS-OUT: $frameString")
+                        outgoing.send(Frame.Text(frameString))
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
 
-        }
-        val inputRoutine = launch {
-            try {
-                for (frame in incoming) {
-                    when (frame) {
-                        is Frame.Text -> {
-                            val payload = frame.readText()
-                            println("S7TH-WS-IN: $payload")
-                            val frame = gson.fromJson<BattleFrame>(payload, BattleFrame::class.java)
-                            val clazz = BattleEventType.valueOf(frame.name).clazz
-                            val event = gson.fromJson(frame.payload, clazz)
-                            handler.invoke(event)
+            }
+            val inputRoutine = launch {
+                try {
+                    for (frame in incoming) {
+                        when (frame) {
+                            is Frame.Text -> {
+                                val payload = frame.readText()
+                                println("S7TH-WS-IN: $payload")
+                                val frame = gson.fromJson<BattleFrame>(payload, BattleFrame::class.java)
+                                val clazz = BattleEventType.valueOf(frame.name).clazz
+                                val event = gson.fromJson(frame.payload, clazz)
+                                handler.invoke(event)
+                            }
                         }
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
-        }
 
-        inputRoutine.join()
-        outputRoutine.cancelAndJoin()
-        close()
-        println("S7TH-WS: Connection closed")
+            inputRoutine.join()
+            outputRoutine.cancelAndJoin()
+            close()
+            println("S7TH-WS: Connection closed")
+        }
+    } else {
+        client.ws(
+                host = baseUrl.replace("http://", "").replace("https://", "").replace(":8080", ""),
+                path = "/battle?battleId=$battleId",
+            port = 8080,
+                request = {
+                    this.headers.set("Authorization", "Bearer $token")
+                }
+        ) {
+            val outputRoutine = launch {
+                try {
+                    output.collect {
+                        val name = InputBattleEvent.getEventDtoType(it).toString()
+                        val payload = gson.toJson(it)
+                        val frame = BattleFrame(name, payload)
+                        val frameString = gson.toJson(frame)
+                        println("S7TH-WS-OUT: $frameString")
+                        outgoing.send(Frame.Text(frameString))
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
+            }
+            val inputRoutine = launch {
+                try {
+                    for (frame in incoming) {
+                        when (frame) {
+                            is Frame.Text -> {
+                                val payload = frame.readText()
+                                println("S7TH-WS-IN: $payload")
+                                val frame = gson.fromJson<BattleFrame>(payload, BattleFrame::class.java)
+                                val clazz = BattleEventType.valueOf(frame.name).clazz
+                                val event = gson.fromJson(frame.payload, clazz)
+                                handler.invoke(event)
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+
+            inputRoutine.join()
+            outputRoutine.cancelAndJoin()
+            close()
+            println("S7TH-WS: Connection closed")
+        }
     }
+
 
     private fun HttpRequestBuilder.sign() {
         headers {
