@@ -1,6 +1,7 @@
 package com.game7th.swipe.game.battle
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.game7th.swipe.game.GameContextWrapper
 
@@ -11,9 +12,11 @@ class PersonageHealthbarController(
         val figure: FigureController
 ) : ElementController(context, battle, id) {
 
-    private val healthBarBackground = context.gameContext.battleAtlas.createPatch("hp_bar_bg")
-    private val healthBarForeground = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("hp_bar_rect"))
-    private val resistForeground = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("rs_bar_rect"))
+    private val healthBarBackground = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("hpbar_bg"))
+    private val healthBarForeground = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("hpbar_scale"))
+    private val healthBarBorder = NinePatchDrawable(context.gameContext.battleAtlas.createPatch("hpbar_border"))
+    private val healthBarGlass = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("hpbar_fg"))
+    private val resistForeground = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("hpbar_resist"))
     private val blackQuad = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("black_quad"))
     var timePassed: Float = 0f
     var timeHpActual: Float = timePassed
@@ -43,17 +46,18 @@ class PersonageHealthbarController(
 
         val percent = displayedValue / figure.viewModel.stats.maxHealth
 
-        val sx = figure.x - 48f * battle.scale
+        val barWidth = 48f * battle.scale * context.scale
+        val sx = figure.x - barWidth / 2
         val sy = figure.y - 15f * battle.scale
 
-        val healthBarWidth = 96f * battle.scale - 12f
-        val distance: Float = (healthBarWidth - 4f) * 100f / figure.viewModel.stats.maxHealth.toFloat()
-        val isBigHealth = distance <= healthBarWidth / 25
-        val hei: Float = 16f * battle.scale
+        val offset = barWidth * 0.04f
+        val distance: Float = (barWidth - 2 * offset) * 100f / figure.viewModel.stats.maxHealth.toFloat()
+        val isBigHealth = distance <= barWidth / 25
+        val hei: Float = 20f * battle.scale
         val sectorHei: Float = (hei - 4f) / 2f
 
-        healthBarBackground.draw(batch, sx, sy, 96f * battle.scale, hei)
-        healthBarForeground.draw(batch, sx + 6f, sy + 2f, healthBarWidth * percent, hei - 4f)
+        healthBarBackground.draw(batch, sx, sy, barWidth, hei)
+        healthBarForeground.region.let { r -> batch.draw(r.texture, sx, sy, barWidth * percent, hei, r.u, r.v2, r.u + (r.u2-r.u) * percent, r.v) }
 
         if (figure.viewModel.stats.resistMax > 0) {
             var resist = figure.viewModel.stats.resist.toFloat()
@@ -68,20 +72,23 @@ class PersonageHealthbarController(
             }
 
             val resistPercent = displayedResist / figure.viewModel.stats.resistMax
-            resistForeground.draw(batch, sx + 6f, sy + 2f, healthBarWidth * resistPercent, hei - 4f)
+            resistForeground.region.let { r -> batch.draw(r.texture, sx, sy, barWidth * resistPercent, hei, r.u, r.v2, r.u + (r.u2-r.u) * resistPercent, r.v) }
         }
 
         var cursor = distance
         var index = 1
-        while (cursor < healthBarWidth) {
+        while (cursor < barWidth - 2 * offset) {
             val wid = if (index % 5 == 0) 2f * context.scale else 1f * context.scale
             val extraHei = if (index % 5 == 0) sectorHei else 0f
             if (index % 5 == 0 || !isBigHealth) {
-                blackQuad.draw(batch, sx + 2f + cursor, sy + 2f + sectorHei - extraHei, wid, sectorHei + extraHei)
+                blackQuad.draw(batch, sx + offset + cursor, sy + 2f + sectorHei - extraHei, wid, sectorHei + extraHei)
             }
             index++
             cursor += distance
         }
+
+        healthBarBorder.draw(batch, sx, sy, barWidth, hei)
+        healthBarGlass.draw(batch, sx, sy, barWidth, hei)
     }
 
     override fun dispose() {

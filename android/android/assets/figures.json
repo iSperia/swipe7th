@@ -89,7 +89,7 @@
       "name": "dryad",
       "atlas": "dryad",
       "height": 230,
-      "width": 110,
+      "width": 146,
       "scale": 0.75,
       "body": "dryad_body",
       "poses": [
@@ -113,7 +113,7 @@
       "name": "dryad_queen",
       "atlas": "dryad_queen",
       "height": 230,
-      "width": 110,
+      "width": 146,
       "scale": 0.75,
       "body": "dryad_queen_body",
       "poses": [
