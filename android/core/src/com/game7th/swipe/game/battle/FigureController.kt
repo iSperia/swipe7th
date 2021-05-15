@@ -16,7 +16,8 @@ enum class FigurePose(val poseName: String) {
     POSE_IDLE("idle"),
     POSE_ATTACK("attack"),
     POSE_DAMAGE("damage"),
-    POSE_DEATH("death")
+    POSE_DEATH("death"),
+    POSE_ABILITY("ability")
 }
 
 /**
@@ -86,19 +87,19 @@ class FigureController(
         animation?.let { animation ->
             if (pose != FigurePose.POSE_DEATH || !animation.isAnimationFinished(timePassed - timePoseStarted)) {
                 batch.draw(animation.getKeyFrame(timePassed - timePoseStarted, true),
-                        x - 256f * bodyScale * flipMultiplier,
+                        x - figureModel.anchor_x * bodyScale * flipMultiplier,
                         y,
-                        512f * bodyScale * flipMultiplier,
-                        512f * bodyScale)
+                        figureModel.source_width * bodyScale * flipMultiplier,
+                        figureModel.source_height * bodyScale)
             } else if (pose == FigurePose.POSE_DEATH) {
                 if (flipped || position > 0) {
                     battle.removeController(this)
                 } else {
                     batch.draw(animation.keyFrames.last(),
-                            x - 256f * bodyScale * flipMultiplier,
+                            x - figureModel.anchor_x * bodyScale * flipMultiplier,
                             y,
-                            512f * bodyScale * flipMultiplier,
-                            512f * bodyScale)
+                            figureModel.source_width * bodyScale * flipMultiplier,
+                            figureModel.source_height * bodyScale)
                 }
             }
 
@@ -125,6 +126,7 @@ class FigureController(
             FigurePose.POSE_ATTACK -> Animation.PlayMode.NORMAL
             FigurePose.POSE_DAMAGE -> Animation.PlayMode.NORMAL
             FigurePose.POSE_DEATH -> Animation.PlayMode.NORMAL
+            FigurePose.POSE_ABILITY -> Animation.PlayMode.NORMAL
         }
         this.animation = Animation(FRAME_DURATION, Array(allTextures.subList((pose?.start ?: 1) - 1, (pose?.end ?: 1)).toTypedArray()), playMode)
     }

@@ -33,9 +33,9 @@ class BattleController(
     private val controllers = mutableListOf<ElementController>()
 
     val bgIndex = 1 + Random.nextInt(3)
-    private val backgroundTexture = context.gameContext.battleAtlas.findRegion("battle_bg", bgIndex)
-    private val foregroundTexture = context.gameContext.battleAtlas.findRegion("battle_fg", bgIndex)
-    private val foregroundRatio = foregroundTexture.originalHeight / foregroundTexture.originalWidth.toFloat()
+    private val backgroundTexture = context.gameContext.battleAtlas.findRegion("battleground_forest")
+//    private val foregroundTexture = context.gameContext.battleAtlas.findRegion("battle_fg", bgIndex)
+//    private val foregroundRatio = foregroundTexture.originalHeight / foregroundTexture.originalWidth.toFloat()
 
     val padding = 0.05f * Gdx.graphics.width
 
@@ -55,16 +55,18 @@ class BattleController(
     var speechLockStarted = 0f
     var isSpeechLocked = false
 
-    init {
-        controllers.add(object : ElementController(context, this, fgId++) {
-            override fun render(batch: SpriteBatch, delta: Float) {
-                batch.draw(foregroundTexture, 0f, y, context.width, context.width * foregroundRatio)
-            }
-        })
-    }
+//    init {
+//        controllers.add(object : ElementController(context, this, fgId++) {
+//            override fun render(batch: SpriteBatch, delta: Float) {
+//                batch.draw(foregroundTexture, 0f, y, context.width, context.width * foregroundRatio)
+//            }
+//        })
+//    }
 
     fun act(batch: SpriteBatch, delta: Float) {
-        batch.draw(backgroundTexture, 0f, y, context.width, h)
+        val scaleNormalized = if (scale > 2f) 2f else if (scale < 0.5f) 0.5f else scale
+        val textureScale = h / backgroundTexture.packedHeight * (1 + 0.5f * (scaleNormalized - 0.5f) / 1.5f)
+        batch.draw(backgroundTexture, - (textureScale * backgroundTexture.packedWidth - context.width) / 2f, y, backgroundTexture.packedWidth * textureScale, backgroundTexture.packedHeight * textureScale)
 
         controllers.sortedBy { it.id }.forEach { it.render(batch, delta) }
 
@@ -75,7 +77,7 @@ class BattleController(
             if (toScale / scale < 1.05f) {
                 scale = toScale
             } else {
-                scale += (toScale - scale) * 0.05f
+                scale += (toScale - scale) * 0.03f
             }
         }
 
@@ -229,6 +231,7 @@ class BattleController(
         figure?.let { figure ->
             context.gdxModel.figures.firstOrNull { it.name == event.source.skin }?.let { figureGdxModel ->
                 figureGdxModel.attacks?.get(event.attackIndex)?.let { attack ->
+                    val poseName = attack.pose ?: "attack"
                     when (attack.attackType) {
                         GdxAttackType.MOVE_AND_PUNCH -> {
                             findFigure(event.targets.firstOrNull()?.id)?.let { targetFigure ->
@@ -250,7 +253,7 @@ class BattleController(
                         }
                         GdxAttackType.AOE_STEPPED_GENERATOR -> {
                             attack.effect?.let { effect ->
-                                val attackPose = figureGdxModel.poses.first { it.name == "attack" }
+                                val attackPose = figureGdxModel.poses.first { it.name == poseName}
                                 val attackDuration = (attackPose.end - attackPose.start) * FRAMERATE
                                 val attackTriggerDuration = attackPose.triggers?.firstOrNull()?.let { (it - attackPose.start) * FRAMERATE }
                                         ?: attackDuration
@@ -262,7 +265,7 @@ class BattleController(
                                         ?: Gdx.graphics.width.toFloat()) / (scale * (effect.step
                                         ?: 1))
                                 scheduledActions.add(Pair(timeShift) {
-                                    figure.switchPose(FigurePose.POSE_ATTACK)
+                                    figure.switchPose(FigurePose.values().first {it.poseName == poseName})
                                 })
                                 scheduledActions.add(Pair(timeShift + attackTriggerDuration) {
                                     SteppedGeneratorEffectController(context, this, effectId++, figure.x + 70f * scale * (if (figure.flipped) -1f else 1f), figure.originY,

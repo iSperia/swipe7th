@@ -18,7 +18,8 @@ enum class GdxAttackType {
 data class AttackGdxModel(
         val attackType: GdxAttackType,
         val sound: String?,
-        val effect: EffectGdxModel?
+        val effect: EffectGdxModel?,
+        val pose: String?
 )
 
 data class FigureGdxModel(
@@ -30,7 +31,10 @@ data class FigureGdxModel(
     var scale: Float,
     val body: String,
     val poses: List<PoseGdxModel>,
-    val attacks: List<AttackGdxModel>
+    val attacks: List<AttackGdxModel>,
+    val source_width: Float,
+    val source_height: Float,
+    val anchor_x: Float
 )
 
 data class EffectGdxModel(
