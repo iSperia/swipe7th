@@ -23,7 +23,7 @@
   "ttr_party_6": "Body gives additional health and armor. Armor decreases physical damage your character takes",
   "ttr_party_7": "This is spirit attribute. After level 3, gladiator will be able to launch the wave spell. Its damage depends on spirit",
   "ttr_party_8": "Spirit also gives evasion (gives a chance to avoid enemy attack) and regeneration (you restore some health after each swipe)",
-  "ttr_party_9": "This is mind attribute. After level 6, gladiator will be able to heal part of damage he deals, amount depends on mind",
+  "ttr_party_9": "This is mind attribute. After level 6, gladiator will be able to heal part of damage he deals, heal amount depends on mind",
   "ttr_party_10": "Mind also gives resist (energy shield that effectively protects agains magic damage) and wisdom (big wisdom generates more tiles on field)",
   "ttr_party_11": "Let us look at your inventory, and equip that loot!",
   "ttr_party_12": "This is your inventory. If there are lots of items, you may scroll this area",
@@ -52,9 +52,9 @@
   "ttr_a1l1_9": "This tile is your strike skill. You need to stack 3 or more tiles to activate it",
   "ttr_a1l1_10": "To stack tiles, you use swipes. Try swipe your screen to the left",
   "ttr_a1l1_11": "Good job! Every swipe you make, new tile is generated, and may be used as well",
-  "ttr_a1l1_12": "Now, swipe up to stack this skill again",
+  "ttr_a1l1_12": "Now, swipe down to stack this skill again",
   "ttr_a1l1_13": "After tile is stacked enough, it is consumed and you attack a slime.",
-  "ttr_a1l1_14": "You have dealt damage to slime, one more strike and you win!",
+  "ttr_a1l1_14": "You have dealt damage to slime, one more strike and you will win!",
   "ttr_a1l1_15": "Nice job, so...n of the king. Let hurry and go further!",
 
   "ttr_a1l1_fb_1": "Wow, what is that creature?",
@@ -154,6 +154,9 @@
   "LIFE_FLASK_GRAND": "Grand Life Flask",
   "SHOP_BEGINNER_POTION_PACK": "Beginner's potions",
 
-  "REWARDS_TITLE_PURCHASED": "Successful Purchase!",
-  "REWARDS_TITLE_CAMPAIGN": "Mission reward!"
+  "button_party": "Party",
+  "button_forge": "Forge",
+  "button_shop": "Shop",
+  "button_lab": "Lab"
+
 }
