@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.campaign.ActsService
+import com.game7th.metagame.dto.UnitType
 import com.game7th.metagame.inventory.GearService
 import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.GdxGameContext
@@ -426,7 +427,12 @@ class GameScreen(game: SwipeGameGdx,
     }
 
     private fun T_A0L1() {
-        if (actId == "act_0" && locationId == 0 && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_FIRST_BATTLE_INTRO_SHOWN)?.toBoolean() != true) {
+        if (actId == "act_0" &&
+                locationId == 0 &&
+                TutorialKeys.tutorialsEnabled &&
+                storage.get(TutorialKeys.ACT1_FIRST_BATTLE_INTRO_SHOWN)?.toBoolean() != true &&
+                personage.level == 1 &&
+                personage.unit == UnitType.GLADIATOR.toString()) {
             preventBottomSwipe = true
             preventTopSwipe = true
             preventLeftSwipe = true
