@@ -55,8 +55,8 @@ android {
         multiDexEnabled true
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 29
-        versionName "0.1.7 tiny-cake"
+        versionCode 30
+        versionName "0.1.8 orange-boat"
         signingConfig signingConfigs.release
     }
     productFlavors {
