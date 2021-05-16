@@ -3,11 +3,10 @@
 package com.game7th.swipe.game.battle
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.g2d.*
 import com.badlogic.gdx.graphics.g2d.Animation
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
+import com.esotericsoftware.spine.*
 import com.game7th.swipe.game.GameContextWrapper
 import com.game7th.swipe.game.battle.model.FigureGdxModel
 import com.game7th.swiped.api.battle.PersonageViewModel
@@ -65,12 +64,28 @@ class FigureController(
 
     var position: Int = 0
 
+    val polygonBatch = PolygonSpriteBatch()
+    val renderer = SkeletonMeshRenderer().apply {
+        setPremultipliedAlpha(true)
+
+    }
+    val dragonAtlas = TextureAtlas(Gdx.files.internal("NewDragon.atlas"))
+    val json = SkeletonJson(dragonAtlas)
+    val jsonData = json.readSkeletonData(Gdx.files.internal("NewDragon.json"))
+    val skeleton = Skeleton(jsonData)
+    val stateData = AnimationStateData(jsonData)
+    val dragonAnimation = AnimationState(stateData).apply {
+        setAnimation(0, "stand", true)
+    }
+
     init {
         switchPose(FigurePose.POSE_IDLE)
     }
 
     override fun render(batch: SpriteBatch, delta: Float) {
         timePassed += delta * battle.timeScale()
+
+
 
         if (targetX != x || targetY != y) {
             val percent = (timePassed - timeMoveStarted) / (timeMoveFinished - timeMoveStarted)
@@ -82,32 +97,44 @@ class FigureController(
                 y = fromY + (targetY - fromY) * percent
             }
         }
+        skeleton.setFlip(flipped, false)
+        skeleton.setPosition(x, y)
+
+        dragonAnimation.update(delta)
+        dragonAnimation.apply(skeleton)
+        skeleton.updateWorldTransform()
+
+        batch.end()
+        polygonBatch.begin()
+        renderer.draw(polygonBatch, skeleton)
+        polygonBatch.end()
+        batch.begin()
 
         val bodyScale = battle.scale * if (figureModel.scale > 0f) figureModel.scale else 1f
-        animation?.let { animation ->
-            if (pose != FigurePose.POSE_DEATH || !animation.isAnimationFinished(timePassed - timePoseStarted)) {
-                batch.draw(animation.getKeyFrame(timePassed - timePoseStarted, true),
-                        x - figureModel.anchor_x * bodyScale * flipMultiplier,
-                        y,
-                        figureModel.source_width * bodyScale * flipMultiplier,
-                        figureModel.source_height * bodyScale)
-            } else if (pose == FigurePose.POSE_DEATH) {
-                if (flipped || position > 0) {
-                    battle.removeController(this)
-                } else {
-                    batch.draw(animation.keyFrames.last(),
-                            x - figureModel.anchor_x * bodyScale * flipMultiplier,
-                            y,
-                            figureModel.source_width * bodyScale * flipMultiplier,
-                            figureModel.source_height * bodyScale)
-                }
-            }
-
-            if (animation.isAnimationFinished(timePassed - timePoseStarted) && animation.playMode == Animation.PlayMode.NORMAL
-                    && pose != FigurePose.POSE_DEATH && !isDead) {
-                switchPose(FigurePose.POSE_IDLE)
-            }
-        }
+//        animation?.let { animation ->
+//            if (pose != FigurePose.POSE_DEATH || !animation.isAnimationFinished(timePassed - timePoseStarted)) {
+//                batch.draw(animation.getKeyFrame(timePassed - timePoseStarted, true),
+//                        x - figureModel.anchor_x * bodyScale * flipMultiplier,
+//                        y,
+//                        figureModel.source_width * bodyScale * flipMultiplier,
+//                        figureModel.source_height * bodyScale)
+//            } else if (pose == FigurePose.POSE_DEATH) {
+//                if (flipped || position > 0) {
+//                    battle.removeController(this)
+//                } else {
+//                    batch.draw(animation.keyFrames.last(),
+//                            x - figureModel.anchor_x * bodyScale * flipMultiplier,
+//                            y,
+//                            figureModel.source_width * bodyScale * flipMultiplier,
+//                            figureModel.source_height * bodyScale)
+//                }
+//            }
+//
+//            if (animation.isAnimationFinished(timePassed - timePoseStarted) && animation.playMode == Animation.PlayMode.NORMAL
+//                    && pose != FigurePose.POSE_DEATH && !isDead) {
+//                switchPose(FigurePose.POSE_IDLE)
+//            }
+//        }
 
         if (viewModel.stats.isFrozen) {
             batch.draw(frozenTexture, x - 64f * bodyScale * flipMultiplier, y, 128f * bodyScale * flipMultiplier, 64f * bodyScale)

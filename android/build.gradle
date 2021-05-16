@@ -145,6 +145,7 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        implementation "com.esotericsoftware.spine:spine-libgdx:3.5.51.1"
         implementation 'io.github.libktx:ktx-actors:1.9.13-b1'
         implementation 'io.github.libktx:ktx-async:1.9.13-b1'
         implementation 'com.google.code.gson:gson:2.8.5'
