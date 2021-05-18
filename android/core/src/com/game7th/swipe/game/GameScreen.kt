@@ -28,16 +28,17 @@ import com.game7th.swiped.api.FlaskItemFullInfoDto
 import com.game7th.swiped.api.LocationCompleteResponseDto
 import com.game7th.swiped.api.PersonageDto
 import com.game7th.swiped.api.battle.BattleEvent
-import com.game7th.swiped.api.battle.BattleResultDto
 import com.game7th.swiped.api.battle.InputBattleEvent
 import com.google.gson.Gson
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import ktx.async.KtxAsync
 
 class GameScreen(game: SwipeGameGdx,
-                 private val battleResources: BattleResultDto,
                  private val battleId: String,
+                 private val accountId: String,
                  private val actId: String,
                  private val locationId: Int,
                  private val difficulty: Int,
@@ -99,16 +100,6 @@ class GameScreen(game: SwipeGameGdx,
             stage.addActor(gameActor)
 
             game.multiplexer.addProcessor(stage)
-
-            atlases["ailments"] = TextureAtlas(Gdx.files.internal("ailments.atlas"))
-            listOf("wind").forEach {
-                sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/$it.ogg"))
-            }
-            battleResources.figures.forEach { figureName ->
-                gdxModel.figures.firstOrNull { it.name == figureName }?.let {
-                    loadResources(it)
-                }
-            }
 
             val scale = game.context.scale
             battleController = BattleController(GameContextWrapper(
@@ -202,6 +193,21 @@ class GameScreen(game: SwipeGameGdx,
                 when (it) {
                     is BattleEvent.VictoryEvent -> onGameEnded(true)
                     is BattleEvent.DefeatEvent -> onGameEnded(false)
+                    is BattleEvent.BattleReadyEvent -> {
+                        val resourceLoader = KtxAsync.async {
+                            atlases["ailments"] = TextureAtlas(Gdx.files.internal("ailments.atlas"))
+                            listOf("wind").forEach {
+                                sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/$it.ogg"))
+                            }
+                            it.battleInfo.figures.forEach { figureName ->
+                                gdxModel.figures.firstOrNull { it.name == figureName }?.let {
+                                    loadResources(it)
+                                }
+                            }
+                        }
+                        resourceLoader.join()
+                        swipeFlow.emit(InputBattleEvent.PlayerReadyEvent(accountId))
+                    }
                     is BattleEvent.NewWaveEvent -> {
                         T_A0L1()
                         T_A0L3()

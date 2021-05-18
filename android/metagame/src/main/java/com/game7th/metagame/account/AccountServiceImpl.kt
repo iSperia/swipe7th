@@ -52,6 +52,7 @@ class AccountServiceImpl(
         return account?.balances ?: emptyMap()
     }
 
+    override fun getAccountId() = account?.accountId ?: ""
 
     data class ScriptedAttrBonusSetup(
             val level: Int,

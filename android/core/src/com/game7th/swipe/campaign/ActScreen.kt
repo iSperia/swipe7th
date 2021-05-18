@@ -452,6 +452,7 @@ class ActScreen(
     private fun showBattlePreparation(node: LocationConfig) {
         battlePrepareDialog = BattlePrepareDialog(
                 game = game,
+                accountId = game.accountService.getAccountId(),
                 context = context,
                 actId = this@ActScreen.actId,
                 locationId = node.id,

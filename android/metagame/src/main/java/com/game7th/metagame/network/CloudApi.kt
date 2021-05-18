@@ -31,7 +31,7 @@ enum class NetworkErrorStatus {
 data class NetworkError(
         val status: NetworkErrorStatus,
         val details: String,
-        val errorCause: Throwable? = null
+        val errorCause: Throwable? = nullc
 ) : RuntimeException("Network error $status", errorCause)
 
 class CloudApi(
@@ -135,7 +135,7 @@ class CloudApi(
         sign()
     }
 
-    suspend fun encounterLocation(actId: String, locationId: Int, difficulty: Int, personageId: String): BattleResultDto = client.post("$baseUrl/encounter?actId=$actId&locationId=$locationId&difficulty=$difficulty&personageId=$personageId") { sign() }
+    suspend fun encounterLocation(actId: String, locationId: Int, difficulty: Int, personageId: String): String = client.post("$baseUrl/encounter?actId=$actId&locationId=$locationId&difficulty=$difficulty&personageId=$personageId") { sign() }
 
     suspend fun connectBattle(battleId: String, output: Flow<InputBattleEvent>, handler: suspend (BattleEvent) -> Unit) = if (baseUrl.contains("https")) {
         client.wss(

@@ -16,4 +16,6 @@ interface AccountService {
     suspend fun refreshBalance()
 
     suspend fun getPersonageGearStats(personageId: String): PersonageAttributesDto
+
+    fun getAccountId(): String
 }

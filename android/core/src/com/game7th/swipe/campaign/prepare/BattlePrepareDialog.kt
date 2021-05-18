@@ -32,6 +32,7 @@ import ktx.async.KtxAsync
  */
 class BattlePrepareDialog(
         private val game: SwipeGameGdx,
+        private val accountId: String,
         private val context: GdxGameContext,
         private val actId: String,
         private val locationId: Int,
@@ -174,7 +175,7 @@ class BattlePrepareDialog(
         game.switchScreen(GameScreen(
                 game,
                 result,
-                result.battleId,
+                accountId,
                 actId,
                 locationId,
                 difficulty,
