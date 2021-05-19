@@ -31,7 +31,7 @@ enum class NetworkErrorStatus {
 data class NetworkError(
         val status: NetworkErrorStatus,
         val details: String,
-        val errorCause: Throwable? = nullc
+        val errorCause: Throwable? = null
 ) : RuntimeException("Network error $status", errorCause)
 
 class CloudApi(

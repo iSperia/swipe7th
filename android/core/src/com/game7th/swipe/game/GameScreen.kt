@@ -152,19 +152,21 @@ class GameScreen(game: SwipeGameGdx,
     private fun loadResources(gdxFigure: FigureGdxModel) {
         if (!atlases.containsKey(gdxFigure.atlas)) {
             atlases[gdxFigure.atlas] = TextureAtlas(Gdx.files.internal("${gdxFigure.name}.atlas"))
-        }
-        gdxFigure.dependencies?.let { dependencies ->
-            dependencies.forEach { dependencyFigure ->
-                gdxModel.figures.firstOrNull { it.name == dependencyFigure }?.let { loadResources(it) }
+            gdxFigure.dependencies?.let { dependencies ->
+                dependencies.forEach { dependencyFigure ->
+                    gdxModel.figures.firstOrNull { it.name == dependencyFigure }?.let { loadResources(it) }
+                }
+            }
+            gdxFigure.attacks.forEach {
+                it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
+                it.effect?.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
+                it.effect?.atlas?.let { gdxModel.figure(it) }?.let { loadResources(it) }
+            }
+            gdxFigure.poses.forEach {
+                it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
             }
         }
-        gdxFigure.attacks.forEach {
-            it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
-            it.effect?.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
-        }
-        gdxFigure.poses.forEach {
-            it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
-        }
+
     }
 
     private fun usePotion(flask: FlaskItemFullInfoDto) {
