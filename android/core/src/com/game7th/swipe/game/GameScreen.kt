@@ -33,7 +33,6 @@ import com.google.gson.Gson
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import ktx.async.KtxAsync
 
 class GameScreen(game: SwipeGameGdx,
@@ -171,7 +170,9 @@ class GameScreen(game: SwipeGameGdx,
 
     private fun usePotion(flask: FlaskItemFullInfoDto) {
         KtxAsync.launch {
-            gameActor.refreshAlchemy()
+            flask.id?.let { flaskId ->
+                swipeFlow.emit(InputBattleEvent.FlaskBattleEvent(flaskId))
+            }
         }
     }
 
@@ -195,6 +196,10 @@ class GameScreen(game: SwipeGameGdx,
                 when (it) {
                     is BattleEvent.VictoryEvent -> onGameEnded(true)
                     is BattleEvent.DefeatEvent -> onGameEnded(false)
+                    is BattleEvent.FlaskConsumedEvent -> {
+                        gearService.reloadData()
+                        gameActor.refreshAlchemy()
+                    }
                     is BattleEvent.BattleReadyEvent -> {
                         val resourceLoader = KtxAsync.async {
                             atlases["ailments"] = TextureAtlas(Gdx.files.internal("ailments.atlas"))

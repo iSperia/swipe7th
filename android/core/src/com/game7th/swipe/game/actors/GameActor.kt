@@ -13,19 +13,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.inventory.GearService
 import com.game7th.swipe.GdxGameContext
-import com.game7th.swipe.alchemy.AlchemyPanel
-import com.game7th.swipe.alchemy.AlchemyPanelMode
 import com.game7th.swipe.game.GameScreen
 import com.game7th.swipe.game.actors.ui.BattleFinishedDialog
-import com.game7th.swipe.util.IconTextButton
-import com.game7th.swipe.util.animateHideToBottom
-import com.game7th.swipe.util.animateShowFromBottom
 import com.game7th.swiped.api.FlaskItemFullInfoDto
 import com.game7th.swiped.api.LocationCompleteResponseDto
 import com.game7th.swiped.api.RewardListDto
 import com.game7th.swiped.api.battle.BattleEvent
 import kotlinx.coroutines.launch
-import ktx.actors.onClick
 import ktx.actors.repeatForever
 import ktx.async.KtxAsync
 import kotlin.math.min
@@ -94,7 +88,7 @@ class GameActor(
             y = -5f * context.scale
         }
         (0..4).forEach { index ->
-            val nodeView = BoosterNodeView(context, 60f * context.scale)
+            val nodeView = BoosterNodeView(context, 60f * context.scale, usePotionCallback)
             nodeView.x = index * 60f * context.scale
             flaskPanel.addActor(nodeView)
         }
