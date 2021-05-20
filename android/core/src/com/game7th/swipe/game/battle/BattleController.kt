@@ -243,11 +243,18 @@ class BattleController(
                         GdxAttackType.ATTACK_IN_PLACE -> {
                             val attackPose = figureGdxModel.poses.first { it.name == "attack" }
                             val attackDuration = (attackPose.end - attackPose.start) * FRAMERATE
-                            val triggerDuration = attackPose.triggers?.firstOrNull()?.let { (it - attackPose.start) * FRAMERATE }
+                            var triggerDuration = attackPose.triggers?.firstOrNull()?.let { (it - attackPose.start) * FRAMERATE }
                                     ?: attackDuration
 
+                            attack.effect?.let { effect ->
+                                triggerDuration = effect.trigger * FRAMERATE
+                                scheduledActions.add(Pair(timeShift) {
+                                    controllers.add(EffectController(context, this@BattleController, effectId++, figure, effect))
+                                })
+                            }
+
                             scheduledActions.add(Pair(timeShift) {
-                                figure.switchPose(FigurePose.POSE_ATTACK)
+                                figure.switchPose(FigurePose.values().firstOrNull { it.poseName == attack.pose } ?: FigurePose.POSE_ATTACK )
                             })
                             timeShift += triggerDuration
                         }

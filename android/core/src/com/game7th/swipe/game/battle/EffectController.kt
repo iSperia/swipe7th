@@ -32,9 +32,9 @@ class EffectController(
 
         if (!animation.isAnimationFinished(timePassed)) {
             batch.draw(animation.getKeyFrame(timePassed, true),
-                    targetFigure.originX - effect.width * battle.scale * flipMultiplier / 2f,
-                    targetFigure.originY,
-                    effect.width * battle.scale * flipMultiplier,
+                    targetFigure.originX + (effect.anchor_x?.toFloat() ?: (effect.width / 2f)) * battle.scale * flipMultiplier,
+                    targetFigure.originY + (effect.anchor_y ?: 0) * battle.scale,
+                    -effect.width * battle.scale * flipMultiplier,
                     effect.height * battle.scale)
         }
 

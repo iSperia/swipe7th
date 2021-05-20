@@ -50,15 +50,16 @@
       ],
       "attacks": [
         {"attackType": "MOVE_AND_PUNCH", "sound": "sword_strike"},
-        {"attackType": "AOE_STEPPED_GENERATOR", "pose": "ability","effect": {
-          "name": "gladiator_wave",
-          "atlas": "personage_gladiator",
-          "type": "STEPPED_GENERATOR",
-          "step": 16,
-          "time": 0.05,
-          "width": 64,
-          "height": 128,
-          "sound": "phys_wave"
+        {"attackType": "ATTACK_IN_PLACE", "pose": "ability", "effect": {
+          "name": "prince_ray",
+          "atlas": "prince",
+          "type": "ANCHOR_EFFECT",
+          "anchor_x": -30,
+          "anchor_y": 50,
+          "trigger": 38,
+          "width": 480,
+          "height": 120,
+          "scale": 1
         }}
       ]
     },

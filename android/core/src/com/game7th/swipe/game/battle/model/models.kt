@@ -41,11 +41,15 @@ data class EffectGdxModel(
         val name: String,
         val atlas: String,
         val step: Int?,
+        val type: String,
         val sound: String?,
         val time: Float = 0f,
         val width: Int = 0,
         val height: Int = 0,
-        val trigger: Int = 0
+        val trigger: Int = 0,
+        val anchor_x: Int? = 0,
+        val anchor_y: Int? = 0,
+        val scale: Float? = 0f
 )
 
 data class GdxModel(
