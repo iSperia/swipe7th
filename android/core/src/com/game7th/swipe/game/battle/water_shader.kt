@@ -12,7 +12,7 @@ uniform vec2 sss;
 uniform vec2 u_maxclamp;
 void main()                                  
 {    
-  gl_FragColor = v_color * texture2D(u_texture, vec2(v_texCoords.x, v_texCoords.y + sin(v_texCoords.x * 40.0 + timedelta) * 0.002));
+  gl_FragColor = v_color * texture2D(u_texture, vec2(v_texCoords.x + cos(v_texCoords.y * 40.0 + timedelta) * 0.001, v_texCoords.y + sin(v_texCoords.x * 40.0 + timedelta) * 0.001));
 
 //    gl_FragColor = v_color * texture2D(u_texture, v_texCoords);
 //    //после получения итогового цвета, меняем его на противоположный

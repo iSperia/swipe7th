@@ -320,6 +320,13 @@ loc_old_house
   orig: 1280, 720
   offset: 0, 0
   index: -1
+particle
+  rotate: false
+  xy: 208, 9
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 pic_concede
   rotate: false
   xy: 1953, 1321

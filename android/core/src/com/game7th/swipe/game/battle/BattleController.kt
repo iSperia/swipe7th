@@ -8,8 +8,10 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Pixmap
+import com.badlogic.gdx.graphics.g2d.ParticleEffect
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.graphics.g3d.particles.ParticleSystem
 import com.badlogic.gdx.graphics.glutils.FrameBuffer
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.*
@@ -66,6 +68,13 @@ class BattleController(
     var speechLockStarted = 0f
     var isSpeechLocked = false
 
+
+    val fireEffect = ParticleEffect().apply {
+        load(Gdx.files.internal("fire_line"),  context.gameContext.battleAtlas)
+        setPosition(0f, y + 90f * context.scale)
+        scaleEffect(Gdx.graphics.width.toFloat() / 480f)
+    }
+
 //    init {
 //        controllers.add(object : ElementController(context, this, fgId++) {
 //            override fun render(batch: SpriteBatch, delta: Float) {
@@ -115,6 +124,7 @@ class BattleController(
         backgroundBatch.shader = null
 
         sceneBatch.begin()
+        fireEffect.draw(sceneBatch, Gdx.graphics.deltaTime * 2f)
 
         controllers.sortedBy { it.id }.forEach { it.render(sceneBatch, delta) }
 
