@@ -22,6 +22,7 @@ class EffectController(
     var atlas: TextureAtlas = context.atlases[effect.atlas]!!
     val allTextures = filterAtlas(atlas, effect.name).toList()
     val animation: Animation<TextureRegion>
+    val scale = effect.scale ?: 1f
 
     init {
         this.animation = Animation(FigureController.FRAME_DURATION, Array(allTextures.toTypedArray()), Animation.PlayMode.NORMAL)
@@ -32,10 +33,10 @@ class EffectController(
 
         if (!animation.isAnimationFinished(timePassed)) {
             batch.draw(animation.getKeyFrame(timePassed, true),
-                    targetFigure.originX + (effect.anchor_x?.toFloat() ?: (effect.width / 2f)) * battle.scale * flipMultiplier,
-                    targetFigure.originY + (effect.anchor_y ?: 0) * battle.scale,
-                    -effect.width * battle.scale * flipMultiplier,
-                    effect.height * battle.scale)
+                    targetFigure.originX + (effect.anchor_x?.toFloat() ?: (effect.width / 2f)) * battle.scale * scale * flipMultiplier,
+                    targetFigure.originY + (effect.anchor_y ?: 0) * battle.scale * scale,
+                    -effect.width * battle.scale * flipMultiplier * scale,
+                    effect.height * battle.scale * scale)
         }
 
         if (animation.isAnimationFinished(timePassed)) {

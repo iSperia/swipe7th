@@ -33,7 +33,7 @@ class BattleController(
     private val controllers = mutableListOf<ElementController>()
 
     val bgIndex = 1 + Random.nextInt(3)
-    private val backgroundTexture = context.gameContext.battleAtlas.findRegion("battleground_forest")
+    private val backgroundTexture = context.gameContext.battleAtlas.findRegion("loc_old_house")
 //    private val foregroundTexture = context.gameContext.battleAtlas.findRegion("battle_fg", bgIndex)
 //    private val foregroundRatio = foregroundTexture.originalHeight / foregroundTexture.originalWidth.toFloat()
 
@@ -66,7 +66,7 @@ class BattleController(
     fun act(batch: SpriteBatch, delta: Float) {
         val scaleNormalized = if (scale > 2f) 2f else if (scale < 0.5f) 0.5f else scale
         val textureScale = h / backgroundTexture.packedHeight * (1 + 0.5f * (scaleNormalized - 0.5f) / 1.5f)
-        batch.draw(backgroundTexture, - (textureScale * backgroundTexture.packedWidth - context.width) / 2f, y - (textureScale - 1) * backgroundTexture.packedHeight / 6, backgroundTexture.packedWidth * textureScale, backgroundTexture.packedHeight * textureScale)
+        batch.draw(backgroundTexture, - (textureScale * backgroundTexture.packedWidth - context.width) / 2f, y, backgroundTexture.packedWidth * textureScale, backgroundTexture.packedHeight * textureScale)
 
         controllers.sortedBy { it.id }.forEach { it.render(batch, delta) }
 

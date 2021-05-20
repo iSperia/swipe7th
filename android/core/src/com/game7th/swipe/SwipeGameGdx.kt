@@ -123,7 +123,7 @@ class SwipeGameGdx(
         val font = BitmapFont(Gdx.files.internal("cuprum.fnt"), Gdx.files.internal("cuprum_0.png"), false).apply {
             color = Color.WHITE
         }
-        val font2 = BitmapFont(Gdx.files.internal("acute.fnt"), Gdx.files.internal("acute_0.png"), false).apply {
+        val font2 = BitmapFont(Gdx.files.internal("nova.fnt"), Gdx.files.internal("nova_0.png"), false).apply {
             color = Color.WHITE
         }
         val balanceFile = Gdx.files.internal("balance.json")

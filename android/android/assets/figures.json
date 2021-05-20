@@ -34,19 +34,19 @@
     {
       "name": "prince",
       "atlas": "prince",
-      "height": 70,
-      "width": 45,
-      "scale": 2,
+      "height": 670,
+      "width": 480,
+      "scale": 0.3,
       "body": "body_prince",
-      "source_width": 400,
-      "source_height": 200,
-      "anchor_x": 135,
+      "source_width": 960,
+      "source_height": 960,
+      "anchor_x": 505,
       "poses": [
-        {"name": "attack", "start":  49, "end": 108, "triggers": [93]},
-        {"name": "damage", "start":  109, "end": 114, "sound":  "damage_human_male"},
-        {"name": "idle", "start":  1, "end": 48},
-        {"name": "death", "start": 109, "end": 118},
-        {"name": "ability", "start":  119, "end":  150, "triggers": [144]}
+        {"name": "attack", "start":  1, "end": 34, "triggers": [24]},
+        {"name": "damage", "start":  1, "end": 10, "sound":  "damage_human_male"},
+        {"name": "idle", "start":  1, "end": 34},
+        {"name": "death", "start": 35, "end": 40},
+        {"name": "ability", "start":  1, "end":  34, "triggers": [20]}
       ],
       "attacks": [
         {"attackType": "MOVE_AND_PUNCH", "sound": "sword_strike"},
@@ -54,12 +54,12 @@
           "name": "prince_ray",
           "atlas": "prince",
           "type": "ANCHOR_EFFECT",
-          "anchor_x": -30,
-          "anchor_y": 50,
+          "anchor_x": 30,
+          "anchor_y": 0,
           "trigger": 38,
           "width": 480,
           "height": 120,
-          "scale": 1
+          "scale": 2
         }}
       ]
     },
