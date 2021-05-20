@@ -5,8 +5,14 @@ package com.game7th.swipe.game.battle
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.graphics.glutils.FrameBuffer
+import com.badlogic.gdx.graphics.glutils.ShaderProgram
+import com.badlogic.gdx.math.*
 import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.game.GameContextWrapper
 import com.game7th.swipe.game.battle.model.FigureGdxModel
@@ -16,6 +22,7 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
+
 
 /**
  * GDX graph controller for battle
@@ -37,6 +44,9 @@ class BattleController(
 //    private val foregroundTexture = context.gameContext.battleAtlas.findRegion("battle_fg", bgIndex)
 //    private val foregroundRatio = foregroundTexture.originalHeight / foregroundTexture.originalWidth.toFloat()
 
+    val backgroundBatch = SpriteBatch()
+    val camera = OrthographicCamera(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
+
     val padding = 0.05f * Gdx.graphics.width
 
     var effectId = 100000
@@ -44,6 +54,7 @@ class BattleController(
     var fgId = 200000
     var scale = 1f
     var toScale = 1f
+    var idt = Matrix4()
 
     val controllersToRemove = mutableListOf<ElementController>()
 
@@ -63,12 +74,51 @@ class BattleController(
 //        })
 //    }
 
-    fun act(batch: SpriteBatch, delta: Float) {
-        val scaleNormalized = if (scale > 2f) 2f else if (scale < 0.5f) 0.5f else scale
-        val textureScale = h / backgroundTexture.packedHeight * (1 + 0.5f * (scaleNormalized - 0.5f) / 1.5f)
-        batch.draw(backgroundTexture, - (textureScale * backgroundTexture.packedWidth - context.width) / 2f, y, backgroundTexture.packedWidth * textureScale, backgroundTexture.packedHeight * textureScale)
+    var scaleX =  1f //floats that convert the width and height in world
+    var scaleY = 1f
 
-        controllers.sortedBy { it.id }.forEach { it.render(batch, delta) }
+    val shader = ShaderProgram(vertexShader, waterFragmentShader);
+    val coords = Vector3(0f,0f,0f)
+    var time = 0f //makes the effect move over time
+    /*This is a bad way to store your regions. I assume some object generates heat waves,
+    so use it's x and y and width and height, also have it store it's own distortionRegion
+    instead of storing ArrayLists*/
+    //Create a FrameBuffer to draw the objects that will be distorted to.
+//    val frameBuffer = FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.width, Gdx.graphics.height, false)
+
+    fun act(sceneBatch: SpriteBatch, delta: Float) {
+        Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
+        Gdx.gl20.glEnable(GL20.GL_BLEND)
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+
+        val dt = Gdx.graphics.deltaTime
+        time += dt
+        var angle: Float = time * (2 * MathUtils.PI)
+        if (angle > 2 * MathUtils.PI) angle -= 2 * MathUtils.PI
+
+        shader.begin()
+        shader.setUniformf("timedelta", -angle)
+
+        shader.end()
+
+//        frameBuffer.begin()
+        backgroundBatch.setShader(shader)
+//        frameBuffer.begin()
+        backgroundBatch.begin()
+
+            val scaleNormalized = if (scale > 2f) 2f else if (scale < 0.5f) 0.5f else scale
+            val textureScale = h / backgroundTexture.packedHeight * (1 + 0.5f * (scaleNormalized - 0.5f) / 1.5f)
+
+            backgroundBatch.draw(backgroundTexture, -(textureScale * backgroundTexture.packedWidth - context.width) / 2f, y, backgroundTexture.packedWidth * textureScale, backgroundTexture.packedHeight * textureScale)
+        backgroundBatch.end()
+//        frameBuffer.end()
+        backgroundBatch.shader = null
+
+        sceneBatch.begin()
+
+        controllers.sortedBy { it.id }.forEach { it.render(sceneBatch, delta) }
+
+        sceneBatch.end()
 
         timePassed += delta * timeScale()
         timeShift = max(timePassed, timeShift)
@@ -101,6 +151,8 @@ class BattleController(
                 recalculateScale()
             }
         }
+
+
     }
 
     private fun playSound(sound: String) {
@@ -163,7 +215,8 @@ class BattleController(
                     var lastSum = 0f
                     (0..event.target).forEach { positionIndex ->
                         val figure = controllers.filter { it is FigureController && it.flipped == figure.flipped && it.position == positionIndex }.firstOrNull() as? FigureController
-                        lastSum = (figure?.let { it.figureModel.scale * it.figureModel.width * scale } ?: (80f * scale))
+                        lastSum = (figure?.let { it.figureModel.scale * it.figureModel.width * scale }
+                                ?: (80f * scale))
                         targetPosition += flipFactor * lastSum
                     }
                     targetPosition -= flipFactor * lastSum / 2f
@@ -254,13 +307,14 @@ class BattleController(
                             }
 
                             scheduledActions.add(Pair(timeShift) {
-                                figure.switchPose(FigurePose.values().firstOrNull { it.poseName == attack.pose } ?: FigurePose.POSE_ATTACK )
+                                figure.switchPose(FigurePose.values().firstOrNull { it.poseName == attack.pose }
+                                        ?: FigurePose.POSE_ATTACK)
                             })
                             timeShift += triggerDuration
                         }
                         GdxAttackType.AOE_STEPPED_GENERATOR -> {
                             attack.effect?.let { effect ->
-                                val attackPose = figureGdxModel.poses.first { it.name == poseName}
+                                val attackPose = figureGdxModel.poses.first { it.name == poseName }
                                 val attackDuration = (attackPose.end - attackPose.start) * FRAMERATE
                                 val attackTriggerDuration = attackPose.triggers?.firstOrNull()?.let { (it - attackPose.start) * FRAMERATE }
                                         ?: attackDuration
@@ -272,7 +326,7 @@ class BattleController(
                                         ?: Gdx.graphics.width.toFloat()) / (scale * (effect.step
                                         ?: 1))
                                 scheduledActions.add(Pair(timeShift) {
-                                    figure.switchPose(FigurePose.values().first {it.poseName == poseName})
+                                    figure.switchPose(FigurePose.values().first { it.poseName == poseName })
                                 })
                                 scheduledActions.add(Pair(timeShift + attackTriggerDuration) {
                                     SteppedGeneratorEffectController(context, this, effectId++, figure.x + 70f * scale * (if (figure.flipped) -1f else 1f), figure.originY,
@@ -359,7 +413,8 @@ class BattleController(
         scheduledActions.add(Pair(timeShift) {
             speechLockStarted = timePassed
             isSpeechLocked = true
-            screen.showDialog(event.portrait, event.name, context.gameContext.texts[event.text] ?: event.text) {
+            screen.showDialog(event.portrait, event.name, context.gameContext.texts[event.text]
+                    ?: event.text) {
                 unlockSpeech()
             }
         })
@@ -430,7 +485,7 @@ class BattleController(
         (0..maxRight).forEach { position ->
             val figures = rightFigures.filter { it.position == position }
             figures.forEach { figure ->
-                figure.moveOrigin( x - toScale * figure.figureModel.scale * figure.figureModel.width / 2f, figure.originY, 1f)
+                figure.moveOrigin(x - toScale * figure.figureModel.scale * figure.figureModel.width / 2f, figure.originY, 1f)
                 x -= toScale * figure.figureModel.width * figure.figureModel.scale
             }
             if (figures.isEmpty()) {

@@ -520,9 +520,7 @@ class GameScreen(game: SwipeGameGdx,
 
     override fun render(delta: Float) {
         if (ready) {
-            batch.begin()
             battleController.act(batch, delta)
-            batch.end()
         }
 
         super.render(delta)
