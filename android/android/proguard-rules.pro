@@ -57,3 +57,4 @@
 -keepclassmembers public class com.game7th.battle.dto.** { *; }
 -keepclassmembers public class com.game7th.swipe.game.battle.model.** { *; }
 -keepclassmembers public class com.game7th.swiped.api.** { *; }
+

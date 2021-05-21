@@ -65,9 +65,10 @@ class SwipeGameGdx(
         initializeContext()
 
         KtxAsync.launch {
-            val token = storage.get(KEY_TOKEN)
+            val token = "Jopa"
+//            val token = storage.get(KEY_TOKEN)
             var needRequestToken = false
-            var tokenReceived = false
+            var tokenReceived: Boolean
             if (!token.isNullOrEmpty()) {
                 api.token = token
                 //validate token
@@ -99,6 +100,8 @@ class SwipeGameGdx(
             if (tokenReceived) {
                 initializeServices()
                 showGameScreen()
+            } else {
+                processNetworkError(NetworkError(NetworkErrorStatus.UNKNOWN_ERROR, "Auth error", null))
             }
         }
     }

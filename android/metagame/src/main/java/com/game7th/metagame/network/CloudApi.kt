@@ -15,16 +15,12 @@ import io.ktor.content.*
 import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.channels.mapNotNull
-import kotlinx.coroutines.channels.receiveOrNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.onEach
 
 enum class NetworkErrorStatus {
     CONNECTION_ERROR,
+    UNAUTHORIZED,
     UNKNOWN_ERROR
 }
 
@@ -56,6 +52,7 @@ class CloudApi(
                 keepAliveTime = 5000
                 connectTimeout = 5000
                 connectAttempts = 5
+                socketTimeout = 35000
             }
 //            https {
 //                serverName = baseUrl
@@ -74,17 +71,22 @@ class CloudApi(
         install(JsonFeature) {
             serializer = GsonSerializer()
         }
-        expectSuccess = false
+        expectSuccess = true
         HttpResponseValidator {
             validateResponse { response ->
                 val status = response.status.value
                 when (status) {
-                    else -> throw NetworkError(NetworkErrorStatus.UNKNOWN_ERROR, response.readText())
+                    in 300..399 -> throw NetworkError(NetworkErrorStatus.CONNECTION_ERROR, response.readText())
+                    in 400..499 -> throw NetworkError(NetworkErrorStatus.CONNECTION_ERROR, response.readText())
+                    in 500..599 -> throw NetworkError(NetworkErrorStatus.CONNECTION_ERROR, response.readText())
                 }
+                if (status >= 600) throw NetworkError(NetworkErrorStatus.UNKNOWN_ERROR, response.readText())
             }
             handleResponseException { e ->
                 if (e !is NetworkError) {
                     throw NetworkError(NetworkErrorStatus.CONNECTION_ERROR, "Connection failure", e)
+                } else {
+                    throw e
                 }
             }
         }
