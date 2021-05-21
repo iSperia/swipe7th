@@ -56,8 +56,8 @@ android {
         multiDexEnabled true
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 31
-        versionName "0.1.9 bitter-heart"
+        versionCode 32
+        versionName "0.1.10 Rough Salad"
         signingConfig signingConfigs.release
     }
     productFlavors {
