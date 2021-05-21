@@ -30,10 +30,12 @@ import com.game7th.swiped.api.PersonageDto
 import com.game7th.swiped.api.battle.BattleEvent
 import com.game7th.swiped.api.battle.InputBattleEvent
 import com.google.gson.Gson
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
 import ktx.async.KtxAsync
+import kotlin.time.ExperimentalTime
+import kotlin.time.TimeMark
+import kotlin.time.TimeSource
 
 class GameScreen(game: SwipeGameGdx,
                  private val battleId: String,
@@ -73,8 +75,14 @@ class GameScreen(game: SwipeGameGdx,
     var preventTopSwipe = false
     var dismissFocusOnSwipe = false
 
+    @Volatile
     var ready = false
 
+    @ExperimentalTime
+    lateinit var pingTimeMark: TimeMark
+    var isResoucesReady = false
+
+    @ExperimentalTime
     override fun show() {
         super.show()
         viewport = ScreenViewport()
@@ -188,11 +196,22 @@ class GameScreen(game: SwipeGameGdx,
 //        return result
 //    }
 
+    @ExperimentalTime
     private fun listenEvents() {
         KtxAsync.launch {
+            launch {
+                repeat(1000) { i ->
+                    if (isResoucesReady) {
+                        pingTimeMark = TimeSource.Monotonic.markNow()
+                        swipeFlow.emit(InputBattleEvent.HeartBeatEvent(accountId))
+                    }
+                    delay(2000L)
+                }
+            }
             game.api.connectBattle(battleId, swipeFlow) {
                 gameActor.processAction(it)
                 battleController.processEvent(it)
+
                 when (it) {
                     is BattleEvent.VictoryEvent -> onGameEnded(true)
                     is BattleEvent.DefeatEvent -> onGameEnded(false)
@@ -213,6 +232,7 @@ class GameScreen(game: SwipeGameGdx,
                             }
                         }
                         resourceLoader.join()
+                        isResoucesReady = true
                         swipeFlow.emit(InputBattleEvent.PlayerReadyEvent(accountId))
                     }
                     is BattleEvent.NewWaveEvent -> {
@@ -225,6 +245,9 @@ class GameScreen(game: SwipeGameGdx,
                         T_A0L9(it)
                         T_A0L11(it)
                         T_A0L14(it)
+                    }
+                    is BattleEvent.HeartbeatResponse -> {
+                        gameActor.showPing(pingTimeMark.elapsedNow().inMilliseconds.toLong())
                     }
                 }
             }

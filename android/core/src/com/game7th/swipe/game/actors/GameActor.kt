@@ -20,6 +20,7 @@ import com.game7th.swiped.api.LocationCompleteResponseDto
 import com.game7th.swiped.api.RewardListDto
 import com.game7th.swiped.api.battle.BattleEvent
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ktx.actors.repeatForever
 import ktx.async.KtxAsync
 import kotlin.math.min
@@ -59,6 +60,15 @@ class GameActor(
     private var combo = 0
 
     val tileFieldAreaHeight = 400f * context.scale
+
+    val pingLabel = Label("DEBUG", Label.LabelStyle(context.font, Color.BLUE)).apply {
+        x = 20f * context.scale
+        y = Gdx.graphics.height - context.scale * 16f
+        setFontScale(context.scale / 2f)
+        width = context.scale * 100f
+        height = context.scale * 16f
+        touchable = Touchable.disabled
+    }
 
     init {
         val bottomPanelHei = 480f * context.scale / 9.66f
@@ -119,6 +129,7 @@ class GameActor(
         addActor(labelComboWrapper)
 
         addActor(uiGroup)
+        addActor(pingLabel)
 
         comboParticles = ParticleEffect()
         comboParticles.load(Gdx.files.internal("particles_0"), context.battleAtlas)
@@ -229,6 +240,12 @@ class GameActor(
             gearService.listFlasks().take(5).forEachIndexed { index, flask ->
                 (flaskPanel.getChild(index) as BoosterNodeView).applyFlask(flask)
             }
+        }
+    }
+
+    suspend fun showPing(ping: Long) {
+        withContext(KtxAsync.coroutineContext) {
+            pingLabel.setText("$ping ms")
         }
     }
 }
