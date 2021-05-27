@@ -42,6 +42,7 @@ class SplashActivity : AppCompatActivity() {
                     finish()
                     startActivity(Intent(this@SplashActivity, GdxGameActivity::class.java).apply {
                         putExtra(GdxGameActivity.ARG_INSTANCE_ID, accountId)
+                        putExtra(GdxGameActivity.ARG_EMAIL, account.email)
                         addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                         overridePendingTransition(0, 0)
                     })

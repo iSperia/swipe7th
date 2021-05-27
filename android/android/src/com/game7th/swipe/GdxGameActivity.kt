@@ -5,6 +5,7 @@ import android.view.View
 import com.android.billingclient.api.*
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
+import com.game7th.metagame.CloudEnvironment
 import com.game7th.metagame.shop.PurchaseItemInfo
 import com.game7th.metagame.shop.PurchaseItemMapper
 import kotlin.coroutines.resume
@@ -43,7 +44,8 @@ class GdxGameActivity : AndroidApplication() {
 
         setLogLevel(LOG_NONE)
 
-        game = SwipeGameGdx(storage, intent.getStringExtra(ARG_INSTANCE_ID)!!, BuildConfig.ENDPOINT, object : PurchaseItemMapper {
+        game = SwipeGameGdx(storage, intent.getStringExtra(ARG_INSTANCE_ID)!!,
+                CloudEnvironment(BuildConfig.ENDPOINT), object : PurchaseItemMapper {
             override suspend fun purchase(id: String): String {
                 return skuDetails.firstOrNull { it.sku == id }?.let { sku ->
                     val params = BillingFlowParams.newBuilder()
@@ -130,5 +132,6 @@ class GdxGameActivity : AndroidApplication() {
     companion object {
         const val KEY_INTRO_SHOWN = "intro.shown"
         const val ARG_INSTANCE_ID = "arg.instance_id"
+        const val ARG_EMAIL = "arg.email"
     }
 }

@@ -16,6 +16,7 @@ java {
 
 dependencies {
     implementation(name: "api-0.0.1", ext: "jar")
+    implementation(project(":protocols"))
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'com.google.code.gson:gson:2.8.5'
 
@@ -26,7 +27,11 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation("io.ktor:ktor-client-logging:1.5.1")
     implementation("io.ktor:ktor-client-websockets:1.5.1")
+    implementation "io.ktor:ktor-network:1.5.1"
 
     //gradle kotlin DSL
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.0")
+
+
+    implementation("com.google.protobuf:protobuf-java:3.0.0")
 }
