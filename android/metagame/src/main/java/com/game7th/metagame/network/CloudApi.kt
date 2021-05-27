@@ -16,9 +16,14 @@ import io.ktor.client.statement.*
 import io.ktor.content.*
 import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
+import io.ktor.network.selector.*
+import io.ktor.network.sockets.*
+import io.ktor.utils.io.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import java.net.InetSocketAddress
+import java.nio.ByteBuffer
 import kotlin.coroutines.CoroutineContext
 
 enum class NetworkErrorStatus {
@@ -147,25 +152,14 @@ class CloudApi(
     suspend fun encounterLocation(actId: String, locationId: Int, difficulty: Int, personageId: String): String = client.post("$baseUrl/encounter?actId=$actId&locationId=$locationId&difficulty=$difficulty&personageId=$personageId") { sign() }
 
     suspend fun connectBattle(accountId: String, battleId: String, outFlow: Flow<InputBattleEvent>, handler: suspend (BattleEvent) -> Unit) {
-        if (baseUrl.contains("https")) client.wss(
-                host = baseUrl.replace("https://", "").replace(":8080", ""),
-                path = "/battle?battleId=$battleId",
-                request = {
-                    this.headers.set("Authorization", "Bearer $token")
-                }
-        ) { processWebSocketConnection(outFlow, handler) } else client.ws(
-                host = baseUrl.replace("http://", "").replace(":8080", ""),
-                path = "/battle?battleId=$battleId",
-                port = 8080,
-                request = {
-                    this.headers.set("Authorization", "Bearer $token")
-                }
-        ) { processWebSocketConnection(outFlow, handler) }
-    }
+        val socket = aSocket(ActorSelectorManager(Dispatchers.IO)).tcp().connect(InetSocketAddress(baseUrl.replace("http://", "").replace(":8080", ""), 2021))
+        val input = socket.openReadChannel()
+        val output = socket.openWriteChannel(autoFlush = true)
 
-    private suspend fun DefaultClientWebSocketSession.processWebSocketConnection(outFlow: Flow<InputBattleEvent>, handler: suspend (BattleEvent) -> Unit) {
         val outputRoutine = launch {
             try {
+                output.writeStringUtf8("$accountId\n")
+                output.writeStringUtf8("$battleId\n")
                 outFlow.collect { event ->
                     val builder = Protocol.BattleMessage.newBuilder().apply {
                         when (event) {
@@ -191,91 +185,92 @@ class CloudApi(
                     }
                     val data = builder.build().toByteArray()
                     println("S7TH-WS-OUT: ${event.javaClass.simpleName} ${data.toHexString()}")
-                    send(Frame.Binary(true, data))
+                    output.writeInt(data.size)
+                    output.writeFully(ByteBuffer.wrap(data))
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
+
         val inputRoutine = launch {
-            for (frame in incoming) {
-                when (frame) {
-                    is Frame.Binary -> {
-                        val message = Protocol.BattleMessage.parseFrom(frame.data)
-                        println("S7TH-IN: ${message.messageType}")
-                        val event = when (message.messageType) {
-                            Protocol.BattleMessage.MessageType.BATTLE_READY -> BattleEvent.BattleReadyEvent(
-                                    BattleResourcesDto(message.resourcesList.resourcesList.toList())
-                            )
-                            Protocol.BattleMessage.MessageType.FLASK_CONSUMED -> BattleEvent.FlaskConsumedEvent("")
-                            Protocol.BattleMessage.MessageType.HEARTBEAT_RESPONSE -> BattleEvent.HeartbeatResponse("")
-                            Protocol.BattleMessage.MessageType.CREATE_TILE -> BattleEvent.CreateTileEvent("",
-                                    message.tileViewModel.let {
-                                        TileViewModel(it.id, it.skin, it.stackSize, it.maxStackSize, it.stun)
-                                    },
-                                    message.position,
-                                    message.sourcePosition
-                            )
-                            Protocol.BattleMessage.MessageType.SWIPE_MOTION -> BattleEvent.SwipeMotionEvent("",
-                                    message.tileFieldEventsList.map { tileEvent ->
-                                        TileFieldEvent(
-                                                when (tileEvent.tileFieldEventType) {
-                                                    Protocol.BattleMessage.TileFieldEvent.TileFieldEventType.MOVE -> TileFieldEventType.MOVE
-                                                    Protocol.BattleMessage.TileFieldEvent.TileFieldEventType.MERGE -> TileFieldEventType.MERGE
-                                                    else -> TileFieldEventType.MOVE
-                                                },
-                                                tileEvent.id, tileEvent.position, if (tileEvent.hasTile()) tileEvent.tile.let {
-                                            TileViewModel(it.id, it.skin, it.stackSize, it.maxStackSize, it.stun)
-                                        } else null
-                                        )
-                                    }
-                            )
-                            Protocol.BattleMessage.MessageType.COMBO_UPDATE -> BattleEvent.ComboUpdateEvent("", message.id)
-                            Protocol.BattleMessage.MessageType.UPDATE_TILE -> BattleEvent.UpdateTileEvent("", message.id,
-                                    message.tileViewModel.let { TileViewModel(it.id, it.skin, it.stackSize, it.maxStackSize, it.stun) })
-                            Protocol.BattleMessage.MessageType.REMOVE_TILE -> BattleEvent.RemoveTileEvent("", message.id)
-                            Protocol.BattleMessage.MessageType.SHOW_TILE -> BattleEvent.ShowTileEffect("", message.position, message.effect)
-                            Protocol.BattleMessage.MessageType.CREATE_PERSONAGE -> BattleEvent.CreatePersonageEvent(
-                                    message.personageViewModel.let { createPersonageViewModel(it) },
-                                    message.position,
-                                    message.appearStrategy
-                            )
-                            Protocol.BattleMessage.MessageType.PERSONAGE_ATTACK -> BattleEvent.PersonageAttackEvent(
-                                    createPersonageViewModel(message.personageViewModel),
-                                    message.targetsList.map { createPersonageViewModel(it) },
-                                    message.attackIndex
-                            )
-                            Protocol.BattleMessage.MessageType.PERSONAGE_POSITIONED_ABILITY -> BattleEvent.PersonagePositionedAbilityEvent(
-                                    createPersonageViewModel(message.personageViewModel), message.id, message.attackIndex
-                            )
-                            Protocol.BattleMessage.MessageType.PERSONAGE_DAMAGE -> BattleEvent.PersonageDamageEvent(
-                                    createPersonageViewModel(message.personageViewModel), message.amount
-                            )
-                            Protocol.BattleMessage.MessageType.PERSONAGE_DEAD -> BattleEvent.PersonageDeadEvent(
-                                    createPersonageViewModel(message.personageViewModel), message.blocking)
-                            Protocol.BattleMessage.MessageType.PERSONAGE_UPDATE -> BattleEvent.PersonageUpdateEvent(
-                                    createPersonageViewModel(message.personageViewModel)
-                            )
-                            Protocol.BattleMessage.MessageType.PERSONAGE_HEAL -> BattleEvent.PersonageHealEvent(
-                                    createPersonageViewModel(message.personageViewModel), message.amount
-                            )
-                            Protocol.BattleMessage.MessageType.SHOW_AILMENT -> BattleEvent.ShowAilmentEffect(message.id, message.skin)
-                            Protocol.BattleMessage.MessageType.REMOVE_PERSONAGE -> BattleEvent.RemovePersonageEvent(message.id)
-                            Protocol.BattleMessage.MessageType.NEW_WAVE -> BattleEvent.NewWaveEvent(message.id)
-                            Protocol.BattleMessage.MessageType.SHOW_SPEECH -> message.speechMessage.let {
-                                BattleEvent.ShowSpeech(
-                                        it.portrait, it.text, it.name
+            while (!socket.isClosed) {
+                val size = input.readInt()
+                val buffer = ByteBuffer.allocate(size)
+                input.readFully(buffer)
+                val message = Protocol.BattleMessage.parseFrom(buffer.array())
+                println("S7TH-IN: ${message.messageType}")
+                val event = when (message.messageType) {
+                    Protocol.BattleMessage.MessageType.BATTLE_READY -> BattleEvent.BattleReadyEvent(
+                            BattleResourcesDto(message.resourcesList.resourcesList.toList())
+                    )
+                    Protocol.BattleMessage.MessageType.FLASK_CONSUMED -> BattleEvent.FlaskConsumedEvent("")
+                    Protocol.BattleMessage.MessageType.HEARTBEAT_RESPONSE -> BattleEvent.HeartbeatResponse("")
+                    Protocol.BattleMessage.MessageType.CREATE_TILE -> BattleEvent.CreateTileEvent("",
+                            message.tileViewModel.let {
+                                TileViewModel(it.id, it.skin, it.stackSize, it.maxStackSize, it.stun)
+                            },
+                            message.position,
+                            message.sourcePosition
+                    )
+                    Protocol.BattleMessage.MessageType.SWIPE_MOTION -> BattleEvent.SwipeMotionEvent("",
+                            message.tileFieldEventsList.map { tileEvent ->
+                                TileFieldEvent(
+                                        when (tileEvent.tileFieldEventType) {
+                                            Protocol.BattleMessage.TileFieldEvent.TileFieldEventType.MOVE -> TileFieldEventType.MOVE
+                                            Protocol.BattleMessage.TileFieldEvent.TileFieldEventType.MERGE -> TileFieldEventType.MERGE
+                                            else -> TileFieldEventType.MOVE
+                                        },
+                                        tileEvent.id, tileEvent.position, if (tileEvent.hasTile()) tileEvent.tile.let {
+                                    TileViewModel(it.id, it.skin, it.stackSize, it.maxStackSize, it.stun)
+                                } else null
                                 )
                             }
-                            Protocol.BattleMessage.MessageType.VICTORY -> BattleEvent.VictoryEvent
-                            Protocol.BattleMessage.MessageType.DEFEAT -> BattleEvent.DefeatEvent
-                            else -> null
-                        }
-                        event?.let { event ->
-                            println("S7TH-WS-IN: ${event.javaClass.simpleName}")
-                            handler.invoke(event)
-                        }
+                    )
+                    Protocol.BattleMessage.MessageType.COMBO_UPDATE -> BattleEvent.ComboUpdateEvent("", message.id)
+                    Protocol.BattleMessage.MessageType.UPDATE_TILE -> BattleEvent.UpdateTileEvent("", message.id,
+                            message.tileViewModel.let { TileViewModel(it.id, it.skin, it.stackSize, it.maxStackSize, it.stun) })
+                    Protocol.BattleMessage.MessageType.REMOVE_TILE -> BattleEvent.RemoveTileEvent("", message.id)
+                    Protocol.BattleMessage.MessageType.SHOW_TILE -> BattleEvent.ShowTileEffect("", message.position, message.effect)
+                    Protocol.BattleMessage.MessageType.CREATE_PERSONAGE -> BattleEvent.CreatePersonageEvent(
+                            message.personageViewModel.let { createPersonageViewModel(it) },
+                            message.position,
+                            message.appearStrategy
+                    )
+                    Protocol.BattleMessage.MessageType.PERSONAGE_ATTACK -> BattleEvent.PersonageAttackEvent(
+                            createPersonageViewModel(message.personageViewModel),
+                            message.targetsList.map { createPersonageViewModel(it) },
+                            message.attackIndex
+                    )
+                    Protocol.BattleMessage.MessageType.PERSONAGE_POSITIONED_ABILITY -> BattleEvent.PersonagePositionedAbilityEvent(
+                            createPersonageViewModel(message.personageViewModel), message.id, message.attackIndex
+                    )
+                    Protocol.BattleMessage.MessageType.PERSONAGE_DAMAGE -> BattleEvent.PersonageDamageEvent(
+                            createPersonageViewModel(message.personageViewModel), message.amount
+                    )
+                    Protocol.BattleMessage.MessageType.PERSONAGE_DEAD -> BattleEvent.PersonageDeadEvent(
+                            createPersonageViewModel(message.personageViewModel), message.blocking)
+                    Protocol.BattleMessage.MessageType.PERSONAGE_UPDATE -> BattleEvent.PersonageUpdateEvent(
+                            createPersonageViewModel(message.personageViewModel)
+                    )
+                    Protocol.BattleMessage.MessageType.PERSONAGE_HEAL -> BattleEvent.PersonageHealEvent(
+                            createPersonageViewModel(message.personageViewModel), message.amount
+                    )
+                    Protocol.BattleMessage.MessageType.SHOW_AILMENT -> BattleEvent.ShowAilmentEffect(message.id, message.skin)
+                    Protocol.BattleMessage.MessageType.REMOVE_PERSONAGE -> BattleEvent.RemovePersonageEvent(message.id)
+                    Protocol.BattleMessage.MessageType.NEW_WAVE -> BattleEvent.NewWaveEvent(message.id)
+                    Protocol.BattleMessage.MessageType.SHOW_SPEECH -> message.speechMessage.let {
+                        BattleEvent.ShowSpeech(
+                                it.portrait, it.text, it.name
+                        )
                     }
+                    Protocol.BattleMessage.MessageType.VICTORY -> BattleEvent.VictoryEvent
+                    Protocol.BattleMessage.MessageType.DEFEAT -> BattleEvent.DefeatEvent
+                    else -> null
+                }
+                event?.let { event ->
+                    println("S7TH-WS-IN: ${event.javaClass.simpleName}")
+                    handler.invoke(event)
                 }
             }
         }

@@ -56,8 +56,8 @@ android {
         multiDexEnabled true
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 33
-        versionName "0.1.11"
+        versionCode 34
+        versionName "0.1.12"
         signingConfig signingConfigs.release
     }
     productFlavors {
@@ -67,7 +67,7 @@ android {
         }
         heroku_qa {
             dimension "environment"
-            buildConfigField('String', 'ENDPOINT', '"https://swipe-battles.herokuapp.com"')
+            buildConfigField('String', 'ENDPOINT', '"http://65.21.177.217:8080"')
         }
     }
     buildTypes {
