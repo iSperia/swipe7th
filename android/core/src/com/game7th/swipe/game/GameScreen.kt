@@ -201,14 +201,14 @@ class GameScreen(game: SwipeGameGdx,
         KtxAsync.launch {
             launch {
                 repeat(1000) { i ->
-                    if (isResoucesReady) {
+                    if (isResoucesReady && !gameEnded) {
                         pingTimeMark = TimeSource.Monotonic.markNow()
                         swipeFlow.emit(InputBattleEvent.HeartBeatEvent(accountId))
                     }
                     delay(2000L)
                 }
             }
-            game.api.connectBattle(battleId, swipeFlow) {
+            game.api.connectBattle(accountId, battleId, swipeFlow) {
                 gameActor.processAction(it)
                 battleController.processEvent(it)
 

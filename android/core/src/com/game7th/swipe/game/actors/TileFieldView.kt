@@ -141,7 +141,7 @@ class TileFieldView(
                         RunnableAction().apply {
                             setRunnable {
                                 tile.clearActions()
-                                tileGroup.removeActor(tile)
+                                tile.remove()
                             }
                         }
                 ))

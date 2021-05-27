@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.game7th.metagame.CloudEnvironment
 import com.game7th.metagame.FileProvider
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.account.AccountService
@@ -32,14 +33,14 @@ import ktx.async.KtxAsync
 class SwipeGameGdx(
         val storage: PersistentStorage,
         val installationId: String,
-        val endpoint: String,
+        val environment: CloudEnvironment,
         val mapper: PurchaseItemMapper,
         val quitCallback: () -> Unit) : Game() {
 
     val multiplexer = InputMultiplexer()
     val gson = Gson()
 
-    val api: CloudApi = CloudApi(endpoint, installationId)
+    val api: CloudApi = CloudApi(environment, installationId)
 
     var servicesInitialized = false
     lateinit var context: GdxGameContext
@@ -65,8 +66,7 @@ class SwipeGameGdx(
         initializeContext()
 
         KtxAsync.launch {
-            val token = "Jopa"
-//            val token = storage.get(KEY_TOKEN)
+            val token = storage.get(KEY_TOKEN)
             var needRequestToken = false
             var tokenReceived: Boolean
             if (!token.isNullOrEmpty()) {

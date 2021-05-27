@@ -1,7 +1,9 @@
 package com.game7th.metagame.network
 
+import com.game7th.metagame.CloudEnvironment
 import com.game7th.swiped.api.*
 import com.game7th.swiped.api.battle.*
+import com.game7th.swiped.api.battle.protocol.Protocol
 import com.google.gson.Gson
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -17,6 +19,7 @@ import io.ktor.http.cio.websocket.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlin.coroutines.CoroutineContext
 
 enum class NetworkErrorStatus {
     CONNECTION_ERROR,
@@ -31,14 +34,18 @@ data class NetworkError(
 ) : RuntimeException("Network error $status", errorCause)
 
 class CloudApi(
-        private val baseUrl: String,
-        private val instanceId: String) {
+        private val environment: CloudEnvironment,
+        private val instanceId: String) : CoroutineScope {
+
+    override val coroutineContext: CoroutineContext = newFixedThreadPoolContext(2, "cloud")
 
     var token: String? = null
 
     val json = defaultSerializer()
 
     val gson = Gson()
+
+    private val baseUrl = environment.endpoint
 
     private val client = HttpClient(CIO) {
         install(WebSockets)
@@ -114,7 +121,7 @@ class CloudApi(
         body = json.write(items)
     }
 
-    suspend fun getInventory(): InventoryPoolDto = client.get<InventoryPoolDto> ("$baseUrl/gear/inventory") { sign() }
+    suspend fun getInventory(): InventoryPoolDto = client.get<InventoryPoolDto>("$baseUrl/gear/inventory") { sign() }
 
     suspend fun putItemOn(personageId: String, item: InventoryItemFullInfoDto): Unit = client.post("$baseUrl/gear/putOn?personageId=$personageId&itemId=${item.id}") { sign() }
 
@@ -139,103 +146,153 @@ class CloudApi(
 
     suspend fun encounterLocation(actId: String, locationId: Int, difficulty: Int, personageId: String): String = client.post("$baseUrl/encounter?actId=$actId&locationId=$locationId&difficulty=$difficulty&personageId=$personageId") { sign() }
 
-    suspend fun connectBattle(battleId: String, output: Flow<InputBattleEvent>, handler: suspend (BattleEvent) -> Unit) = if (baseUrl.contains("https")) {
-        client.wss(
-                host = baseUrl.replace("http://", "").replace("https://", "").replace(":8080", ""),
+    suspend fun connectBattle(accountId: String, battleId: String, outFlow: Flow<InputBattleEvent>, handler: suspend (BattleEvent) -> Unit) {
+        if (baseUrl.contains("https")) client.wss(
+                host = baseUrl.replace("https://", "").replace(":8080", ""),
                 path = "/battle?battleId=$battleId",
                 request = {
                     this.headers.set("Authorization", "Bearer $token")
                 }
-        ) {
-            val outputRoutine = launch {
-                try {
-                    output.collect {
-                        val name = InputBattleEvent.getEventDtoType(it).toString()
-                        val payload = gson.toJson(it)
-                        val frame = BattleFrame(name, payload)
-                        val frameString = gson.toJson(frame)
-                        println("S7TH-WS-OUT: $frameString")
-                        outgoing.send(Frame.Text(frameString))
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-
-            }
-            val inputRoutine = launch {
-                try {
-                    for (frame in incoming) {
-                        when (frame) {
-                            is Frame.Text -> {
-                                val payload = frame.readText()
-                                println("S7TH-WS-IN: $payload")
-                                val frame = gson.fromJson<BattleFrame>(payload, BattleFrame::class.java)
-                                val clazz = BattleEventType.valueOf(frame.name).clazz
-                                val event = gson.fromJson(frame.payload, clazz)
-                                handler.invoke(event)
-                            }
-                        }
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-
-            inputRoutine.join()
-            outputRoutine.cancelAndJoin()
-            close()
-            println("S7TH-WS: Connection closed")
-        }
-    } else {
-        client.ws(
-                host = baseUrl.replace("http://", "").replace("https://", "").replace(":8080", ""),
+        ) { processWebSocketConnection(outFlow, handler) } else client.ws(
+                host = baseUrl.replace("http://", "").replace(":8080", ""),
                 path = "/battle?battleId=$battleId",
-            port = 8080,
+                port = 8080,
                 request = {
                     this.headers.set("Authorization", "Bearer $token")
                 }
-        ) {
-            val outputRoutine = launch {
-                try {
-                    output.collect {
-                        val name = InputBattleEvent.getEventDtoType(it).toString()
-                        val payload = gson.toJson(it)
-                        val frame = BattleFrame(name, payload)
-                        val frameString = gson.toJson(frame)
-                        println("S7TH-WS-OUT: $frameString")
-                        outgoing.send(Frame.Text(frameString))
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-
-            }
-            val inputRoutine = launch {
-                try {
-                    for (frame in incoming) {
-                        when (frame) {
-                            is Frame.Text -> {
-                                val payload = frame.readText()
-                                println("S7TH-WS-IN: $payload")
-                                val frame = gson.fromJson<BattleFrame>(payload, BattleFrame::class.java)
-                                val clazz = BattleEventType.valueOf(frame.name).clazz
-                                val event = gson.fromJson(frame.payload, clazz)
-                                handler.invoke(event)
-                            }
-                        }
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-
-            inputRoutine.join()
-            outputRoutine.cancelAndJoin()
-            close()
-            println("S7TH-WS: Connection closed")
-        }
+        ) { processWebSocketConnection(outFlow, handler) }
     }
 
+    private suspend fun DefaultClientWebSocketSession.processWebSocketConnection(outFlow: Flow<InputBattleEvent>, handler: suspend (BattleEvent) -> Unit) {
+        val outputRoutine = launch {
+            try {
+                outFlow.collect { event ->
+                    val builder = Protocol.BattleMessage.newBuilder().apply {
+                        when (event) {
+                            is InputBattleEvent.ConcedeBattleEvent -> {
+                                messageType = Protocol.BattleMessage.MessageType.CONCEDE
+                            }
+                            is InputBattleEvent.FlaskBattleEvent -> {
+                                messageType = Protocol.BattleMessage.MessageType.FLASK
+                                skin = event.flaskId
+                            }
+                            is InputBattleEvent.SwipeBattleEvent -> {
+                                messageType = Protocol.BattleMessage.MessageType.SWIPE
+                                dx = event.dx
+                                dy = event.dy
+                            }
+                            is InputBattleEvent.PlayerReadyEvent -> {
+                                messageType = Protocol.BattleMessage.MessageType.READY
+                            }
+                            is InputBattleEvent.HeartBeatEvent -> {
+                                messageType = Protocol.BattleMessage.MessageType.HEARTBEAT
+                            }
+                        }
+                    }
+                    val data = builder.build().toByteArray()
+                    println("S7TH-WS-OUT: ${event.javaClass.simpleName} ${data.toHexString()}")
+                    send(Frame.Binary(true, data))
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        val inputRoutine = launch {
+            for (frame in incoming) {
+                when (frame) {
+                    is Frame.Binary -> {
+                        val message = Protocol.BattleMessage.parseFrom(frame.data)
+                        println("S7TH-IN: ${message.messageType}")
+                        val event = when (message.messageType) {
+                            Protocol.BattleMessage.MessageType.BATTLE_READY -> BattleEvent.BattleReadyEvent(
+                                    BattleResourcesDto(message.resourcesList.resourcesList.toList())
+                            )
+                            Protocol.BattleMessage.MessageType.FLASK_CONSUMED -> BattleEvent.FlaskConsumedEvent("")
+                            Protocol.BattleMessage.MessageType.HEARTBEAT_RESPONSE -> BattleEvent.HeartbeatResponse("")
+                            Protocol.BattleMessage.MessageType.CREATE_TILE -> BattleEvent.CreateTileEvent("",
+                                    message.tileViewModel.let {
+                                        TileViewModel(it.id, it.skin, it.stackSize, it.maxStackSize, it.stun)
+                                    },
+                                    message.position,
+                                    message.sourcePosition
+                            )
+                            Protocol.BattleMessage.MessageType.SWIPE_MOTION -> BattleEvent.SwipeMotionEvent("",
+                                    message.tileFieldEventsList.map { tileEvent ->
+                                        TileFieldEvent(
+                                                when (tileEvent.tileFieldEventType) {
+                                                    Protocol.BattleMessage.TileFieldEvent.TileFieldEventType.MOVE -> TileFieldEventType.MOVE
+                                                    Protocol.BattleMessage.TileFieldEvent.TileFieldEventType.MERGE -> TileFieldEventType.MERGE
+                                                    else -> TileFieldEventType.MOVE
+                                                },
+                                                tileEvent.id, tileEvent.position, if (tileEvent.hasTile()) tileEvent.tile.let {
+                                            TileViewModel(it.id, it.skin, it.stackSize, it.maxStackSize, it.stun)
+                                        } else null
+                                        )
+                                    }
+                            )
+                            Protocol.BattleMessage.MessageType.COMBO_UPDATE -> BattleEvent.ComboUpdateEvent("", message.id)
+                            Protocol.BattleMessage.MessageType.UPDATE_TILE -> BattleEvent.UpdateTileEvent("", message.id,
+                                    message.tileViewModel.let { TileViewModel(it.id, it.skin, it.stackSize, it.maxStackSize, it.stun) })
+                            Protocol.BattleMessage.MessageType.REMOVE_TILE -> BattleEvent.RemoveTileEvent("", message.id)
+                            Protocol.BattleMessage.MessageType.SHOW_TILE -> BattleEvent.ShowTileEffect("", message.position, message.effect)
+                            Protocol.BattleMessage.MessageType.CREATE_PERSONAGE -> BattleEvent.CreatePersonageEvent(
+                                    message.personageViewModel.let { createPersonageViewModel(it) },
+                                    message.position,
+                                    message.appearStrategy
+                            )
+                            Protocol.BattleMessage.MessageType.PERSONAGE_ATTACK -> BattleEvent.PersonageAttackEvent(
+                                    createPersonageViewModel(message.personageViewModel),
+                                    message.targetsList.map { createPersonageViewModel(it) },
+                                    message.attackIndex
+                            )
+                            Protocol.BattleMessage.MessageType.PERSONAGE_POSITIONED_ABILITY -> BattleEvent.PersonagePositionedAbilityEvent(
+                                    createPersonageViewModel(message.personageViewModel), message.id, message.attackIndex
+                            )
+                            Protocol.BattleMessage.MessageType.PERSONAGE_DAMAGE -> BattleEvent.PersonageDamageEvent(
+                                    createPersonageViewModel(message.personageViewModel), message.amount
+                            )
+                            Protocol.BattleMessage.MessageType.PERSONAGE_DEAD -> BattleEvent.PersonageDeadEvent(
+                                    createPersonageViewModel(message.personageViewModel), message.blocking)
+                            Protocol.BattleMessage.MessageType.PERSONAGE_UPDATE -> BattleEvent.PersonageUpdateEvent(
+                                    createPersonageViewModel(message.personageViewModel)
+                            )
+                            Protocol.BattleMessage.MessageType.PERSONAGE_HEAL -> BattleEvent.PersonageHealEvent(
+                                    createPersonageViewModel(message.personageViewModel), message.amount
+                            )
+                            Protocol.BattleMessage.MessageType.SHOW_AILMENT -> BattleEvent.ShowAilmentEffect(message.id, message.skin)
+                            Protocol.BattleMessage.MessageType.REMOVE_PERSONAGE -> BattleEvent.RemovePersonageEvent(message.id)
+                            Protocol.BattleMessage.MessageType.NEW_WAVE -> BattleEvent.NewWaveEvent(message.id)
+                            Protocol.BattleMessage.MessageType.SHOW_SPEECH -> message.speechMessage.let {
+                                BattleEvent.ShowSpeech(
+                                        it.portrait, it.text, it.name
+                                )
+                            }
+                            Protocol.BattleMessage.MessageType.VICTORY -> BattleEvent.VictoryEvent
+                            Protocol.BattleMessage.MessageType.DEFEAT -> BattleEvent.DefeatEvent
+                            else -> null
+                        }
+                        event?.let { event ->
+                            println("S7TH-WS-IN: ${event.javaClass.simpleName}")
+                            handler.invoke(event)
+                        }
+                    }
+                }
+            }
+        }
+        inputRoutine.join()
+        outputRoutine.cancelAndJoin()
+        println("S7TH: CLOSE CONNECTION")
+    }
+
+    fun createPersonageViewModel(builder: Protocol.BattleMessage.PersonageViewModel) = PersonageViewModel(
+            builder.personageStats.let { PersonageStats(it.body, it.health, it.maxHealth, it.armor, it.spirit, it.regeneration, it.evasion, it.mind, it.wisdom, it.resist, it.resistMax, it.level, it.tick, it.maxTick, it.tickAbility.let { if (it.isEmpty()) null else it }, it.isStunned, it.isFrozen) },
+            builder.skin,
+            builder.portrait,
+            builder.id,
+            builder.team
+    )
+
+    fun ByteArray.toHexString() = joinToString("") { "%02x".format(it) }
 
     private fun HttpRequestBuilder.sign() {
         headers {

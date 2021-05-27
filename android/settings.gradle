@@ -1,3 +1,4 @@
+include ':protocols'
 include ':metagame'
 include ':balance-tool'
 include 'desktop', 'android', 'ios', 'core'
