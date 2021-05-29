@@ -18,6 +18,8 @@ enum class UnitType(val bodyWeight: Int, val spiritWeight: Int, val mindWeight: 
     DRYAD(0,0,0),
     DRYAD_QUEEN(0,0,0),
 
+    ARACHNID_SMALL(0,0,0),
+
     UNKNOWN(0,0,0);
 
     fun getSkin(): String = when (this) {
@@ -34,6 +36,7 @@ enum class UnitType(val bodyWeight: Int, val spiritWeight: Int, val mindWeight: 
         SLIME_ARMORED -> "slime_armored"
         BHASTUSE_JOLLY -> "bhastuse_jolly"
         PRINCE -> "prince"
+        ARACHNID_SMALL -> "arachnid_small"
         else -> "personage_dead"
     }
 
@@ -51,6 +54,7 @@ enum class UnitType(val bodyWeight: Int, val spiritWeight: Int, val mindWeight: 
         SLIME_ARMORED -> "slime_armored"
         BHASTUSE_JOLLY -> "bhastuse_jolly"
         PRINCE -> "prince"
+        ARACHNID_SMALL -> "arachnid_small"
         else -> "portrait_unknown"
     }
 }

@@ -213,16 +213,15 @@ class TileFieldView(
     }
 
     fun finalizeActions() {
-//        tileGroup.children.forEach { tileActor ->
-//            (tileActor as? TileView)?.let { tileView ->
-//                tileView.applyPosition(tileView.tx, tileView.ty)
-//                tileView.setScale(1f)
-//                tileView.alpha = 1f
-//                tileView.clearActions()
-//                if (tileView.removed) tileView.remove()
-//            }
-//        }
-//        moveShift = 0
+        tileGroup.children.forEach { tileActor ->
+            (tileActor as? TileView)?.let { tileView ->
+                tileView.applyPosition(tileView.tx, tileView.ty)
+                tileView.setScale(1f)
+                tileView.alpha = 1f
+                tileView.clearActions()
+                if (tileView.removed) tileView.remove()
+            }
+        }
     }
 
     private fun Actor.applyPosition(x: Int, y: Int) {
@@ -237,6 +236,6 @@ class TileFieldView(
         const val TILE_BG_REGION = "tile_bg"
         const val TILE_FG_REGION = "tilefg"
         const val FIELD_WIDTH = 5
-        const val MOVE_STEP_LENGTH = 0.05f
+        const val MOVE_STEP_LENGTH = 0.025f
     }
 }

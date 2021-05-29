@@ -7,6 +7,7 @@ import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.game7th.metagame.CloudEnvironment
 import com.game7th.metagame.FileProvider
@@ -29,6 +30,9 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
 import ktx.async.KtxAsync
+import kotlin.time.ExperimentalTime
+import kotlin.time.TimeMark
+import kotlin.time.TimeSource
 
 class SwipeGameGdx(
         val storage: PersistentStorage,
@@ -140,6 +144,8 @@ class SwipeGameGdx(
         context = GdxGameContext(atlas, uiAtlas, font, font2, scale, texts, storage)
 
         Gdx.input.inputProcessor = multiplexer
+
+        batch = SpriteBatch()
     }
 
     private suspend fun initializeServices() {
@@ -169,12 +175,28 @@ class SwipeGameGdx(
         accountService.init()
     }
 
+    @ExperimentalTime
+    private var timeStamp = TimeSource.Monotonic.markNow()
+    private var framesDrawn = 0
+    lateinit var batch: SpriteBatch
+    var frameRate = 20
+    @ExperimentalTime
     override fun render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT or (if (Gdx.graphics.getBufferFormat().coverageSampling) GL20.GL_COVERAGE_BUFFER_BIT_NV else 0))
 //        Gdx.gl.glClearColor(0f, 0f, 1f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         super.render()
+        val timePassed = timeStamp.elapsedNow().inMilliseconds.toLong()
+        framesDrawn++
+        if (timePassed > 1000) {
+            frameRate = (framesDrawn * timePassed.toFloat() / 1000).toInt()
+            framesDrawn = 0
+            timeStamp = TimeSource.Monotonic.markNow()
+        }
+        batch.begin()
+        context.font.draw(batch, "FPS: $frameRate", Gdx.graphics.width - 100f, Gdx.graphics.height - 38f)
+        batch.end()
     }
 
     override fun pause() {

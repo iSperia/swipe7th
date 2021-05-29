@@ -38,6 +38,7 @@ class GdxGameActivity : AndroidApplication() {
         val config = AndroidApplicationConfiguration().apply {
             useImmersiveMode = true
             numSamples = 2
+
         }
 
         val storage = AndroidStorage(applicationContext)

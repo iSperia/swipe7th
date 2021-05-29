@@ -152,7 +152,12 @@ class CloudApi(
     suspend fun encounterLocation(actId: String, locationId: Int, difficulty: Int, personageId: String): String = client.post("$baseUrl/encounter?actId=$actId&locationId=$locationId&difficulty=$difficulty&personageId=$personageId") { sign() }
 
     suspend fun connectBattle(accountId: String, battleId: String, outFlow: Flow<InputBattleEvent>, handler: suspend (BattleEvent) -> Unit) {
-        val socket = aSocket(ActorSelectorManager(Dispatchers.IO)).tcp().connect(InetSocketAddress(baseUrl.replace("http://", "").replace(":8080", ""), 2021))
+        val socket = aSocket(ActorSelectorManager(Dispatchers.IO)).tcp().let {
+            it.connect(InetSocketAddress(baseUrl.replace("http://", "").replace(":8080", ""), 2021)) {
+                noDelay = true
+                keepAlive = true
+            }
+        }
         val input = socket.openReadChannel()
         val output = socket.openWriteChannel(autoFlush = true)
 

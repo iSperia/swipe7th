@@ -209,6 +209,7 @@ class GameScreen(game: SwipeGameGdx,
                 }
             }
             game.api.connectBattle(accountId, battleId, swipeFlow) {
+                println("S7TH GS: THREAD: ${Thread.currentThread().name}")
                 gameActor.processAction(it)
                 battleController.processEvent(it)
 
