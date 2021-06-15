@@ -35,6 +35,7 @@ message BattleMessage {
         FLASK_CONSUMED = 1021;
         HEARTBEAT_RESPONSE = 1022;
         DEFEAT = 1023;
+        WISDOM_UPDATE = 1024;
     }
 
     MessageType message_type = 2;

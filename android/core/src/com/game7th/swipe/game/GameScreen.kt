@@ -96,8 +96,10 @@ class GameScreen(game: SwipeGameGdx,
 
             listenEvents()
 
+            val actConfig = actService.getActConfig(actId)
+            val locationConfig = actConfig.findNode(locationId)!!
             gameActor = GameActor(
-                    game.context, game.gearService, this@GameScreen, this@GameScreen::usePotion, this@GameScreen::claimRewards) { _ ->
+                    game.context, game.gearService, locationConfig, this@GameScreen, this@GameScreen::usePotion, this@GameScreen::claimRewards) { _ ->
                 KtxAsync.launch {
                     game.gearService.reloadData()
                 }
@@ -495,7 +497,7 @@ class GameScreen(game: SwipeGameGdx,
                                                                 preventLeftSwipe = true
                                                                 dismissFocusOnSwipe = false
                                                                 showFocusView("ttr_a1l1_fb_14", calcTileRect(5), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                                    showFocusView("ttr_a1l1_fb_15", calcComboRect(), DismissStrategy.DISMISS_ON_OUTSIDE) {
+//                                                                    showFocusView("ttr_a1l1_fb_15", calcComboRect(), DismissStrategy.DISMISS_ON_OUTSIDE) {
                                                                         showFocusView("ttr_a1l1_fb_16", calcTileRect(13), DismissStrategy.DISMISS_ON_OUTSIDE) {
                                                                             showFocusView("ttr_a1l1_fb_17", calcRightPersonageSkillRect(), DismissStrategy.DISMISS_ON_OUTSIDE)
                                                                             preventBottomSwipe = false
@@ -516,7 +518,7 @@ class GameScreen(game: SwipeGameGdx,
                                                                                     }
                                                                                 }
                                                                             }
-                                                                        }
+//                                                                        }
                                                                     }
                                                                 }
                                                             }
@@ -587,10 +589,6 @@ class GameScreen(game: SwipeGameGdx,
 
     fun calcTileRect(p: Int) = gameActor.tileField.localToStageCoordinates(Vector2()).let {
         Rectangle(it.x + gameActor.tileField.calcX(p) - 5f, it.y + gameActor.tileField.calcY(p) - 5f, gameActor.tileField.tileSize + 10f, gameActor.tileField.tileSize + 10f)
-    }
-
-    fun calcComboRect(): Rectangle = gameActor.labelCombo.localToStageCoordinates(Vector2()).let {
-        Rectangle(it.x - 30f, it.y - 30f, gameActor.labelCombo.width + 30f, gameActor.labelCombo.height + 30f)
     }
 
     fun calcRightPersonageSkillRect() = battleController.calcRightPersonageSkillRect()

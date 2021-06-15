@@ -12,12 +12,14 @@ class PersonageHealthbarController(
         val figure: FigureController
 ) : ElementController(context, battle, id) {
 
-    private val healthBarBackground = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("hpbar_bg"))
-    private val healthBarForeground = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("hpbar_scale"))
-    private val healthBarBorder = NinePatchDrawable(context.gameContext.battleAtlas.createPatch("hpbar_border"))
-    private val healthBarGlass = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("hpbar_fg"))
-    private val resistForeground = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("hpbar_resist"))
-    private val blackQuad = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("black_quad"))
+    private val lifebarHealth = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("lifebar_health"))
+    private val lifebarBackgroundBottom = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("lifebar_background_bottom"))
+    private val lifebarBackgroundTop = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("lifebar_background_top"))
+    private val lifebarBorderBottom = NinePatchDrawable(context.gameContext.battleAtlas.createPatch("lifebar_border_bottom"))
+    private val lifebarBorderTop = NinePatchDrawable(context.gameContext.battleAtlas.createPatch("lifebar_border_top"))
+    private val lifebarLine = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("lifebar_line"))
+    private val lifebarResist = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("lifebar_resist"))
+
     var timePassed: Float = 0f
     var timeHpActual: Float = timePassed
     var timeRsActual: Float = timePassed
@@ -29,6 +31,9 @@ class PersonageHealthbarController(
     var lastKnownResist: Float = figure.viewModel.stats.resist.toFloat()
     var displayedResist: Float = lastKnownResist
     var lastDisplayedResist: Float = displayedResist
+
+    private var bottomHei = 4f * context.scale
+    private var topHei = 8f * context.scale
 
     override fun render(batch: SpriteBatch, delta: Float) {
         timePassed += delta * battle.timeScale()
@@ -46,20 +51,20 @@ class PersonageHealthbarController(
 
         val percent = displayedValue / figure.viewModel.stats.maxHealth
 
-        val barWidth = 48f * battle.scale * context.scale
-        val sx = figure.x - barWidth / 2
-        val sy = figure.y - 15f * battle.scale
+        val barWidth = 200f * battle.scale * 0.8f
+        val sx = figure.x - barWidth / 2f
+        val sy = figure.y + figure.figureModel.height * figure.figureModel.scale * battle.scale + 8f * context.scale
 
-        val offset = barWidth * 0.04f
-        val distance: Float = (barWidth - 2 * offset) * 100f / figure.viewModel.stats.maxHealth.toFloat()
+        val distance: Float = barWidth * 100f / figure.viewModel.stats.maxHealth.toFloat()
         val isBigHealth = distance <= barWidth / 25
         val hei: Float = 20f * battle.scale
-        val sectorHei: Float = (hei - 4f) / 2f
+        val sectorHei: Float = topHei / 2f
 
-        healthBarBackground.draw(batch, sx, sy, barWidth, hei)
-        healthBarForeground.region.let { r -> batch.draw(r.texture, sx, sy, barWidth * percent, hei, r.u, r.v2, r.u + (r.u2-r.u) * percent, r.v) }
+        lifebarBackgroundTop.draw(batch, sx, sy + bottomHei, barWidth, topHei)
+        lifebarHealth.region.let { r -> batch.draw(r.texture, sx, sy + bottomHei, barWidth * percent, topHei, r.u, r.v2, r.u + (r.u2-r.u) * percent, r.v) }
 
         if (figure.viewModel.stats.resistMax > 0) {
+            lifebarBackgroundBottom.draw(batch, sx, sy, barWidth, 3f * context.scale)
             var resist = figure.viewModel.stats.resist.toFloat()
             if (resist != lastKnownResist) {
                 lastKnownResist = resist
@@ -72,23 +77,22 @@ class PersonageHealthbarController(
             }
 
             val resistPercent = displayedResist / figure.viewModel.stats.resistMax
-            resistForeground.region.let { r -> batch.draw(r.texture, sx, sy, barWidth * resistPercent, hei, r.u, r.v2, r.u + (r.u2-r.u) * resistPercent, r.v) }
+            lifebarResist.region.let { r -> batch.draw(r.texture, sx, sy, barWidth * resistPercent, 3f * context.scale, r.u, r.v2, r.u + (r.u2-r.u) * resistPercent, r.v) }
+            lifebarBorderBottom.draw(batch, sx, sy, barWidth, bottomHei)
         }
 
         var cursor = distance
         var index = 1
-        while (cursor < barWidth - 2 * offset) {
-            val wid = if (index % 5 == 0) 2f * context.scale else 1f * context.scale
+        while (cursor < barWidth) {
             val extraHei = if (index % 5 == 0) sectorHei else 0f
             if (index % 5 == 0 || !isBigHealth) {
-                blackQuad.draw(batch, sx + offset + cursor, sy + 2f + sectorHei - extraHei, wid, sectorHei + extraHei)
+                lifebarLine.draw(batch, sx + cursor, sy + bottomHei + sectorHei - extraHei, context.scale, sectorHei + extraHei)
             }
             index++
             cursor += distance
         }
 
-        healthBarBorder.draw(batch, sx, sy, barWidth, hei)
-        healthBarGlass.draw(batch, sx, sy, barWidth, hei)
+        lifebarBorderTop.draw(batch, sx, sy + bottomHei, barWidth, topHei)
     }
 
     override fun dispose() {

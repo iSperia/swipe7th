@@ -31,7 +31,6 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
 import ktx.async.KtxAsync
 import kotlin.time.ExperimentalTime
-import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 
 class SwipeGameGdx(
@@ -126,11 +125,11 @@ class SwipeGameGdx(
         scale = Gdx.graphics.width / 480f
 
         val uiAtlas = TextureAtlas(Gdx.files.internal("ui.atlas"))
-        val atlas = TextureAtlas(Gdx.files.internal("pack_0.atlas"))
+        val battleAtlas = TextureAtlas(Gdx.files.internal("pack_0.atlas"))
         val font = BitmapFont(Gdx.files.internal("cuprum.fnt"), Gdx.files.internal("cuprum_0.png"), false).apply {
             color = Color.WHITE
         }
-        val font2 = BitmapFont(Gdx.files.internal("nova.fnt"), Gdx.files.internal("nova_0.png"), false).apply {
+        val font2 = BitmapFont(Gdx.files.internal("haymaker.fnt"), Gdx.files.internal("haymaker_0.png"), false).apply {
             color = Color.WHITE
         }
         val balanceFile = Gdx.files.internal("balance.json")
@@ -141,7 +140,7 @@ class SwipeGameGdx(
         val token = object : TypeToken<Map<String, String>>() {}.type
         val texts = gson.fromJson<Map<String, String>>(textsText, token)
 
-        context = GdxGameContext(atlas, uiAtlas, font, font2, scale, texts, storage)
+        context = GdxGameContext(battleAtlas, uiAtlas, font, font2, scale, texts, storage)
 
         Gdx.input.inputProcessor = multiplexer
 
@@ -195,7 +194,7 @@ class SwipeGameGdx(
             timeStamp = TimeSource.Monotonic.markNow()
         }
         batch.begin()
-        context.font.draw(batch, "FPS: $frameRate", Gdx.graphics.width - 100f, Gdx.graphics.height - 38f)
+        context.font.draw(batch, "FPS: $frameRate", Gdx.graphics.width - 100f, Gdx.graphics.height - 20f)
         batch.end()
     }
 

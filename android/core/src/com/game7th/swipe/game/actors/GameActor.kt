@@ -8,9 +8,12 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.actions.*
+import com.badlogic.gdx.scenes.scene2d.ui.Button
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
+import com.game7th.metagame.campaign.dto.LocationConfig
 import com.game7th.metagame.inventory.GearService
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.game.GameScreen
@@ -21,6 +24,7 @@ import com.game7th.swiped.api.RewardListDto
 import com.game7th.swiped.api.battle.BattleEvent
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ktx.actors.onClick
 import ktx.actors.repeatForever
 import ktx.async.KtxAsync
 import kotlin.math.min
@@ -28,6 +32,7 @@ import kotlin.math.min
 class GameActor(
         private val context: GdxGameContext,
         private val gearService: GearService,
+        private val locationConfig: LocationConfig,
         private val screen: GameScreen,
         private val usePotionCallback: (FlaskItemFullInfoDto) -> Unit,
         private val rewardCallback: suspend () -> LocationCompleteResponseDto,
@@ -37,29 +42,69 @@ class GameActor(
     lateinit var atlas: TextureAtlas
     val tileField: TileFieldView
     val flaskPanel = Group()
-    val tileFieldBackground = Image(context.battleAtlas.findRegion("tilefieldbg"))
-    val tileFieldForeground = Image(context.battleAtlas.findRegion("tilefield_border"))
 
-    private val buttonConcede = BigButtonGroup(context, 80f * context.scale, 90f * context.scale, "btn_se_bg", "btn_se_bg_pressed", "btn_se_fg", "pic_concede", "pic_concede_pressed", Align.right) {
-        showDefeat()
-    }.apply {
-        x = context.scale * (480f - 80f)
+    val scaleIconWisdom = Image(context.battleAtlas.findRegion("icon_mind")).apply {
+        x = 0f
+        y = 60f * context.scale
+        width = 70f * context.scale
+        height = 88f * context.scale
     }
-    private val buttonSettings = BigButtonGroup(context, 80f * context.scale, 90f * context.scale, "btn_sw_bg", "btn_sw_bg_pressed", "btn_sw_fg", "pic_settings", "pic_settings_pressed", Align.left) {
-
+    val scaleIconCombo = Image(context.battleAtlas.findRegion("icon_spirit")).apply {
+        x = 413f * context.scale
+        y = 58f * context.scale
+        width = 67f * context.scale
+        height = 82f * context.scale
     }
-
-    val bottomPanel = Image(context.battleAtlas.findRegion("flask_pane_bg"))
-    val labelCombo: Label
-    val labelComboWrapper: Group
-    val comboParticles: ParticleEffect
+    val scaleWisdom = ScaleActor(context, "scale_wisdom", 0).apply {
+        x = scaleIconWisdom.x + 27f * context.scale
+        y = scaleIconWisdom.y + 68f * context.scale
+    }
+    val scaleCombo = ScaleActor(context, "scale_combo", 10).apply {
+        x = scaleIconCombo.x + 26f * context.scale
+        y = scaleIconCombo.y + 70f * context.scale
+    }
+    val comboCaption = Label(context.texts["ui_combo"], Label.LabelStyle(context.captionFont, Color.YELLOW)).apply {
+        x = scaleIconCombo.x
+        y = scaleIconCombo.y + 9f * context.scale
+        height = 12f * context.scale
+        setFontScale(12f * context.scale / 36f)
+        width = scaleIconCombo.width
+        setAlignment(Align.center)
+        isVisible = false
+    }
+    val comboValue = Label("X1", Label.LabelStyle(context.captionFont, Color.YELLOW)).apply {
+        x = scaleIconCombo.x
+        y = scaleIconCombo.y - 11f * context.scale
+        height = 20f * context.scale
+        setFontScale(20f * context.scale / 36f)
+        width = scaleIconCombo.width
+        setAlignment(Align.center)
+        isVisible = false
+    }
     val uiGroup = Group()
+    val buttonSettings = Button(Button.ButtonStyle(
+            TextureRegionDrawable(context.battleAtlas.findRegion("btn_settings")),
+            TextureRegionDrawable(context.battleAtlas.findRegion("btn_settings_pressed")),
+            null)).apply {
+                x = Gdx.graphics.width - 87f * context.scale
+                y = Gdx.graphics.height - 87f * context.scale
+                width = 60f * context.scale
+                height = 60f * context.scale
+                onClick { showDefeat() }
+    }
+    val progressIndicator = ProgressIndicatorActor(
+            context,
+            ProgressConfiguration(0, locationConfig.waves.map { WaveInfo(WaveType.REGULAR, false) } + WaveInfo(WaveType.REWARD, false))
+        ).apply {
+        y = Gdx.graphics.height - 60f * context.scale
+        x = (Gdx.graphics.width - ProgressIndicatorActor.WIDTH * context.scale) / 2f
+    }
 
     var fingerActor: Image? = null
 
     private var combo = 0
 
-    val tileFieldAreaHeight = 400f * context.scale
+    val tileFieldAreaHeight = 348f * context.scale
 
     val pingLabel = Label("DEBUG", Label.LabelStyle(context.font, Color.BLUE)).apply {
         x = 20f * context.scale
@@ -72,69 +117,36 @@ class GameActor(
 
     init {
         val bottomPanelHei = 480f * context.scale / 9.66f
-        bottomPanel.apply {
-            width = context.scale * 480f
-            height = bottomPanelHei
-        }
-        tileFieldForeground.apply {
-            y = bottomPanelHei - 24f * context.scale
-            width = context.scale * 480f
-            height = context.scale * 480f / 1.05f
-        }
 
         tileField = TileFieldView(context, tileFieldAreaHeight, tileFieldAreaHeight).apply {
             x = (Gdx.graphics.width - tileFieldAreaHeight) / 2f
-            y = tileFieldForeground.y + 30f * context.scale
-        }
-        tileFieldBackground.apply {
-            x = tileField.x - 20f * context.scale
-            y = tileField.y - 20f * context.scale
-            width = tileFieldAreaHeight + 40f * context.scale
-            height = tileFieldAreaHeight + 40f * context.scale
+            y = 84f * context.scale
         }
 
         flaskPanel.apply {
-            x = 90f * context.scale
-            y = -5f * context.scale
+            x = 68f * context.scale
+            y = 10f * context.scale
         }
         (0..4).forEach { index ->
             val nodeView = BoosterNodeView(context, 60f * context.scale, usePotionCallback)
-            nodeView.x = index * 60f * context.scale
+            nodeView.x = index * 70f * context.scale
             flaskPanel.addActor(nodeView)
         }
 
-        addActor(tileFieldBackground)
         addActor(tileField)
-        addActor(tileFieldForeground)
-        addActor(bottomPanel)
         addActor(flaskPanel)
-        addActor(buttonConcede)
-        addActor(buttonSettings)
         refreshAlchemy()
-
-        labelCombo = Label("COMBO", Label.LabelStyle(context.font2, Color.SCARLET)).apply {
-            x = -Gdx.graphics.width / 2f
-            y = -20f * context.scale
-            width = Gdx.graphics.width.toFloat()
-            height = 40f * context.scale
-            setFontScale(60f * context.scale / 36f)
-            setAlignment(Align.center)
-            isVisible = false
-        }
-        labelComboWrapper = Group().apply {
-            y = Gdx.graphics.height - 40f * context.scale
-            x = Gdx.graphics.width / 2f
-        }
-        labelComboWrapper.addActor(labelCombo)
-        addActor(labelComboWrapper)
+        addActor(scaleWisdom)
+        addActor(scaleCombo)
+        addActor(scaleIconCombo)
+        addActor(scaleIconWisdom)
+        addActor(comboCaption)
+        addActor(comboValue)
+        addActor(buttonSettings)
+        addActor(progressIndicator)
 
         addActor(uiGroup)
         addActor(pingLabel)
-
-        comboParticles = ParticleEffect()
-        comboParticles.load(Gdx.files.internal("particles_0"), context.battleAtlas)
-        comboParticles.setPosition(labelComboWrapper.x, labelComboWrapper.y + labelCombo.y - 10f * context.scale)
-        comboParticles.scaleEffect(3f)
     }
 
     internal fun showDefeat() {
@@ -150,14 +162,8 @@ class GameActor(
         }
     }
 
-    override fun draw(batch: Batch?, parentAlpha: Float) {
-        if (combo > 1) {
-            comboParticles.draw(batch, Gdx.graphics.deltaTime * 0.1f * min(combo, 8))
-        }
-        super.draw(batch, parentAlpha)
-    }
-
     fun showVictory() {
+        progressIndicator.updateCurrentLevel(progressIndicator.configuration.waves.size - 1)
 //        Gdx.audio.newMusic(Gdx.files.internal("sounds/victory.ogg")).let { it.play() }
         KtxAsync.launch {
             val rewards = rewardCallback()
@@ -175,21 +181,16 @@ class GameActor(
         tileField.processAction(event)
         when (event) {
             is BattleEvent.ComboUpdateEvent -> {
-                combo = event.combo
-                labelCombo.isVisible = event.combo > 0
-                labelCombo.setText("COMBO X${event.combo}")
-                labelComboWrapper.clearActions()
-                if (event.combo > 0) {
-                    labelComboWrapper.addAction(SequenceAction(
-                            ScaleToAction().apply { setScale(1.1f + 0.03f * min(8, event.combo)); duration = 2f / min(8, event.combo) },
-                            ScaleToAction().apply { setScale(0.9f - 0.01f * min(8, event.combo)); duration = 2f / min(8, event.combo) }
-                    ).repeatForever())
-                    comboParticles.reset()
-                    comboParticles.scaleEffect(3f + min(8, combo) * 0.2f)
-                }
+                scaleCombo.applyProgress(event.combo * 10)
+                comboCaption.isVisible = event.combo > 0
+                comboValue.isVisible = event.combo > 0
+                comboValue.setText("X${event.combo}")
+            }
+            is BattleEvent.WisdomUpdateEvent ->  {
+                scaleWisdom.applyProgress(event.wisdomProgress)
             }
             is BattleEvent.NewWaveEvent -> {
-                val waveText = Label("WAVE ${event.wave+1}", Label.LabelStyle(context.font2, Color.YELLOW)).apply {
+                val waveText = Label("WAVE ${event.wave+1}", Label.LabelStyle(context.captionFont, Color.YELLOW)).apply {
                     y = Gdx.graphics.height / 2f - 50f * context.scale
                     x = 0f
                     width = 480f * context.scale
@@ -207,6 +208,7 @@ class GameActor(
                             waveText.remove()
                         } }
                 ))
+                progressIndicator.updateCurrentLevel(event.wave)
             }
         }
     }

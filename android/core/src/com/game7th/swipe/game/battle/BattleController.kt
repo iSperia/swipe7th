@@ -32,10 +32,16 @@ class BattleController(
 
     private val controllers = mutableListOf<ElementController>()
 
-    val bgIndex = 1 + Random.nextInt(3)
     private val backgroundTexture = context.gameContext.battleAtlas.findRegion("loc_beach_bg")
-//    private val foregroundTexture = context.gameContext.battleAtlas.findRegion("battle_fg", bgIndex)
-//    private val foregroundRatio = foregroundTexture.originalHeight / foregroundTexture.originalWidth.toFloat()
+    private val foregroundTexture = context.gameContext.battleAtlas.findRegion("loc_beach_fg")
+    val horizontLinePercent = 0.61f
+    val horizontLine = y + context.scale * 140f
+    val baseLine = y + 60f * context.scale
+    val backLine = y + 80f * context.scale
+    val middleLine = (baseLine + backLine) / 2f
+    val foregroundScale = y / 1000f
+    val backgroundScale = Gdx.graphics.height.toFloat() / backgroundTexture.packedHeight
+    val foregroundOutfit = (context.width - foregroundTexture.packedWidth * foregroundScale) / 2f
 
     val padding = 0.05f * Gdx.graphics.width
 
@@ -55,31 +61,31 @@ class BattleController(
     var speechLockStarted = 0f
     var isSpeechLocked = false
 
-//    init {
-//        controllers.add(object : ElementController(context, this, fgId++) {
-//            override fun render(batch: SpriteBatch, delta: Float) {
-//                batch.draw(foregroundTexture, 0f, y, context.width, context.width * foregroundRatio)
-//            }
-//        })
-//    }
 
     fun act(batch: SpriteBatch, delta: Float) {
-        val scaleNormalized = if (scale > 2f) 2f else if (scale < 0.5f) 0.5f else scale
-        val textureScale = h / backgroundTexture.packedHeight * (1 + 0.5f * (scaleNormalized - 0.5f) / 1.5f)
-        batch.draw(backgroundTexture, - (textureScale * backgroundTexture.packedWidth - context.width) / 2f, y, backgroundTexture.packedWidth * textureScale, backgroundTexture.packedHeight * textureScale)
-
-        controllers.sortedBy { it.id }.forEach { it.render(batch, delta) }
-
-        timePassed += delta * timeScale()
-        timeShift = max(timePassed, timeShift)
-
         if (scale != toScale) {
-            if (toScale / scale < 1.05f) {
+            if ((toScale / scale > 1f && toScale / scale < 1.05f) ||
+                    (toScale / scale < 1f) && toScale / scale > 0.95f) {
                 scale = toScale
             } else {
                 scale += (toScale - scale) * 0.03f
             }
         }
+
+        val scaleNormalized = if (scale > 1f) 1f else if (scale < 0.66f) 0.66f else scale
+        val textureScale = backgroundScale * scaleNormalized * 1.5f
+        batch.draw(backgroundTexture, (context.width - textureScale * backgroundTexture.packedWidth) / 2f, max(context.height - textureScale * backgroundTexture.packedHeight, horizontLine - textureScale * backgroundTexture.packedHeight * horizontLinePercent), backgroundTexture.packedWidth * textureScale, backgroundTexture.packedHeight * textureScale)
+
+        controllers.filter { it.zIndex < ElementController.Z_INDEX_HUD }.sortedBy { it.zIndex }.forEach { it.render(batch, delta) }
+
+        batch.draw(foregroundTexture, foregroundOutfit, 0f, foregroundTexture.packedWidth * foregroundScale, foregroundTexture.packedHeight * foregroundScale)
+
+        controllers.filter { it.zIndex >= ElementController.Z_INDEX_HUD }.forEach { it.render(batch, delta) }
+
+        timePassed += delta * timeScale()
+        timeShift = max(timePassed, timeShift)
+
+
 
         if (!isSpeechLocked) {
             actions.forEachIndexed { index, (timestamp, action) ->
@@ -378,7 +384,7 @@ class BattleController(
             FigureController(context,
                     this@BattleController,
                     event.personage.id,
-                    y + 45f * context.scale,
+                    baseLine,
                     event.appearStrategy,
                     context.gdxModel.figure(event.personage.skin)!!,
                     event.personage,
@@ -387,9 +393,11 @@ class BattleController(
                 controllers.add(it)
                 PersonageHealthbarController(context, this@BattleController, hudId++, it).let {
                     controllers.add(it)
+                    it.zIndex = ElementController.Z_INDEX_HUD
                 }
                 PersonageTickerController(context, this@BattleController, hudId++, it).let {
                     controllers.add(it)
+                    it.zIndex = ElementController.Z_INDEX_HUD
                 }
             }
             timeShift += 0.2f
@@ -408,33 +416,37 @@ class BattleController(
         val totalWidthLeftNotScaled = (leftFigures.sumByDouble { it.figureModel.scale * it.figureModel.width.toDouble() } + (maxLeft - leftFigures.size + 1) * 80f).toFloat()
         val totalWidthRightNotScaled = (rightFigures.sumByDouble { it.figureModel.scale * it.figureModel.width.toDouble() } + (maxRight - rightFigures.size + 1) * 80f).toFloat()
 
-        toScale = min((Gdx.graphics.height - y) / 384f, (Gdx.graphics.width - 4 * padding) / (totalWidthLeftNotScaled + totalWidthRightNotScaled))
-        if (scale == 1f) {
-            scale = toScale
-        }
+        val targetScale = (Gdx.graphics.width - 4 * padding) / (totalWidthLeftNotScaled + totalWidthRightNotScaled)
+        toScale = min(1f, max(0.5f, targetScale))
 
-        println("SSCALE $scale ${rightFigures.map { it.position }} $totalWidthRightNotScaled")
+        val needBackLine = targetScale < toScale
+        val overWidth =  2 * padding + toScale * (totalWidthLeftNotScaled + totalWidthRightNotScaled) - Gdx.graphics.width
+        val shift = max(0f, overWidth / (maxLeft + maxRight))
 
         var x = padding
-        (0..maxLeft).forEach { position ->
+        (0..maxLeft).forEachIndexed { index, position ->
             val figures = leftFigures.filter { it.position == position }
             figures.forEach { figure ->
-                figure.moveOrigin(x + toScale * figure.figureModel.scale * figure.figureModel.width / 2f, figure.originY, 1f)
-                x += toScale * figure.figureModel.width * figure.figureModel.scale
+                val figureY = if (!needBackLine) baseLine else if (leftFigures.size == 1) middleLine else if (index % 2 == 0) baseLine else backLine
+                figure.moveOrigin(x + toScale * figure.figureModel.scale * figure.figureModel.width / 2f, figureY, 1f)
+                x += toScale * figure.figureModel.width * figure.figureModel.scale - shift
+                figure.zIndex = 1000 * (1 - index % 2) + index
             }
             if (figures.isEmpty()) {
-                x += 80f * toScale
+                x += 80f * toScale - shift
             }
         }
         x = Gdx.graphics.width - padding
-        (0..maxRight).forEach { position ->
+        (0..maxRight).forEachIndexed { index, position ->
             val figures = rightFigures.filter { it.position == position }
             figures.forEach { figure ->
-                figure.moveOrigin( x - toScale * figure.figureModel.scale * figure.figureModel.width / 2f, figure.originY, 1f)
-                x -= toScale * figure.figureModel.width * figure.figureModel.scale
+                val figureY = if (!needBackLine) baseLine else if (rightFigures.size == 1) middleLine else if (index % 2 == 0) baseLine else backLine
+                figure.moveOrigin( x - toScale * figure.figureModel.scale * figure.figureModel.width / 2f, figureY, 1f)
+                x -= toScale * figure.figureModel.width * figure.figureModel.scale - shift
+                figure.zIndex = 1000 * (1 - index % 2) + index
             }
             if (figures.isEmpty()) {
-                x -= 80f * toScale
+                x -= 80f * toScale - shift
             }
         }
     }

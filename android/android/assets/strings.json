@@ -157,6 +157,8 @@
   "button_party": "Party",
   "button_forge": "Forge",
   "button_shop": "Shop",
-  "button_lab": "Lab"
+  "button_lab": "Lab",
+
+  "ui_combo": "COMBO"
 
 }

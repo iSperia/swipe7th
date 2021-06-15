@@ -2,6 +2,7 @@ package com.game7th.swipe.campaign.inventory
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
@@ -18,7 +19,7 @@ sealed class ItemViewAdapter {
 
     data class PotionItemAdater(val potion: FlaskItemFullInfoDto): ItemViewAdapter() {
         override fun getIcon() = "${potion.template.name.toLowerCase()}"
-        override fun getLabel() = "x${potion.stackSize}"
+        override fun getLabel() = "${potion.stackSize}"
         override fun getName() = potion.template.name
     }
 
@@ -54,38 +55,32 @@ class ItemView(
 
     val image: Image? = item.getIcon()?.let {
         Image(context.uiAtlas.findRegion(it) ?: context.battleAtlas.findRegion(it)).apply {
-            width = size * 0.9f
-            height = size * 0.9f
-            x = size * 0.05f
-            y = size * 0.05f
+            width = ITEM_SIZE * context.scale
+            height = ITEM_SIZE * context.scale
+            x = (size - width) / 2f
+            y = (size - height) / 2f
         }
     }
 
-    val lvlLabel = Label(item.getLabel(), Label.LabelStyle(context.font, Color.WHITE)).apply {
-        x = size * 0.5f
-        y = size * 0.1f
-        width = size / 3
-        height = size / 3
-        setAlignment(Align.bottomRight)
-        setFontScale(size / 3 / 36f)
-    }
-
-    val lvlLabelShadow = Label(item.getLabel(), Label.LabelStyle(context.font, Color.BLACK)).apply {
-        x = lvlLabel.x + 1f * context.scale
-        y = lvlLabel.y - 1f * context.scale
-        width = lvlLabel.width
-        height = lvlLabel.height
-        setAlignment(Align.bottomRight)
-        setFontScale(size / 3 / 36f)
+    val lvlLabel = Label(item.getLabel(), Label.LabelStyle(context.captionFont, Color.WHITE)).apply {
+        width = textSize * size
+        height = textSize * size
+        setAlignment(Align.bottomLeft)
+        setFontScale(textSize * size / 36f)
+        touchable = Touchable.disabled
     }
 
     init {
         addActor(bg)
         image?.let { addActor(it) }
-        addActor(lvlLabelShadow)
         addActor(lvlLabel)
 
         width = size
         height = size
+    }
+
+    companion object {
+        val ITEM_SIZE = 64f
+        val textSize = 0.4f
     }
 }

@@ -22,8 +22,8 @@ class PersonageTickerController(
                 oldAbility = tickAbility
             }
             val ticksLeft = figure.viewModel.stats.maxTick - figure.viewModel.stats.tick
-            batch.draw(texture, figure.x - context.scale * 15f, figure.y + (figure.figureModel.height * figure.figureModel.scale + 10f) * context.scale, context.scale * 30f, context.scale * 30f)
-            context.gameContext.font.draw(batch, ticksLeft.toString(), figure.x - context.scale * 12f, figure.y + (figure.figureModel.height * figure.figureModel.scale + 23f) * context.scale)
+            batch.draw(texture, figure.x - context.scale * 15f, figure.y + (figure.figureModel.height * figure.figureModel.scale + 10f) * context.scale * battle.scale, context.scale * 30f, context.scale * 30f)
+            context.gameContext.font.draw(batch, ticksLeft.toString(), figure.x - context.scale * 12f, figure.y + (figure.figureModel.height * figure.figureModel.scale + 23f) * battle.scale * context.scale)
         }
     }
 

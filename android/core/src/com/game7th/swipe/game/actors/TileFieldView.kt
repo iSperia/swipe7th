@@ -24,41 +24,25 @@ class TileFieldView(
     private val tileGroup = Group()
     private val tileEffectGroup = Group()
 
-    val tileSize = w / FIELD_WIDTH
+    val tileSize = (w - 4 * gameContext.scale) / FIELD_WIDTH
 
     private val shapeRenderer = ShapeRenderer()
 
     init {
         for (i in 0..4) {
             for (j in 0..4) {
-                tileBackgrounds.addActor(Image(gameContext.battleAtlas.findRegion(TILE_BG_REGION, i * 5 + j)).apply {
-                    val ax = tileSize * j
-                    val ay = tileSize * (FIELD_WIDTH - 1 - i)
-
-                    x = tileSize * j - tileSize / 2 + tileSize * Random.nextFloat()
-                    y = tileSize * (FIELD_WIDTH - 1 - i) - tileSize / 2 + tileSize * Random.nextFloat()
+                tileBackgrounds.addActor(Image(gameContext.battleAtlas.findRegion(TILE_BG_REGION)).apply {
+                    x = (tileSize + gameContext.scale) * j
+                    y = (tileSize + gameContext.scale) * (FIELD_WIDTH - 1 - i)
                     width = tileSize
                     height = tileSize
-                    setScale(1.5f + ((i+j)%3) * 0.5f)
-                    addAction(ParallelAction(
-                            MoveToAction().apply { setPosition(ax, ay); duration = 1.8f },
-                            ScaleToAction().apply { setScale(1f); duration = 1.6f }
-                    ))
                 })
 
                 tileForegrounds.addActor(Image(gameContext.battleAtlas.findRegion(TILE_FG_REGION)).apply {
-                    val ax = tileSize * j
-                    val ay = tileSize * (FIELD_WIDTH - 1 - i)
-
-                    x = tileSize * j - tileSize / 2 + tileSize * Random.nextFloat()
-                    y = tileSize * (FIELD_WIDTH - 1 - i) - tileSize / 2 + tileSize * Random.nextFloat()
+                    x = (tileSize + gameContext.scale) * j
+                    y = (tileSize + gameContext.scale) * (FIELD_WIDTH - 1 - i)
                     width = tileSize
                     height = tileSize
-                    setScale(1.5f + ((i+j)%3) * 0.5f)
-                    addAction(ParallelAction(
-                            MoveToAction().apply { setPosition(ax, ay); duration = 1.8f },
-                            ScaleToAction().apply { setScale(1f); duration = 1.6f }
-                    ))
                 })
             }
         }
@@ -234,7 +218,7 @@ class TileFieldView(
 
     companion object {
         const val TILE_BG_REGION = "tile_bg"
-        const val TILE_FG_REGION = "tilefg"
+        const val TILE_FG_REGION = "tile_fg"
         const val FIELD_WIDTH = 5
         const val MOVE_STEP_LENGTH = 0.025f
     }

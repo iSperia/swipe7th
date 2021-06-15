@@ -34,13 +34,13 @@
     {
       "name": "prince",
       "atlas": "prince",
-      "height": 670,
-      "width": 480,
-      "scale": 0.3,
+      "height": 752,
+      "width": 764,
+      "scale": 0.5,
       "body": "body_prince",
       "source_width": 960,
       "source_height": 960,
-      "anchor_x": 505,
+      "anchor_x": 480,
       "poses": [
         {"name": "attack", "start":  1, "end": 34, "triggers": [24]},
         {"name": "damage", "start":  1, "end": 10, "sound":  "damage_human_male"},
@@ -59,7 +59,7 @@
           "trigger": 38,
           "width": 480,
           "height": 120,
-          "scale": 2
+          "scale": 3.3
         }}
       ]
     },
@@ -132,7 +132,7 @@
       "atlas": "dryad",
       "height": 230,
       "width": 146,
-      "scale": 0.75,
+      "scale": 2,
       "body": "dryad_body",
       "source_width": 512,
       "source_height": 512,
@@ -159,7 +159,7 @@
       "atlas": "dryad_queen",
       "height": 230,
       "width": 146,
-      "scale": 0.75,
+      "scale": 1.2,
       "body": "dryad_queen_body",
       "source_width": 512,
       "source_height": 512,
@@ -187,7 +187,7 @@
       "atlas": "slime",
       "height": 94,
       "width": 100,
-      "scale": 1,
+      "scale": 2,
       "body": "slime_body",
       "source_width": 512,
       "source_height": 512,
@@ -208,7 +208,7 @@
       "atlas": "arachnid_small",
       "height": 180,
       "width": 220,
-      "scale": 0.7,
+      "scale": 1.1,
       "body": "arachnid_small_body",
       "source_width": 400,
       "source_height": 300,
@@ -226,9 +226,9 @@
     {
       "name": "slime_armored",
       "atlas": "slime_armored",
-      "height": 94,
-      "width": 100,
-      "scale": 1.1,
+      "height": 103,
+      "width": 122,
+      "scale": 2.8,
       "body": "slime_armored_body",
       "source_width": 512,
       "source_height": 512,
@@ -249,7 +249,7 @@
       "atlas": "slime_boss",
       "height": 250,
       "width": 220,
-      "scale": 1.2,
+      "scale": 1.9,
       "body": "slime_boss",
       "source_width": 512,
       "source_height": 512,
@@ -275,13 +275,13 @@
     {
       "name": "slime_red",
       "atlas": "slime_red",
-      "height": 94,
-      "width": 100,
-      "scale": 1,
+      "height": 99,
+      "width": 118,
+      "scale": 2.8,
       "body": "slime_red_body",
       "source_width": 512,
       "source_height": 512,
-      "anchor_x": 256,
+      "anchor_x": 257,
       "poses": [
         {"name":  "attack", "start":  1, "end":  35, "triggers": [23]},
         {"name":  "damage", "start":  54, "end":  65, "sound":  "monster_damage"},
@@ -317,14 +317,14 @@
     {
       "name": "bhastuse_jolly",
       "atlas": "bhastuse_jolly",
-      "scale": 1,
+      "scale": 2,
       "dependencies": ["slime_red", "slime_armored", "slime_boss"],
       "height": 210,
-      "width": 120,
+      "width": 200,
       "body": "bhastuse_jolly_body",
       "source_width": 512,
       "source_height": 512,
-      "anchor_x": 256,
+      "anchor_x": 241,
       "poses": [
         {"name":  "attack", "start":  1, "end":  18, "triggers": [14]},
         {"name":  "damage", "start":  19, "end":  29, "sound":  "damage_human_male"},
@@ -393,7 +393,8 @@
       "sound": "sound_heal",
       "trigger": 28,
       "height": 144,
-      "width": 144
+      "width": 144,
+      "scale": 2
     }
   ]
 }

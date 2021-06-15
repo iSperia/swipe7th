@@ -15,21 +15,16 @@ class BoosterNodeView(
         private val callback: (FlaskItemFullInfoDto) -> Unit
 ): Group() {
 
-    val background = Image(context.battleAtlas.findRegion("flask_bg")).apply {
+    val background = Image(context.uiAtlas.findRegion("inventory_bg")).apply {
         width = size
         height = size
     }
     var flaskStackView: ItemView? = null
-    val foreground = Image(context.battleAtlas.findRegion("flask_fg")).apply {
-        width = size
-        height = size
-        touchable = Touchable.disabled
-    }
 
     fun applyFlask(flask: FlaskItemFullInfoDto) {
         flaskStackView?.let { it.remove() }
         val itemViewSize = size * 0.76f
-        flaskStackView = ItemView(context, ItemViewAdapter.PotionItemAdater(flask), false, size * 0.8f).apply {
+        flaskStackView = ItemView(context, ItemViewAdapter.PotionItemAdater(flask), false, 52f * context.scale).apply {
             x = (size - itemViewSize) / 2f
             y = (size - itemViewSize) / 2f
         }
@@ -39,6 +34,5 @@ class BoosterNodeView(
 
     init {
         addActor(background)
-        addActor(foreground)
     }
 }

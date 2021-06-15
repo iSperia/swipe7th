@@ -36,7 +36,7 @@ class FigureController(
 
     var originX: Float = 0f
 
-    val originY: Float = y
+    var originY: Float = y
 
     var x = originX
     var y = originY
@@ -144,6 +144,7 @@ class FigureController(
         val needFastMove = originX > 0f
 
         originX = targetX
+        originY = targetY
 
         if (needFastMove) {
             move(originX, targetY, duration)
@@ -155,6 +156,9 @@ class FigureController(
                 x = originX
                 fromX = originX
                 this.targetX = originX
+                fromY = originY
+                this.targetY = originY
+                y = originY
             }
         }
     }

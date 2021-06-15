@@ -9,7 +9,13 @@ abstract class ElementController(
         val id: Int
 ) {
 
+    var zIndex = 10000
+
     abstract fun render(batch: SpriteBatch, delta: Float)
 
     open fun dispose() {}
+
+    companion object {
+        val Z_INDEX_HUD = 100000
+    }
 }

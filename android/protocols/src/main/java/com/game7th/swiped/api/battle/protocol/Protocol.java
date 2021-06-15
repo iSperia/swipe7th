@@ -588,6 +588,10 @@ public final class Protocol {
        * <code>DEFEAT = 1023;</code>
        */
       DEFEAT(1023),
+      /**
+       * <code>WISDOM_UPDATE = 1024;</code>
+       */
+      WISDOM_UPDATE(1024),
       UNRECOGNIZED(-1),
       ;
 
@@ -707,6 +711,10 @@ public final class Protocol {
        * <code>DEFEAT = 1023;</code>
        */
       public static final int DEFEAT_VALUE = 1023;
+      /**
+       * <code>WISDOM_UPDATE = 1024;</code>
+       */
+      public static final int WISDOM_UPDATE_VALUE = 1024;
 
 
       public final int getNumber() {
@@ -756,6 +764,7 @@ public final class Protocol {
           case 1021: return FLASK_CONSUMED;
           case 1022: return HEARTBEAT_RESPONSE;
           case 1023: return DEFEAT;
+          case 1024: return WISDOM_UPDATE;
           default: return null;
         }
       }
@@ -8952,7 +8961,7 @@ public final class Protocol {
   static {
     java.lang.String[] descriptorData = {
       "\n\016protocol.proto\022&com.game7th.swiped.api" +
-      ".battle.protocol\"\260\023\n\rBattleMessage\022\014\n\004ty" +
+      ".battle.protocol\"\304\023\n\rBattleMessage\022\014\n\004ty" +
       "pe\030\001 \001(\005\022W\n\014message_type\030\002 \001(\0162A.com.gam" +
       "e7th.swiped.api.battle.protocol.BattleMe" +
       "ssage.MessageType\022\n\n\002dx\030\003 \001(\005\022\n\n\002dy\030\004 \001(" +
@@ -9000,7 +9009,7 @@ public final class Protocol {
       "\022\020\n\010max_tick\030\016 \001(\005\022\024\n\014tick_ability\030\017 \001(\t" +
       "\022\022\n\nis_stunned\030\020 \001(\010\022\021\n\tis_frozen\030\021 \001(\010\032" +
       "=\n\rSpeechMessage\022\020\n\010portrait\030\001 \001(\t\022\014\n\004te" +
-      "xt\030\002 \001(\t\022\014\n\004name\030\003 \001(\t\"\252\004\n\013MessageType\022\t",
+      "xt\030\002 \001(\t\022\014\n\004name\030\003 \001(\t\"\276\004\n\013MessageType\022\t",
       "\n\005SWIPE\020\000\022\t\n\005READY\020\001\022\013\n\007CONCEDE\020\002\022\t\n\005FLA" +
       "SK\020\003\022\r\n\tHEARTBEAT\020\004\022\020\n\013CREATE_TILE\020\350\007\022\021\n" +
       "\014SWIPE_MOTION\020\351\007\022\021\n\014COMBO_UPDATE\020\352\007\022\020\n\013U" +
@@ -9014,7 +9023,8 @@ public final class Protocol {
       "E_PERSONAGE\020\370\007\022\r\n\010NEW_WAVE\020\371\007\022\020\n\013SHOW_SP" +
       "EECH\020\372\007\022\014\n\007VICTORY\020\373\007\022\021\n\014BATTLE_READY\020\374\007" +
       "\022\023\n\016FLASK_CONSUMED\020\375\007\022\027\n\022HEARTBEAT_RESPO" +
-      "NSE\020\376\007\022\013\n\006DEFEAT\020\377\007b\006proto3"
+      "NSE\020\376\007\022\013\n\006DEFEAT\020\377\007\022\022\n\rWISDOM_UPDATE\020\200\010b" +
+      "\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

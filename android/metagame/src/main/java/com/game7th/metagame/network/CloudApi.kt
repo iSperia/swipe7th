@@ -271,6 +271,7 @@ class CloudApi(
                     }
                     Protocol.BattleMessage.MessageType.VICTORY -> BattleEvent.VictoryEvent
                     Protocol.BattleMessage.MessageType.DEFEAT -> BattleEvent.DefeatEvent
+                    Protocol.BattleMessage.MessageType.WISDOM_UPDATE -> BattleEvent.WisdomUpdateEvent("", message.id)
                     else -> null
                 }
                 event?.let { event ->
