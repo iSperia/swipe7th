@@ -19,7 +19,7 @@ dependencies {
 android {
     signingConfigs {
         release {
-            storeFile file('C:\\Users\\User\\Documents\\swiped.keystore')
+            storeFile file('/Users/iSperia/Documents/swiped.keystore')
             storePassword 'game7thGame7th'
             keyAlias 'gladiator'
             keyPassword 'game7thGame7th'
