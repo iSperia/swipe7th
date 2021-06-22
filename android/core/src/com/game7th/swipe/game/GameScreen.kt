@@ -171,7 +171,7 @@ class GameScreen(game: SwipeGameGdx,
                 it.effect?.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
                 it.effect?.atlas?.let { gdxModel.figure(it) }?.let { loadResources(it) }
             }
-            gdxFigure.poses.forEach {
+            gdxFigure.poses?.forEach {
                 it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
             }
         }

@@ -9,13 +9,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.game.GameContextWrapper
+import com.game7th.swipe.game.battle.model.AttackGdxModel
 import com.game7th.swipe.game.battle.model.FigureGdxModel
 import com.game7th.swipe.game.battle.model.GdxAttackType
+import com.game7th.swipe.game.battle.model.GdxRenderType
 import com.game7th.swiped.api.battle.BattleEvent
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.random.Random
 
 /**
  * GDX graph controller for battle
@@ -169,11 +170,12 @@ class BattleController(
                     var lastSum = 0f
                     (0..event.target).forEach { positionIndex ->
                         val figure = controllers.filter { it is FigureController && it.flipped == figure.flipped && it.position == positionIndex }.firstOrNull() as? FigureController
-                        lastSum = (figure?.let { it.figureModel.scale * it.figureModel.width * scale } ?: (80f * scale))
+                        lastSum = (figure?.let { it.figureModel.scale * it.figureModel.width * scale }
+                                ?: (80f * scale))
                         targetPosition += flipFactor * lastSum
                     }
                     targetPosition -= flipFactor * lastSum / 2f
-                    moveAndPunch(gdxModel, figure, targetPosition)
+                    moveAndPunch(gdxModel, gdxModel.attacks[event.attackIndex], figure, targetPosition)
                 }
             }
             Unit
@@ -224,7 +226,15 @@ class BattleController(
                         event.damage,
                         Color.RED
                 )
-                figure.switchPose(FigurePose.POSE_DAMAGE)
+                when (figure.figureModel.render) {
+                    GdxRenderType.SEQUENCE -> {
+                        figure.switchPose("damage")
+                    }
+                    GdxRenderType.SPINE -> {
+                        figure.switchPose("Damage")
+                        timeShift += 0.2f
+                    }
+                }
                 figure.viewModel = event.personage
                 controllers.add(controller)
             }
@@ -241,32 +251,49 @@ class BattleController(
                     when (attack.attackType) {
                         GdxAttackType.MOVE_AND_PUNCH -> {
                             findFigure(event.targets.firstOrNull()?.id)?.let { targetFigure ->
-                                val tox = targetFigure.originX - (if (figure.flipped) -1f else 1f) * 70f * scale
+                                val tox = targetFigure.originX - (if (figure.flipped) -1f else 1f) * figure.figureModel.width * figure.figureModel.scale * 0.5f * scale
 
-                                moveAndPunch(figureGdxModel, figure, tox)
+                                moveAndPunch(figureGdxModel, figureGdxModel.attacks[event.attackIndex], figure, tox)
                             }
                         }
                         GdxAttackType.ATTACK_IN_PLACE -> {
-                            val attackPose = figureGdxModel.poses.first { it.name == "attack" }
-                            val attackDuration = (attackPose.end - attackPose.start) * FRAMERATE
-                            var triggerDuration = attackPose.triggers?.firstOrNull()?.let { (it - attackPose.start) * FRAMERATE }
-                                    ?: attackDuration
+                            val attackModel = figureGdxModel.attacks[event.attackIndex]
+                            when (figureGdxModel.render) {
+                                GdxRenderType.SPINE -> {
+                                    val pose = attackModel.pose
+                                    pose?.let { pose ->
+                                        scheduledActions.add(Pair(timeShift) {
+                                            figure.switchPose(pose)
+                                        })
+                                        timeShift += attack.trigger!!
 
-                            attack.effect?.let { effect ->
-                                triggerDuration = effect.trigger * FRAMERATE
-                                scheduledActions.add(Pair(timeShift) {
-                                    controllers.add(EffectController(context, this@BattleController, effectId++, figure, effect))
-                                })
+                                    }
+                                }
+                                GdxRenderType.SEQUENCE -> {
+                                    val pose = figureGdxModel.poses?.firstOrNull { it.name == attackModel.pose }
+                                    pose?.let { pose ->
+                                        val attackDuration = (pose.end - pose.start) * FRAMERATE
+                                        var triggerDuration = pose.triggers?.firstOrNull()?.let { (it - pose.start) * FRAMERATE }
+                                                ?: attackDuration
+
+                                        attack.effect?.let { effect ->
+                                            triggerDuration = effect.trigger * FRAMERATE
+                                            scheduledActions.add(Pair(timeShift) {
+                                                controllers.add(EffectController(context, this@BattleController, effectId++, figure, effect))
+                                            })
+                                        }
+
+                                        scheduledActions.add(Pair(timeShift) {
+                                            figure.switchPose(pose.name)
+                                        })
+                                        timeShift += triggerDuration
+                                    }
+                                }
                             }
-
-                            scheduledActions.add(Pair(timeShift) {
-                                figure.switchPose(FigurePose.values().firstOrNull { it.poseName == attack.pose } ?: FigurePose.POSE_ATTACK )
-                            })
-                            timeShift += triggerDuration
                         }
                         GdxAttackType.AOE_STEPPED_GENERATOR -> {
                             attack.effect?.let { effect ->
-                                val attackPose = figureGdxModel.poses.first { it.name == poseName}
+                                val attackPose = figureGdxModel.poses!!.first { it.name == poseName }
                                 val attackDuration = (attackPose.end - attackPose.start) * FRAMERATE
                                 val attackTriggerDuration = attackPose.triggers?.firstOrNull()?.let { (it - attackPose.start) * FRAMERATE }
                                         ?: attackDuration
@@ -278,7 +305,7 @@ class BattleController(
                                         ?: Gdx.graphics.width.toFloat()) / (scale * (effect.step
                                         ?: 1))
                                 scheduledActions.add(Pair(timeShift) {
-                                    figure.switchPose(FigurePose.values().first {it.poseName == poseName})
+                                    figure.switchPose(poseName)
                                 })
                                 scheduledActions.add(Pair(timeShift + attackTriggerDuration) {
                                     SteppedGeneratorEffectController(context, this, effectId++, figure.x + 70f * scale * (if (figure.flipped) -1f else 1f), figure.originY,
@@ -291,13 +318,13 @@ class BattleController(
                         GdxAttackType.BOW_STRIKE -> {
                             attack.effect?.let { effect ->
                                 val targets = event.targets.map { findFigure(it.id) }
-                                val attackPose = figureGdxModel.poses.first { it.name == "attack" }
+                                val attackPose = figureGdxModel.poses!!.first { it.name == "attack" }
                                 val attackDuration = (attackPose.end - attackPose.start) * FRAMERATE
                                 val attackTriggerDuration = attackPose.triggers?.firstOrNull()?.let { (it - attackPose.start) * FRAMERATE }
                                         ?: attackDuration
                                 val triggerDuration = effect.trigger * FRAMERATE
                                 scheduledActions.add(Pair(timeShift) {
-                                    figure.switchPose(FigurePose.POSE_ATTACK)
+                                    figure.switchPose("attack")
                                 })
                                 scheduledActions.add(Pair(timeShift + attackTriggerDuration) {
                                     targets.forEach {
@@ -313,22 +340,41 @@ class BattleController(
         }
     }
 
-    private fun moveAndPunch(figureGdxModel: FigureGdxModel, figure: FigureController, tox: Float) {
-        val attackPose = figureGdxModel.poses.first { it.name == "attack" }
-        val attackDuration = (attackPose.end - attackPose.start) * FRAMERATE
-        val triggerDuration = attackPose.triggers?.firstOrNull()?.let { (it - attackPose.start) * FRAMERATE }
-                ?: attackDuration
+    private fun moveAndPunch(figureGdxModel: FigureGdxModel, attack: AttackGdxModel, figure: FigureController, tox: Float) {
 
-        scheduledActions.add(Pair(timeShift) {
-            figure.move(tox, figure.originY, MOVE_DURATION)
-        })
-        scheduledActions.add(Pair(timeShift + MOVE_DURATION) {
-            figure.switchPose(FigurePose.POSE_ATTACK)
-        })
-        scheduledActions.add(Pair(timeShift + MOVE_DURATION + attackDuration) {
-            figure.move(figure.originX, figure.originY, MOVE_DURATION)
-        })
-        timeShift += MOVE_DURATION + triggerDuration
+        when (figureGdxModel.render) {
+            GdxRenderType.SEQUENCE -> {
+                val attackPose = figureGdxModel.poses!!.first { it.name == "attack" }
+                val attackDuration = (attackPose.end - attackPose.start) * FRAMERATE
+                val triggerDuration = attackPose.triggers?.firstOrNull()?.let { (it - attackPose.start) * FRAMERATE }
+                        ?: attackDuration
+
+                scheduledActions.add(Pair(timeShift) {
+                    figure.move(tox, figure.originY, MOVE_DURATION)
+                })
+                scheduledActions.add(Pair(timeShift + MOVE_DURATION) {
+                    figure.switchPose("attack")
+                })
+                scheduledActions.add(Pair(timeShift + MOVE_DURATION + attackDuration) {
+                    figure.move(figure.originX, figure.originY, MOVE_DURATION)
+                })
+                timeShift += MOVE_DURATION + triggerDuration
+            }
+            GdxRenderType.SPINE -> {
+                val trigger = attack.trigger!!
+                scheduledActions.add(Pair(timeShift) {
+                    figure.move(tox, figure.originY, MOVE_DURATION)
+                })
+                scheduledActions.add(Pair(timeShift + MOVE_DURATION) {
+                    figure.switchPose(attack.pose!!)
+                })
+                scheduledActions.add(Pair(timeShift + MOVE_DURATION + trigger) {
+                    figure.move(figure.originX, figure.originY, MOVE_DURATION)
+                })
+                timeShift += MOVE_DURATION + trigger
+            }
+        }
+
     }
 
     private fun schedulePersonageDeath(event: BattleEvent.PersonageDeadEvent) {
@@ -337,7 +383,7 @@ class BattleController(
 
         scheduledActions.add(Pair(timeShift) {
             figure?.let {
-                it.switchPose(FigurePose.POSE_DEATH)
+                it.switchPose("death")
                 it.isDead = true
             }
             controllers.firstOrNull { it is PersonageHealthbarController && it.figure.id == event.personage.id }?.let {
@@ -351,7 +397,8 @@ class BattleController(
             Unit
         })
         if (event.blocking) {
-            timeShift += (figure?.figureModel?.poses?.firstOrNull { it.name == "death" }?.let { (it.end - it.start) * FRAMERATE } ?: 0f)
+            timeShift += (figure?.figureModel?.poses?.firstOrNull { it.name == "death" }?.let { (it.end - it.start) * FRAMERATE }
+                    ?: 0f)
         }
     }
 
@@ -365,7 +412,8 @@ class BattleController(
         scheduledActions.add(Pair(timeShift) {
             speechLockStarted = timePassed
             isSpeechLocked = true
-            screen.showDialog(event.portrait, event.name, context.gameContext.texts[event.text] ?: event.text) {
+            screen.showDialog(event.portrait, event.name, context.gameContext.texts[event.text]
+                    ?: event.text) {
                 unlockSpeech()
             }
         })
@@ -408,7 +456,7 @@ class BattleController(
     private fun recalculateScale() {
         val figures = controllers.filterIsInstance<FigureController>()
         val leftFigures = figures.filter { !it.flipped }
-        val rightFigures = figures.filter { it.flipped && it.pose != FigurePose.POSE_DEATH }
+        val rightFigures = figures.filter { it.flipped && it.pose != "death" }
 
         val maxLeft = leftFigures.maxBy { it.position }?.position ?: 0
         val maxRight = rightFigures.maxBy { it.position }?.position ?: 0
@@ -420,7 +468,7 @@ class BattleController(
         toScale = min(1f, max(0.5f, targetScale))
 
         val needBackLine = targetScale < toScale
-        val overWidth =  2 * padding + toScale * (totalWidthLeftNotScaled + totalWidthRightNotScaled) - Gdx.graphics.width
+        val overWidth = 2 * padding + toScale * (totalWidthLeftNotScaled + totalWidthRightNotScaled) - Gdx.graphics.width
         val shift = max(0f, overWidth / (maxLeft + maxRight))
 
         var x = padding
@@ -441,7 +489,7 @@ class BattleController(
             val figures = rightFigures.filter { it.position == position }
             figures.forEach { figure ->
                 val figureY = if (!needBackLine) baseLine else if (rightFigures.size == 1) middleLine else if (index % 2 == 0) baseLine else backLine
-                figure.moveOrigin( x - toScale * figure.figureModel.scale * figure.figureModel.width / 2f, figureY, 1f)
+                figure.moveOrigin(x - toScale * figure.figureModel.scale * figure.figureModel.width / 2f, figureY, 1f)
                 x -= toScale * figure.figureModel.width * figure.figureModel.scale - shift
                 figure.zIndex = 1000 * (1 - index % 2) + index
             }
