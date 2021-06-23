@@ -44,7 +44,7 @@
       "source_height": 960,
       "anchor_x": 480,
       "attacks": [
-        {"attackType": "MOVE_AND_PUNCH", "pose": "Strike", "trigger": 1.3, "sound": "sword_strike"},
+        {"attackType": "MOVE_AND_PUNCH", "pose": "Strike", "trigger": 0.77, "length": 1, "sound": "sword_strike"},
         {"attackType": "ATTACK_IN_PLACE", "pose": "Ultimate", "trigger": 1, "attach_effect": {
           "name": "prince_ray",
           "atlas": "prince",
@@ -56,7 +56,7 @@
           "height": 120,
           "scale": 3.3
         }},
-        {"attackType": "ATTACK_IN_PLACE", "trigger": 0.5, "pose": "Buf"}
+        {"attackType": "ATTACK_IN_PLACE", "trigger": 0.5, "pose": "Buff"}
       ]
     },
     {

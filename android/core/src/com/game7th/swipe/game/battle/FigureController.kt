@@ -37,6 +37,7 @@ class FigureController(
     var timePoseStarted = 0f
     var timeMoveStarted = 0f
     var timeMoveFinished = 0f
+    var timeShift = 0f
 
     var fromX = x
     var fromY = y
@@ -44,7 +45,6 @@ class FigureController(
     var targetY = y
 
     val frozenTexture = context.gameContext.battleAtlas.findRegion("ailment_frozen")
-
 
     var atlas: TextureAtlas? = if (figureModel.render == GdxRenderType.SEQUENCE) context.atlases[figureModel.atlas]!! else null
     val allTextures = if (figureModel.render == GdxRenderType.SEQUENCE) filterAtlas(atlas!!, figureModel.body).toList() else null

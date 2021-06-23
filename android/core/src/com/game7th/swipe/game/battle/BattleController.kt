@@ -125,10 +125,10 @@ class BattleController(
                 scheduleCreatePersonage(event)
             }
             is BattleEvent.VictoryEvent -> {
-                scheduleFinalEventPropagation(event)
+                scheduleFinalEventPropagation(event, false)
             }
             is BattleEvent.DefeatEvent -> {
-                scheduleFinalEventPropagation(event)
+                scheduleFinalEventPropagation(event, true)
             }
             is BattleEvent.PersonageDeadEvent -> {
                 schedulePersonageDeath(event)
@@ -162,7 +162,7 @@ class BattleController(
     }
 
     private fun schedulePositionedAbility(event: BattleEvent.PersonagePositionedAbilityEvent) {
-        scheduledActions.add(Pair(timeShift) {
+        scheduledActions.add(Pair(max(timeShift, findFigure(event.source.id)?.timeShift ?: 0f)) {
             findFigure(event.source.id)?.let { figure ->
                 context.gdxModel.figure(event.source.skin)?.let { gdxModel ->
                     var targetPosition = if (figure.flipped) Gdx.graphics.width - padding else padding
@@ -183,7 +183,7 @@ class BattleController(
     }
 
     private fun scheduleAilment(event: BattleEvent.ShowAilmentEffect) {
-        scheduledActions.add(Pair(timeShift) {
+        scheduledActions.add(Pair(max(timeShift, findFigure(event.target)?.timeShift ?: 0f)) {
             context.gdxModel.ailments.firstOrNull { it.name == event.effectSkin }?.let { effect ->
                 effect.sound?.let { playSound(it) }
                 findFigure(event.target)?.let { figure ->
@@ -215,7 +215,7 @@ class BattleController(
     }
 
     private fun schedulePersonageDamage(event: BattleEvent.PersonageDamageEvent) {
-        scheduledActions.add(Pair(timeShift) {
+        scheduledActions.add(Pair(max(timeShift, findFigure(event.personage.id)?.timeShift ?: 0f)) {
             findFigure(event.personage.id)?.let { figure ->
                 val controller = DamagePopupController(
                         context,
@@ -262,7 +262,7 @@ class BattleController(
                                 GdxRenderType.SPINE -> {
                                     val pose = attackModel.pose
                                     pose?.let { pose ->
-                                        scheduledActions.add(Pair(timeShift) {
+                                        scheduledActions.add(Pair(max(timeShift, figure.timeShift)) {
                                             figure.switchPose(pose)
                                         })
                                         timeShift += attack.trigger!!
@@ -278,12 +278,12 @@ class BattleController(
 
                                         attack.effect?.let { effect ->
                                             triggerDuration = effect.trigger * FRAMERATE
-                                            scheduledActions.add(Pair(timeShift) {
+                                            scheduledActions.add(Pair(max(figure.timeShift, timeShift)) {
                                                 controllers.add(EffectController(context, this@BattleController, effectId++, figure, effect))
                                             })
                                         }
 
-                                        scheduledActions.add(Pair(timeShift) {
+                                        scheduledActions.add(Pair(max(figure.timeShift, timeShift)) {
                                             figure.switchPose(pose.name)
                                         })
                                         timeShift += triggerDuration
@@ -349,6 +349,8 @@ class BattleController(
                 val triggerDuration = attackPose.triggers?.firstOrNull()?.let { (it - attackPose.start) * FRAMERATE }
                         ?: attackDuration
 
+                val timeShift = max(timeShift, figure.timeShift)
+
                 scheduledActions.add(Pair(timeShift) {
                     figure.move(tox, figure.originY, MOVE_DURATION)
                 })
@@ -358,30 +360,32 @@ class BattleController(
                 scheduledActions.add(Pair(timeShift + MOVE_DURATION + attackDuration) {
                     figure.move(figure.originX, figure.originY, MOVE_DURATION)
                 })
-                timeShift += MOVE_DURATION + triggerDuration
+                this.timeShift += MOVE_DURATION + triggerDuration
             }
             GdxRenderType.SPINE -> {
                 val trigger = attack.trigger!!
+                val timeShift = max(timeShift, figure.timeShift)
+
                 scheduledActions.add(Pair(timeShift) {
                     figure.move(tox, figure.originY, MOVE_DURATION)
                 })
                 scheduledActions.add(Pair(timeShift + MOVE_DURATION) {
                     figure.switchPose(attack.pose!!)
                 })
-                scheduledActions.add(Pair(timeShift + MOVE_DURATION + trigger) {
+                scheduledActions.add(Pair(timeShift + MOVE_DURATION + attack.length!!) {
                     figure.move(figure.originX, figure.originY, MOVE_DURATION)
                 })
-                timeShift += MOVE_DURATION + trigger
+                figure.timeShift = timeShift + MOVE_DURATION * 2f + attack.length
+                this.timeShift += MOVE_DURATION + trigger
             }
         }
-
     }
 
     private fun schedulePersonageDeath(event: BattleEvent.PersonageDeadEvent) {
         println(">>> DEATH: $timePassed, $timeShift")
         val figure = findFigure(event.personage.id)
 
-        scheduledActions.add(Pair(timeShift) {
+        scheduledActions.add(Pair(max(timeShift, figure?.timeShift ?: 0f)) {
             figure?.let {
                 it.switchPose("death")
                 it.isDead = true
@@ -402,8 +406,13 @@ class BattleController(
         }
     }
 
-    private fun scheduleFinalEventPropagation(event: BattleEvent) {
+    private fun scheduleFinalEventPropagation(event: BattleEvent, flipped: Boolean) {
         scheduledActions.add(Pair(timeShift) {
+            controllers.mapNotNull { it as? FigureController }.filter { it.flipped == flipped }.forEach {
+                if (it.figureModel.render == GdxRenderType.SPINE) {
+                    it.switchPose("Win")
+                }
+            }
             endEventHandler(event)
         })
     }

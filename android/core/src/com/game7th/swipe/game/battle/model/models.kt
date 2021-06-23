@@ -29,7 +29,8 @@ data class AttackGdxModel(
         val effect: EffectGdxModel?,
         val attach_effect: EffectGdxModel?,
         val pose: String?,
-        val trigger: Float?
+        val trigger: Float?,
+        val length: Float?
 )
 
 data class FigureGdxModel(

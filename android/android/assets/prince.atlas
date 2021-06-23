@@ -258,147 +258,147 @@ Magic_VFX_00036
   index: -1
 Magic_VFX_00037
   rotate: false
-  xy: 962, 279
+  xy: 482, 811
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00000
   rotate: false
-  xy: 482, 811
+  xy: 722, 800
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00001
   rotate: false
-  xy: 722, 800
+  xy: 962, 759
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00002
   rotate: false
-  xy: 962, 759
+  xy: 1202, 699
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00003
   rotate: false
-  xy: 1202, 699
+  xy: 1442, 600
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00004
   rotate: false
-  xy: 1442, 600
+  xy: 1682, 600
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00005
   rotate: false
-  xy: 1682, 600
+  xy: 2, 583
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00006
   rotate: false
-  xy: 1682, 600
+  xy: 2, 583
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00007
   rotate: false
-  xy: 2, 583
+  xy: 242, 578
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00008
   rotate: false
-  xy: 242, 578
+  xy: 482, 571
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00009
   rotate: false
-  xy: 482, 571
+  xy: 722, 560
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00010
   rotate: false
-  xy: 722, 560
+  xy: 962, 519
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00011
   rotate: false
-  xy: 962, 519
+  xy: 1202, 459
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00012
   rotate: false
-  xy: 1202, 459
+  xy: 1442, 360
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00013
   rotate: false
-  xy: 1442, 360
+  xy: 1682, 360
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00014
   rotate: false
-  xy: 1682, 360
+  xy: 2, 343
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00015
   rotate: false
-  xy: 1682, 360
+  xy: 2, 343
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00016
   rotate: false
-  xy: 2, 343
+  xy: 242, 338
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00017
   rotate: false
-  xy: 242, 338
+  xy: 482, 331
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00018
   rotate: false
-  xy: 482, 331
+  xy: 722, 320
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
   index: -1
 Strike_VFX_00019
   rotate: false
-  xy: 722, 320
+  xy: 962, 279
   size: 238, 238
   orig: 238, 238
   offset: 0, 0
