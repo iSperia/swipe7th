@@ -1,0 +1,174 @@
+
+artifacts.png
+size: 2048, 256
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+BOOK_OF_BODY
+  rotate: false
+  xy: 1708, 156
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+BOOK_OF_REGENERATION
+  rotate: false
+  xy: 434, 156
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+BOOK_OF_WISDOM
+  rotate: false
+  xy: 1904, 156
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+BOOTS
+  rotate: false
+  xy: 1414, 156
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+BREASTPLATE
+  rotate: false
+  xy: 1512, 156
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+CLOAK
+  rotate: false
+  xy: 1022, 156
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+CONE_HAT
+  rotate: false
+  xy: 434, 58
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+HELMET
+  rotate: false
+  xy: 826, 156
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+HOOD
+  rotate: false
+  xy: 728, 156
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+LEGGINGS
+  rotate: false
+  xy: 2, 2
+  size: 92, 92
+  orig: 92, 92
+  offset: 0, 0
+  index: -1
+LUTE
+  rotate: false
+  xy: 1610, 156
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+MANTLE
+  rotate: false
+  xy: 924, 156
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+RING_OF_HEALTH
+  rotate: false
+  xy: 630, 156
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+RING_OF_MIND
+  rotate: false
+  xy: 532, 156
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+RING_OF_SPIRIT
+  rotate: false
+  xy: 1316, 156
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+SHIELD
+  rotate: false
+  xy: 1120, 156
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+SHOES
+  rotate: false
+  xy: 1218, 156
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+STAFF
+  rotate: false
+  xy: 1806, 156
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+life_flask_grand
+  rotate: false
+  xy: 310, 100
+  size: 122, 152
+  orig: 122, 152
+  offset: 0, 0
+  index: -1
+life_flask_greater
+  rotate: false
+  xy: 310, 100
+  size: 122, 152
+  orig: 122, 152
+  offset: 0, 0
+  index: -1
+life_flask_large
+  rotate: false
+  xy: 310, 100
+  size: 122, 152
+  orig: 122, 152
+  offset: 0, 0
+  index: -1
+life_flask_medium
+  rotate: false
+  xy: 160, 104
+  size: 148, 148
+  orig: 148, 148
+  offset: 0, 0
+  index: -1
+life_flask_small
+  rotate: false
+  xy: 160, 104
+  size: 148, 148
+  orig: 148, 148
+  offset: 0, 0
+  index: -1
+stun_flask
+  rotate: false
+  xy: 2, 96
+  size: 156, 156
+  orig: 156, 156
+  offset: 0, 0
+  index: -1

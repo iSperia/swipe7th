@@ -5,12 +5,12 @@ package com.game7th.swipe.game.battle
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.game7th.swipe.game.GameContextWrapper
+import com.game7th.swipe.game.BattleContext
 import com.game7th.swipe.game.battle.model.EffectGdxModel
 import kotlin.random.Random
 
 class SteppedGeneratorEffectController(
-        context: GameContextWrapper,
+        context: BattleContext,
         battle: BattleController,
         id: Int,
         private val x: Float,

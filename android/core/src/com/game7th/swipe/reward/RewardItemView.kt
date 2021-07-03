@@ -19,10 +19,10 @@ class RewardItemView(
 ): Group() {
 
     val texture = when (item.entryType) {
-        PackEntryType.CURRENCY -> context.uiAtlas.findRegion(CurrencyRewardView.getTextureName(Currency.valueOf(item.meta)))
-        PackEntryType.ITEM -> context.battleAtlas.findRegion("art_${item.meta}")
-        PackEntryType.FLASK -> context.battleAtlas.findRegion(item.meta.toLowerCase())
-        else -> context.uiAtlas.findRegion(CurrencyRewardView.getTextureName(Currency.GOLD))
+        PackEntryType.CURRENCY -> context.commonAtlas.findRegion(CurrencyRewardView.getTextureName(Currency.valueOf(item.meta)))
+        PackEntryType.ITEM -> context.itemsAtlas.findRegion("art_${item.meta}")
+        PackEntryType.FLASK -> context.itemsAtlas.findRegion(item.meta.toLowerCase())
+        else -> context.commonAtlas.findRegion(CurrencyRewardView.getTextureName(Currency.GOLD))
     }
 
     val itemImage = Image(texture).apply {
@@ -30,7 +30,7 @@ class RewardItemView(
         height = 60f * context.scale
     }
 
-    val label = Label("", Label.LabelStyle(context.font, Color.WHITE)).apply {
+    val label = Label("", Label.LabelStyle(context.regularFont, Color.WHITE)).apply {
         width = 30f * context.scale
         height = 30f * context.scale
         x = 30f * context.scale

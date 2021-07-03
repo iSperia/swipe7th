@@ -12,7 +12,7 @@ import com.game7th.swiped.api.InventoryItemFullInfoDto
 
 sealed class ItemViewAdapter {
     data class InventoryItemAdapter(val item: InventoryItemFullInfoDto): ItemViewAdapter() {
-        override fun getIcon() = "art_${item.template.name}"
+        override fun getIcon() = "${item.template.name}"
         override fun getLabel() = "${item.level}"
         override fun getName() = item.template.name
     }
@@ -47,14 +47,14 @@ class ItemView(
         val size: Float = context.scale * 60f
 ) : Group() {
 
-    val bg = Image(context.uiAtlas.findRegion("ui_item_bg")).apply {
+    val bg = Image(context.commonAtlas.findRegion("ui_item_bg")).apply {
         width = size
         height = size
         isVisible = backgroundShown
     }
 
     val image: Image? = item.getIcon()?.let {
-        Image(context.uiAtlas.findRegion(it) ?: context.battleAtlas.findRegion(it)).apply {
+        Image(context.itemsAtlas.findRegion(it)).apply {
             width = ITEM_SIZE * context.scale
             height = ITEM_SIZE * context.scale
             x = (size - width) / 2f

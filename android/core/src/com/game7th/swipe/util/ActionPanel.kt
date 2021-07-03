@@ -34,15 +34,15 @@ class ActionPanel(
 
             when (action) {
                 is InventoryAction.StringAction -> {
-                    val button = Button(Button.ButtonStyle(NinePatchDrawable(context.uiAtlas.createPatch("ui_button_simple")),
-                            NinePatchDrawable(context.uiAtlas.createPatch("ui_button_pressed")), null)).apply {
+                    val button = Button(Button.ButtonStyle(NinePatchDrawable(context.commonAtlas.createPatch("ui_button_simple")),
+                            NinePatchDrawable(context.commonAtlas.createPatch("ui_button_pressed")), null)).apply {
                         y = index * 40f * context.scale
                         width = buttonWidth
                         height = 30f * context.scale
                         onClick { equipper(index) }
                     }
 
-                    val label = Label(action.text, Label.LabelStyle(context.font, Color.BLACK)).apply {
+                    val label = Label(action.text, Label.LabelStyle(context.regularFont, Color.BLACK)).apply {
                         x = button.x
                         y = button.y
                         width = button.width
@@ -56,15 +56,15 @@ class ActionPanel(
                 }
 
                 is InventoryAction.IconAction -> {
-                    val button = Button(Button.ButtonStyle(NinePatchDrawable(context.uiAtlas.createPatch("ui_button_simple")),
-                            NinePatchDrawable(context.uiAtlas.createPatch("ui_button_pressed")), null)).apply {
+                    val button = Button(Button.ButtonStyle(NinePatchDrawable(context.commonAtlas.createPatch("ui_button_simple")),
+                            NinePatchDrawable(context.commonAtlas.createPatch("ui_button_pressed")), null)).apply {
                         y = index * 40f * context.scale
                         width = buttonWidth
                         height = 30f * context.scale
                         onClick { equipper(index) }
                     }
 
-                    val label = Label(action.text, Label.LabelStyle(context.font, Color.BLACK)).apply {
+                    val label = Label(action.text, Label.LabelStyle(context.regularFont, Color.BLACK)).apply {
                         x = button.x + 30f * context.scale
                         y = button.y
                         height = button.height
@@ -76,7 +76,7 @@ class ActionPanel(
                     addActor(button)
                     addActor(label)
 
-                    val actionIcon = Image(context.uiAtlas.findRegion(action.icon)).apply {
+                    val actionIcon = Image(context.commonAtlas.findRegion(action.icon)).apply {
                         x = button.x + 3f * context.scale
                         y = button.y + 3f * context.scale
                         width = 24f * context.scale
@@ -86,7 +86,7 @@ class ActionPanel(
                     addActor(actionIcon)
 
                     if (action.currency != null) {
-                        val currencyIcon = Image(context.uiAtlas.findRegion(CurrencyRewardView.getTextureName(action.currency))).apply {
+                        val currencyIcon = Image(context.commonAtlas.findRegion(CurrencyRewardView.getTextureName(action.currency))).apply {
                             x = label.x + label.width + 20f * context.scale
                             y = button.y
                             touchable = Touchable.disabled

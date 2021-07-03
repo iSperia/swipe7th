@@ -124,23 +124,21 @@ class SwipeGameGdx(
         height = Gdx.graphics.height.toFloat()
         scale = Gdx.graphics.width / 480f
 
-        val uiAtlas = TextureAtlas(Gdx.files.internal("ui.atlas"))
-        val battleAtlas = TextureAtlas(Gdx.files.internal("pack_0.atlas"))
-        val font = BitmapFont(Gdx.files.internal("cuprum.fnt"), Gdx.files.internal("cuprum_0.png"), false).apply {
+        val commonAtlas = TextureAtlas(Gdx.files.internal("textures/common.atlas"))
+        val itemsAtlas = TextureAtlas(Gdx.files.internal("textures/artifacts.atlas"))
+        val regularFont = BitmapFont(Gdx.files.internal("cuprum.fnt"), Gdx.files.internal("cuprum_0.png"), false).apply {
             color = Color.WHITE
         }
-        val font2 = BitmapFont(Gdx.files.internal("haymaker.fnt"), Gdx.files.internal("haymaker_0.png"), false).apply {
+        val captionFont = BitmapFont(Gdx.files.internal("haymaker.fnt"), Gdx.files.internal("haymaker_0.png"), false).apply {
             color = Color.WHITE
         }
-        val balanceFile = Gdx.files.internal("balance.json")
-        val balanceText = balanceFile.readString()
 
         val textsFile = Gdx.files.internal("strings-ru.json")
         val textsText = textsFile.readString()
         val token = object : TypeToken<Map<String, String>>() {}.type
         val texts = gson.fromJson<Map<String, String>>(textsText, token)
 
-        context = GdxGameContext(battleAtlas, uiAtlas, font, font2, scale, texts, storage)
+        context = GdxGameContext(commonAtlas, itemsAtlas, regularFont, captionFont, scale, texts, storage)
 
         Gdx.input.inputProcessor = multiplexer
 
@@ -158,7 +156,7 @@ class SwipeGameGdx(
     }
 
     private fun initializeGearService() {
-        gearService = GearServiceImpl(gson, storage, api)
+        gearService = GearServiceImpl(api)
     }
 
     private fun initializeActService() {
@@ -194,7 +192,7 @@ class SwipeGameGdx(
             timeStamp = TimeSource.Monotonic.markNow()
         }
         batch.begin()
-        context.font.draw(batch, "FPS: $frameRate", Gdx.graphics.width - 100f, Gdx.graphics.height - 20f)
+        context.regularFont.draw(batch, "FPS: $frameRate", Gdx.graphics.width - 100f, Gdx.graphics.height - 20f)
         batch.end()
     }
 

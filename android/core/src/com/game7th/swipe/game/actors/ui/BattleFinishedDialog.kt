@@ -31,14 +31,14 @@ class BattleFinishedDialog(
         callback: () -> Unit
         ) : Group() {
 
-    val background = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
+    val background = Image(context.commonAtlas.createPatch("ui_hor_panel")).apply {
         width = 400f * context.scale
         height = 300f * context.scale
         zIndex = 5
         addActor(this)
     }
 
-    val buttonClose = Image(context.uiAtlas.createPatch("ui_button_simple")).apply {
+    val buttonClose = Image(context.commonAtlas.createPatch("ui_button_simple")).apply {
         width = 120f * context.scale
         height = 20f * context.scale
         zIndex = 6
@@ -54,7 +54,7 @@ class BattleFinishedDialog(
         })
     }
 
-    val buttonCloseLabel = Label("CLOSE", Label.LabelStyle(context.font, Color.BLACK)).apply {
+    val buttonCloseLabel = Label("CLOSE", Label.LabelStyle(context.regularFont, Color.BLACK)).apply {
         width = 120f * context.scale
         height = 20f * context.scale
         zIndex = 7
@@ -66,7 +66,7 @@ class BattleFinishedDialog(
         touchable = Touchable.disabled
     }
 
-    val label = Label(text, Label.LabelStyle(context.font, Color.RED)).apply {
+    val label = Label(text, Label.LabelStyle(context.regularFont, Color.RED)).apply {
         setAlignment(Align.center)
         width = 400f * context.scale
         height = 25f * context.scale
@@ -83,7 +83,7 @@ class BattleFinishedDialog(
         touchable = Touchable.disabled
     }
 
-    val newLevelText = Label("", Label.LabelStyle(context.font, Color.YELLOW)).apply {
+    val newLevelText = Label("", Label.LabelStyle(context.regularFont, Color.YELLOW)).apply {
         width = 380f * context.scale
         height = 30f * context.scale
         setFontScale(context.scale)
@@ -95,7 +95,7 @@ class BattleFinishedDialog(
         isVisible = true
     }
 
-    val statsText = Label("", Label.LabelStyle(context.font, Color.BLUE)).apply {
+    val statsText = Label("", Label.LabelStyle(context.regularFont, Color.BLUE)).apply {
         width = 380f * context.scale
         height = 25f * context.scale
         setFontScale(0.75f * context.scale)

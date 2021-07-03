@@ -15,7 +15,7 @@ class BottomMenu(
     var onShopButtonPressed: (() -> Unit)? = null
     var onAlchButtonPressed: (() -> Unit)? = null
 
-    val bg = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
+    val bg = Image(context.commonAtlas.createPatch("ui_hor_panel")).apply {
         x = 0f
         y = 0f
         width = Gdx.graphics.width.toFloat()

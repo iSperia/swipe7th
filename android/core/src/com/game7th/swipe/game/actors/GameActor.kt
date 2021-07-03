@@ -2,8 +2,6 @@ package com.game7th.swipe.game.actors
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.ParticleEffect
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Touchable
@@ -15,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.campaign.dto.LocationConfig
 import com.game7th.metagame.inventory.GearService
-import com.game7th.swipe.GdxGameContext
+import com.game7th.swipe.game.BattleContext
 import com.game7th.swipe.game.GameScreen
 import com.game7th.swipe.game.actors.ui.BattleFinishedDialog
 import com.game7th.swiped.api.FlaskItemFullInfoDto
@@ -27,10 +25,9 @@ import kotlinx.coroutines.withContext
 import ktx.actors.onClick
 import ktx.actors.repeatForever
 import ktx.async.KtxAsync
-import kotlin.math.min
 
 class GameActor(
-        private val context: GdxGameContext,
+        private val context: BattleContext,
         private val gearService: GearService,
         private val locationConfig: LocationConfig,
         private val screen: GameScreen,
@@ -63,7 +60,7 @@ class GameActor(
         x = scaleIconCombo.x + 26f * context.scale
         y = scaleIconCombo.y + 70f * context.scale
     }
-    val comboCaption = Label(context.texts["ui_combo"], Label.LabelStyle(context.captionFont, Color.YELLOW)).apply {
+    val comboCaption = Label(context.gameContext.texts["ui_combo"], Label.LabelStyle(context.gameContext.captionFont, Color.YELLOW)).apply {
         x = scaleIconCombo.x
         y = scaleIconCombo.y + 9f * context.scale
         height = 12f * context.scale
@@ -72,7 +69,7 @@ class GameActor(
         setAlignment(Align.center)
         isVisible = false
     }
-    val comboValue = Label("X1", Label.LabelStyle(context.captionFont, Color.YELLOW)).apply {
+    val comboValue = Label("X1", Label.LabelStyle(context.gameContext.captionFont, Color.YELLOW)).apply {
         x = scaleIconCombo.x
         y = scaleIconCombo.y - 11f * context.scale
         height = 20f * context.scale
@@ -106,7 +103,7 @@ class GameActor(
 
     val tileFieldAreaHeight = 348f * context.scale
 
-    val pingLabel = Label("DEBUG", Label.LabelStyle(context.font, Color.BLUE)).apply {
+    val pingLabel = Label("DEBUG", Label.LabelStyle(context.gameContext.regularFont, Color.BLUE)).apply {
         x = 20f * context.scale
         y = Gdx.graphics.height - context.scale * 16f
         setFontScale(context.scale / 2f)
@@ -152,8 +149,7 @@ class GameActor(
     internal fun showDefeat() {
         tileField.touchable = Touchable.disabled
 
-//        Gdx.audio.newMusic(Gdx.files.internal("sounds/defeat.ogg")).let { it.play() }
-        BattleFinishedDialog(context, "Defeat", LocationCompleteResponseDto(RewardListDto(emptyList(), emptyList()), emptyList()), screen) {
+        BattleFinishedDialog(context.gameContext, "Defeat", LocationCompleteResponseDto(RewardListDto(emptyList(), emptyList()), emptyList()), screen) {
             finishCallback(false)
         }.apply {
             x = 40f * context.scale
@@ -167,7 +163,7 @@ class GameActor(
 //        Gdx.audio.newMusic(Gdx.files.internal("sounds/victory.ogg")).let { it.play() }
         KtxAsync.launch {
             val rewards = rewardCallback()
-            BattleFinishedDialog(context, "Victory", rewards, screen) {
+            BattleFinishedDialog(context.gameContext, "Victory", rewards, screen) {
                 finishCallback(true)
             }.apply {
                 x = 40f * context.scale
@@ -190,7 +186,7 @@ class GameActor(
                 scaleWisdom.applyProgress(event.wisdomProgress)
             }
             is BattleEvent.NewWaveEvent -> {
-                val waveText = Label("WAVE ${event.wave+1}", Label.LabelStyle(context.captionFont, Color.YELLOW)).apply {
+                val waveText = Label("WAVE ${event.wave+1}", Label.LabelStyle(context.gameContext.captionFont, Color.YELLOW)).apply {
                     y = Gdx.graphics.height / 2f - 50f * context.scale
                     x = 0f
                     width = 480f * context.scale
@@ -215,7 +211,7 @@ class GameActor(
 
     fun showFingerAnimation(dx: Int, dy: Int) {
         dismissFingerAnimation()
-        fingerActor = Image(context.uiAtlas.findRegion("tutorial_swipe_finger")).apply {
+        fingerActor = Image(context.gameContext.commonAtlas.findRegion("tutorial_swipe_finger")).apply {
             x = tileField.x + tileField.tileSize * 5 / 2f - 32f * context.scale
             y = tileField.y + tileField.tileSize * 5 / 2f - 32f * context.scale
             width = 64f * context.scale

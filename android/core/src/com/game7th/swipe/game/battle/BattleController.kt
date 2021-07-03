@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import com.game7th.swipe.BaseScreen
-import com.game7th.swipe.game.GameContextWrapper
+import com.game7th.swipe.game.BattleContext
 import com.game7th.swipe.game.battle.model.AttackGdxModel
 import com.game7th.swipe.game.battle.model.FigureGdxModel
 import com.game7th.swipe.game.battle.model.GdxAttackType
@@ -22,7 +22,7 @@ import kotlin.math.min
  * GDX graph controller for battle
  */
 class BattleController(
-        private val context: GameContextWrapper,
+        private val context: BattleContext,
         private val screen: BaseScreen,
         private val y: Float,
         private val sounds: Map<String, Sound>,
@@ -33,8 +33,8 @@ class BattleController(
 
     private val controllers = mutableListOf<ElementController>()
 
-    private val backgroundTexture = context.gameContext.battleAtlas.findRegion("loc_beach_bg")
-    private val foregroundTexture = context.gameContext.battleAtlas.findRegion("loc_beach_fg")
+    private val backgroundTexture = context.locationAtlas.findRegion("loc_beach_bg")
+    private val foregroundTexture = context.locationAtlas.findRegion("loc_beach_fg")
     val horizontLinePercent = 0.61f
     val horizontLine = y + context.scale * 140f
     val baseLine = y + 60f * context.scale
@@ -375,7 +375,7 @@ class BattleController(
                 scheduledActions.add(Pair(timeShift + MOVE_DURATION + attack.length!!) {
                     figure.move(figure.originX, figure.originY, MOVE_DURATION)
                 })
-                figure.timeShift = timeShift + MOVE_DURATION * 2f + attack.length
+                figure.timeShift = timeShift + MOVE_DURATION + attack.length
                 this.timeShift += MOVE_DURATION + trigger
             }
         }

@@ -4,10 +4,10 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
-import com.game7th.swipe.GdxGameContext
+import com.game7th.swipe.game.BattleContext
 
 class ScaleActor(
-        private val context: GdxGameContext,
+        private val context: BattleContext,
         private val textureName: String,
         private val numLines: Int
 ) : Group() {

@@ -20,13 +20,13 @@ class RewardCollectionView(
         private val titleResId: String
 ): Group() {
 
-    val background = Image(context.uiAtlas.findRegion("panel_modal")).apply {
+    val background = Image(context.commonAtlas.findRegion("panel_modal")).apply {
         width = Gdx.graphics.width.toFloat()
         height = Gdx.graphics.height.toFloat()
         onClick {  }
     }
 
-    val titleLabel = Label(context.texts[titleResId] ?: titleResId, Label.LabelStyle(context.font, Color.YELLOW)).apply {
+    val titleLabel = Label(context.texts[titleResId] ?: titleResId, Label.LabelStyle(context.regularFont, Color.YELLOW)).apply {
         y = Gdx.graphics.height * 0.6f
         x = 40f
         width = 400f * context.scale
@@ -36,7 +36,7 @@ class RewardCollectionView(
         touchable = Touchable.disabled
     }
 
-    val closeLabel = Label("Close", Label.LabelStyle(context.font, Color.WHITE)).apply {
+    val closeLabel = Label("Close", Label.LabelStyle(context.regularFont, Color.WHITE)).apply {
         y = Gdx.graphics.height * 0.3f
         x = 40f
         width = 400f * context.scale

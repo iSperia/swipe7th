@@ -1,0 +1,520 @@
+
+common.png
+size: 2048, 1024
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+alchemyadvanced
+  rotate: false
+  xy: 1301, 522
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+alchemybeginner
+  rotate: false
+  xy: 436, 24
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+chararcher
+  rotate: false
+  xy: 291, 24
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+charfreezemage
+  rotate: false
+  xy: 1446, 522
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+circle_blue
+  rotate: false
+  xy: 1591, 524
+  size: 138, 142
+  orig: 138, 142
+  offset: 0, 0
+  index: -1
+circle_orange
+  rotate: false
+  xy: 1005, 458
+  size: 138, 142
+  orig: 138, 142
+  offset: 0, 0
+  index: -1
+circle_red
+  rotate: false
+  xy: 1730, 524
+  size: 138, 142
+  orig: 138, 142
+  offset: 0, 0
+  index: -1
+dust0
+  rotate: false
+  xy: 1156, 667
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+dust1
+  rotate: false
+  xy: 1, 9
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+dust2
+  rotate: false
+  xy: 1156, 522
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+icon_alch
+  rotate: false
+  xy: 1069, 125
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+icon_forge
+  rotate: false
+  xy: 1004, 55
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+icon_gear
+  rotate: false
+  xy: 1134, 125
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+icon_gear_focused
+  rotate: false
+  xy: 1079, 320
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+icon_shop
+  rotate: false
+  xy: 1134, 190
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+icon_squads
+  rotate: false
+  xy: 1004, 185
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+inapp_crystals100
+  rotate: false
+  xy: 1591, 667
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+inapp_crystals1000
+  rotate: false
+  xy: 146, 9
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+inapp_crystals10000
+  rotate: false
+  xy: 514, 393
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+inapp_crystals500
+  rotate: false
+  xy: 860, 555
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+inapp_crystals5000
+  rotate: false
+  xy: 1736, 667
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+itemchest0
+  rotate: false
+  xy: 1, 154
+  size: 225, 225
+  orig: 225, 225
+  offset: 0, 0
+  index: -1
+lock
+  rotate: false
+  xy: 982, 323
+  size: 96, 134
+  orig: 96, 134
+  offset: 0, 0
+  index: -1
+panel_blue
+  rotate: false
+  xy: 1446, 667
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+panel_edge
+  rotate: false
+  xy: 659, 443
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+panel_modal
+  rotate: false
+  xy: 2025, 1006
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+shop_beginner_potion_pack
+  rotate: false
+  xy: 982, 250
+  size: 72, 72
+  orig: 72, 72
+  offset: 0, 0
+  index: -1
+star_grey
+  rotate: false
+  xy: 803, 829
+  size: 194, 193
+  orig: 194, 193
+  offset: 0, 0
+  index: -1
+star_yellow
+  rotate: false
+  xy: 514, 538
+  size: 194, 195
+  orig: 194, 195
+  offset: 0, 0
+  index: -1
+tutorial_swipe_finger
+  rotate: false
+  xy: 860, 700
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ui_attrs_tree
+  rotate: false
+  xy: 514, 734
+  size: 288, 288
+  orig: 288, 288
+  offset: 0, 0
+  index: -1
+ui_bg_alch
+  rotate: false
+  xy: 1, 380
+  size: 512, 288
+  orig: 512, 288
+  offset: 0, 0
+  index: -1
+ui_bg_forge
+  rotate: false
+  xy: 1, 669
+  size: 512, 353
+  orig: 512, 353
+  offset: 0, 0
+  index: -1
+ui_button_dust
+  rotate: false
+  xy: 1069, 60
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ui_button_levelup
+  rotate: false
+  xy: 1004, 120
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ui_button_pressed
+  rotate: false
+  xy: 1134, 92
+  size: 64, 32
+  split: 8, 9, 8, 8
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+ui_button_simple
+  rotate: false
+  xy: 1134, 59
+  size: 64, 32
+  split: 7, 8, 8, 8
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+ui_button_trans_pressed
+  rotate: false
+  xy: 1004, 38
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: -1
+ui_button_trans_simple
+  rotate: false
+  xy: 916, 538
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: -1
+ui_currency_dust
+  rotate: false
+  xy: 1069, 190
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ui_currency_gems
+  rotate: false
+  xy: 1120, 255
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ui_currency_gold
+  rotate: false
+  xy: 1055, 255
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ui_dialog
+  rotate: false
+  xy: 1301, 667
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+ui_exp_bar_bg
+  rotate: false
+  xy: 1904, 817
+  size: 96, 24
+  orig: 96, 24
+  offset: 0, 0
+  index: -1
+ui_exp_bar_fg
+  rotate: false
+  xy: 702, 13
+  size: 96, 24
+  orig: 96, 24
+  offset: 0, 0
+  index: -1
+ui_gold_panel
+  rotate: false
+  xy: 860, 536
+  size: 55, 18
+  orig: 55, 18
+  offset: 0, 0
+  index: -1
+ui_hor_panel
+  rotate: false
+  xy: 659, 460
+  size: 204, 62
+  split: 12, 11, 12, 12
+  orig: 204, 62
+  offset: 0, 0
+  index: -1
+ui_icon_vs
+  rotate: false
+  xy: 1079, 385
+  size: 72, 72
+  orig: 72, 72
+  offset: 0, 0
+  index: -1
+ui_item_bg
+  rotate: false
+  xy: 931, 5
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+ui_item_bg_body
+  rotate: false
+  xy: 832, 5
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+ui_item_bg_book
+  rotate: false
+  xy: 898, 5
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+ui_item_bg_boots
+  rotate: false
+  xy: 799, 5
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+ui_item_bg_hand
+  rotate: false
+  xy: 803, 747
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+ui_item_bg_hat
+  rotate: false
+  xy: 865, 5
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+ui_item_bg_ring
+  rotate: false
+  xy: 964, 5
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+ui_level_bg
+  rotate: false
+  xy: 803, 780
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+ui_portrait_fg
+  rotate: false
+  xy: 1904, 842
+  size: 120, 180
+  orig: 120, 180
+  offset: 0, 0
+  index: -1
+ui_portrait_fg_focused
+  rotate: false
+  xy: 581, 1
+  size: 120, 180
+  orig: 120, 180
+  offset: 0, 0
+  index: -1
+vp_arachnid_small
+  rotate: false
+  xy: 831, 249
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_bhastuse_jolly
+  rotate: false
+  xy: 709, 523
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_dryad
+  rotate: false
+  xy: 1300, 812
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_dryad_queen
+  rotate: false
+  xy: 529, 182
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_freeze_mage
+  rotate: false
+  xy: 1451, 812
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_personage_gladiator
+  rotate: false
+  xy: 853, 38
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_poison_archer
+  rotate: false
+  xy: 680, 249
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_prince
+  rotate: false
+  xy: 1753, 812
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_slime
+  rotate: false
+  xy: 1602, 812
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_slime_armored
+  rotate: false
+  xy: 1005, 601
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_slime_boss
+  rotate: false
+  xy: 227, 169
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_slime_father
+  rotate: false
+  xy: 998, 812
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_slime_mother
+  rotate: false
+  xy: 378, 169
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_slime_red
+  rotate: false
+  xy: 702, 38
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1
+vp_strange_figure
+  rotate: false
+  xy: 1149, 812
+  size: 150, 210
+  orig: 150, 210
+  offset: 0, 0
+  index: -1

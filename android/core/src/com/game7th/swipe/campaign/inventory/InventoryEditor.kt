@@ -23,7 +23,7 @@ class InventoryEditor(
         private val refresher: () -> Unit
 ) : Group() {
 
-    private val bg = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
+    private val bg = Image(context.commonAtlas.createPatch("ui_hor_panel")).apply {
         width = context.scale * 480f
         height = context.scale * 200f
     }
@@ -68,7 +68,7 @@ class InventoryEditor(
         bg.onClick { dismissDetailPanel() }
 
         textures.forEachIndexed { index, texture ->
-            val bg = Image(context.uiAtlas.findRegion(texture)).apply {
+            val bg = Image(context.commonAtlas.findRegion(texture)).apply {
                 x = if (index % 2 == 0) 0f else 60f * context.scale
                 y = (index / 2) * 60f * context.scale
                 width = 60f * context.scale

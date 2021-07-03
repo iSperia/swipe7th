@@ -43,6 +43,18 @@
       "source_width": 960,
       "source_height": 960,
       "anchor_x": 480,
+      "tiles": [
+        "tile_buff", "prince_strike", "prince_ray", "prince_concentration"
+      ],
+      "poses": [
+        {"name":  "Strike"},
+        {"name":  "Buff"},
+        {"name":  "Ultimate"},
+        {"name":  "Damage"},
+        {"name":  "Death"},
+        {"name": "idle"},
+        {"name": "idle_long"}
+      ],
       "attacks": [
         {"attackType": "MOVE_AND_PUNCH", "pose": "Strike", "trigger": 0.77, "length": 1, "sound": "sword_strike"},
         {"attackType": "ATTACK_IN_PLACE", "pose": "Ultimate", "trigger": 1, "attach_effect": {

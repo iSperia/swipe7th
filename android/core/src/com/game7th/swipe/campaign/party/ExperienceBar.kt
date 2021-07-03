@@ -29,12 +29,12 @@ class ExperienceBar(
 
     val padding = 0.08f * h
 
-    val bg = Image(context.uiAtlas.findRegion("ui_exp_bar_bg")).apply {
+    val bg = Image(context.commonAtlas.findRegion("ui_exp_bar_bg")).apply {
         width = w
         height = h
     }
 
-    val fg = Image(context.uiAtlas.findRegion("ui_exp_bar_fg")).apply {
+    val fg = Image(context.commonAtlas.findRegion("ui_exp_bar_fg")).apply {
         x = padding
         y = padding
         width = w - 2 * padding

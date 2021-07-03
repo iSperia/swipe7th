@@ -1,0 +1,515 @@
+
+model.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+slime_boss0002
+  rotate: false
+  xy: 512, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0004
+  rotate: false
+  xy: 1536, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0007
+  rotate: false
+  xy: 1536, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0012
+  rotate: false
+  xy: 1024, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0015
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0025
+  rotate: false
+  xy: 1536, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0023
+  rotate: false
+  xy: 1536, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0028
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0001
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0020
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0021
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0027
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0047
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0048
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0030
+  rotate: false
+  xy: 1536, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0033
+  rotate: false
+  xy: 512, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0036
+  rotate: false
+  xy: 0, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0038
+  rotate: false
+  xy: 1024, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0041
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0046
+  rotate: false
+  xy: 512, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0049
+  rotate: false
+  xy: 0, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0051
+  rotate: false
+  xy: 1024, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0054
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+
+model2.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+slime_boss0006
+  rotate: false
+  xy: 512, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0009
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0011
+  rotate: false
+  xy: 1024, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0014
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0017
+  rotate: false
+  xy: 0, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0019
+  rotate: false
+  xy: 1024, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0022
+  rotate: false
+  xy: 512, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0026
+  rotate: false
+  xy: 512, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0024
+  rotate: false
+  xy: 1024, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0032
+  rotate: false
+  xy: 512, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0035
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0037
+  rotate: false
+  xy: 1536, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0040
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0043
+  rotate: false
+  xy: 0, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0045
+  rotate: false
+  xy: 1536, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0050
+  rotate: false
+  xy: 1536, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0053
+  rotate: false
+  xy: 1536, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+
+model3.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+slime_boss0003
+  rotate: false
+  xy: 0, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0005
+  rotate: false
+  xy: 1024, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0008
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0010
+  rotate: false
+  xy: 1536, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0013
+  rotate: false
+  xy: 1536, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0016
+  rotate: false
+  xy: 0, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0018
+  rotate: false
+  xy: 1024, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0029
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0031
+  rotate: false
+  xy: 1536, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0034
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0039
+  rotate: false
+  xy: 512, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0042
+  rotate: false
+  xy: 512, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0044
+  rotate: false
+  xy: 1024, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0052
+  rotate: false
+  xy: 512, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss0055
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+slime_boss_projectile0002
+  rotate: false
+  xy: 1632, 80
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+slime_boss_projectile0001
+  rotate: false
+  xy: 1632, 80
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+slime_boss_projectile0003
+  rotate: false
+  xy: 1536, 224
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+slime_boss_projectile0004
+  rotate: false
+  xy: 1536, 224
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+slime_boss_projectile0005
+  rotate: false
+  xy: 1632, 224
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+slime_boss_projectile0006
+  rotate: false
+  xy: 1632, 224
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+slime_boss_projectile0008
+  rotate: false
+  xy: 1632, 368
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+slime_boss_projectile0007
+  rotate: false
+  xy: 1632, 368
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+slime_boss_projectile0010
+  rotate: false
+  xy: 1728, 368
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+slime_boss_projectile0009
+  rotate: false
+  xy: 1728, 368
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+slime_boss_projectile0012
+  rotate: false
+  xy: 1728, 224
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+slime_boss_projectile0011
+  rotate: false
+  xy: 1728, 224
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+slime_boss_projectile0013
+  rotate: false
+  xy: 1536, 80
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+slime_boss_projectile0014
+  rotate: false
+  xy: 1536, 80
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+slime_boss_projectile0016
+  rotate: false
+  xy: 1536, 368
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+slime_boss_projectile0015
+  rotate: false
+  xy: 1536, 368
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1

@@ -15,7 +15,7 @@ class PersonageShopPanel(
         private val equipper: (itemId: String, actionIndex: Int) -> Unit
 ): Group() {
 
-    val bg = Image(context.battleAtlas.findRegion("vp_${unitType.getSkin()}")).apply {
+    val bg = Image(context.commonAtlas.findRegion("vp_${unitType.getSkin()}")).apply {
         width = 220 * context.scale
         height = 310 * context.scale
     }

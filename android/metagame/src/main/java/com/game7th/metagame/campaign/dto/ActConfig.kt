@@ -12,7 +12,8 @@ data class LocationConfig(
         val x: Float,
         val y: Float,
         val unlock: List<Int>,
-        val waves: List<List<UnitConfig>> = mutableListOf()
+        val waves: List<List<UnitConfig>> = mutableListOf(),
+        val scene: String
 )
 
 data class ActConfig(

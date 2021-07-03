@@ -34,14 +34,14 @@ class ForgePanel(
         private val accountService: AccountService
 ) : Group() {
 
-    val dustIcon = Image(context.uiAtlas.findRegion("ui_currency_dust")).apply {
+    val dustIcon = Image(context.commonAtlas.findRegion("ui_currency_dust")).apply {
         x = 40f * context.scale
         y = (h - 10f - 24f) * context.scale
         width = 24f * context.scale
         height = 24f * context.scale
     }
 
-    val dustLabel = Label("?", Label.LabelStyle(context.font, Color.WHITE)).apply {
+    val dustLabel = Label("?", Label.LabelStyle(context.regularFont, Color.WHITE)).apply {
         x = 69f * context.scale
         y = dustIcon.y
         width = 72f * context.scale
@@ -60,7 +60,7 @@ class ForgePanel(
 
     var detailPanel: ItemDetailPanel? = null
 
-    val bg = Image(context.uiAtlas.findRegion("ui_bg_forge")).apply {
+    val bg = Image(context.commonAtlas.findRegion("ui_bg_forge")).apply {
         width = context.scale * 480f
         height = context.scale * h
     }

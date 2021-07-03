@@ -52,16 +52,19 @@ class GameScreen(game: SwipeGameGdx,
 
     lateinit var viewport: Viewport
 
-    lateinit var battleController: BattleController
+    var battleController: BattleController? = null
 
     lateinit var batch: SpriteBatch
+
+    lateinit var battleContext: BattleContext
 
     lateinit var processor: SimpleDirectionGestureDetector
 
     val gdxModel = Gson().fromJson<GdxModel>(Gdx.files.internal("figures.json").readString(), GdxModel::class.java)
 
-    lateinit var gameActor: GameActor
-    val atlases = mutableMapOf<String, TextureAtlas>()
+    var gameActor: GameActor? = null
+//    val atlases = mutableMapOf<String, TextureAtlas>()
+    val tiles = mutableMapOf<String, TextureAtlas>()
     val sounds = mutableMapOf<String, Sound>()
 
     lateinit var backgroundMusic: Music
@@ -96,45 +99,7 @@ class GameScreen(game: SwipeGameGdx,
 
             listenEvents()
 
-            val actConfig = actService.getActConfig(actId)
-            val locationConfig = actConfig.findNode(locationId)!!
-            gameActor = GameActor(
-                    game.context, game.gearService, locationConfig, this@GameScreen, this@GameScreen::usePotion, this@GameScreen::claimRewards) { _ ->
-                KtxAsync.launch {
-                    game.gearService.reloadData()
-                }
-                game.switchScreen(ActScreen(game, game.actService, actId, game.context, game.storage))
-            }
 
-            stage.addActor(gameActor)
-
-            game.multiplexer.addProcessor(stage)
-
-            val scale = game.context.scale
-            battleController = BattleController(GameContextWrapper(
-                    gameContext = game.context,
-                    scale = scale,
-                    gdxModel = gdxModel,
-                    width = Gdx.graphics.width.toFloat(),
-                    height = Gdx.graphics.height.toFloat(),
-                    atlases = atlases
-            ), this@GameScreen, 480f * context.scale, sounds) {
-                if (it is BattleEvent.VictoryEvent) {
-                    gameActor.showVictory()
-                    backgroundMusic.pause()
-                } else {
-                    gameActor.showDefeat()
-                    backgroundMusic.pause()
-                }
-            }
-
-            backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sb_chase.ogg")).apply {
-                volume = 0.5f
-                isLooping = true
-                play()
-            }
-
-            ready = true
         }
     }
 
@@ -144,7 +109,7 @@ class GameScreen(game: SwipeGameGdx,
                 dismissFocusView()
             }
             if (!gameEnded && !prevent) {
-                gameActor.tileField.finalizeActions()
+                gameActor?.tileField?.finalizeActions()
                 swipeFlow.emit(InputBattleEvent.SwipeBattleEvent(dx, dy))
             }
         }
@@ -158,21 +123,27 @@ class GameScreen(game: SwipeGameGdx,
                 override fun onDown() { processSwipe(0, 1, preventBottomSwipe) }
             })
 
-    private fun loadResources(gdxFigure: FigureGdxModel) {
+    private fun loadResources(gdxFigure: FigureGdxModel, atlases: MutableMap<String, TextureAtlas>) {
         if (!atlases.containsKey(gdxFigure.atlas)) {
-            atlases[gdxFigure.atlas] = TextureAtlas(Gdx.files.internal("${gdxFigure.name}.atlas"))
+            atlases[gdxFigure.atlas] = TextureAtlas(Gdx.files.internal("textures/personages/${gdxFigure.atlas}/model.atlas"))
             gdxFigure.dependencies?.let { dependencies ->
                 dependencies.forEach { dependencyFigure ->
-                    gdxModel.figures.firstOrNull { it.name == dependencyFigure }?.let { loadResources(it) }
+                    gdxModel.figures.firstOrNull { it.name == dependencyFigure }?.let { loadResources(it, atlases) }
                 }
             }
             gdxFigure.attacks.forEach {
                 it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
                 it.effect?.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
-                it.effect?.atlas?.let { gdxModel.figure(it) }?.let { loadResources(it) }
+                it.effect?.atlas?.let { gdxModel.figure(it) }?.let { loadResources(it, atlases) }
             }
             gdxFigure.poses?.forEach {
                 it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
+            }
+            Gdx.files.internal("textures/personages/${gdxFigure.name}/ui.atlas").let { handle ->
+                if (handle.exists()) {
+                    val uiAtlas = TextureAtlas(handle)
+                    gdxFigure.tiles?.forEach { tiles[it] = uiAtlas }
+                }
             }
         }
 
@@ -201,6 +172,7 @@ class GameScreen(game: SwipeGameGdx,
     @ExperimentalTime
     private fun listenEvents() {
         KtxAsync.launch {
+            val actConfig = actService.getActConfig(actId)
             launch {
                 repeat(1000) { i ->
                     if (isResoucesReady && !gameEnded) {
@@ -212,45 +184,83 @@ class GameScreen(game: SwipeGameGdx,
             }
             game.api.connectBattle(accountId, battleId, swipeFlow) {
                 println("S7TH GS: THREAD: ${Thread.currentThread().name}")
-                gameActor.processAction(it)
-                battleController.processEvent(it)
+                gameActor?.processAction(it)
+                battleController?.processEvent(it)
 
                 when (it) {
                     is BattleEvent.VictoryEvent -> onGameEnded(true)
                     is BattleEvent.DefeatEvent -> onGameEnded(false)
                     is BattleEvent.FlaskConsumedEvent -> {
                         gearService.reloadData()
-                        gameActor.refreshAlchemy()
+                        gameActor?.refreshAlchemy()
                     }
                     is BattleEvent.BattleReadyEvent -> {
-                        val resourceLoader = KtxAsync.async {
-                            atlases["ailments"] = TextureAtlas(Gdx.files.internal("ailments.atlas"))
+                        KtxAsync.launch {
+                            val atlases = mutableMapOf<String, TextureAtlas>()
+                            atlases["ailments"] = TextureAtlas(Gdx.files.internal("textures/ailments.atlas"))
                             listOf("wind").forEach {
                                 sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/$it.ogg"))
                             }
                             it.battleInfo.figures.forEach { figureName ->
                                 gdxModel.figures.firstOrNull { it.name == figureName }?.let {
-                                    loadResources(it)
+                                    loadResources(it, atlases)
                                 }
                             }
+
+                            val locationConfig = actConfig.findNode(locationId)!!
+                            val battleAtlas = TextureAtlas(Gdx.files.internal("textures/battle.atlas"))
+                            val locationAtlas = TextureAtlas(Gdx.files.internal("textures/locations/${locationConfig.scene}.atlas"))
+                            val scale = game.context.scale
+                            println("atlases: ${atlases.keys}")
+                            battleContext = BattleContext(
+                                gameContext = game.context,
+                                battleAtlas = battleAtlas,
+                                locationAtlas = locationAtlas,
+                                scale = scale,
+                                gdxModel = gdxModel,
+                                width = Gdx.graphics.width.toFloat(),
+                                height = Gdx.graphics.height.toFloat(),
+                                atlases = atlases,
+                                tiles = tiles
+                            )
+
+                            gameActor = GameActor(
+                                battleContext, game.gearService, locationConfig, this@GameScreen, this@GameScreen::usePotion, this@GameScreen::claimRewards) { _ ->
+                                KtxAsync.launch {
+                                    game.gearService.reloadData()
+                                }
+                                game.switchScreen(ActScreen(game, game.actService, actId, game.context, game.storage))
+                            }
+
+                            stage.addActor(gameActor)
+
+                            game.multiplexer.addProcessor(stage)
+
+                            battleController = BattleController(battleContext, this@GameScreen, 480f * context.scale, sounds) {
+                                if (it is BattleEvent.VictoryEvent) {
+                                    gameActor?.showVictory()
+                                    backgroundMusic.pause()
+                                } else {
+                                    gameActor?.showDefeat()
+                                    backgroundMusic.pause()
+                                }
+                            }
+
+                            backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sb_chase.ogg")).apply {
+                                volume = 0.5f
+                                isLooping = true
+                                play()
+                            }
+
+                            ready = true
+                            isResoucesReady = true
+                            swipeFlow.emit(InputBattleEvent.PlayerReadyEvent(accountId))
                         }
-                        resourceLoader.join()
-                        isResoucesReady = true
-                        swipeFlow.emit(InputBattleEvent.PlayerReadyEvent(accountId))
                     }
                     is BattleEvent.NewWaveEvent -> {
-                        T_A0L1()
-                        T_A0L3()
-                        T_A0L4()
-                        T_A0L5()
-                        T_A0L7()
-                        T_A0L8(it)
-                        T_A0L9(it)
-                        T_A0L11(it)
-                        T_A0L14(it)
                     }
                     is BattleEvent.HeartbeatResponse -> {
-                        gameActor.showPing(pingTimeMark.elapsedNow().inMilliseconds.toLong())
+                        gameActor?.showPing(pingTimeMark.elapsedNow().inMilliseconds.toLong())
                     }
                 }
             }
@@ -465,78 +475,6 @@ class GameScreen(game: SwipeGameGdx,
         }
     }
 
-    private fun T_A0L1() {
-        if (actId == "act_0" &&
-                locationId == 0 &&
-                TutorialKeys.tutorialsEnabled &&
-                storage.get(TutorialKeys.ACT1_FIRST_BATTLE_INTRO_SHOWN)?.toBoolean() != true &&
-                personage.level == 1 &&
-                personage.unit == UnitType.GLADIATOR.toString()) {
-            preventBottomSwipe = true
-            preventTopSwipe = true
-            preventLeftSwipe = true
-            preventRightSwipe = true
-
-            showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l1_fb_1"]!!) {
-                showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l1_fb_2"]!!) {
-                    showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l1_fb_3"]!!) {
-                        showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l1_fb_4"]!!) {
-                            showFocusView("ttr_a1l1_fb_5", calcLeftPersonageRect(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                showFocusView("ttr_a1l1_fb_6", calcRightPersonageRect(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                    showFocusView("ttr_a1l1_fb_7", calcLeftPersonageHpBarRect(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                        showFocusView("ttr_a1l1_fb_8", calcRightPersonageHpBarRect(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                            showFocusView("ttr_a1l1_fb_9", calcTileFieldRect(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                showFocusView("ttr_a1l1_fb_10", calcTileRect(7), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                    showFocusView("ttr_a1l1_fb_11", calcTileRect(9), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                        showFocusView("ttr_a1l1_fb_12", calcTileRect(17), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                            preventLeftSwipe = false
-                                                            dismissFocusOnSwipe = true
-                                                            showFingerAnimation(-1, 0)
-                                                            showFocusView("ttr_a1l1_fb_13", calcTileFieldRect(), DismissStrategy.DISMISS_FORCED) {
-                                                                dismissFingerAnimation()
-                                                                preventLeftSwipe = true
-                                                                dismissFocusOnSwipe = false
-                                                                showFocusView("ttr_a1l1_fb_14", calcTileRect(5), DismissStrategy.DISMISS_ON_OUTSIDE) {
-//                                                                    showFocusView("ttr_a1l1_fb_15", calcComboRect(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                                        showFocusView("ttr_a1l1_fb_16", calcTileRect(13), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                                            showFocusView("ttr_a1l1_fb_17", calcRightPersonageSkillRect(), DismissStrategy.DISMISS_ON_OUTSIDE)
-                                                                            preventBottomSwipe = false
-                                                                            dismissFocusOnSwipe = true
-                                                                            showFingerAnimation(0, -1)
-                                                                            showFocusView("ttr_a1l1_fb_18", calcTileFieldRect(), DismissStrategy.DISMISS_FORCED) {
-                                                                                dismissFingerAnimation()
-                                                                                dismissFocusOnSwipe = false
-                                                                                preventBottomSwipe = true
-                                                                                showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l1_fb_19"]!!) {
-                                                                                    showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_a1l1_fb_20"]!!) {
-                                                                                        showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_a1l1_fb_21"]!!) {
-                                                                                            preventBottomSwipe = false
-                                                                                            preventTopSwipe = false
-                                                                                            preventLeftSwipe = false
-                                                                                            preventRightSwipe = false
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-//                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private fun onGameEnded(victory: Boolean) {
         gameEnded = true
         if (actId == "act_0" && locationId == 0) {
@@ -547,7 +485,7 @@ class GameScreen(game: SwipeGameGdx,
     override fun render(delta: Float) {
         if (ready) {
             batch.begin()
-            battleController.act(batch, delta)
+            battleController?.act(batch, delta)
             batch.end()
         }
 
@@ -572,26 +510,6 @@ class GameScreen(game: SwipeGameGdx,
 
     override fun dispose() {
         game.multiplexer.removeProcessor(processor)
-        atlases.forEach { (_, atlas) ->
-            atlas.dispose()
-        }
+        battleContext.atlases.forEach { (_, atlas) -> atlas.dispose() }
     }
-
-
-
-    fun calcLeftPersonageRect() = battleController.calcLeftPersonageRect()
-    fun calcRightPersonageRect() = battleController.calcRightPersonageRect()
-    fun calcLeftPersonageHpBarRect() = battleController.calcLeftPersonageHpBarRect()
-    fun calcRightPersonageHpBarRect() = battleController.calcRightPersonageHpBarRect()
-    fun calcTileFieldRect() = gameActor.tileField.localToStageCoordinates(Vector2()).let {
-        Rectangle(it.x - 5f, it.y - 5f, gameActor.tileField.tileSize * 5 + 10f, gameActor.tileField.tileSize * 5 + 10f)
-    }
-
-    fun calcTileRect(p: Int) = gameActor.tileField.localToStageCoordinates(Vector2()).let {
-        Rectangle(it.x + gameActor.tileField.calcX(p) - 5f, it.y + gameActor.tileField.calcY(p) - 5f, gameActor.tileField.tileSize + 10f, gameActor.tileField.tileSize + 10f)
-    }
-
-    fun calcRightPersonageSkillRect() = battleController.calcRightPersonageSkillRect()
-    fun showFingerAnimation(dx: Int, dy: Int) = gameActor.showFingerAnimation(dx, dy)
-    fun dismissFingerAnimation() = gameActor.dismissFingerAnimation()
 }

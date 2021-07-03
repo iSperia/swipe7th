@@ -23,7 +23,7 @@ class ShopPanel(
         private val balanceRefresher: () -> Unit
 ): Group() {
 
-    val bg = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
+    val bg = Image(context.commonAtlas.findRegion("ui_dialog")).apply {
         width = 480f * context.scale
         height = h * context.scale
     }

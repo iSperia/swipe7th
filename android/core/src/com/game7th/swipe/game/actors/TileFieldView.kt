@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.actions.*
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.game7th.swipe.GdxGameContext
+import com.game7th.swipe.game.BattleContext
 import com.game7th.swiped.api.battle.BattleEvent
 import com.game7th.swiped.api.battle.TileFieldEventType
 import com.game7th.swiped.api.battle.TileViewModel
@@ -13,7 +14,7 @@ import ktx.actors.alpha
 import kotlin.random.Random
 
 class TileFieldView(
-        private val gameContext: GdxGameContext,
+        private val context: BattleContext,
         private val w: Float,
         private val h: Float
 ) : Group() {
@@ -24,23 +25,23 @@ class TileFieldView(
     private val tileGroup = Group()
     private val tileEffectGroup = Group()
 
-    val tileSize = (w - 4 * gameContext.scale) / FIELD_WIDTH
+    val tileSize = (w - 4 * context.scale) / FIELD_WIDTH
 
     private val shapeRenderer = ShapeRenderer()
 
     init {
         for (i in 0..4) {
             for (j in 0..4) {
-                tileBackgrounds.addActor(Image(gameContext.battleAtlas.findRegion(TILE_BG_REGION)).apply {
-                    x = (tileSize + gameContext.scale) * j
-                    y = (tileSize + gameContext.scale) * (FIELD_WIDTH - 1 - i)
+                tileBackgrounds.addActor(Image(context.locationAtlas.findRegion(TILE_BG_REGION)).apply {
+                    x = (tileSize + context.scale) * j
+                    y = (tileSize + context.scale) * (FIELD_WIDTH - 1 - i)
                     width = tileSize
                     height = tileSize
                 })
 
-                tileForegrounds.addActor(Image(gameContext.battleAtlas.findRegion(TILE_FG_REGION)).apply {
-                    x = (tileSize + gameContext.scale) * j
-                    y = (tileSize + gameContext.scale) * (FIELD_WIDTH - 1 - i)
+                tileForegrounds.addActor(Image(context.locationAtlas.findRegion(TILE_FG_REGION)).apply {
+                    x = (tileSize + context.scale) * j
+                    y = (tileSize + context.scale) * (FIELD_WIDTH - 1 - i)
                     width = tileSize
                     height = tileSize
                 })
@@ -61,7 +62,7 @@ class TileFieldView(
                 val fx = if (action.sourcePosition >= 0) action.sourcePosition % FIELD_WIDTH else tx
                 val fy = if (action.sourcePosition >= 0) action.sourcePosition / FIELD_WIDTH else ty
 
-                val view = TileView(gameContext, action.tile, tileSize, shapeRenderer).apply {
+                val view = TileView(context, action.tile, tileSize, shapeRenderer).apply {
                     this.tx = tx
                     this.ty = ty
                 }
@@ -131,23 +132,23 @@ class TileFieldView(
                 ))
             }
             is BattleEvent.ShowTileEffect -> {
-                val x = action.position % 5
-                val y = action.position / 5
-                val effect = Image(gameContext.battleAtlas.findRegion(action.effect)).apply {
-                    width = tileSize
-                    height = tileSize
-                }
-                effect.applyPosition(x, y)
-                tileEffectGroup.addActor(effect)
-                effect.setScale(1.2f)
-                effect.alpha = 0f
-                effect.addAction(SequenceAction(
-                        ParallelAction(
-                                ScaleToAction().apply { duration = 0.3f; setScale(1f) },
-                                AlphaAction().apply { alpha = 1f; duration = 0.1f }
-                        ),
-                        RunnableAction().apply { setRunnable { effect.remove() } }
-                ))
+//                val x = action.position % 5
+//                val y = action.position / 5
+//                val effect = Image(context.battleAtlas.findRegion(action.effect)).apply {
+//                    width = tileSize
+//                    height = tileSize
+//                }
+//                effect.applyPosition(x, y)
+//                tileEffectGroup.addActor(effect)
+//                effect.setScale(1.2f)
+//                effect.alpha = 0f
+//                effect.addAction(SequenceAction(
+//                        ParallelAction(
+//                                ScaleToAction().apply { duration = 0.3f; setScale(1f) },
+//                                AlphaAction().apply { alpha = 1f; duration = 0.1f }
+//                        ),
+//                        RunnableAction().apply { setRunnable { effect.remove() } }
+//                ))
             }
         }
     }

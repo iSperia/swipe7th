@@ -15,17 +15,17 @@ class CurrencyRewardView(
         val size: Float = context.scale * 60f
 ) : Group() {
 
-    val bg = Image(context.uiAtlas.findRegion("ui_item_bg")).apply {
+    val bg = Image(context.commonAtlas.findRegion("ui_item_bg")).apply {
         width = size
         height = size
     }
 
-    val image: Image? = Image(context.uiAtlas.findRegion(getTextureName(currency))).apply {
+    val image: Image? = Image(context.commonAtlas.findRegion(getTextureName(currency))).apply {
         width = size
         height = size
     }
 
-    val lvlLabel = Label(amount.toString(), Label.LabelStyle(context.font, Color.WHITE)).apply {
+    val lvlLabel = Label(amount.toString(), Label.LabelStyle(context.regularFont, Color.WHITE)).apply {
         x = 25f * context.scale
         y = 5f
         width = size / 2

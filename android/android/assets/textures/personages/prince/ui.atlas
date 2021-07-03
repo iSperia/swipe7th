@@ -1,0 +1,48 @@
+
+ui.png
+size: 512, 64
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+prince_concentration
+  rotate: false
+  xy: 386, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+prince_ray
+  rotate: false
+  xy: 337, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+prince_ray_indicator_empty
+  rotate: false
+  xy: 120, 13
+  size: 118, 36
+  orig: 118, 36
+  offset: 0, 0
+  index: -1
+prince_ray_indicator_full
+  rotate: false
+  xy: 1, 13
+  size: 118, 36
+  orig: 118, 36
+  offset: 0, 0
+  index: -1
+prince_strike
+  rotate: false
+  xy: 288, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+tile_buff
+  rotate: false
+  xy: 239, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1

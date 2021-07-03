@@ -1,11 +1,11 @@
 package com.game7th.swipe.game.battle
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.game7th.swipe.game.GameContextWrapper
+import com.game7th.swipe.game.BattleContext
 
 abstract class ElementController(
-        protected val context: GameContextWrapper,
-        protected val battle: BattleController,
+        protected val context: BattleContext,
+        val battle: BattleController,
         val id: Int
 ) {
 

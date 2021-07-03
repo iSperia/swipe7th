@@ -19,14 +19,14 @@ class IconTextButton(
 ): Group() {
 
     val btn = Button(Button.ButtonStyle(
-            TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_trans_simple")),
-            TextureRegionDrawable(context.uiAtlas.findRegion("ui_button_trans_pressed")),
+            TextureRegionDrawable(context.commonAtlas.findRegion("ui_button_trans_simple")),
+            TextureRegionDrawable(context.commonAtlas.findRegion("ui_button_trans_pressed")),
             null)).apply {
         width = context.scale * 120f
         height = context.scale * 48f
     }
 
-    val icon = Image(context.uiAtlas.findRegion(iconTexture)).apply {
+    val icon = Image(context.commonAtlas.findRegion(iconTexture)).apply {
         x = btn.x + context.scale * 8f
         y = btn.y + context.scale * 8f
         width = context.scale * 32f
@@ -34,7 +34,7 @@ class IconTextButton(
         touchable = Touchable.disabled
     }
 
-    val labelForge = Label(labelText, Label.LabelStyle(context.font, Color.WHITE)).apply {
+    val labelForge = Label(labelText, Label.LabelStyle(context.regularFont, Color.WHITE)).apply {
         x = btn.x + context.scale * 52f
         y = btn.y + context.scale * 12f
         setAlignment(Align.left)

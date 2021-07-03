@@ -16,19 +16,19 @@ class CurrencyPanel(
         private val accountService: AccountService
 ) : Group() {
 
-    val background = Image(context.uiAtlas.findRegion("panel_blue")).apply {
+    val background = Image(context.commonAtlas.findRegion("panel_blue")).apply {
         width = 178f * context.scale
         height = 34f * context.scale
     }
 
-    val iconGold = Image(context.uiAtlas.findRegion("ui_currency_gold")).apply {
+    val iconGold = Image(context.commonAtlas.findRegion("ui_currency_gold")).apply {
         width = 24f * context.scale
         height = 24f * context.scale
         x = 5f * context.scale
         y = 5f * context.scale
     }
 
-    val iconGems = Image(context.uiAtlas.findRegion("ui_currency_gems")).apply {
+    val iconGems = Image(context.commonAtlas.findRegion("ui_currency_gems")).apply {
         width = 24f * context.scale
         height = 24f * context.scale
         x = 101f * context.scale
@@ -47,7 +47,7 @@ class CurrencyPanel(
         KtxAsync.launch {
             balance = accountService.getBalance()
 
-            labelGold = Label((balance[Currency.GOLD.toString()] ?: 0).toString(), Label.LabelStyle(context.font, Color.WHITE)).apply {
+            labelGold = Label((balance[Currency.GOLD.toString()] ?: 0).toString(), Label.LabelStyle(context.regularFont, Color.WHITE)).apply {
                 x = 34f * context.scale
                 y = 5f * context.scale
                 width = 62f * context.scale
@@ -56,7 +56,7 @@ class CurrencyPanel(
                 setFontScale(20f * context.scale / 36f)
             }
 
-            labelGems = Label((balance[Currency.GEMS.toString()] ?: 0).toString(), Label.LabelStyle(context.font, Color.WHITE)).apply {
+            labelGems = Label((balance[Currency.GEMS.toString()] ?: 0).toString(), Label.LabelStyle(context.regularFont, Color.WHITE)).apply {
                 x = 130f * context.scale
                 y = 5f * context.scale
                 width = 38f * context.scale

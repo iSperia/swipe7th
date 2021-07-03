@@ -1,0 +1,779 @@
+
+model.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+freeze_mage_body0001
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0025
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0037
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0006
+  rotate: false
+  xy: 1024, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0009
+  rotate: false
+  xy: 0, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0014
+  rotate: false
+  xy: 1536, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0019
+  rotate: false
+  xy: 1536, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0022
+  rotate: false
+  xy: 0, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0027
+  rotate: false
+  xy: 512, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0032
+  rotate: false
+  xy: 1024, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0035
+  rotate: false
+  xy: 512, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0040
+  rotate: false
+  xy: 512, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0045
+  rotate: false
+  xy: 1536, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0048
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0053
+  rotate: false
+  xy: 1024, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0061
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0066
+  rotate: false
+  xy: 1536, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0067
+  rotate: false
+  xy: 1536, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0068
+  rotate: false
+  xy: 1536, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0074
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0072
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0073
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+
+model2.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+freeze_mage_body0003
+  rotate: false
+  xy: 1536, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0008
+  rotate: false
+  xy: 1024, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0011
+  rotate: false
+  xy: 512, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0016
+  rotate: false
+  xy: 512, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0021
+  rotate: false
+  xy: 1536, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0024
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0036
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0055
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0056
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0029
+  rotate: false
+  xy: 1024, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0034
+  rotate: false
+  xy: 1024, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0042
+  rotate: false
+  xy: 512, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0047
+  rotate: false
+  xy: 1536, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0050
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0058
+  rotate: false
+  xy: 0, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0060
+  rotate: false
+  xy: 1536, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0063
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0071
+  rotate: false
+  xy: 0, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0069
+  rotate: false
+  xy: 0, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0070
+  rotate: false
+  xy: 0, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0076
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0075
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0077
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0078
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+
+model3.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+freeze_mage_body0002
+  rotate: false
+  xy: 1536, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0005
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0010
+  rotate: false
+  xy: 1024, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0013
+  rotate: false
+  xy: 0, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0015
+  rotate: false
+  xy: 1536, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0018
+  rotate: false
+  xy: 1536, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0023
+  rotate: false
+  xy: 1536, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0026
+  rotate: false
+  xy: 0, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0031
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0039
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0044
+  rotate: false
+  xy: 512, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0049
+  rotate: false
+  xy: 1024, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0052
+  rotate: false
+  xy: 512, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0057
+  rotate: false
+  xy: 512, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0062
+  rotate: false
+  xy: 1024, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0065
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+
+model4.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+freeze_mage_body0004
+  rotate: false
+  xy: 1024, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0007
+  rotate: false
+  xy: 0, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0012
+  rotate: false
+  xy: 512, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0017
+  rotate: false
+  xy: 1536, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0020
+  rotate: false
+  xy: 0, 512
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0028
+  rotate: false
+  xy: 0, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0030
+  rotate: false
+  xy: 1024, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0033
+  rotate: false
+  xy: 512, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0038
+  rotate: false
+  xy: 1024, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0041
+  rotate: false
+  xy: 0, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0043
+  rotate: false
+  xy: 1536, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0046
+  rotate: false
+  xy: 1024, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0051
+  rotate: false
+  xy: 512, 0
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0054
+  rotate: false
+  xy: 512, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0059
+  rotate: false
+  xy: 1536, 1536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+freeze_mage_body0064
+  rotate: false
+  xy: 1536, 1024
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+
+model5.png
+size: 1024, 512
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+freeze_mage_arrow0001
+  rotate: false
+  xy: 384, 0
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0002
+  rotate: false
+  xy: 240, 144
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0003
+  rotate: false
+  xy: 768, 288
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0004
+  rotate: false
+  xy: 288, 0
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0005
+  rotate: false
+  xy: 0, 0
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0006
+  rotate: false
+  xy: 672, 288
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0007
+  rotate: false
+  xy: 336, 144
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0008
+  rotate: false
+  xy: 720, 144
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0009
+  rotate: false
+  xy: 576, 288
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0010
+  rotate: false
+  xy: 288, 288
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0011
+  rotate: false
+  xy: 624, 144
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0012
+  rotate: false
+  xy: 480, 288
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0013
+  rotate: false
+  xy: 864, 288
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0014
+  rotate: false
+  xy: 528, 144
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0015
+  rotate: false
+  xy: 384, 288
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0016
+  rotate: false
+  xy: 576, 0
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0017
+  rotate: false
+  xy: 432, 144
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0018
+  rotate: false
+  xy: 144, 144
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0019
+  rotate: false
+  xy: 480, 0
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0020
+  rotate: false
+  xy: 192, 0
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0021
+  rotate: false
+  xy: 192, 0
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0023
+  rotate: false
+  xy: 96, 0
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_arrow0022
+  rotate: false
+  xy: 96, 0
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_storm0002
+  rotate: false
+  xy: 144, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_storm0001
+  rotate: false
+  xy: 144, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_storm0003
+  rotate: false
+  xy: 0, 144
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_storm0004
+  rotate: false
+  xy: 0, 144
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_storm0006
+  rotate: false
+  xy: 0, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+freeze_mage_storm0005
+  rotate: false
+  xy: 0, 288
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1

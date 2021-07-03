@@ -40,14 +40,14 @@ class PersonageDetailView(
 
     lateinit var personage: PersonageDto
 
-    val bg = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
+    val bg = Image(context.commonAtlas.createPatch("ui_hor_panel")).apply {
         width = 480f * context.scale
         height = 240f * context.scale
     }
 
     lateinit var portrait: PersonageVerticalPortrait
 
-    val attrsBg = Image(context.uiAtlas.findRegion("ui_attrs_tree")).apply {
+    val attrsBg = Image(context.commonAtlas.findRegion("ui_attrs_tree")).apply {
         x = 140f * context.scale
         y = 10f * context.scale
         width = 160f * context.scale
@@ -59,7 +59,7 @@ class PersonageDetailView(
     val ah = 0.08f * attrsBg.height
     val aw = 0.13f * attrsBg.height
 
-    val bodyLabel = Label("", Label.LabelStyle(context.font, Color.WHITE)).apply {
+    val bodyLabel = Label("", Label.LabelStyle(context.regularFont, Color.WHITE)).apply {
         x = attrsBg.x + 0.19f * attrsBg.width
         y = attrsBg.y + 0.04f * attrsBg.height
         width = aw
@@ -68,7 +68,7 @@ class PersonageDetailView(
         setFontScale(ah / 36f)
     }
 
-    val spiritLabel = Label("", Label.LabelStyle(context.font, Color.WHITE)).apply {
+    val spiritLabel = Label("", Label.LabelStyle(context.regularFont, Color.WHITE)).apply {
         x = attrsBg.x + 0.45f * attrsBg.width
         y = attrsBg.y + 0.87f * attrsBg.height
         width = aw
@@ -77,7 +77,7 @@ class PersonageDetailView(
         setFontScale(ah / 36f)
     }
 
-    val mindLabel = Label("", Label.LabelStyle(context.font, Color.WHITE)).apply {
+    val mindLabel = Label("", Label.LabelStyle(context.regularFont, Color.WHITE)).apply {
         x = attrsBg.x + 0.7f * attrsBg.width
         y = attrsBg.y + 0.04f * attrsBg.height
         width = aw
@@ -86,7 +86,7 @@ class PersonageDetailView(
         setFontScale(ah / 36f)
     }
 
-    val secondAttrsBody = Label("", Label.LabelStyle(context.font, Color(0xff2626ff.toInt()))).apply {
+    val secondAttrsBody = Label("", Label.LabelStyle(context.regularFont, Color(0xff2626ff.toInt()))).apply {
         y = attrsBg.y + 2 * sh
         x = attrsBg.x + attrsBg.width + context.scale * 0.1f
         width = 140f * context.scale
@@ -95,7 +95,7 @@ class PersonageDetailView(
         setAlignment(Align.left)
     }
 
-    val secondAttrsSpirit = Label("", Label.LabelStyle(context.font, Color(0x00B200ff))).apply {
+    val secondAttrsSpirit = Label("", Label.LabelStyle(context.regularFont, Color(0x00B200ff))).apply {
         y = attrsBg.y + sh
         x = attrsBg.x + attrsBg.width + context.scale * 0.1f
         width = 140f * context.scale
@@ -104,7 +104,7 @@ class PersonageDetailView(
         setAlignment(Align.left)
     }
 
-    val secondAttrsMind = Label("", Label.LabelStyle(context.font, Color(0x00A3D9ff))).apply {
+    val secondAttrsMind = Label("", Label.LabelStyle(context.regularFont, Color(0x00A3D9ff))).apply {
         y = attrsBg.y
         x = attrsBg.x + attrsBg.width + context.scale * 0.1f
         width = 140f * context.scale
@@ -118,7 +118,7 @@ class PersonageDetailView(
     lateinit var experienceBar: ExperienceBar
 
 
-    val buttonGear = Image(context.uiAtlas.findRegion("icon_gear")).apply {
+    val buttonGear = Image(context.commonAtlas.findRegion("icon_gear")).apply {
         x = attrsBg.x
         y = 182f * context.scale
         width = 48f * context.scale
@@ -192,7 +192,7 @@ class PersonageDetailView(
     }
 
     private fun showGear() {
-        buttonGear.drawable = TextureRegionDrawable(context.uiAtlas.findRegion("icon_gear_focused"))
+        buttonGear.drawable = TextureRegionDrawable(context.commonAtlas.findRegion("icon_gear_focused"))
         inventoryView = InventoryEditor(context, accountService, gearService, personageId, this::refreshStats).apply {
             y = (240f - 200f) * context.scale
             addAction(MoveByAction().apply { amountY = 200f * context.scale; duration = 0.2f })
@@ -202,7 +202,7 @@ class PersonageDetailView(
     }
 
     private fun hideGear() {
-        buttonGear.drawable = TextureRegionDrawable(context.uiAtlas.findRegion("icon_gear"))
+        buttonGear.drawable = TextureRegionDrawable(context.commonAtlas.findRegion("icon_gear"))
         inventoryView?.let { inventory ->
             inventory.addAction(SequenceAction(
                     MoveByAction().apply { amountY = -200f * context.scale; duration = 0.2f },

@@ -44,7 +44,7 @@ class ActsServiceImpl(
         val config = ActConfig(act.texture, act.locations.mapIndexed { index, location ->
             LocationConfig(index, CampaignNodeType.REGULAR, location.x.toFloat(), location.y.toFloat(), location.unlock, location.waves.map {
                 it.monsters.map { UnitConfig(UnitType.valueOf(it.name), it.level) }
-            })
+            }, location.scene)
         })
         actCache.put(actName, config)
         return config

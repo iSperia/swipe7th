@@ -10,11 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
-import com.game7th.swipe.GdxGameContext
+import com.game7th.swipe.game.BattleContext
 import com.game7th.swiped.api.battle.TileViewModel
 
 class TileView(
-        private val gameContext: GdxGameContext,
+        private val context: BattleContext,
         viewModel: TileViewModel,
         private val size: Float,
         private val shapeRenderer: ShapeRenderer
@@ -28,7 +28,7 @@ class TileView(
     }
 
     private var skillImage: Image? = null
-    private var stackSizeLabel: Label = Label("", Label.LabelStyle(gameContext.font, Color.WHITE)).apply {
+    private var stackSizeLabel: Label = Label("", Label.LabelStyle(context.gameContext.regularFont, Color.WHITE)).apply {
         setFontScale(size / 4 / 36f)
         x = size - width - size/4f
         y = size/4f
@@ -123,7 +123,7 @@ class TileView(
         if (isStunChanged) {
             if (vm?.stun == true) {
                 //appear stun
-                stunImage = Image(gameContext.battleAtlas.findRegion("tile_stun")).apply {
+                stunImage = Image(context.battleAtlas.findRegion("tile_stun")).apply {
                     width = size
                     height = size
                     originX = 18f
@@ -140,7 +140,7 @@ class TileView(
 
     private fun addSkill() {
         vm?.let { vm ->
-            skillImage = Image(gameContext.battleAtlas.findRegion(vm.skin)).apply {
+            skillImage = Image(context.tiles[vm.skin]!!.findRegion(vm.skin)).apply {
                 zIndex = 2
                 originY = 18f
                 originX = 18f
@@ -177,6 +177,7 @@ fun ShapeRenderer.strokeArc(strokeWidth: Float, x: Float, y: Float, radius: Floa
         val x4 = (radius - strokeWidth) * MathUtils.cosDeg(start + (degrees / segments) * (i + 1))
         val y4 = (radius - strokeWidth) * MathUtils.sinDeg(start + (degrees / segments) * (i + 1))
 
+        renderer.texCoord()
         renderer.color(colorBits)
         renderer.vertex(x + x1, y + y1, 0f)
         renderer.color(colorBits)

@@ -5,11 +5,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
-import com.game7th.swipe.game.GameContextWrapper
+import com.game7th.swipe.game.BattleContext
 import com.game7th.swipe.game.battle.model.EffectGdxModel
 
 class EffectController(
-        context: GameContextWrapper,
+        context: BattleContext,
         battle: BattleController,
         id: Int,
         private val targetFigure: FigureController,

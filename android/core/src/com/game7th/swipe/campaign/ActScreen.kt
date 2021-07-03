@@ -4,14 +4,13 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.input.GestureDetector
 import com.badlogic.gdx.math.Rectangle
 import com.game7th.metagame.PersistentStorage
-import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.campaign.*
 import com.game7th.metagame.campaign.dto.ActConfig
 import com.game7th.metagame.campaign.dto.CampaignNodeType
@@ -67,7 +66,7 @@ class ActScreen(
 
     private val batch = SpriteBatch()
     private lateinit var actConfig: ActConfig
-    private lateinit var backgroundTexture: Texture
+    private lateinit var backgroundTexture: TextureRegion
 
     private lateinit var config: ActConfig
 
@@ -83,8 +82,6 @@ class ActScreen(
     private val linkMainColor = Color(0.1f, 0.1f, 0.1f, 0.8f)
     private val linkSubColor = Color(0.1f, 0.1f, 0.1f, 0.5f)
 
-    private val atlas = TextureAtlas(Gdx.files.internal("metagame"))
-
     private var mapBottomOffset = 0f
     private var scroll = 0f
     private var scrollImpulse = 0f
@@ -92,6 +89,7 @@ class ActScreen(
 
     lateinit var bottomMenu: BottomMenu
     lateinit var currencyView: CurrencyPanel
+    lateinit var actAtlas: TextureAtlas
 
     private var uiState: UiState = UiState.Hidden
 
@@ -119,7 +117,8 @@ class ActScreen(
 
             updateLocationProgressCache(progressState)
             actConfig = actsService.getActConfig(actId)
-            backgroundTexture = Texture(Gdx.files.internal(actConfig.texture))
+            actAtlas = TextureAtlas(Gdx.files.internal("textures/acts/${actId}.atlas"))
+            backgroundTexture = actAtlas.findRegion("bg")
 
             gestureDetector = GestureDetector(game.width / 12f, 0.4f, 1.1f, Float.MAX_VALUE, object : GestureDetector.GestureAdapter() {
                 override fun pan(x: Float, y: Float, deltaX: Float, deltaY: Float): Boolean {
@@ -161,11 +160,11 @@ class ActScreen(
             circleScale = game.width / 8 / texture.regionWidth
             circleOffset = game.width / 16
 
-            val greyStarTexture = atlas.findRegion("star_grey")
+            val greyStarTexture = context.commonAtlas.findRegion("star_grey")
             starScale = game.width / 24 / greyStarTexture.regionWidth
             starOffset = game.width / 48
 
-            val lockTexture = atlas.findRegion("lock")
+            val lockTexture = context.commonAtlas.findRegion("lock")
             lockScale = game.width / 10 / lockTexture.regionWidth
             lockOffset = game.width / 20
 
@@ -216,7 +215,7 @@ class ActScreen(
     }
 
     private fun normalizeScroll() {
-        scroll = max(0f, min(scroll, game.scale * backgroundTexture.height - game.height + mapBottomOffset))
+        scroll = max(0f, min(scroll, game.scale * backgroundTexture.regionHeight - game.height + mapBottomOffset))
     }
 
     private fun onPartyButtonPressed() {
@@ -255,7 +254,7 @@ class ActScreen(
         }
 
         batch.begin()
-        batch.draw(backgroundTexture, 0f, -scroll + mapBottomOffset, backgroundTexture.width * game.scale, backgroundTexture.height * game.scale)
+        batch.draw(backgroundTexture, 0f, -scroll + mapBottomOffset, backgroundTexture.regionWidth * game.scale, backgroundTexture.regionHeight * game.scale)
         batch.end()
 
         Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -291,7 +290,7 @@ class ActScreen(
         stage.dispose()
         game.multiplexer.removeProcessor(gestureDetector)
         game.multiplexer.removeProcessor(stage)
-        backgroundTexture.dispose()
+        actAtlas.dispose()
         batch.dispose()
     }
 
@@ -327,8 +326,8 @@ class ActScreen(
                 0f)
 
         if (type != CampaignNodeType.FARM) {
-            val greyStarTexture = atlas.findRegion("star_grey")
-            val yellowStarTexture = atlas.findRegion("star_yellow")
+            val greyStarTexture = context.commonAtlas.findRegion("star_grey")
+            val yellowStarTexture = context.commonAtlas.findRegion("star_yellow")
             val stars = if (locationCache.containsKey(id)) locationCache[id]?.stars ?: 0 else 0
             (4 downTo 0).forEach { i ->
                 val alpha = 2 * starAlphaStep - i * starAlphaStep
@@ -347,7 +346,7 @@ class ActScreen(
         }
 
         if (!locationCache.containsKey(id)) {
-            val texture = atlas.findRegion("lock")
+            val texture = context.commonAtlas.findRegion("lock")
             batch.draw(texture,
                     game.scale * x - lockOffset,
                     game.scale * y - lockOffset - scroll + mapBottomOffset,
@@ -371,9 +370,9 @@ class ActScreen(
     }
 
     private fun getTextureForCircle(type: CampaignNodeType) = when (type) {
-        CampaignNodeType.BOSS -> atlas.findRegion("circle_red")
-        CampaignNodeType.FARM -> atlas.findRegion("circle_orange")
-        CampaignNodeType.REGULAR -> atlas.findRegion("circle_blue")
+        CampaignNodeType.BOSS -> context.commonAtlas.findRegion("circle_red")
+        CampaignNodeType.FARM -> context.commonAtlas.findRegion("circle_orange")
+        CampaignNodeType.REGULAR -> context.commonAtlas.findRegion("circle_blue")
     }
 
     private fun transiteUiState(state: UiState) {

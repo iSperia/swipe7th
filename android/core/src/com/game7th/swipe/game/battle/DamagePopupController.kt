@@ -3,11 +3,11 @@ package com.game7th.swipe.game.battle
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.Align
-import com.game7th.swipe.game.GameContextWrapper
+import com.game7th.swipe.game.BattleContext
 import kotlin.math.max
 
 class DamagePopupController(
-        context: GameContextWrapper,
+        context: BattleContext,
         battle: BattleController,
         id: Int,
         val originX: Float,
@@ -28,13 +28,13 @@ class DamagePopupController(
         val progress = timePassed / showTime
         color.a = max(1f, progress)
 
-        context.gameContext.font.apply {
+        context.gameContext.regularFont.apply {
             color = this@DamagePopupController.color
             data.scaleX = 1f + 1f * progress
             data.scaleY = 1f + 1f * progress
         }
-        context.gameContext.font.draw(batch, value.toString(), originX - targetWidth / 2f, originY + (targetY - originY) * progress, targetWidth, Align.center, false)
-        context.gameContext.font.apply {
+        context.gameContext.regularFont.draw(batch, value.toString(), originX - targetWidth / 2f, originY + (targetY - originY) * progress, targetWidth, Align.center, false)
+        context.gameContext.regularFont.apply {
             color = Color.WHITE
             data.scaleX = 1f
             data.scaleY = 1f

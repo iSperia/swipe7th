@@ -1,0 +1,1378 @@
+
+model.png
+size: 4096, 4096
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+body_gladiator0002
+  rotate: false
+  xy: 999, 2056
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0007
+  rotate: false
+  xy: 2997, 856
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0015
+  rotate: false
+  xy: 1998, 2656
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0020
+  rotate: false
+  xy: 2997, 1456
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0028
+  rotate: false
+  xy: 999, 1456
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0033
+  rotate: false
+  xy: 2997, 256
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0041
+  rotate: false
+  xy: 2997, 3256
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0049
+  rotate: false
+  xy: 999, 3256
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0054
+  rotate: false
+  xy: 2997, 2656
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0062
+  rotate: false
+  xy: 0, 3256
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0067
+  rotate: false
+  xy: 1998, 1456
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0075
+  rotate: false
+  xy: 0, 2056
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0080
+  rotate: false
+  xy: 0, 256
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0088
+  rotate: false
+  xy: 0, 1456
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0093
+  rotate: false
+  xy: 2997, 2056
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0107
+  rotate: false
+  xy: 0, 856
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0112
+  rotate: false
+  xy: 1998, 256
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0120
+  rotate: false
+  xy: 1998, 2056
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0128
+  rotate: false
+  xy: 0, 2656
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0133
+  rotate: false
+  xy: 999, 856
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0146
+  rotate: false
+  xy: 999, 256
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0154
+  rotate: false
+  xy: 999, 2656
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0159
+  rotate: false
+  xy: 1998, 856
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0167
+  rotate: false
+  xy: 1998, 3256
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+gladiator_wave0003
+  rotate: false
+  xy: 0, 128
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0001
+  rotate: false
+  xy: 0, 128
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0002
+  rotate: false
+  xy: 0, 128
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0004
+  rotate: false
+  xy: 0, 128
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0008
+  rotate: false
+  xy: 0, 0
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0005
+  rotate: false
+  xy: 0, 0
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0006
+  rotate: false
+  xy: 0, 0
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0007
+  rotate: false
+  xy: 0, 0
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0009
+  rotate: false
+  xy: 0, 0
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0011
+  rotate: false
+  xy: 3996, 3728
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0010
+  rotate: false
+  xy: 3996, 3728
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0012
+  rotate: false
+  xy: 3996, 3728
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0013
+  rotate: false
+  xy: 3996, 3728
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0016
+  rotate: false
+  xy: 3996, 3600
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0014
+  rotate: false
+  xy: 3996, 3600
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0015
+  rotate: false
+  xy: 3996, 3600
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0018
+  rotate: false
+  xy: 64, 128
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0017
+  rotate: false
+  xy: 64, 128
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0019
+  rotate: false
+  xy: 64, 128
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+gladiator_wave0020
+  rotate: false
+  xy: 64, 128
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+
+model2.png
+size: 4096, 4096
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+body_gladiator0004
+  rotate: false
+  xy: 2997, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0012
+  rotate: false
+  xy: 2997, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0025
+  rotate: false
+  xy: 1998, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0030
+  rotate: false
+  xy: 2997, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0038
+  rotate: false
+  xy: 999, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0046
+  rotate: false
+  xy: 0, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0051
+  rotate: false
+  xy: 2997, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0059
+  rotate: false
+  xy: 1998, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0064
+  rotate: false
+  xy: 1998, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0072
+  rotate: false
+  xy: 0, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0077
+  rotate: false
+  xy: 2997, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0085
+  rotate: false
+  xy: 0, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0090
+  rotate: false
+  xy: 999, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0098
+  rotate: false
+  xy: 1998, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0104
+  rotate: false
+  xy: 0, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0117
+  rotate: false
+  xy: 0, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0125
+  rotate: false
+  xy: 0, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0130
+  rotate: false
+  xy: 999, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0138
+  rotate: false
+  xy: 999, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0143
+  rotate: false
+  xy: 2997, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0151
+  rotate: false
+  xy: 999, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0156
+  rotate: false
+  xy: 1998, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0164
+  rotate: false
+  xy: 999, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0169
+  rotate: false
+  xy: 1998, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+
+model3.png
+size: 4096, 4096
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+body_gladiator0009
+  rotate: false
+  xy: 2997, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0017
+  rotate: false
+  xy: 0, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0022
+  rotate: false
+  xy: 1998, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0035
+  rotate: false
+  xy: 0, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0043
+  rotate: false
+  xy: 999, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0048
+  rotate: false
+  xy: 999, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0056
+  rotate: false
+  xy: 1998, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0061
+  rotate: false
+  xy: 1998, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0069
+  rotate: false
+  xy: 1998, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0074
+  rotate: false
+  xy: 1998, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0082
+  rotate: false
+  xy: 0, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0087
+  rotate: false
+  xy: 2997, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0095
+  rotate: false
+  xy: 0, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0101
+  rotate: false
+  xy: 999, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0109
+  rotate: false
+  xy: 0, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0114
+  rotate: false
+  xy: 999, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0122
+  rotate: false
+  xy: 0, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0127
+  rotate: false
+  xy: 2997, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0135
+  rotate: false
+  xy: 999, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0140
+  rotate: false
+  xy: 2997, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0148
+  rotate: false
+  xy: 999, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0153
+  rotate: false
+  xy: 1998, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0161
+  rotate: false
+  xy: 2997, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0166
+  rotate: false
+  xy: 2997, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+
+model4.png
+size: 4096, 4096
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+body_gladiator0001
+  rotate: false
+  xy: 0, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0006
+  rotate: false
+  xy: 2997, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0014
+  rotate: false
+  xy: 0, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0019
+  rotate: false
+  xy: 1998, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0027
+  rotate: false
+  xy: 999, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0032
+  rotate: false
+  xy: 999, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0040
+  rotate: false
+  xy: 999, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0045
+  rotate: false
+  xy: 2997, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0053
+  rotate: false
+  xy: 1998, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0058
+  rotate: false
+  xy: 2997, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0066
+  rotate: false
+  xy: 2997, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0071
+  rotate: false
+  xy: 999, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0079
+  rotate: false
+  xy: 1998, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0084
+  rotate: false
+  xy: 2997, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0092
+  rotate: false
+  xy: 0, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0106
+  rotate: false
+  xy: 0, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0111
+  rotate: false
+  xy: 0, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0119
+  rotate: false
+  xy: 0, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0124
+  rotate: false
+  xy: 1998, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0132
+  rotate: false
+  xy: 999, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0137
+  rotate: false
+  xy: 1998, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0145
+  rotate: false
+  xy: 1998, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0150
+  rotate: false
+  xy: 2997, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0158
+  rotate: false
+  xy: 999, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+
+model5.png
+size: 4096, 4096
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+body_gladiator0003
+  rotate: false
+  xy: 999, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0011
+  rotate: false
+  xy: 999, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0016
+  rotate: false
+  xy: 1998, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0024
+  rotate: false
+  xy: 999, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0029
+  rotate: false
+  xy: 1998, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0037
+  rotate: false
+  xy: 999, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0042
+  rotate: false
+  xy: 2997, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0050
+  rotate: false
+  xy: 1998, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0055
+  rotate: false
+  xy: 1998, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0063
+  rotate: false
+  xy: 1998, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0076
+  rotate: false
+  xy: 999, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0081
+  rotate: false
+  xy: 2997, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0089
+  rotate: false
+  xy: 0, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0097
+  rotate: false
+  xy: 0, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0103
+  rotate: false
+  xy: 0, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0108
+  rotate: false
+  xy: 999, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0116
+  rotate: false
+  xy: 0, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0121
+  rotate: false
+  xy: 2997, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0129
+  rotate: false
+  xy: 2997, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0134
+  rotate: false
+  xy: 2997, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0142
+  rotate: false
+  xy: 0, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0155
+  rotate: false
+  xy: 1998, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0163
+  rotate: false
+  xy: 0, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0168
+  rotate: false
+  xy: 2997, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+
+model6.png
+size: 4096, 4096
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+body_gladiator0008
+  rotate: false
+  xy: 0, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0013
+  rotate: false
+  xy: 999, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0021
+  rotate: false
+  xy: 1998, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0026
+  rotate: false
+  xy: 2997, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0034
+  rotate: false
+  xy: 999, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0039
+  rotate: false
+  xy: 2997, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0047
+  rotate: false
+  xy: 0, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0052
+  rotate: false
+  xy: 1998, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0060
+  rotate: false
+  xy: 1998, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0068
+  rotate: false
+  xy: 0, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0073
+  rotate: false
+  xy: 1998, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0086
+  rotate: false
+  xy: 999, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0094
+  rotate: false
+  xy: 0, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0099
+  rotate: false
+  xy: 2997, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0100
+  rotate: false
+  xy: 999, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0105
+  rotate: false
+  xy: 1998, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0113
+  rotate: false
+  xy: 2997, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0118
+  rotate: false
+  xy: 2997, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0126
+  rotate: false
+  xy: 999, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0139
+  rotate: false
+  xy: 2997, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0147
+  rotate: false
+  xy: 999, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0152
+  rotate: false
+  xy: 0, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0160
+  rotate: false
+  xy: 0, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0165
+  rotate: false
+  xy: 1998, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+
+model7.png
+size: 4096, 4096
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+body_gladiator0005
+  rotate: false
+  xy: 999, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0010
+  rotate: false
+  xy: 2997, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0018
+  rotate: false
+  xy: 999, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0023
+  rotate: false
+  xy: 2997, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0031
+  rotate: false
+  xy: 1998, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0044
+  rotate: false
+  xy: 1998, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0057
+  rotate: false
+  xy: 999, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0065
+  rotate: false
+  xy: 0, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0070
+  rotate: false
+  xy: 2997, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0078
+  rotate: false
+  xy: 999, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0083
+  rotate: false
+  xy: 1998, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0091
+  rotate: false
+  xy: 999, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0096
+  rotate: false
+  xy: 1998, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0102
+  rotate: false
+  xy: 1998, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0110
+  rotate: false
+  xy: 2997, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0115
+  rotate: false
+  xy: 2997, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0123
+  rotate: false
+  xy: 0, 600
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0131
+  rotate: false
+  xy: 0, 2400
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0136
+  rotate: false
+  xy: 0, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0144
+  rotate: false
+  xy: 0, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0149
+  rotate: false
+  xy: 2997, 1800
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0157
+  rotate: false
+  xy: 1998, 3000
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0162
+  rotate: false
+  xy: 999, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0170
+  rotate: false
+  xy: 0, 1200
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+
+model8.png
+size: 2048, 1024
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+body_gladiator0036
+  rotate: false
+  xy: 999, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1
+body_gladiator0141
+  rotate: false
+  xy: 0, 0
+  size: 999, 600
+  orig: 999, 600
+  offset: 0, 0
+  index: -1

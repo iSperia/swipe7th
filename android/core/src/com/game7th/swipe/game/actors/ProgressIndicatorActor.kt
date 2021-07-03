@@ -1,12 +1,10 @@
 package com.game7th.swipe.game.actors
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.Group
-import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
-import com.game7th.swipe.GdxGameContext
+import com.game7th.swipe.game.BattleContext
 import ktx.actors.repeatForever
 
 enum class WaveType {
@@ -24,7 +22,7 @@ data class ProgressConfiguration(
 )
 
 class ProgressIndicatorActor(
-        private val context: GdxGameContext,
+        private val context: BattleContext,
         configuration: ProgressConfiguration
 ) : Group() {
 

@@ -46,7 +46,8 @@ data class FigureGdxModel(
     val attacks: List<AttackGdxModel>,
     val source_width: Float,
     val source_height: Float,
-    val anchor_x: Float
+    val anchor_x: Float,
+    val tiles: List<String>?
 )
 
 data class EffectGdxModel(

@@ -7,23 +7,112 @@ import com.badlogic.gdx.graphics.g2d.*
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.utils.Array
 import com.esotericsoftware.spine.*
-import com.game7th.swipe.game.GameContextWrapper
+import com.game7th.swipe.game.BattleContext
 import com.game7th.swipe.game.battle.model.FigureGdxModel
 import com.game7th.swipe.game.battle.model.GdxRenderType
+import com.game7th.swipe.game.battle.model.PoseGdxModel
 import com.game7th.swiped.api.battle.PersonageViewModel
+
+sealed class FigureRenderer {
+    abstract fun render(figure: FigureController, batch: SpriteBatch, bodyScale: Float, delta: Float)
+    abstract fun switchPose(figure: FigureController, pose: PoseGdxModel)
+
+    class SequenceRenderer(context: BattleContext, figureModel: FigureGdxModel) : FigureRenderer() {
+        var atlas: TextureAtlas? = context.atlases[figureModel.atlas]!!
+        val allTextures = if (figureModel.render == GdxRenderType.SEQUENCE) filterAtlas(atlas!!, figureModel.body).toList() else null
+        var animation: Animation<TextureRegion>? = null
+
+        override fun render(figure: FigureController, batch: SpriteBatch, bodyScale: Float, delta: Float) {
+            animation?.let { animation ->
+                if (figure.pose != "death" || !animation.isAnimationFinished(figure.timePassed - figure.timePoseStarted)) {
+                    batch.draw(animation.getKeyFrame(figure.timePassed - figure.timePoseStarted, true),
+                            figure.x - figure.figureModel.anchor_x * bodyScale * figure.flipMultiplier,
+                            figure.y,
+                            figure.figureModel.source_width * bodyScale * figure.flipMultiplier,
+                            figure.figureModel.source_height * bodyScale)
+                } else if (figure.pose == "death") {
+                    if (figure.flipped || figure.position > 0) {
+                        figure.battle.removeController(figure)
+                    } else {
+                        batch.draw(animation.keyFrames.last(),
+                                figure.x - figure.figureModel.anchor_x * bodyScale * figure.flipMultiplier,
+                                figure.y,
+                                figure.figureModel.source_width * bodyScale * figure.flipMultiplier,
+                                figure.figureModel.source_height * bodyScale)
+                    }
+                }
+
+                if (animation.isAnimationFinished(figure.timePassed - figure.timePoseStarted) && animation.playMode == Animation.PlayMode.NORMAL
+                        && figure.pose != "death" && !figure.isDead) {
+                    figure.switchPose("idle")
+                }
+            }
+        }
+
+        override fun switchPose(figure: FigureController, pose: PoseGdxModel) {
+            pose?.sound?.let { figure.player(it) }
+            val playMode = when (figure.pose) {
+                "idle" -> Animation.PlayMode.LOOP
+                else -> Animation.PlayMode.NORMAL
+            }
+            this.animation = Animation(FigureController.FRAME_DURATION, Array(allTextures!!.subList((pose?.start ?: 1) - 1, (pose?.end ?: 1)).toTypedArray()), playMode)
+        }
+    }
+
+    class SpineRenderer(context: BattleContext, figureModel: FigureGdxModel): FigureRenderer() {
+        val polygonBatch = PolygonSpriteBatch()
+        val skeletonRenderer = SkeletonRenderer().apply {
+            setPremultipliedAlpha(true)
+
+        }
+        val dragonAtlas = context.atlases[figureModel.atlas]!!
+        val json = SkeletonJson(dragonAtlas)
+        val jsonData = json.readSkeletonData(Gdx.files.internal("textures/personages/${figureModel.name}/model.json"))
+        val skeleton = Skeleton(jsonData)
+        val stateData = AnimationStateData(jsonData)
+        val dragonAnimation = AnimationState(stateData).apply {
+            setAnimation(0, "idle", true)
+        }
+
+        override fun render(figure: FigureController, batch: SpriteBatch, bodyScale: Float, delta: Float) {
+            figure.apply {
+                skeleton.scaleX = (if (flipped) -1f else 1f) * figureModel.scale * battle.scale
+                skeleton.scaleY = figureModel.scale * battle.scale
+                skeleton.setPosition(x, y)
+
+                dragonAnimation.update(delta)
+                dragonAnimation.apply(skeleton)
+                skeleton.updateWorldTransform()
+
+                batch.end()
+                polygonBatch.begin()
+                skeletonRenderer.draw(polygonBatch, skeleton)
+                polygonBatch.end()
+                batch.begin()
+            }
+        }
+
+        override fun switchPose(figure: FigureController, pose: PoseGdxModel) {
+            dragonAnimation.setAnimation(0, pose.name, pose.name == "idle")
+            if (pose.name != "Death") {
+                dragonAnimation.addAnimation(0, "idle", true, 0f)
+            }
+        }
+    }
+}
 
 /**
  * GDX graphics figure controller with poses
  */
 class FigureController(
-        context: GameContextWrapper,
+        context: BattleContext,
         battle: BattleController,
         id: Int,
         y: Float,
         val appearStrategy: Int,
         val figureModel: FigureGdxModel,
         var viewModel: PersonageViewModel,
-        val player: (String) -> Unit
+        internal val player: (String) -> Unit
 ) : ElementController(context, battle, id) {
 
     var originX: Float = 0f
@@ -44,36 +133,24 @@ class FigureController(
     var targetX = x
     var targetY = y
 
-    val frozenTexture = context.gameContext.battleAtlas.findRegion("ailment_frozen")
-
-    var atlas: TextureAtlas? = if (figureModel.render == GdxRenderType.SEQUENCE) context.atlases[figureModel.atlas]!! else null
-    val allTextures = if (figureModel.render == GdxRenderType.SEQUENCE) filterAtlas(atlas!!, figureModel.body).toList() else null
-    var animation: Animation<TextureRegion>? = null
+    val frozenTexture = context.battleAtlas.findRegion("ailment_frozen")
 
     var isDead = false
 
-    val polygonBatch = PolygonSpriteBatch()
-    val renderer = SkeletonRenderer().apply {
-        setPremultipliedAlpha(true)
-
-    }
 
     lateinit var pose: String
     val flipped = viewModel.team > 0
-    private val flipMultiplier = if (flipped) -1 else 1
+    internal val flipMultiplier = if (flipped) -1 else 1
 
     var position: Int = 0
 
-    val dragonAtlas = TextureAtlas(Gdx.files.internal("prince.atlas"))
-    val json = SkeletonJson(dragonAtlas)
-    val jsonData = json.readSkeletonData(Gdx.files.internal("prince.json"))
-    val skeleton = Skeleton(jsonData)
-    val stateData = AnimationStateData(jsonData)
-    val dragonAnimation = AnimationState(stateData).apply {
-        setAnimation(0, "idle", true)
-    }
+    val renderer: FigureRenderer
 
     init {
+        renderer = when (figureModel.render) {
+            GdxRenderType.SEQUENCE -> FigureRenderer.SequenceRenderer(context, figureModel)
+            GdxRenderType.SPINE -> FigureRenderer.SpineRenderer(context, figureModel)
+        }
         switchPose("idle")
     }
 
@@ -92,81 +169,17 @@ class FigureController(
         }
 
         val bodyScale = battle.scale * if (figureModel.scale > 0f) figureModel.scale else 1f
-        when (figureModel.render) {
-            GdxRenderType.SEQUENCE -> {
-                animation?.let { animation ->
-                    if (pose != "death" || !animation.isAnimationFinished(timePassed - timePoseStarted)) {
-                        batch.draw(animation.getKeyFrame(timePassed - timePoseStarted, true),
-                                x - figureModel.anchor_x * bodyScale * flipMultiplier,
-                                y,
-                                figureModel.source_width * bodyScale * flipMultiplier,
-                                figureModel.source_height * bodyScale)
-                    } else if (pose == "death") {
-                        if (flipped || position > 0) {
-                            battle.removeController(this)
-                        } else {
-                            batch.draw(animation.keyFrames.last(),
-                                    x - figureModel.anchor_x * bodyScale * flipMultiplier,
-                                    y,
-                                    figureModel.source_width * bodyScale * flipMultiplier,
-                                    figureModel.source_height * bodyScale)
-                        }
-                    }
-
-                    if (animation.isAnimationFinished(timePassed - timePoseStarted) && animation.playMode == Animation.PlayMode.NORMAL
-                            && pose != "death" && !isDead) {
-                        switchPose("idle")
-                    }
-                }
-            }
-            GdxRenderType.SPINE -> {
-                skeleton.scaleX = (if (flipped) -1f else 1f) * figureModel.scale * battle.scale
-                skeleton.scaleY = figureModel.scale * battle.scale
-                skeleton.setPosition(x, y)
-
-                dragonAnimation.update(delta)
-                dragonAnimation.apply(skeleton)
-                skeleton.updateWorldTransform()
-
-                batch.end()
-                polygonBatch.begin()
-                renderer.draw(polygonBatch, skeleton)
-                polygonBatch.end()
-                batch.begin()
-            }
-        }
-
+        renderer.render(this@FigureController, batch, bodyScale, delta)
         if (viewModel.stats.isFrozen) {
             batch.draw(frozenTexture, x - 64f * bodyScale * flipMultiplier, y, 128f * bodyScale * flipMultiplier, 64f * bodyScale)
         }
-
     }
 
     fun switchPose(poseName: String) {
         if (isDead) return
         timePoseStarted = timePassed
         this.pose = poseName
-        val pose = figureModel.poses?.firstOrNull { it.name == pose }
-        val playMode = when (this.pose) {
-            "idle" -> Animation.PlayMode.LOOP
-            "attack" -> Animation.PlayMode.NORMAL
-            "damage" -> Animation.PlayMode.NORMAL
-            "death" -> Animation.PlayMode.NORMAL
-            "ability" -> Animation.PlayMode.NORMAL
-            else -> Animation.PlayMode.NORMAL
-        }
-        when (figureModel.render) {
-            GdxRenderType.SEQUENCE -> {
-                pose?.sound?.let { player(it) }
-                this.animation = Animation(FRAME_DURATION, Array(allTextures!!.subList((pose?.start ?: 1) - 1, (pose?.end ?: 1)).toTypedArray()), playMode)
-            }
-            GdxRenderType.SPINE -> {
-                dragonAnimation.setAnimation(0, poseName, playMode == Animation.PlayMode.LOOP)
-                if (poseName != "Death") {
-                    dragonAnimation.addAnimation(0, "idle", true, 0f)
-                }
-            }
-        }
+        figureModel.poses?.firstOrNull { it.name == pose }?.let { pose -> renderer.switchPose(this@FigureController, pose) }
     }
 
     fun move(targetX: Float, targetY: Float, duration: Float) {

@@ -3,22 +3,22 @@ package com.game7th.swipe.game.battle
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
-import com.game7th.swipe.game.GameContextWrapper
+import com.game7th.swipe.game.BattleContext
 
 class PersonageHealthbarController(
-        context: GameContextWrapper,
+        context: BattleContext,
         battle: BattleController,
         id: Int,
         val figure: FigureController
 ) : ElementController(context, battle, id) {
 
-    private val lifebarHealth = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("lifebar_health"))
-    private val lifebarBackgroundBottom = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("lifebar_background_bottom"))
-    private val lifebarBackgroundTop = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("lifebar_background_top"))
-    private val lifebarBorderBottom = NinePatchDrawable(context.gameContext.battleAtlas.createPatch("lifebar_border_bottom"))
-    private val lifebarBorderTop = NinePatchDrawable(context.gameContext.battleAtlas.createPatch("lifebar_border_top"))
-    private val lifebarLine = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("lifebar_line"))
-    private val lifebarResist = TextureRegionDrawable(context.gameContext.battleAtlas.findRegion("lifebar_resist"))
+    private val lifebarHealth = TextureRegionDrawable(context.battleAtlas.findRegion("lifebar_health"))
+    private val lifebarBackgroundBottom = TextureRegionDrawable(context.battleAtlas.findRegion("lifebar_background_bottom"))
+    private val lifebarBackgroundTop = TextureRegionDrawable(context.battleAtlas.findRegion("lifebar_background_top"))
+    private val lifebarBorderBottom = NinePatchDrawable(context.battleAtlas.createPatch("lifebar_border_bottom"))
+    private val lifebarBorderTop = NinePatchDrawable(context.battleAtlas.createPatch("lifebar_border_top"))
+    private val lifebarLine = TextureRegionDrawable(context.battleAtlas.findRegion("lifebar_line"))
+    private val lifebarResist = TextureRegionDrawable(context.battleAtlas.findRegion("lifebar_resist"))
 
     var timePassed: Float = 0f
     var timeHpActual: Float = timePassed

@@ -8,8 +8,6 @@ import com.game7th.swiped.api.InventoryItemFullInfoDto
 import com.google.gson.Gson
 
 class GearServiceImpl(
-        private val gson: Gson,
-        private val storage: PersistentStorage,
         private val api: CloudApi
 ) : GearService {
 

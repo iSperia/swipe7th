@@ -26,7 +26,7 @@ class PartyView(
     lateinit var personagesView:PersonageScrollActor
     lateinit var personagesScroll: ScrollPane
 
-    val personagesBg = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
+    val personagesBg = Image(context.commonAtlas.createPatch("ui_hor_panel")).apply {
         width = 480 * context.scale
         height = 170 * context.scale
     }

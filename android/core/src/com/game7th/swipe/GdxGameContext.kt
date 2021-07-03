@@ -5,9 +5,9 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.game7th.metagame.PersistentStorage
 
 data class GdxGameContext(
-        val battleAtlas: TextureAtlas,
-        val uiAtlas: TextureAtlas,
-        val font: BitmapFont,
+        val commonAtlas: TextureAtlas,
+        val itemsAtlas: TextureAtlas,
+        val regularFont: BitmapFont,
         val captionFont: BitmapFont,
         val scale: Float,
         val texts: Map<String, String>,

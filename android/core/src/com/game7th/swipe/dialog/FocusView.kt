@@ -13,8 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.game7th.swipe.GdxGameContext
-import com.game7th.swipe.ScreenContext
-import ktx.actors.onClick
 import kotlin.math.max
 import kotlin.math.min
 
@@ -32,12 +30,12 @@ class FocusView(
         private val dismissCallback: (() -> Unit)?
 ) : Group() {
 
-    private val modalPanel = Image(context.uiAtlas.findRegion("panel_modal")).apply {
+    private val modalPanel = Image(context.commonAtlas.findRegion("panel_modal")).apply {
         width = Gdx.graphics.width.toFloat()
         height = Gdx.graphics.height.toFloat()
     }
 
-    private val edge = Image(context.uiAtlas.findRegion("panel_edge")).apply {
+    private val edge = Image(context.commonAtlas.findRegion("panel_edge")).apply {
         x = rect.x - context.scale
         y = rect.y - context.scale
         width = rect.width + 2 * context.scale
@@ -45,9 +43,9 @@ class FocusView(
         touchable = Touchable.disabled
     }
 
-    private val mask = TextureRegionDrawable(context.uiAtlas.findRegion("panel_modal"))
+    private val mask = TextureRegionDrawable(context.commonAtlas.findRegion("panel_modal"))
 
-    private val textLabel = Label(text, Label.LabelStyle(context.font, Color.WHITE)).apply {
+    private val textLabel = Label(text, Label.LabelStyle(context.regularFont, Color.WHITE)).apply {
         val w = min(480f * context.scale, max(300f * context.scale, 480f * context.scale - rect.x))
         val bottom = rect.y + rect.height + 60f > Gdx.graphics.height
         x = max(0f, min(rect.x, 480f * context.scale - w))

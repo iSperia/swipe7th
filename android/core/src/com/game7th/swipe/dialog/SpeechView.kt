@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.game7th.swipe.GdxGameContext
-import com.game7th.swipe.ScreenContext
 import com.game7th.swipe.campaign.plist.PersonageVerticalPortrait
 import com.game7th.swipe.campaign.plist.PortraitConfig
 import ktx.actors.onClick
@@ -27,7 +26,7 @@ class SpeechView(
         onClick { dismiss() }
     }
 
-    val textLabel = Label(text, Label.LabelStyle(context.font, Color.BLACK)).apply {
+    val textLabel = Label(text, Label.LabelStyle(context.regularFont, Color.BLACK)).apply {
         x = 140f * context.scale
         width = 330f * context.scale
         height = 180f * context.scale
@@ -38,13 +37,13 @@ class SpeechView(
         onClick { dismiss() }
     }
 
-    val bg = Image(context.uiAtlas.findRegion("ui_dialog")).apply {
+    val bg = Image(context.commonAtlas.findRegion("ui_dialog")).apply {
         x = 130f * context.scale
         width = 350f * context.scale
         height = 200f * context.scale
     }
 
-    val modale = Image(context.uiAtlas.findRegion("panel_modal")).apply {
+    val modale = Image(context.commonAtlas.findRegion("panel_modal")).apply {
         x = 0f
         y = 0f
         width = Gdx.graphics.width.toFloat()

@@ -31,15 +31,15 @@ class PersonageVerticalPortrait(
     private val lvlSize = elementWidth * 0.25f
     private val lvlPadding = lvlSize * 0.25f
 
-    val bg = Image(context.battleAtlas.findRegion(unitConfig.textureName)).apply {
+    val bg = Image(context.commonAtlas.findRegion(unitConfig.textureName)).apply {
         width = elementWidth
         height = h
     }
-    val fg = Image(context.uiAtlas.findRegion("ui_portrait_fg")).apply {
+    val fg = Image(context.commonAtlas.findRegion("ui_portrait_fg")).apply {
         width = elementWidth
         height = h
     }
-    val lvl = Image(context.uiAtlas.findRegion("ui_level_bg")).apply {
+    val lvl = Image(context.commonAtlas.findRegion("ui_level_bg")).apply {
         x = lvlPadding
         y = h - lvlSize - lvlPadding
         width = lvlSize
@@ -47,7 +47,7 @@ class PersonageVerticalPortrait(
         touchable = Touchable.disabled
         isVisible = unitConfig.level > 0
     }
-    val lvlLabel = Label(unitConfig.level.toString(), Label.LabelStyle(context.font, Color.YELLOW)).apply {
+    val lvlLabel = Label(unitConfig.level.toString(), Label.LabelStyle(context.regularFont, Color.YELLOW)).apply {
         x = lvlPadding
         y = h - lvlSize - lvlPadding
         width = lvlSize
@@ -57,7 +57,7 @@ class PersonageVerticalPortrait(
         touchable = Touchable.disabled
         isVisible = unitConfig.level > 0
     }
-    val name = Label(unitConfig.name, Label.LabelStyle(context.font, Color.BLACK)).apply {
+    val name = Label(unitConfig.name, Label.LabelStyle(context.regularFont, Color.BLACK)).apply {
         x = lvlPadding
         y = 0.03f * h
         width = elementWidth - 2 * lvlPadding
@@ -79,7 +79,7 @@ class PersonageVerticalPortrait(
     }
 
     fun setFocused(focused: Boolean) {
-        fg.drawable = TextureRegionDrawable(context.uiAtlas.findRegion(if (focused) "ui_portrait_fg_focused" else "ui_portrait_fg"))
+        fg.drawable = TextureRegionDrawable(context.commonAtlas.findRegion(if (focused) "ui_portrait_fg_focused" else "ui_portrait_fg"))
     }
 
 }

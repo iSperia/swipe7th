@@ -38,7 +38,7 @@ class AlchemyPanel(
         height = 240f * context.scale
     }
 
-    val bg = Image(context.uiAtlas.findRegion("ui_bg_alch")).apply {
+    val bg = Image(context.commonAtlas.findRegion("ui_bg_alch")).apply {
         width = context.scale * 480f
         height = context.scale * ForgePanel.h
     }

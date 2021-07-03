@@ -82,7 +82,7 @@ class BattlePrepareDialog(
                                 ScaleToAction().apply { setScale(1f); duration = 0.3f }
                         ), RunnableAction().apply { setRunnable { shownCallback(this@BattlePrepareDialog) } }))
 
-        background = Image(context.uiAtlas.createPatch("ui_hor_panel")).apply {
+        background = Image(context.commonAtlas.createPatch("ui_hor_panel")).apply {
             width = this@BattlePrepareDialog.width
             height = this@BattlePrepareDialog.height
         }
@@ -90,10 +90,10 @@ class BattlePrepareDialog(
         addActor(background)
 
         buttonStart = TextButton("Start", TextButton.TextButtonStyle(
-                NinePatchDrawable(context.uiAtlas.createPatch("ui_button_simple")),
-                NinePatchDrawable(context.uiAtlas.createPatch("ui_button_pressed")),
+                NinePatchDrawable(context.commonAtlas.createPatch("ui_button_simple")),
+                NinePatchDrawable(context.commonAtlas.createPatch("ui_button_pressed")),
                 null,
-                context.font
+                context.regularFont
         )).apply {
             label.setFontScale(1f)
             label.color = Color.BLACK
@@ -131,7 +131,7 @@ class BattlePrepareDialog(
         }
         addActor(npcPersonages)
 
-        vsIcon = Image(context.uiAtlas.findRegion("ui_icon_vs")).apply {
+        vsIcon = Image(context.commonAtlas.findRegion("ui_icon_vs")).apply {
             x = 190f * game.scale
             y = 190f * game.scale
             width = 40f * game.scale
@@ -140,7 +140,7 @@ class BattlePrepareDialog(
         }
         addActor(vsIcon)
 
-        labelDifficulty = Label("Select difficulty:", Label.LabelStyle(context.font, Color.BLACK)).apply {
+        labelDifficulty = Label("Select difficulty:", Label.LabelStyle(context.regularFont, Color.BLACK)).apply {
             x = 0f
             y = 380f * game.scale
             width = 210f * game.scale
@@ -153,7 +153,7 @@ class BattlePrepareDialog(
 
         addActor(starImages)
         (1..5).forEach { i ->
-            val image = Image(context.uiAtlas.findRegion("star_grey")).apply {
+            val image = Image(context.commonAtlas.findRegion("star_grey")).apply {
                 width = 30f * game.scale
                 height = 30f * game.scale
                 x = (230 + 35f * (i - 1)) * game.scale
@@ -195,9 +195,9 @@ class BattlePrepareDialog(
     private fun applyDifficulty() {
         starImages.children.withIndex().forEach { (index, star) ->
             if (index < difficulty) {
-                (star as Image).drawable = TextureRegionDrawable(context.uiAtlas.findRegion("star_yellow"))
+                (star as Image).drawable = TextureRegionDrawable(context.commonAtlas.findRegion("star_yellow"))
             } else {
-                (star as Image).drawable = TextureRegionDrawable(context.uiAtlas.findRegion("star_grey"))
+                (star as Image).drawable = TextureRegionDrawable(context.commonAtlas.findRegion("star_grey"))
             }
         }
         npcGroup.changePersonages(mapNpcWaves())
