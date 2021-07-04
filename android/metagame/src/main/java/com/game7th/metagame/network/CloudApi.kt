@@ -151,6 +151,10 @@ class CloudApi(
 
     suspend fun encounterLocation(actId: String, locationId: Int, difficulty: Int, personageId: String): String = client.post("$baseUrl/encounter?actId=$actId&locationId=$locationId&difficulty=$difficulty&personageId=$personageId") { sign() }
 
+    suspend fun getStringPackVersion(packName: String): Int = client.get("$baseUrl/strings/$packName/version")
+
+    suspend fun getStringPack(packName: String): List<TextEntryDto> = client.get("$baseUrl/strings/$packName")
+
     suspend fun connectBattle(accountId: String, battleId: String, outFlow: Flow<InputBattleEvent>, handler: suspend (BattleEvent) -> Unit) {
         val socket = aSocket(ActorSelectorManager(Dispatchers.IO)).tcp().let {
             it.connect(InetSocketAddress(baseUrl.replace("http://", "").replace(":8080", ""), 2021)) {

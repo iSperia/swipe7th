@@ -177,7 +177,6 @@ fun ShapeRenderer.strokeArc(strokeWidth: Float, x: Float, y: Float, radius: Floa
         val x4 = (radius - strokeWidth) * MathUtils.cosDeg(start + (degrees / segments) * (i + 1))
         val y4 = (radius - strokeWidth) * MathUtils.sinDeg(start + (degrees / segments) * (i + 1))
 
-        renderer.texCoord()
         renderer.color(colorBits)
         renderer.vertex(x + x1, y + y1, 0f)
         renderer.color(colorBits)
