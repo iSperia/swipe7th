@@ -46,51 +46,7 @@ class GdxGameActivity : AndroidApplication() {
         setLogLevel(LOG_NONE)
 
         game = SwipeGameGdx(storage, intent.getStringExtra(ARG_INSTANCE_ID)!!,
-                CloudEnvironment(BuildConfig.ENDPOINT), object : PurchaseItemMapper {
-            override suspend fun purchase(id: String): String {
-                return skuDetails.firstOrNull { it.sku == id }?.let { sku ->
-                    val params = BillingFlowParams.newBuilder()
-                            .setSkuDetails(sku)
-                            .build()
-                    billingClient.launchBillingFlow(this@GdxGameActivity, params)
-                    suspendCoroutine<String> { continuation ->
-                        purchaseHandler = { token ->
-                            continuation.resume(token)
-                        }
-                    }
-                } ?: ""
-            }
-
-            override suspend fun consume(purchaseToken: String) {
-                val consumeParams =
-                        ConsumeParams.newBuilder()
-                                .setPurchaseToken(purchaseToken)
-                                .build()
-                billingClient.consumeAsync(consumeParams) { billingResult, outToken ->
-                    //TODO: do something
-                }
-            }
-
-            override suspend fun mapItems(ids: List<String>): List<PurchaseItemInfo> {
-                return if (state == BillingState.READY) {
-                    val params = SkuDetailsParams.newBuilder().setSkusList(ids).setType(BillingClient.SkuType.INAPP)
-                    suspendCoroutine { continuation ->
-                        billingClient.querySkuDetailsAsync(params.build()) { result, details ->
-                            details?.let { skuDetails.addAll(it) }
-                            if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                                continuation.resume(details?.map {
-                                    PurchaseItemInfo(it.sku, it.title, it.price, it.priceCurrencyCode)
-                                }?.sortedBy { ids.indexOf(it.id) } ?: emptyList())
-                            } else {
-                                continuation.resume(emptyList())
-                            }
-                        }
-                    }
-                } else {
-                    emptyList()
-                }
-            }
-        }) { finish() }
+                CloudEnvironment(BuildConfig.ENDPOINT), producePurchaseItemMapper()) { finish() }
         initialize(game, config)
 
         purchasesUpdatedListener = PurchasesUpdatedListener { billingResult, purchases ->
@@ -101,6 +57,52 @@ class GdxGameActivity : AndroidApplication() {
             }
         }
         initBillingClient()
+    }
+
+    private fun producePurchaseItemMapper() = object : PurchaseItemMapper {
+        override suspend fun purchase(id: String): String {
+            return skuDetails.firstOrNull { it.sku == id }?.let { sku ->
+                val params = BillingFlowParams.newBuilder()
+                        .setSkuDetails(sku)
+                        .build()
+                billingClient.launchBillingFlow(this@GdxGameActivity, params)
+                suspendCoroutine<String> { continuation ->
+                    purchaseHandler = { token ->
+                        continuation.resume(token)
+                    }
+                }
+            } ?: ""
+        }
+
+        override suspend fun consume(purchaseToken: String) {
+            val consumeParams =
+                    ConsumeParams.newBuilder()
+                            .setPurchaseToken(purchaseToken)
+                            .build()
+            billingClient.consumeAsync(consumeParams) { billingResult, outToken ->
+                //TODO: do something
+            }
+        }
+
+        override suspend fun mapItems(ids: List<String>): List<PurchaseItemInfo> {
+            return if (state == BillingState.READY) {
+                val params = SkuDetailsParams.newBuilder().setSkusList(ids).setType(BillingClient.SkuType.INAPP)
+                suspendCoroutine { continuation ->
+                    billingClient.querySkuDetailsAsync(params.build()) { result, details ->
+                        details?.let { skuDetails.addAll(it) }
+                        if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                            continuation.resume(details?.map {
+                                PurchaseItemInfo(it.sku, it.title, it.price, it.priceCurrencyCode)
+                            }?.sortedBy { ids.indexOf(it.id) } ?: emptyList())
+                        } else {
+                            continuation.resume(emptyList())
+                        }
+                    }
+                }
+            } else {
+                emptyList()
+            }
+        }
     }
 
     private fun handlePurchase(purchase: Purchase) {

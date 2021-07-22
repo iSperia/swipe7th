@@ -21,13 +21,17 @@ class SplashActivity : AppCompatActivity() {
         FirebaseAnalytics.getInstance(applicationContext)
 
         // Configure Google Sign In
-        // Configure Google Sign In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 //                .requestIdToken("668899100685-u68s72n9ugh2rg83ea2alidemqui45us.apps.googleusercontent.com")
                 .requestEmail()
                 .build()
 
-        GoogleSignIn.getClient(this, gso).signInIntent.let { startActivityForResult(it, RC_SIGN_IN) }
+        val account = GoogleSignIn.getLastSignedInAccount(this)
+        if (account != null) {
+            processGoogleAccount(account)
+        } else {
+            GoogleSignIn.getClient(this, gso).signInIntent.let { startActivityForResult(it, RC_SIGN_IN) }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -38,19 +42,23 @@ class SplashActivity : AppCompatActivity() {
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 val account: GoogleSignInAccount? = task.getResult(ApiException::class.java)
-                account?.id?.let { accountId ->
-                    finish()
-                    startActivity(Intent(this@SplashActivity, GdxGameActivity::class.java).apply {
-                        putExtra(GdxGameActivity.ARG_INSTANCE_ID, accountId)
-                        putExtra(GdxGameActivity.ARG_EMAIL, account.email)
-                        addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-                        overridePendingTransition(0, 0)
-                    })
-                }
+                processGoogleAccount(account)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e)
             }
+        }
+    }
+
+    private fun processGoogleAccount(account: GoogleSignInAccount?) {
+        account?.id?.let { accountId ->
+            finish()
+            startActivity(Intent(this@SplashActivity, GdxGameActivity::class.java).apply {
+                putExtra(GdxGameActivity.ARG_INSTANCE_ID, accountId)
+                putExtra(GdxGameActivity.ARG_EMAIL, account.email)
+                addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                overridePendingTransition(0, 0)
+            })
         }
     }
 
