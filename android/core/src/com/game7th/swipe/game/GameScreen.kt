@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.badlogic.gdx.utils.viewport.Viewport
+import com.esotericsoftware.spine.SkeletonData
+import com.esotericsoftware.spine.SkeletonJson
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.campaign.ActsService
 import com.game7th.metagame.dto.UnitType
@@ -63,8 +65,9 @@ class GameScreen(game: SwipeGameGdx,
     val gdxModel = Gson().fromJson<GdxModel>(Gdx.files.internal("figures.json").readString(), GdxModel::class.java)
 
     var gameActor: GameActor? = null
-//    val atlases = mutableMapOf<String, TextureAtlas>()
-    val tiles = mutableMapOf<String, TextureAtlas>()
+
+    val figureUis = mutableMapOf<String, TextureAtlas>()
+    val skeletonDatas = mutableMapOf<String, SkeletonData>()
     val sounds = mutableMapOf<String, Sound>()
 
     lateinit var backgroundMusic: Music
@@ -142,8 +145,15 @@ class GameScreen(game: SwipeGameGdx,
             Gdx.files.internal("textures/personages/${gdxFigure.name}/ui.atlas").let { handle ->
                 if (handle.exists()) {
                     val uiAtlas = TextureAtlas(handle)
-                    gdxFigure.tiles?.forEach { tiles[it] = uiAtlas }
+                    gdxFigure.tiles?.forEach { figureUis[it] = uiAtlas }
+                    figureUis[gdxFigure.name] = uiAtlas
                 }
+            }
+            gdxFigure.tiles?.forEach {
+                val spineAtlas = TextureAtlas(Gdx.files.internal("textures/tiles/$it/tile.atlas"))
+                val json = SkeletonJson(spineAtlas)
+                val jsonData = json.readSkeletonData(Gdx.files.internal("textures/tiles/$it/spine.json"))
+                skeletonDatas[it] = jsonData
             }
         }
 
@@ -184,7 +194,9 @@ class GameScreen(game: SwipeGameGdx,
             }
             game.api.connectBattle(accountId, battleId, swipeFlow) {
                 println("S7TH GS: THREAD: ${Thread.currentThread().name}")
-                gameActor?.processAction(it)
+                runBlocking(KtxAsync.coroutineContext) {
+                    gameActor?.processAction(it)
+                }
                 battleController?.processEvent(it)
 
                 when (it) {
@@ -221,7 +233,8 @@ class GameScreen(game: SwipeGameGdx,
                                 width = Gdx.graphics.width.toFloat(),
                                 height = Gdx.graphics.height.toFloat(),
                                 atlases = atlases,
-                                tiles = tiles
+                                skeletons = skeletonDatas,
+                                figuresUi = figureUis
                             )
 
                             gameActor = GameActor(

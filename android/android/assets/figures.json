@@ -44,7 +44,7 @@
       "source_height": 960,
       "anchor_x": 480,
       "tiles": [
-        "tile_buff", "prince_strike", "prince_ray", "prince_concentration"
+        "prince_strike"
       ],
       "poses": [
         {"name":  "Strike"},

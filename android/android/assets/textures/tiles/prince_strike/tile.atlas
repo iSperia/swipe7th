@@ -1,0 +1,48 @@
+
+atlas.png
+size: 256,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+axe
+  rotate: false
+  xy: 2, 17
+  size: 22, 23
+  orig: 22, 23
+  offset: 0, 0
+  index: -1
+axe shine
+  rotate: false
+  xy: 2, 42
+  size: 93, 92
+  orig: 93, 92
+  offset: 0, 0
+  index: -1
+axe_light
+  rotate: false
+  xy: 26, 17
+  size: 20, 23
+  orig: 20, 23
+  offset: 0, 0
+  index: -1
+stone_light
+  rotate: false
+  xy: 97, 97
+  size: 37, 37
+  orig: 37, 37
+  offset: 0, 0
+  index: -1
+фоновый круг
+  rotate: false
+  xy: 97, 61
+  size: 34, 34
+  orig: 34, 34
+  offset: 0, 0
+  index: -1
+шкала
+  rotate: false
+  xy: 97, 30
+  size: 29, 29
+  orig: 29, 29
+  offset: 0, 0
+  index: -1

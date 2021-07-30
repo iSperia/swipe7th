@@ -1,15 +1,15 @@
 package com.game7th.swipe.game.actors
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.Group
-import com.badlogic.gdx.scenes.scene2d.ui.Image
-import com.badlogic.gdx.scenes.scene2d.ui.Label
-import com.badlogic.gdx.utils.Align
+import com.esotericsoftware.spine.*
 import com.game7th.swipe.game.BattleContext
 import com.game7th.swiped.api.battle.TileViewModel
 
@@ -21,26 +21,23 @@ class TileView(
 ) : Group() {
 
     private var vm: TileViewModel? = null
-    set(value) {
-        field = value
-        drawnSectors = value?.maxStackSize ?: 0
-        angle = if (drawnSectors > 0) 360f / drawnSectors else 0f
-    }
-
-    private var skillImage: Image? = null
-    private var stackSizeLabel: Label = Label("", Label.LabelStyle(context.gameContext.regularFont, Color.WHITE)).apply {
-        setFontScale(size / 4 / 36f)
-        x = size - width - size/4f
-        y = size/4f
-        setAlignment(Align.right)
-        zIndex = 3
-    }
-
-    private var stunImage: Image? = null
+        set(value) {
+            field = value
+            drawnSectors = value?.maxStackSize ?: 0
+            angle = if (drawnSectors > 0) 360f / drawnSectors else 0f
+        }
 
     private var drawnSectors = 0
     private var angle = 10f
     private var sectorRotation = 0f
+
+    val polygonBatch = PolygonSpriteBatch()
+    val skeleton: Skeleton
+    var stateData: AnimationStateData
+    var animation: AnimationState
+    val skeletonRenderer = SkeletonRenderer().apply {
+        premultipliedAlpha = true
+    }
 
     var tx: Int = 0
     var ty: Int = 0
@@ -53,13 +50,18 @@ class TileView(
     init {
         width = size
         height = size
+        val skeletonJson = context.skeletons[viewModel.skin]!!
+        skeleton = Skeleton(skeletonJson)
+        stateData = AnimationStateData(skeletonJson)
+        animation = AnimationState(stateData).apply {
+            setAnimation(0, "idle", true)
+        }
         updateFrom(viewModel)
-        addActor(stackSizeLabel)
     }
 
     override fun act(delta: Float) {
         super.act(delta)
-        sectorRotation += (45f + 90f * (vm?.stackSize?:0) / (vm?.maxStackSize?:0)) * delta
+        sectorRotation += (45f + 90f * (vm?.stackSize ?: 0) / (vm?.maxStackSize ?: 0)) * delta
         sectorRotation %= 360f
 
         if (!hasActions() && durationActionQueue.isNotEmpty()) {
@@ -69,6 +71,24 @@ class TileView(
 
     override fun draw(batch: Batch, parentAlpha: Float) {
         super.draw(batch, parentAlpha)
+
+        bufferVector.set(0f, 0f)
+        localToStageCoordinates(bufferVector)
+
+        animation.update(Gdx.graphics.deltaTime)
+        val scale = 0.92f * size / 180f
+        skeleton.scaleX = scale
+        skeleton.scaleY = scale
+        skeleton.setPosition(bufferVector.x + 0.04f * size, bufferVector.y + 0.04f * size)
+        animation.apply(skeleton)
+        skeleton.updateWorldTransform()
+
+        batch.end()
+        polygonBatch.begin()
+        skeletonRenderer.draw(polygonBatch, skeleton)
+        polygonBatch.end()
+        batch.begin()
+
         if (drawnSectors > 1) {
             batch.end()
 
@@ -91,71 +111,13 @@ class TileView(
                         color = color)
             }
 
-            shapeRenderer
             shapeRenderer.end()
             batch.begin()
         }
     }
 
     fun updateFrom(viewModel: TileViewModel) {
-        val isSkinChanged = vm?.skin != viewModel.skin
-        val isStackSizeChanged = vm?.stackSize != viewModel.stackSize
-        val isStunChanged = vm?.stun != viewModel.stun
-
         vm = viewModel
-        name = "${viewModel.id}"
-
-        if (isSkinChanged) {
-            removeSkill()
-            addSkill()
-        }
-
-        if (isStackSizeChanged) {
-            stackSizeLabel.setText(if (viewModel.stackSize < 1) "" else "${viewModel.stackSize}")
-            stackSizeLabel.isVisible = drawnSectors == 0
-            if (viewModel.stackSize >= viewModel.maxStackSize && viewModel.maxStackSize > 1) {
-                skillImage?.color = Color.BLUE
-            } else {
-                skillImage?.color = Color.WHITE
-            }
-        }
-
-        if (isStunChanged) {
-            if (vm?.stun == true) {
-                //appear stun
-                stunImage = Image(context.battleAtlas.findRegion("tile_stun")).apply {
-                    width = size
-                    height = size
-                    originX = 18f
-                    originY = 18f
-                    zIndex = 3
-                }
-                addActor(stunImage)
-            } else {
-                stunImage?.remove()
-                stunImage = null
-            }
-        }
-    }
-
-    private fun addSkill() {
-        vm?.let { vm ->
-            skillImage = Image(context.tiles[vm.skin]!!.findRegion(vm.skin)).apply {
-                zIndex = 2
-                originY = 18f
-                originX = 18f
-                width = size
-                height = size
-            }
-
-            addActor(skillImage)
-        }
-    }
-
-    private fun removeSkill() {
-        skillImage?.let {
-            removeActor(it)
-        }.also { skillImage = null }
     }
 }
 

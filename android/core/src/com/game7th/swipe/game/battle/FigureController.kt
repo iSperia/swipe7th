@@ -65,12 +65,12 @@ sealed class FigureRenderer {
             setPremultipliedAlpha(true)
 
         }
-        val dragonAtlas = context.atlases[figureModel.atlas]!!
-        val json = SkeletonJson(dragonAtlas)
+        val spineAtlas = context.atlases[figureModel.atlas]!!
+        val json = SkeletonJson(spineAtlas)
         val jsonData = json.readSkeletonData(Gdx.files.internal("textures/personages/${figureModel.name}/model.json"))
         val skeleton = Skeleton(jsonData)
         val stateData = AnimationStateData(jsonData)
-        val dragonAnimation = AnimationState(stateData).apply {
+        val spineAnimation = AnimationState(stateData).apply {
             setAnimation(0, "idle", true)
         }
 
@@ -80,8 +80,8 @@ sealed class FigureRenderer {
                 skeleton.scaleY = figureModel.scale * battle.scale
                 skeleton.setPosition(x, y)
 
-                dragonAnimation.update(delta)
-                dragonAnimation.apply(skeleton)
+                spineAnimation.update(delta)
+                spineAnimation.apply(skeleton)
                 skeleton.updateWorldTransform()
 
                 batch.end()
@@ -93,9 +93,9 @@ sealed class FigureRenderer {
         }
 
         override fun switchPose(figure: FigureController, pose: PoseGdxModel) {
-            dragonAnimation.setAnimation(0, pose.name, pose.name == "idle")
+            spineAnimation.setAnimation(0, pose.name, pose.name == "idle")
             if (pose.name != "Death") {
-                dragonAnimation.addAnimation(0, "idle", true, 0f)
+                spineAnimation.addAnimation(0, "idle", true, 0f)
             }
         }
     }
