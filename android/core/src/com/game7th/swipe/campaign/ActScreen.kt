@@ -20,12 +20,9 @@ import com.game7th.metagame.dto.LocationProgressState
 import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.SwipeGameGdx
-import com.game7th.swipe.TutorialKeys
 import com.game7th.swipe.alchemy.AlchemyPanel
 import com.game7th.swipe.alchemy.AlchemyPanelMode
 import com.game7th.swipe.campaign.bottom_menu.BottomMenu
-import com.game7th.swipe.campaign.inventory.ItemView
-import com.game7th.swipe.campaign.inventory.ItemViewAdapter
 import com.game7th.swipe.campaign.party.PartyView
 import com.game7th.swipe.campaign.prepare.BattlePrepareDialog
 import com.game7th.swipe.campaign.top_menu.CurrencyPanel
@@ -34,9 +31,7 @@ import com.game7th.swipe.forge.ForgePanel
 import com.game7th.swipe.shop.ShopPanel
 import com.game7th.swipe.util.animateHideToBottom
 import com.game7th.swipe.util.animateShowFromBottom
-import com.game7th.swipe.util.bounds
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ktx.async.KtxAsync
 import kotlin.math.*
@@ -105,7 +100,6 @@ class ActScreen(
 
     lateinit var backgroundMusic: Music
 
-    private var battlePreparationTutorialHook = false
     private var readyToRender = false
 
     override fun show() {
@@ -184,18 +178,10 @@ class ActScreen(
             bottomMenu.zIndex = 100
             mapBottomOffset = context.scale * 48f
 
-            if (actId == "act_0" && TutorialKeys.tutorialsEnabled && storage.get(TutorialKeys.ACT1_INTRO_SHOWN)?.toBoolean() != true) {
-                showIntro()
-            }
-
             backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sb_indreams.ogg")).apply {
                 volume = 0.5f
                 isLooping = true
                 play()
-            }
-
-            if (actId == "act_0" && locationCache.size == 2 && locationCache[0]?.stars == 1 && storage.get(TutorialKeys.ACT1_AFTER_FIRST_LEVEL_DONE)?.toBoolean() != true) {
-                showPartyTutorialScenario()
             }
 
             readyToRender = true
@@ -457,7 +443,7 @@ class ActScreen(
                 locationId = node.id,
                 config = node,
                 actsService = actsService,
-                shownCallback = this@ActScreen::processBattlePrepareDialogShown) {}
+                shownCallback = {}) {}
         stage.addActor(battlePrepareDialog)
         battlePrepareDialog?.zIndex = max(0, stage.actors.size - 3)
     }
@@ -466,126 +452,6 @@ class ActScreen(
         battlePrepareDialog?.let { dialog ->
             dialog.remove()
             battlePrepareDialog = null
-        }
-    }
-
-    private fun showIntro() {
-        showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_intro_1"]!!) {
-            showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_intro_2"]!!) {
-                showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_intro_3"]!!) {
-                    showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_intro_4"]!!) {
-                        showDialog("vp_personage_gladiator", "Antoxa", game.context.texts["ttr_intro_5"]!!) {
-                            showDialog("vp_strange_figure", "Strange Figure", game.context.texts["ttr_intro_6"]!!) {
-                                val rect = config.nodes[0].let { node ->
-                                    val txt = getTextureForCircle(CampaignNodeType.REGULAR)
-                                    Rectangle(node.x * game.scale - circleOffset - 5f * context.scale,
-                                            node.y * game.scale - circleOffset - scroll + mapBottomOffset - 5f * context.scale,
-                                            txt.regionWidth * circleScale + 10f * context.scale,
-                                            txt.regionHeight * circleScale + 10f * context.scale
-                                    )
-                                }
-                                battlePreparationTutorialHook = true
-                                showFocusView(game.context.texts["ttr_intro_7"]!!, rect, DismissStrategy.DISMISS_ON_INSIDE) {
-                                    showBattlePreparation(config.nodes[0])
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun showPartyTutorialScenario() {
-        showFocusView("ttr_party_1", bottomMenu.buttonSquads.bounds(), DismissStrategy.DISMISS_ON_INSIDE) {
-            transiteUiState(UiState.PartyUi)
-            KtxAsync.launch {
-                delay(300)
-                partyUi?.let { party ->
-                    showFocusView("ttr_party_2", party.personagesView.getChild(0).bounds(), DismissStrategy.DISMISS_ON_INSIDE) {
-                        KtxAsync.launch {
-                            party.personagesView.selectionCallback?.invoke(0)
-                            delay(300)
-                            party.detailView?.let { details ->
-                                showFocusView("ttr_party_3", details.experienceBar.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                    showFocusView("ttr_party_4", details.attrsBg.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                        showFocusView("ttr_party_5", details.bodyLabel.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                            showFocusView("ttr_party_6", details.secondAttrsBody.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                showFocusView("ttr_party_7", details.spiritLabel.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                    showFocusView("ttr_party_8", details.secondAttrsSpirit.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                        showFocusView("ttr_party_9", details.mindLabel.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                            showFocusView("ttr_party_10", details.secondAttrsMind.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                                showFocusView("ttr_party_11", details.buttonGear.bounds(), DismissStrategy.DISMISS_ON_INSIDE) {
-                                                                    details.processGearButton()
-                                                                    KtxAsync.launch {
-                                                                        delay(300)
-                                                                        details.inventoryView?.let { inventory ->
-                                                                            showFocusView("ttr_party_12", inventory.panelScroller.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                                                if ((inventory.panelItems.getChild(0) as ItemView).item is ItemViewAdapter.InventoryItemAdapter) {
-                                                                                    showFocusView("ttr_party_13", inventory.panelItems.getChild(0).bounds(), DismissStrategy.DISMISS_ON_INSIDE) {
-                                                                                        (inventory.panelItems.getChild(0) as? ItemView)?.let { itemView ->
-                                                                                            KtxAsync.launch {
-                                                                                                inventory.processInventoryItemClick(game.gearService.listInventory()[0], itemView)
-                                                                                                delay(50)
-                                                                                                inventory.detailPanel?.let { detailPanel ->
-                                                                                                    showFocusView("ttr_party_14", detailPanel.itemView.bg.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                                                                        showFocusView("ttr_party_15", detailPanel.affixText.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                                                                            showFocusView("ttr_party_16", detailPanel.actionGroup.getChild(0).bounds(), DismissStrategy.DISMISS_ON_INSIDE) {
-                                                                                                                storage.put(TutorialKeys.ACT1_AFTER_FIRST_LEVEL_DONE, "true")
-                                                                                                                inventory.equipFromDetailPanel(0, null)
-                                                                                                                showFocusView("ttr_party_17", inventory.equippedGroup.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                                                                                    showFocusView("ttr_party_18", details.attrsBg.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                                                                                                        dismissFocusView()
-                                                                                                                        isScrollEnabled = true
-                                                                                                                    }
-                                                                                                                }
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                } else {
-                                                                                    storage.put(TutorialKeys.ACT1_AFTER_FIRST_LEVEL_DONE, "true")
-                                                                                    inventory.equipFromDetailPanel(0, null)
-                                                                                    dismissFocusView()
-                                                                                    isScrollEnabled = true
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun processBattlePrepareDialogShown(dialog: BattlePrepareDialog) {
-        if (battlePreparationTutorialHook) {
-            dismissFocusView()
-            showFocusView("ttr_intro_8", dialog.getPersonageRowBounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                showFocusView("ttr_intro_9", dialog.getEnemyRowBounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                    showFocusView("ttr_intro_10", dialog.getDifficultyBounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                        showFocusView("ttr_intro_11", dialog.getStartButtonBounds(), DismissStrategy.DISMISS_ON_INSIDE) {
-                            dismissFocusView()
-                            battlePrepareDialog?.startBattle()
-                            storage.put(TutorialKeys.ACT1_INTRO_SHOWN, true.toString())
-                        }
-                    }
-                }
-            }
         }
     }
 

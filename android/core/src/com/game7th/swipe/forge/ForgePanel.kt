@@ -10,7 +10,6 @@ import com.game7th.metagame.account.AccountService
 import com.game7th.metagame.inventory.GearService
 import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.GdxGameContext
-import com.game7th.swipe.TutorialKeys
 import com.game7th.swipe.campaign.ActScreen
 import com.game7th.swipe.campaign.inventory.ItemDetailPanel
 import com.game7th.swipe.campaign.inventory.ItemView
@@ -71,32 +70,6 @@ class ForgePanel(
         addActor(dustIcon)
         addActor(dustLabel)
         reloadData()
-
-        KtxAsync.launch {
-            val items = gearService.listInventory()
-            if (items.isNotEmpty() && context.storage.get(TutorialKeys.TUTORIAL_FORGE)?.toBoolean() != true) {
-                delay(300)
-                screen.showFocusView("ttr_forge_1", bg.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                    screen.showFocusView("ttr_forge_2", dustLabel.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                        screen.showFocusView("ttr_forge_3", panelItems.getChild(0).bounds(), DismissStrategy.DISMISS_ON_INSIDE) {
-                            processItemClicked(items[0], panelItems.getChild(0) as ItemView)
-                            KtxAsync.launch {
-                                delay(50)
-                                detailPanel?.let { detail ->
-                                    screen.showFocusView("ttr_forge_4", detail.actionGroup.getChild(4).bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                        screen.showFocusView("ttr_forge_5", detail.actionGroup.getChild(0).bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                            context.storage.put(TutorialKeys.TUTORIAL_FORGE, "true")
-                                            screen.dismissFocusView()
-                                            (screen as? ActScreen)?.isScrollEnabled = true
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private fun dismissDetailPanel() {

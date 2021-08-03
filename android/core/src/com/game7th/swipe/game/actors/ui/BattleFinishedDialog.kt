@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Align
 import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.GdxGameContext
-import com.game7th.swipe.TutorialKeys
 import com.game7th.swipe.campaign.inventory.ItemView
 import com.game7th.swipe.campaign.inventory.ItemViewAdapter
 import com.game7th.swipe.campaign.party.ExperienceBar
@@ -157,26 +156,6 @@ class BattleFinishedDialog(
                     })
                 }
             }
-        }
-
-        if (context.storage.get(TutorialKeys.ACT1_FIRST_REWARD_DIALOG_SHOWN)?.toBoolean() != true) {
-            addAction(DelayAction(1f).apply {
-                action = RunnableAction().apply {
-                    setRunnable {
-                        screen.showFocusView("ttr_reward_1", experienceBar.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                            screen.showFocusView("ttr_reward_2", newLevelText.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                screen.showFocusView("ttr_reward_3", statsText.bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                    screen.showFocusView("ttr_reward_4", rewardsRoot.getChild(0).bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                        screen.showFocusView("ttr_reward_5", rewardsRoot.getChild(1).bounds(), DismissStrategy.DISMISS_ON_OUTSIDE) {
-                                            context.storage.put(TutorialKeys.ACT1_FIRST_REWARD_DIALOG_SHOWN, true.toString())
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            })
         }
     }
 

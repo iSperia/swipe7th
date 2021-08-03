@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.Group
+import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.utils.FloatArray
 import com.esotericsoftware.spine.*
 import com.game7th.swipe.game.BattleContext
 import com.game7th.swiped.api.battle.TileViewModel
@@ -17,7 +19,11 @@ class TileView(
         private val context: BattleContext,
         viewModel: TileViewModel,
         private val size: Float,
-        private val shapeRenderer: ShapeRenderer
+        private val polygonBatch: PolygonSpriteBatch,
+        private val tileBatch: PolygonSpriteBatch,
+        private val progressIndicatorEmpty: TextureRegion?,
+        private val progressIndicatorFull: TextureRegion?,
+        private val tileBackground: TextureRegion?
 ) : Group() {
 
     private var vm: TileViewModel? = null
@@ -31,7 +37,6 @@ class TileView(
     private var angle = 10f
     private var sectorRotation = 0f
 
-    val polygonBatch = PolygonSpriteBatch()
     val skeleton: Skeleton
     var stateData: AnimationStateData
     var animation: AnimationState
@@ -54,15 +59,22 @@ class TileView(
         skeleton = Skeleton(skeletonJson)
         stateData = AnimationStateData(skeletonJson)
         animation = AnimationState(stateData).apply {
-            setAnimation(0, "idle", true)
+            setAnimation(0, "Attract", false)
+            addAnimation(0, "Idle", true, 0f)
         }
         updateFrom(viewModel)
+
+        tileBackground?.let {
+            val image = Image(it).apply {
+                width = size
+                height = size
+            }
+            addActor(image)
+        }
     }
 
     override fun act(delta: Float) {
         super.act(delta)
-        sectorRotation += (45f + 90f * (vm?.stackSize ?: 0) / (vm?.maxStackSize ?: 0)) * delta
-        sectorRotation %= 360f
 
         if (!hasActions() && durationActionQueue.isNotEmpty()) {
             addAction(durationActionQueue.removeAt(0))
@@ -76,12 +88,32 @@ class TileView(
         localToStageCoordinates(bufferVector)
 
         animation.update(Gdx.graphics.deltaTime)
-        val scale = 0.92f * size / 180f
+        val scale = size * scaleX / 180f
         skeleton.scaleX = scale
         skeleton.scaleY = scale
-        skeleton.setPosition(bufferVector.x + 0.04f * size, bufferVector.y + 0.04f * size)
+        skeleton.setPosition(bufferVector.x + size / 2f, bufferVector.y + size / 2f)
         animation.apply(skeleton)
         skeleton.updateWorldTransform()
+
+        if (drawnSectors > 1 && progressIndicatorEmpty != null && progressIndicatorFull != null) {
+            batch.end()
+            tileBatch.begin()
+
+            (0 until drawnSectors).filter { sectorRotation + angle * (it+1) <= 180f }.forEach {
+                tileBatch.strokeArc(
+                        strokeWidth = 0.11f * size,
+                        x = bufferVector.x + size / 2,
+                        y = bufferVector.y + size / 2,
+                        radius = size * 0.4f,
+                        start = sectorRotation + angle * it + 3f,
+                        degrees = angle - 6f,
+                        sampling = 2f,
+                        if ((vm?.stackSize ?: 0) - 1 >= it) progressIndicatorFull else progressIndicatorEmpty)
+            }
+
+            tileBatch.end()
+            batch.begin()
+        }
 
         batch.end()
         polygonBatch.begin()
@@ -89,29 +121,23 @@ class TileView(
         polygonBatch.end()
         batch.begin()
 
-        if (drawnSectors > 1) {
+        if (drawnSectors > 1 && progressIndicatorEmpty != null && progressIndicatorFull != null) {
             batch.end()
+            tileBatch.begin()
 
-            shapeRenderer.projectionMatrix = batch.projectionMatrix
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
-
-            bufferVector.set(0f, 0f)
-            localToStageCoordinates(bufferVector)
-
-            (0..drawnSectors).forEach {
-                val color = if (vm?.stackSize ?: 0 >= it) Color.WHITE else Color.DARK_GRAY
-                shapeRenderer.strokeArc(
-                        strokeWidth = 0.06f * size * scaleX,
+            (0 until drawnSectors).filter { sectorRotation + angle * (it+1) > 180f }.forEach {
+                tileBatch.strokeArc(
+                        strokeWidth = 0.11f * size,
                         x = bufferVector.x + size / 2,
                         y = bufferVector.y + size / 2,
-                        radius = size * 0.4f * scaleX,
+                        radius = size * 0.4f,
                         start = sectorRotation + angle * it + 3f,
                         degrees = angle - 6f,
                         sampling = 2f,
-                        color = color)
+                        if ((vm?.stackSize ?: 0) - 1 >= it) progressIndicatorFull else progressIndicatorEmpty)
             }
 
-            shapeRenderer.end()
+            tileBatch.end()
             batch.begin()
         }
     }
@@ -122,35 +148,30 @@ class TileView(
 }
 
 /** Draws an arc with 'stroke' of given width  */
-fun ShapeRenderer.strokeArc(strokeWidth: Float, x: Float, y: Float, radius: Float, start: Float, degrees: Float, sampling: Float = 2f, color: Color = Color.WHITE) {
-    val segments = ((6 * Math.cbrt(radius.toDouble()) * (Math.abs(degrees) / 360.0f)) * sampling).toInt()
-    val colorBits = color.toFloatBits()
+fun PolygonSpriteBatch.strokeArc(strokeWidth: Float, x: Float, y: Float, radius: Float, start: Float, degrees: Float, sampling: Float = 2f, texture: TextureRegion) {
+    val segments = (degrees / 12).toInt()
 
-    for (i in 0 until segments) {
-        val x1 = radius * MathUtils.cosDeg(start + (degrees / segments) * i)
-        val y1 = radius * MathUtils.sinDeg(start + (degrees / segments) * i)
+    val color = Color.WHITE.toFloatBits()
+    val verticeCount = (segments + 1) * 2
+    val vertices = FloatArray(verticeCount * 5)
+    val degreeDelta = degrees / segments
 
-        val x2 = (radius - strokeWidth) * MathUtils.cosDeg(start + (degrees / segments) * i)
-        val y2 = (radius - strokeWidth) * MathUtils.sinDeg(start + (degrees / segments) * i)
+    for (i in 0..segments) {
+        /**Close to center vertex*/
+        /*x*/vertices.add(x + (radius - strokeWidth) * MathUtils.cosDeg(start + degreeDelta * i))
+        /*y*/vertices.add(y + (radius - strokeWidth) * MathUtils.sinDeg(start + degreeDelta * i))
+        /*c*/vertices.add(color)
+        /*u*/vertices.add(texture.u + (texture.u2 - texture.u) * i.toFloat() / segments)
+        /*v*/vertices.add(texture.v)
 
-        val x3 = radius * MathUtils.cosDeg(start + (degrees / segments) * (i + 1))
-        val y3 = radius * MathUtils.sinDeg(start + (degrees / segments) * (i + 1))
-
-        val x4 = (radius - strokeWidth) * MathUtils.cosDeg(start + (degrees / segments) * (i + 1))
-        val y4 = (radius - strokeWidth) * MathUtils.sinDeg(start + (degrees / segments) * (i + 1))
-
-        renderer.color(colorBits)
-        renderer.vertex(x + x1, y + y1, 0f)
-        renderer.color(colorBits)
-        renderer.vertex(x + x3, y + y3, 0f)
-        renderer.color(colorBits)
-        renderer.vertex(x + x2, y + y2, 0f)
-
-        renderer.color(colorBits)
-        renderer.vertex(x + x3, y + y3, 0f)
-        renderer.color(colorBits)
-        renderer.vertex(x + x2, y + y2, 0f)
-        renderer.color(colorBits)
-        renderer.vertex(x + x4, y + y4, 0f)
+        /**Remote radius vertex*/
+        /*x*/vertices.add(x + radius * MathUtils.cosDeg(start + degreeDelta * i))
+        /*y*/vertices.add(y + radius * MathUtils.sinDeg(start + degreeDelta * i))
+        /*c*/vertices.add(color)
+        /*u*/vertices.add(texture.u + (texture.u2 - texture.u) * i.toFloat() / segments)
+        /*v*/vertices.add(texture.v2)
     }
+
+    val triangles = ShortArray(segments * 2 * 3) { index -> (index / 3 + index % 3).toShort() }
+    draw(texture.texture, vertices.toArray(), 0, verticeCount * 5, triangles, 0, triangles.size)
 }

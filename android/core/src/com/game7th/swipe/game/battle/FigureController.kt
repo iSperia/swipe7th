@@ -67,11 +67,15 @@ sealed class FigureRenderer {
         }
         val spineAtlas = context.atlases[figureModel.atlas]!!
         val json = SkeletonJson(spineAtlas)
-        val jsonData = json.readSkeletonData(Gdx.files.internal("textures/personages/${figureModel.name}/model.json"))
-        val skeleton = Skeleton(jsonData)
+        val jsonData = json.readSkeletonData(Gdx.files.internal("textures/personages/${figureModel.name}/${figureModel.name}.json"))
+        val skeleton = Skeleton(jsonData).apply {
+            if (jsonData.skins.firstOrNull { it.name == "Dark_knight" } != null) {
+                setSkin("Dark_knight")
+            }
+        }
         val stateData = AnimationStateData(jsonData)
         val spineAnimation = AnimationState(stateData).apply {
-            setAnimation(0, "idle", true)
+            setAnimation(0, getIdlePoseName(), true)
         }
 
         override fun render(figure: FigureController, batch: SpriteBatch, bodyScale: Float, delta: Float) {
@@ -93,11 +97,15 @@ sealed class FigureRenderer {
         }
 
         override fun switchPose(figure: FigureController, pose: PoseGdxModel) {
-            spineAnimation.setAnimation(0, pose.name, pose.name == "idle")
+            //TODO: Remove this crunch
+            val poseName = if (pose.name == "idle") getIdlePoseName() else pose.name
+            spineAnimation.setAnimation(0, poseName, pose.name == "idle")
             if (pose.name != "Death") {
-                spineAnimation.addAnimation(0, "idle", true, 0f)
+                spineAnimation.addAnimation(0, getIdlePoseName(), true, 0f)
             }
         }
+
+        private fun getIdlePoseName() = jsonData.animations.firstOrNull { it.name == "idle" }?.name ?: "Idle"
     }
 }
 

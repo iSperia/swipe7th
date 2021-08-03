@@ -1,5 +1,6 @@
 package com.game7th.swipe.game.actors
 
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
@@ -10,6 +11,7 @@ import com.game7th.swipe.game.BattleContext
 import com.game7th.swiped.api.battle.BattleEvent
 import com.game7th.swiped.api.battle.TileFieldEventType
 import com.game7th.swiped.api.battle.TileViewModel
+import kotlinx.coroutines.delay
 import ktx.actors.alpha
 import kotlin.random.Random
 
@@ -27,7 +29,8 @@ class TileFieldView(
 
     val tileSize = (w - 4 * context.scale) / FIELD_WIDTH
 
-    private val shapeRenderer = ShapeRenderer()
+    private val polygonSpriteBatch = PolygonSpriteBatch()
+    private val tileProgressSpriteBatch = PolygonSpriteBatch()
 
     init {
         for (i in 0..4) {
@@ -62,7 +65,12 @@ class TileFieldView(
                 val fx = if (action.sourcePosition >= 0) action.sourcePosition % FIELD_WIDTH else tx
                 val fy = if (action.sourcePosition >= 0) action.sourcePosition / FIELD_WIDTH else ty
 
-                val view = TileView(context, action.tile, tileSize, shapeRenderer).apply {
+                val tile = action.tile.skin
+                val progressEmpty = context.figuresUi[tile]?.findRegion("${tile}_progress_empty")
+                val progressFull = context.figuresUi[tile]?.findRegion("${tile}_progress_full")
+                val tileBg = context.figuresUi[tile]?.findRegion("${tile}_bg")
+
+                val view = TileView(context, action.tile, tileSize, polygonSpriteBatch, tileProgressSpriteBatch, progressEmpty, progressFull, tileBg).apply {
                     this.tx = tx
                     this.ty = ty
                 }
@@ -79,12 +87,7 @@ class TileFieldView(
                     })
                 }
 
-                view.alpha = 0f
-                view.setScale(1.5f)
-                tileAnimation.addAction(AlphaAction().apply {
-                    alpha = 1f
-                    duration = 0.2f
-                })
+                view.setScale(1.1f)
                 tileAnimation.addAction(ScaleToAction().apply {
                     setScale(1f)
                     duration = 0.2f
@@ -210,12 +213,9 @@ class TileFieldView(
     }
 
     private fun Actor.applyPosition(x: Int, y: Int) {
-        this.x = tileSize * x
-        this.y = tileSize * (FIELD_WIDTH - 1 - y)
+        this.x = (context.scale + tileSize) * x
+        this.y = (context.scale + tileSize) * (FIELD_WIDTH - 1 - y)
     }
-
-    fun calcX(position: Int): Float = tileSize * (position % 5)
-    fun calcY(position: Int): Float = tileSize * (FIELD_WIDTH - 1 - (position / FIELD_WIDTH))
 
     companion object {
         const val TILE_BG_REGION = "tile_bg"

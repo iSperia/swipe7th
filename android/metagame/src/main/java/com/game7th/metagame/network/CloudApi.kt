@@ -157,7 +157,7 @@ class CloudApi(
 
     suspend fun connectBattle(accountId: String, battleId: String, outFlow: Flow<InputBattleEvent>, handler: suspend (BattleEvent) -> Unit) {
         val socket = aSocket(ActorSelectorManager(Dispatchers.IO)).tcp().let {
-            it.connect(InetSocketAddress(baseUrl.replace("http://", "").replace(":8080", ""), 2021)) {
+            it.connect(InetSocketAddress(baseUrl.replace("http://", "").replace(":8080", ""), environment.socketPort)) {
                 noDelay = true
                 keepAlive = true
             }

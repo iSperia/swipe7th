@@ -44,7 +44,7 @@
       "source_height": 960,
       "anchor_x": 480,
       "tiles": [
-        "prince_strike"
+        "prince_strike", "prince_ray"
       ],
       "poses": [
         {"name":  "Strike"},
@@ -217,24 +217,27 @@
       ]
     },
     {
-      "name": "arachnid_small",
-      "atlas": "arachnid_small",
-      "render": "sequence",
-      "height": 180,
-      "width": 220,
-      "scale": 1.1,
-      "body": "arachnid_small_body",
-      "source_width": 400,
-      "source_height": 300,
-      "anchor_x": 113,
+      "name": "Knight",
+      "atlas": "Knight",
+      "render": "spine",
+      "height": 752,
+      "width": 764,
+      "scale": 0.5,
+      "body": "Knight",
+      "source_width": 960,
+      "source_height": 960,
+      "anchor_x": 480,
       "poses": [
-        {"name":  "attack", "start":  11, "end":  23, "triggers": [20]},
-        {"name":  "damage", "start":  23, "end":  30, "sound": "monster_damage"},
-        {"name":  "idle", "start":  1, "end":  10},
-        {"name":  "death", "start":  30, "end":  45}
+        {"name":  "Strike"},
+        {"name":  "Buff"},
+        {"name":  "Ultimate"},
+        {"name":  "Damage"},
+        {"name":  "Death"},
+        {"name": "idle"},
+        {"name": "idle_long"}
       ],
       "attacks": [
-        {"attackType": "MOVE_AND_PUNCH", "sound":  "monster_damage"}
+        {"attackType": "MOVE_AND_PUNCH", "pose": "Strike", "trigger": 0.77, "length": 1, "sound": "sword_strike"}
       ]
     },
     {

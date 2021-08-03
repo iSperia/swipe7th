@@ -387,7 +387,7 @@ class BattleController(
 
         scheduledActions.add(Pair(max(timeShift, figure?.timeShift ?: 0f)) {
             figure?.let {
-                it.switchPose("death")
+                it.switchPose("Death")
                 it.isDead = true
             }
             controllers.firstOrNull { it is PersonageHealthbarController && it.figure.id == event.personage.id }?.let {

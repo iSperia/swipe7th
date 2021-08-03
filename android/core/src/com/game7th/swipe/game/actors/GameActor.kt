@@ -40,25 +40,25 @@ class GameActor(
     val tileField: TileFieldView
     val flaskPanel = Group()
 
-    val scaleIconWisdom = Image(context.battleAtlas.findRegion("icon_mind")).apply {
+    val scaleIconCombo = Image(context.battleAtlas.findRegion("icon_mind")).apply {
         x = 0f
         y = 60f * context.scale
         width = 70f * context.scale
         height = 88f * context.scale
     }
-    val scaleIconCombo = Image(context.battleAtlas.findRegion("icon_spirit")).apply {
+    val scaleIconUltimate = Image(context.battleAtlas.findRegion("icon_spirit")).apply {
         x = 413f * context.scale
         y = 58f * context.scale
         width = 67f * context.scale
         height = 82f * context.scale
     }
-    val scaleWisdom = ScaleActor(context, "scale_wisdom", 0).apply {
-        x = scaleIconWisdom.x + 27f * context.scale
-        y = scaleIconWisdom.y + 68f * context.scale
+    val scaleCombo = ScaleActor(context, "scale_wisdom", 10).apply {
+        x = scaleIconCombo.x + 27f * context.scale
+        y = scaleIconCombo.y + 68f * context.scale
     }
-    val scaleCombo = ScaleActor(context, "scale_combo", 10).apply {
-        x = scaleIconCombo.x + 26f * context.scale
-        y = scaleIconCombo.y + 70f * context.scale
+    val scaleUltimate = ScaleActor(context, "scale_combo", 20).apply {
+        x = scaleIconUltimate.x + 26f * context.scale
+        y = scaleIconUltimate.y + 70f * context.scale
     }
     val comboCaption = Label(context.gameContext.texts["ui_combo"], Label.LabelStyle(context.gameContext.captionFont, Color.YELLOW)).apply {
         x = scaleIconCombo.x
@@ -133,10 +133,10 @@ class GameActor(
         addActor(tileField)
         addActor(flaskPanel)
         refreshAlchemy()
-        addActor(scaleWisdom)
         addActor(scaleCombo)
+        addActor(scaleUltimate)
         addActor(scaleIconCombo)
-        addActor(scaleIconWisdom)
+        addActor(scaleIconUltimate)
         addActor(comboCaption)
         addActor(comboValue)
         addActor(buttonSettings)
@@ -183,7 +183,7 @@ class GameActor(
                 comboValue.setText("X${event.combo}")
             }
             is BattleEvent.WisdomUpdateEvent ->  {
-                scaleWisdom.applyProgress(event.wisdomProgress)
+//                scaleWisdom.applyProgress(event.wisdomProgress)
             }
             is BattleEvent.NewWaveEvent -> {
                 val waveText = Label("WAVE ${event.wave+1}", Label.LabelStyle(context.gameContext.captionFont, Color.YELLOW)).apply {

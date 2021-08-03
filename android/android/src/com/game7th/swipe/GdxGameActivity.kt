@@ -46,7 +46,7 @@ class GdxGameActivity : AndroidApplication() {
         setLogLevel(LOG_NONE)
 
         game = SwipeGameGdx(storage, intent.getStringExtra(ARG_INSTANCE_ID)!!,
-                CloudEnvironment(BuildConfig.ENDPOINT), producePurchaseItemMapper()) { finish() }
+                CloudEnvironment(BuildConfig.ENDPOINT, BuildConfig.SOCKET_PORT), producePurchaseItemMapper()) { finish() }
         initialize(game, config)
 
         purchasesUpdatedListener = PurchasesUpdatedListener { billingResult, purchases ->
