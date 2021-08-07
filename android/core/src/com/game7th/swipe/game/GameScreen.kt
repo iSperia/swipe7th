@@ -39,7 +39,6 @@ class GameScreen(game: SwipeGameGdx,
                  private val accountId: String,
                  private val actId: String,
                  private val locationId: Int,
-                 private val difficulty: Int,
                  private val personage: PersonageDto,
                  private val actService: ActsService,
                  private val gearService: GearService,
@@ -164,7 +163,7 @@ class GameScreen(game: SwipeGameGdx,
 
     private suspend fun claimRewards(): LocationCompleteResponseDto {
         game.accountService.refreshPersonages()
-        return actService.markLocationComplete(actId, locationId, difficulty, personage.id)
+        return actService.markLocationComplete(actId, locationId, personage.id)
     }
 
     //    private fun produceTutorials(): List<AbilityTrigger> {

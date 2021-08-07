@@ -15,8 +15,6 @@ import com.game7th.metagame.campaign.*
 import com.game7th.metagame.campaign.dto.ActConfig
 import com.game7th.metagame.campaign.dto.CampaignNodeType
 import com.game7th.metagame.campaign.dto.LocationConfig
-import com.game7th.metagame.dto.ActProgressState
-import com.game7th.metagame.dto.LocationProgressState
 import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.SwipeGameGdx
@@ -63,13 +61,8 @@ class ActScreen(
     private lateinit var actConfig: ActConfig
     private lateinit var backgroundTexture: TextureRegion
 
-    private lateinit var config: ActConfig
-
     private var circleScale: Float = 0f
     private var circleOffset: Float = 0f
-    private var starScale: Float = 0f
-    private var starOffset: Float = 0f
-    private val starAlphaStep = Math.toRadians(30.0).toFloat()
     private var lockScale: Float = 0f
     private var lockOffset: Float = 0f
 
@@ -88,8 +81,6 @@ class ActScreen(
 
     private var uiState: UiState = UiState.Hidden
 
-    private val locationCache = mutableMapOf<Int, LocationProgressState>()
-
     private var battlePrepareDialog: BattlePrepareDialog? = null
     private var partyUi: PartyView? = null
     private var forgeUi: ForgePanel? = null
@@ -106,11 +97,8 @@ class ActScreen(
         super.show()
         KtxAsync.launch {
 
-            config = actsService.getActConfig(actId)
-            val progressState: ActProgressState = actsService.getActProgress(actId)
-
-            updateLocationProgressCache(progressState)
             actConfig = actsService.getActConfig(actId)
+
             actAtlas = TextureAtlas(Gdx.files.internal("textures/acts/${actId}.atlas"))
             backgroundTexture = actAtlas.findRegion("bg")
 
@@ -140,7 +128,7 @@ class ActScreen(
                     val wx = x / game.scale
                     actConfig.nodes.forEach { node ->
                         val rect = Rectangle(node.x - 30, node.y - 30, 60f, 60f)
-                        if (rect.contains(wx, wy) && locationCache.containsKey(node.id)) {
+                        if (rect.contains(wx, wy) && !node.isLocked) {
                             transiteUiState(UiState.BattlePreparation(node))
                             return true
                         }
@@ -153,10 +141,6 @@ class ActScreen(
             val texture = getTextureForCircle(CampaignNodeType.FARM)
             circleScale = game.width / 8 / texture.regionWidth
             circleOffset = game.width / 16
-
-            val greyStarTexture = context.commonAtlas.findRegion("star_grey")
-            starScale = game.width / 24 / greyStarTexture.regionWidth
-            starOffset = game.width / 48
 
             val lockTexture = context.commonAtlas.findRegion("lock")
             lockScale = game.width / 10 / lockTexture.regionWidth
@@ -191,13 +175,6 @@ class ActScreen(
                 currencyView.refreshBalance()
             }
         }
-    }
-
-    private fun updateLocationProgressCache(progressState: ActProgressState) {
-        locationCache.clear()
-        locationCache.putAll(progressState.asMap())
-        val maxKey = locationCache.keys.max() ?: -1
-        locationCache[maxKey + 1] = LocationProgressState(maxKey + 1, 0)
     }
 
     private fun normalizeScroll() {
@@ -246,14 +223,14 @@ class ActScreen(
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         linkRenderer.begin(ShapeRenderer.ShapeType.Filled)
-        config.nodes.forEach {
+        actConfig.nodes.forEach {
             it.drawLinks()
         }
         linkRenderer.end()
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
         batch.begin()
-        config.nodes.forEach {
+        actConfig.nodes.forEach {
             it.draw(batch)
         }
         batch.end()
@@ -311,27 +288,7 @@ class ActScreen(
                 circleScale,
                 0f)
 
-        if (type != CampaignNodeType.FARM) {
-            val greyStarTexture = context.commonAtlas.findRegion("star_grey")
-            val yellowStarTexture = context.commonAtlas.findRegion("star_yellow")
-            val stars = if (locationCache.containsKey(id)) locationCache[id]?.stars ?: 0 else 0
-            (4 downTo 0).forEach { i ->
-                val alpha = 2 * starAlphaStep - i * starAlphaStep
-                val texture = if (i <= stars - 1) yellowStarTexture else greyStarTexture
-                batch.draw(texture,
-                        game.scale * x - circleOffset * sin(alpha) - starOffset,
-                        game.scale * y - circleOffset * cos(alpha) - starOffset - scroll + mapBottomOffset,
-                        0f,
-                        0f,
-                        texture.regionWidth.toFloat(),
-                        texture.regionHeight.toFloat(),
-                        starScale,
-                        starScale,
-                        0f)
-            }
-        }
-
-        if (!locationCache.containsKey(id)) {
+        if (isLocked) {
             val texture = context.commonAtlas.findRegion("lock")
             batch.draw(texture,
                     game.scale * x - lockOffset,
@@ -345,14 +302,6 @@ class ActScreen(
                     0f
             )
         }
-    }
-
-    private fun ActProgressState.asMap(): Map<Int, LocationProgressState> {
-        val map = mutableMapOf<Int, LocationProgressState>()
-        locations.forEach {
-            map[it.id] = it
-        }
-        return map
     }
 
     private fun getTextureForCircle(type: CampaignNodeType) = when (type) {

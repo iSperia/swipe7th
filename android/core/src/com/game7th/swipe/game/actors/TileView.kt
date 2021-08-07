@@ -55,6 +55,7 @@ class TileView(
     init {
         width = size
         height = size
+        println("Skeleton skin: ${viewModel.skin}")
         val skeletonJson = context.skeletons[viewModel.skin]!!
         skeleton = Skeleton(skeletonJson)
         stateData = AnimationStateData(skeletonJson)

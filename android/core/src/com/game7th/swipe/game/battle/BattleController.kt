@@ -474,7 +474,7 @@ class BattleController(
         val totalWidthRightNotScaled = (rightFigures.sumByDouble { it.figureModel.scale * it.figureModel.width.toDouble() } + (maxRight - rightFigures.size + 1) * 80f).toFloat()
 
         val targetScale = (Gdx.graphics.width - 4 * padding) / (totalWidthLeftNotScaled + totalWidthRightNotScaled)
-        toScale = min(1f, max(0.5f, targetScale))
+        toScale = min(Gdx.graphics.width * 1.6f / 1440f, max(Gdx.graphics.width * 0.8f / 1440f, targetScale))
 
         val needBackLine = targetScale < toScale
         val overWidth = 2 * padding + toScale * (totalWidthLeftNotScaled + totalWidthRightNotScaled) - Gdx.graphics.width
@@ -515,46 +515,6 @@ class BattleController(
 
     fun timeScale(): Float {
         return 1f + min(5f, timeShift - timePassed)
-    }
-
-    fun calcLeftPersonageRect(): Rectangle {
-        return (controllers.first { it is FigureController && !it.flipped } as FigureController).let {
-            val x = it.x - 65f * scale
-            val y = it.y
-            Rectangle(x, y, 140f * scale, it.figureModel.height * scale)
-        }
-    }
-
-    fun calcRightPersonageRect(): Rectangle {
-        return (controllers.first { it is FigureController && it.flipped } as FigureController).let {
-            val x = it.x - 65f * scale
-            val y = it.y
-            Rectangle(x, y, 140f * scale, it.figureModel.height * scale)
-        }
-    }
-
-    fun calcLeftPersonageHpBarRect(): Rectangle {
-        return (controllers.first { it is PersonageHealthbarController && !it.figure.flipped } as PersonageHealthbarController).let {
-            val sx = it.figure.x - 48f * scale - 5f
-            val sy = it.figure.y - 15f * scale - 5f
-            Rectangle(sx, sy, 96f * scale + 10f, 16f * scale + 10f)
-        }
-    }
-
-    fun calcRightPersonageHpBarRect(): Rectangle {
-        return (controllers.first { it is PersonageHealthbarController && it.figure.flipped } as PersonageHealthbarController).let {
-            val sx = it.figure.x - 48f * scale - 5f
-            val sy = it.figure.y - 15f * scale - 5f
-            Rectangle(sx, sy, 96f * scale + 10f, 16f * scale + 10f)
-        }
-    }
-
-    fun calcRightPersonageSkillRect(): Rectangle {
-        return (controllers.first { it is PersonageTickerController && it.figure.flipped } as PersonageTickerController).let {
-            val sx = it.figure.x - context.scale * 15f - 5f
-            val sy = it.figure.y + (it.figure.figureModel.height + 10f) * context.scale - 5f
-            Rectangle(sx, sy, 45f * scale, 45f * scale)
-        }
     }
 
     companion object {

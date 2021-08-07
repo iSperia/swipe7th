@@ -118,7 +118,7 @@ class CloudApi(
 
     suspend fun getAct(actName: String): ActDto = client.get("$baseUrl/acts/$actName") { sign() }
 
-    suspend fun markLocationComplete(actName: String, locationId: Int, difficulty: Int, personageId: String): LocationCompleteResponseDto = client.post("$baseUrl/acts/$actName/$locationId/markComplete?difficulty=$difficulty&personageId=$personageId") { sign() }
+    suspend fun markLocationComplete(actName: String, locationId: Int, personageId: String): LocationCompleteResponseDto = client.post("$baseUrl/acts/$actName/$locationId/markComplete?personageId=$personageId") { sign() }
 
     suspend fun getActProgress(actName: String): List<LocationProgressDto> = client.get("$baseUrl/acts/$actName/progress") { sign() }
 
@@ -149,7 +149,7 @@ class CloudApi(
         sign()
     }
 
-    suspend fun encounterLocation(actId: String, locationId: Int, difficulty: Int, personageId: String): String = client.post("$baseUrl/encounter?actId=$actId&locationId=$locationId&difficulty=$difficulty&personageId=$personageId") { sign() }
+    suspend fun encounterLocation(actId: String, locationId: Int, personageId: String): String = client.post("$baseUrl/encounter?actId=$actId&locationId=$locationId&personageId=$personageId") { sign() }
 
     suspend fun getStringPackVersion(packName: String): Int = client.get("$baseUrl/strings/$packName/version")
 

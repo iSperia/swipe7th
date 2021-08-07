@@ -10,10 +10,8 @@ interface ActsService {
     @Throws(NetworkError::class)
     suspend fun getActConfig(actName: String): ActConfig
 
-    suspend fun getActProgress(actName: String): ActProgressState
-
     /**
      * Mark user completed some location with some stars involved
      */
-    suspend fun markLocationComplete(actName: String, locationId: Int, starCount: Int, personageId: String): LocationCompleteResponseDto
+    suspend fun markLocationComplete(actName: String, locationId: Int, personageId: String): LocationCompleteResponseDto
 }
