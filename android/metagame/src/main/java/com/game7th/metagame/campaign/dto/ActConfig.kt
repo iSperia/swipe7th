@@ -1,6 +1,7 @@
 package com.game7th.metagame.campaign.dto
 
 import com.game7th.metagame.dto.UnitConfig
+import com.game7th.swiped.api.FarmLocationMonsterConfigDto
 
 enum class CampaignNodeType {
     REGULAR, BOSS, FARM
@@ -14,7 +15,9 @@ data class LocationConfig(
         val unlock: List<Int>,
         val waves: List<List<UnitConfig>> = mutableListOf(),
         val scene: String,
-        val isLocked: Boolean
+        val isLocked: Boolean,
+        val timeoutStart: Long,
+        val farmConfig: FarmLocationMonsterConfigDto?
 )
 
 data class ActConfig(

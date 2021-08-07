@@ -8,6 +8,7 @@ import com.game7th.metagame.dto.UnitType
 import com.game7th.metagame.network.CloudApi
 import com.game7th.metagame.network.NetworkError
 import com.game7th.swiped.api.LocationCompleteResponseDto
+import com.game7th.swiped.api.LocationType
 
 /**
  * View model for campaign stuff
@@ -40,10 +41,13 @@ class ActsServiceImpl(
         }
 
         val config = ActConfig(act.texture, act.locations.map { location ->
-            LocationConfig(location.index, CampaignNodeType.REGULAR, location.x.toFloat(), location.y.toFloat(), location.unlock, location.waves.map {
-                it.monsters.map { UnitConfig(UnitType.valueOf(it.name), it.level) }
-            }, location.scene, !unlockedLocations.contains(location.index))
-        })
+            LocationConfig(location.index, when (location.locationType) {
+                    LocationType.FARM -> CampaignNodeType.FARM
+                    else -> CampaignNodeType.REGULAR
+            }, location.x.toFloat(), location.y.toFloat(), location.unlock, location.waves.map {
+                    it.monsters.map { UnitConfig(UnitType.valueOf(it.name), it.level) }
+                }, location.scene, !unlockedLocations.contains(location.index), progress.firstOrNull { it.locationId == location.index }?.timeoutStarted ?: 0, location.farm)
+            })
         actCache.put(actName, config)
         return config
     }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.input.GestureDetector
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.utils.Align
 import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.campaign.*
 import com.game7th.metagame.campaign.dto.ActConfig
@@ -292,6 +293,16 @@ class ActScreen(
                     lockScale,
                     0f
             )
+        }
+
+        if (type == CampaignNodeType.FARM) {
+            val now = System.currentTimeMillis()
+            val delta = max(0L, (timeoutStart + farmConfig!!.timeout * 1000L - now)/1000L + 1)
+//            if (delta > 0) {
+                context.regularFont.setColor(0f, 0f, 0f, 1f)
+                context.regularFont.draw(batch, delta.toString(), game.scale * x - lockOffset, game.scale * y - scroll + mapBottomOffset, texture.regionWidth.toFloat(), Align.center, false)
+                context.regularFont.setColor(1f, 1f, 1f, 1f)
+//            }
         }
     }
 
