@@ -8,7 +8,6 @@ import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.campaign.inventory.ItemDetailPanel
 import com.game7th.swipe.campaign.inventory.ItemView
 import com.game7th.swipe.campaign.inventory.ItemViewAdapter
-import com.game7th.swipe.forge.ForgePanel
 import com.game7th.swipe.util.InventoryAction
 import com.game7th.swiped.api.FlaskItemFullInfoDto
 import kotlinx.coroutines.launch
@@ -40,7 +39,7 @@ class AlchemyPanel(
 
     val bg = Image(context.commonAtlas.findRegion("ui_bg_alch")).apply {
         width = context.scale * 480f
-        height = context.scale * ForgePanel.h
+        height = context.scale * h
     }
 
     var detailPanel: ItemDetailPanel? = null

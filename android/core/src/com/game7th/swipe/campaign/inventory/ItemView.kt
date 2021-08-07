@@ -13,7 +13,7 @@ import com.game7th.swiped.api.InventoryItemFullInfoDto
 sealed class ItemViewAdapter {
     data class InventoryItemAdapter(val item: InventoryItemFullInfoDto): ItemViewAdapter() {
         override fun getIcon() = "${item.template.name}"
-        override fun getLabel() = "${item.level}"
+        override fun getLabel() = ""
         override fun getName() = item.template.name
     }
 
@@ -62,7 +62,7 @@ class ItemView(
         }
     }
 
-    val lvlLabel = Label(item.getLabel(), Label.LabelStyle(context.captionFont, Color.WHITE)).apply {
+    val digitLabel = Label(item.getLabel(), Label.LabelStyle(context.captionFont, Color.WHITE)).apply {
         width = textSize * size
         height = textSize * size
         setAlignment(Align.bottomLeft)
@@ -73,7 +73,7 @@ class ItemView(
     init {
         addActor(bg)
         image?.let { addActor(it) }
-        addActor(lvlLabel)
+        addActor(digitLabel)
 
         width = size
         height = size

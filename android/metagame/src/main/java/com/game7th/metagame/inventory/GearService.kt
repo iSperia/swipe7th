@@ -8,8 +8,6 @@ interface GearService {
     suspend fun equipItem(personageId: String, item: InventoryItemFullInfoDto)
     suspend fun dequipItem(personageId: String, item: InventoryItemFullInfoDto)
     suspend fun reloadData()
-    suspend fun dustItem(item: InventoryItemFullInfoDto): Boolean
-    suspend fun pumpItem(item: InventoryItemFullInfoDto): Boolean
     suspend fun listFlasks(): List<FlaskItemFullInfoDto>
     suspend fun consumeFlask(flaskItemId: String)
 }

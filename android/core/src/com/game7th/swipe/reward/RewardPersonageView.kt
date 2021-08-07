@@ -13,7 +13,7 @@ class RewardPersonageView(
         private val item: PackEntryDto
 ) : Group() {
 
-    val portrait = PersonageVerticalPortrait(context, PortraitConfig(item.meta, "vp_${item.meta.toLowerCase()}", item.level), context.scale * 90f)
+    val portrait = PersonageVerticalPortrait(context, PortraitConfig(item.meta, "vp_${item.meta.toLowerCase()}", 1), context.scale * 90f)
 
     init {
         addActor(portrait)

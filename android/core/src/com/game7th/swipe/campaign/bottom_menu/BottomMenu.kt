@@ -11,7 +11,6 @@ class BottomMenu(
 ) : Group() {
 
     var onPartyButtonPressed: (() -> Unit)? = null
-    var onForgeButtonPressed: (() -> Unit)? = null
     var onShopButtonPressed: (() -> Unit)? = null
     var onAlchButtonPressed: (() -> Unit)? = null
 
@@ -26,16 +25,10 @@ class BottomMenu(
         onPartyButtonPressed?.invoke()
     }
 
-    val buttonForge = IconTextButton(context, "icon_forge", context.texts["button_forge"]!!) {
-        onForgeButtonPressed?.invoke()
-    }.apply {
-        x = buttonSquads.x + buttonSquads.width
-    }
-
     val buttonShop = IconTextButton(context, "icon_shop", context.texts["button_shop"]!!) {
         onShopButtonPressed?.invoke()
     }.apply {
-        x = buttonForge.x + buttonForge.width
+        x = buttonSquads.x + buttonSquads.width
     }
 
     val buttonAlch = IconTextButton(context, "icon_alch", context.texts["button_lab"]!!) {
@@ -48,7 +41,6 @@ class BottomMenu(
         addActor(bg)
 
         addActor(buttonSquads)
-        addActor(buttonForge)
         addActor(buttonShop)
         addActor(buttonAlch)
     }

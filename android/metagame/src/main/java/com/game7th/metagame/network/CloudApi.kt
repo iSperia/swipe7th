@@ -134,10 +134,6 @@ class CloudApi(
 
     suspend fun consumeFlask(itemId: String): Unit = client.post("$baseUrl/gear/consumeFlask?flaskId=$itemId") { sign() }
 
-    suspend fun dustItem(item: InventoryItemFullInfoDto): Unit = client.post("$baseUrl/gear/dust?itemId=${item.id}") { sign() }
-
-    suspend fun pumpItem(item: InventoryItemFullInfoDto): Unit = client.post("$baseUrl/gear/pump?itemId=${item.id}") { sign() }
-
     suspend fun listShopDisplay(): ShopDisplayDto = client.get("$baseUrl/shop/display") { sign() }
 
     suspend fun validateGooglePurchase(token: String, shopItemId: String): List<PackEntryDto> = client.post("$baseUrl/shop/google_inapp_purchase?token=$token&shopItemId=$shopItemId") { sign() }

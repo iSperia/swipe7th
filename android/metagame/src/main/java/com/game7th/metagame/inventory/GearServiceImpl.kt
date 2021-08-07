@@ -1,11 +1,8 @@
 package com.game7th.metagame.inventory
 
-import com.game7th.metagame.PersistentStorage
 import com.game7th.metagame.network.CloudApi
-import com.game7th.metagame.network.NetworkError
 import com.game7th.swiped.api.FlaskItemFullInfoDto
 import com.game7th.swiped.api.InventoryItemFullInfoDto
-import com.google.gson.Gson
 
 class GearServiceImpl(
         private val api: CloudApi
@@ -48,26 +45,6 @@ class GearServiceImpl(
 
     override suspend fun reloadData() {
         itemsDirty = true
-    }
-
-    override suspend fun dustItem(item: InventoryItemFullInfoDto): Boolean {
-        try {
-            api.dustItem(item)
-            reloadData()
-            return true
-        } catch (e: NetworkError) {
-            return false
-        }
-    }
-
-    override suspend fun pumpItem(item: InventoryItemFullInfoDto): Boolean {
-        try {
-            api.pumpItem(item)
-            reloadData()
-            return true
-        } catch (e: NetworkError) {
-            return false
-        }
     }
 
     override suspend fun consumeFlask(flaskItemId: String) {

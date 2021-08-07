@@ -42,11 +42,7 @@ class RewardItemView(
         addActor(itemImage)
         addActor(label)
 
-        label.setText(if (item.level > 0) {
-            item.level.toString()
-        } else {
-            item.amount.toString()
-        })
+        label.setText(if (item.amount > 1) item.amount.toString() else "")
 
         when (item.entryType) {
             PackEntryType.CURRENCY -> screen.currencyUpdated()
