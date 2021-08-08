@@ -47,9 +47,9 @@
         "prince_strike", "prince_ray"
       ],
       "poses": [
-        {"name":  "Strike", "effect": { "frame": 40, "x": 0, "y": 0, "id": "prince_laser", "pose": "laser_use" }},
+        {"name":  "Strike"},
         {"name":  "Buff"},
-        {"name":  "Laser", "effect": { "frame": 40, "x": 0, "y": 0, "id": "prince_laser", "pose": "laser_use" }},
+        {"name":  "Laser", "effect": { "frame": 24, "x": 0, "y": 0, "id": "prince_laser", "pose": "laser_use" }},
         {"name":  "Damage"},
         {"name":  "Death"},
         {"name": "idle"},
