@@ -47,9 +47,9 @@
         "prince_strike", "prince_ray"
       ],
       "poses": [
-        {"name":  "Strike"},
+        {"name":  "Strike", "effect": { "frame": 40, "x": 0, "y": 0, "id": "prince_laser", "pose": "laser_use" }},
         {"name":  "Buff"},
-        {"name":  "Ultimate"},
+        {"name":  "Laser", "effect": { "frame": 40, "x": 0, "y": 0, "id": "prince_laser", "pose": "laser_use" }},
         {"name":  "Damage"},
         {"name":  "Death"},
         {"name": "idle"},
@@ -57,17 +57,7 @@
       ],
       "attacks": [
         {"attackType": "MOVE_AND_PUNCH", "pose": "Strike", "trigger": 0.77, "length": 1, "sound": "sword_strike"},
-        {"attackType": "ATTACK_IN_PLACE", "pose": "Ultimate", "trigger": 1, "attach_effect": {
-          "name": "prince_ray",
-          "atlas": "prince",
-          "type": "ANCHOR_EFFECT",
-          "anchor_x": 30,
-          "anchor_y": 0,
-          "delay": 0.1,
-          "width": 480,
-          "height": 120,
-          "scale": 3.3
-        }},
+        {"attackType": "ATTACK_IN_PLACE", "pose": "Laser", "trigger": 1},
         {"attackType": "ATTACK_IN_PLACE", "trigger": 0.5, "pose": "Buff"}
       ]
     },

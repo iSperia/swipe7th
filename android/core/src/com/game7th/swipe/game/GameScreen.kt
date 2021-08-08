@@ -135,6 +135,13 @@ class GameScreen(game: SwipeGameGdx,
             }
             gdxFigure.poses?.forEach {
                 it.sound?.let { sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/${it}.ogg")) }
+                it.effect?.let { effect ->
+                    val atlas = TextureAtlas(Gdx.files.internal("textures/effects/${effect.id}/${effect.id}.atlas"))
+                    atlases[effect.id] = atlas
+                    val json = SkeletonJson(atlas)
+                    val jsonData = json.readSkeletonData(Gdx.files.internal("textures/effects/${effect.id}/${effect.id}.json"))
+                    skeletonDatas[effect.id] = jsonData
+                }
             }
             Gdx.files.internal("textures/personages/${gdxFigure.name}/ui.atlas").let { handle ->
                 if (handle.exists()) {

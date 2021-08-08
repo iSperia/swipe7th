@@ -2,13 +2,22 @@ package com.game7th.swipe.game.battle.model
 
 import com.google.gson.annotations.SerializedName
 
+data class PoseEffectGdxModel(
+        val x: Float,
+        val y: Float,
+        val frame: Int,
+        val id: String,
+        val pose: String
+)
+
 data class PoseGdxModel(
         val name: String,
         val start: Int,
         val end: Int,
         val triggers: List<Int>?,
         val sound: String?,
-        val duration: Float?
+        val duration: Float?,
+        val effect: PoseEffectGdxModel?
 )
 
 enum class GdxAttackType {
@@ -27,7 +36,6 @@ data class AttackGdxModel(
         val attackType: GdxAttackType,
         val sound: String?,
         val effect: EffectGdxModel?,
-        val attach_effect: EffectGdxModel?,
         val pose: String?,
         val trigger: Float?,
         val length: Float?

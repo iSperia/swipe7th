@@ -1,0 +1,347 @@
+
+laser_VFX.png
+size: 1580, 1580
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+laser_00004
+  rotate: false
+  xy: 2, 906
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00005
+  rotate: true
+  xy: 904, 678
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00006
+  rotate: true
+  xy: 2, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00007
+  rotate: false
+  xy: 676, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+
+laser_VFX_2.png
+size: 1580, 1580
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+laser_00008
+  rotate: false
+  xy: 2, 906
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00009
+  rotate: true
+  xy: 904, 678
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00010
+  rotate: true
+  xy: 2, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00011
+  rotate: false
+  xy: 676, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+
+laser_VFX_3.png
+size: 1580, 1580
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+laser_00012
+  rotate: false
+  xy: 2, 906
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00013
+  rotate: true
+  xy: 904, 678
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00014
+  rotate: true
+  xy: 2, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00015
+  rotate: false
+  xy: 676, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+
+laser_VFX_4.png
+size: 1580, 1580
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+laser_00016
+  rotate: false
+  xy: 2, 906
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00017
+  rotate: true
+  xy: 904, 678
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00018
+  rotate: true
+  xy: 2, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00019
+  rotate: false
+  xy: 676, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+
+laser_VFX_5.png
+size: 1580, 1580
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+laser_00020
+  rotate: false
+  xy: 2, 906
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00021
+  rotate: true
+  xy: 904, 678
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00022
+  rotate: true
+  xy: 2, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00023
+  rotate: false
+  xy: 676, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+
+laser_VFX_6.png
+size: 1580, 1580
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+laser_00024
+  rotate: false
+  xy: 2, 906
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00025
+  rotate: true
+  xy: 904, 678
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00026
+  rotate: true
+  xy: 2, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00027
+  rotate: false
+  xy: 676, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+
+laser_VFX_7.png
+size: 1580, 1580
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+laser_00028
+  rotate: false
+  xy: 2, 906
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00029
+  rotate: true
+  xy: 904, 678
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00030
+  rotate: true
+  xy: 2, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00031
+  rotate: false
+  xy: 676, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+
+laser_VFX_8.png
+size: 1580, 1580
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+laser_00032
+  rotate: false
+  xy: 2, 906
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00033
+  rotate: false
+  xy: 2, 906
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00034
+  rotate: true
+  xy: 904, 678
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00035
+  rotate: true
+  xy: 2, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00036
+  rotate: false
+  xy: 676, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+
+laser_VFX_9.png
+size: 1580, 1580
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+laser_00037
+  rotate: false
+  xy: 2, 906
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00038
+  rotate: true
+  xy: 904, 678
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00039
+  rotate: true
+  xy: 2, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00040
+  rotate: false
+  xy: 676, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+
+laser_VFX_10.png
+size: 1580, 1580
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+laser_00041
+  rotate: false
+  xy: 2, 906
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00042
+  rotate: true
+  xy: 904, 678
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00043
+  rotate: true
+  xy: 2, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1
+laser_00044
+  rotate: false
+  xy: 676, 4
+  size: 900, 672
+  orig: 900, 672
+  offset: 0, 0
+  index: -1

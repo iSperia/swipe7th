@@ -10,6 +10,7 @@ import com.esotericsoftware.spine.*
 import com.game7th.swipe.game.BattleContext
 import com.game7th.swipe.game.battle.model.FigureGdxModel
 import com.game7th.swipe.game.battle.model.GdxRenderType
+import com.game7th.swipe.game.battle.model.PoseEffectGdxModel
 import com.game7th.swipe.game.battle.model.PoseGdxModel
 import com.game7th.swiped.api.battle.PersonageViewModel
 
@@ -55,7 +56,7 @@ sealed class FigureRenderer {
                 "idle" -> Animation.PlayMode.LOOP
                 else -> Animation.PlayMode.NORMAL
             }
-            this.animation = Animation(FigureController.FRAME_DURATION, Array(allTextures!!.subList((pose?.start ?: 1) - 1, (pose?.end ?: 1)).toTypedArray()), playMode)
+            this.animation = Animation(FigureController.FRAME_DURATION, Array(allTextures!!.subList((pose.start) - 1, (pose.end)).toTypedArray()), playMode)
         }
     }
 
@@ -102,12 +103,33 @@ sealed class FigureRenderer {
             spineAnimation.setAnimation(0, poseName, pose.name == "idle")
             if (pose.name != "Death") {
                 spineAnimation.addAnimation(0, getIdlePoseName(), true, 0f)
+            } else {
+                spineAnimation.addListener(object : AnimationState.AnimationStateListener {
+                    override fun start(entry: AnimationState.TrackEntry?) {}
+                    override fun interrupt(entry: AnimationState.TrackEntry?) {}
+                    override fun end(entry: AnimationState.TrackEntry?) {}
+                    override fun dispose(entry: AnimationState.TrackEntry?) {}
+                    override fun event(entry: AnimationState.TrackEntry?, event: Event?) {}
+
+                    override fun complete(entry: AnimationState.TrackEntry?) {
+                        if (entry?.animation?.name == "Death") {
+                            if (figure.flipped || figure.position > 0) {
+                                figure.battle.removeController(figure)
+                            }
+                        }
+                    }
+                })
             }
         }
 
         private fun getIdlePoseName() = jsonData.animations.firstOrNull { it.name == "idle" }?.name ?: "Idle"
     }
 }
+
+data class FigurePostponedEffectWrapper(
+        val model: PoseEffectGdxModel,
+        var timeLeft: Float
+)
 
 /**
  * GDX graphics figure controller with poses
@@ -145,7 +167,6 @@ class FigureController(
 
     var isDead = false
 
-
     lateinit var pose: String
     val flipped = viewModel.team > 0
     internal val flipMultiplier = if (flipped) -1 else 1
@@ -153,6 +174,8 @@ class FigureController(
     var position: Int = 0
 
     val renderer: FigureRenderer
+
+    val effectsToShow = mutableListOf<FigurePostponedEffectWrapper>()
 
     init {
         renderer = when (figureModel.render) {
@@ -181,13 +204,26 @@ class FigureController(
         if (viewModel.stats.isFrozen) {
             batch.draw(frozenTexture, x - 64f * bodyScale * flipMultiplier, y, 128f * bodyScale * flipMultiplier, 64f * bodyScale)
         }
+
+        effectsToShow.forEach { effect ->
+            effect.timeLeft -= delta * battle.timeScale()
+            if (effect.timeLeft <= 0f) {
+                battle.showEffect(this@FigureController, effect.model)
+            }
+        }
+        effectsToShow.removeAll { it.timeLeft <= 0f }
     }
 
     fun switchPose(poseName: String) {
         if (isDead) return
         timePoseStarted = timePassed
         this.pose = poseName
-        figureModel.poses?.firstOrNull { it.name == pose }?.let { pose -> renderer.switchPose(this@FigureController, pose) }
+        figureModel.poses?.firstOrNull { it.name == pose }?.let { pose ->
+            renderer.switchPose(this@FigureController, pose)
+            pose.effect?.let { effect ->
+                effectsToShow.add(FigurePostponedEffectWrapper(effect, effect.frame * FRAME_DURATION))
+            }
+        }
     }
 
     fun move(targetX: Float, targetY: Float, duration: Float) {

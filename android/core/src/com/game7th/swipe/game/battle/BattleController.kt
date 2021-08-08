@@ -9,10 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.game.BattleContext
-import com.game7th.swipe.game.battle.model.AttackGdxModel
-import com.game7th.swipe.game.battle.model.FigureGdxModel
-import com.game7th.swipe.game.battle.model.GdxAttackType
-import com.game7th.swipe.game.battle.model.GdxRenderType
+import com.game7th.swipe.game.battle.model.*
 import com.game7th.swiped.api.battle.BattleEvent
 import kotlin.math.abs
 import kotlin.math.max
@@ -115,6 +112,11 @@ class BattleController(
     }
 
     private fun findFigure(id: Int?) = controllers.firstOrNull { it.id == id } as? FigureController
+
+    fun showEffect(figure: FigureController, effect: PoseEffectGdxModel) {
+        val controller = FigureEffectController(context, this@BattleController, effectId++, figure, effect)
+        controllers.add(controller)
+    }
 
     fun processEvent(event: BattleEvent) {
         when (event) {

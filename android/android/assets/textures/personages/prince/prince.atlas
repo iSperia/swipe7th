@@ -1,629 +1,1480 @@
 
-prince.png
-size: 2048,2048
+Prince.png
+size: 2036, 2036
 format: RGBA8888
-filter: Linear,Linear
+filter: Linear, Linear
 repeat: none
-Magic_VFX_00001
+Ult_axe00000
   rotate: false
-  xy: 1560, 1800
-  size: 238, 238
-  orig: 238, 238
+  xy: 2, 1065
+  size: 500, 500
+  orig: 500, 500
   offset: 0, 0
   index: -1
-Magic_VFX_00002
+Ult_axe00001
   rotate: false
-  xy: 1800, 1800
-  size: 238, 238
-  orig: 238, 238
+  xy: 504, 969
+  size: 500, 500
+  orig: 500, 500
   offset: 0, 0
   index: -1
-Magic_VFX_00003
+Ult_axe00002
   rotate: false
-  xy: 2, 1783
-  size: 238, 238
-  orig: 238, 238
+  xy: 1006, 883
+  size: 500, 500
+  orig: 500, 500
   offset: 0, 0
   index: -1
-Magic_VFX_00004
+Ult_axe00003
   rotate: false
-  xy: 242, 1778
-  size: 238, 238
-  orig: 238, 238
+  xy: 1508, 883
+  size: 500, 500
+  orig: 500, 500
   offset: 0, 0
   index: -1
-Magic_VFX_00005
+Ult_axe00004
   rotate: false
-  xy: 482, 1771
-  size: 238, 238
-  orig: 238, 238
+  xy: 2, 563
+  size: 500, 500
+  orig: 500, 500
   offset: 0, 0
   index: -1
-Magic_VFX_00006
+Ult_axe00005
   rotate: false
-  xy: 722, 1760
-  size: 238, 238
-  orig: 238, 238
+  xy: 504, 467
+  size: 500, 500
+  orig: 500, 500
   offset: 0, 0
   index: -1
-Magic_VFX_00007
+Ult_axe00006
   rotate: false
-  xy: 962, 1719
-  size: 238, 238
-  orig: 238, 238
+  xy: 504, 467
+  size: 500, 500
+  orig: 500, 500
   offset: 0, 0
   index: -1
-Magic_VFX_00008
+Ult_axe00007
   rotate: false
-  xy: 1202, 1659
-  size: 238, 238
-  orig: 238, 238
+  xy: 1006, 381
+  size: 500, 500
+  orig: 500, 500
   offset: 0, 0
   index: -1
-Magic_VFX_00009
+Ult_axe00008
   rotate: false
-  xy: 1442, 1560
-  size: 238, 238
-  orig: 238, 238
+  xy: 1508, 381
+  size: 500, 500
+  orig: 500, 500
   offset: 0, 0
   index: -1
-Magic_VFX_00010
+Ult_axe00009
   rotate: false
-  xy: 1682, 1560
-  size: 238, 238
-  orig: 238, 238
+  xy: 1508, 381
+  size: 500, 500
+  orig: 500, 500
   offset: 0, 0
   index: -1
-Magic_VFX_00011
+Ult_axe00010
   rotate: false
-  xy: 2, 1543
-  size: 238, 238
-  orig: 238, 238
+  xy: 2, 61
+  size: 500, 500
+  orig: 500, 500
   offset: 0, 0
   index: -1
-Magic_VFX_00012
+Ult_axe00011
   rotate: false
-  xy: 242, 1538
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00013
-  rotate: false
-  xy: 482, 1531
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00014
-  rotate: false
-  xy: 722, 1520
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00015
-  rotate: false
-  xy: 962, 1479
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00016
-  rotate: false
-  xy: 1202, 1419
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00017
-  rotate: false
-  xy: 1442, 1320
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00018
-  rotate: false
-  xy: 1682, 1320
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00019
-  rotate: false
-  xy: 2, 1303
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00020
-  rotate: false
-  xy: 242, 1298
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00021
-  rotate: false
-  xy: 482, 1291
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00022
-  rotate: false
-  xy: 722, 1280
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00023
-  rotate: false
-  xy: 962, 1239
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00024
-  rotate: false
-  xy: 1202, 1179
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00025
-  rotate: false
-  xy: 1442, 1080
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00026
-  rotate: false
-  xy: 1682, 1080
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00027
-  rotate: false
-  xy: 2, 1063
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00028
-  rotate: false
-  xy: 242, 1058
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00029
-  rotate: false
-  xy: 482, 1051
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00030
-  rotate: false
-  xy: 722, 1040
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00031
-  rotate: false
-  xy: 962, 999
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00032
-  rotate: false
-  xy: 1202, 939
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00033
-  rotate: false
-  xy: 1442, 840
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00034
-  rotate: false
-  xy: 1682, 840
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00035
-  rotate: false
-  xy: 2, 823
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00036
-  rotate: false
-  xy: 242, 818
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Magic_VFX_00037
-  rotate: false
-  xy: 482, 811
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00000
-  rotate: false
-  xy: 722, 800
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00001
-  rotate: false
-  xy: 962, 759
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00002
-  rotate: false
-  xy: 1202, 699
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00003
-  rotate: false
-  xy: 1442, 600
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00004
-  rotate: false
-  xy: 1682, 600
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00005
-  rotate: false
-  xy: 2, 583
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00006
-  rotate: false
-  xy: 2, 583
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00007
-  rotate: false
-  xy: 242, 578
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00008
-  rotate: false
-  xy: 482, 571
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00009
-  rotate: false
-  xy: 722, 560
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00010
-  rotate: false
-  xy: 962, 519
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00011
-  rotate: false
-  xy: 1202, 459
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00012
-  rotate: false
-  xy: 1442, 360
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00013
-  rotate: false
-  xy: 1682, 360
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00014
-  rotate: false
-  xy: 2, 343
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00015
-  rotate: false
-  xy: 2, 343
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00016
-  rotate: false
-  xy: 242, 338
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00017
-  rotate: false
-  xy: 482, 331
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00018
-  rotate: false
-  xy: 722, 320
-  size: 238, 238
-  orig: 238, 238
-  offset: 0, 0
-  index: -1
-Strike_VFX_00019
-  rotate: false
-  xy: 962, 279
-  size: 238, 238
-  orig: 238, 238
+  xy: 2, 61
+  size: 500, 500
+  orig: 500, 500
   offset: 0, 0
   index: -1
 axe shine
   rotate: false
-  xy: 1220, 1946
-  size: 93, 92
-  orig: 93, 92
+  xy: 1263, 1385
+  size: 422, 420
+  orig: 422, 420
   offset: 0, 0
   index: -1
 crow_shine
   rotate: false
-  xy: 1134, 1959
-  size: 84, 79
-  orig: 84, 79
+  xy: 881, 1471
+  size: 380, 359
+  orig: 380, 359
   offset: 0, 0
   index: -1
 hip_back
   rotate: true
-  xy: 389, 2020
-  size: 18, 23
-  orig: 18, 23
-  offset: 0, 0
-  index: -1
-pngegg
-  rotate: false
-  xy: 1315, 1899
-  size: 243, 139
-  orig: 243, 139
+  xy: 1688, 1952
+  size: 81, 106
+  orig: 81, 106
   offset: 0, 0
   index: -1
 shin_back
   rotate: true
-  xy: 414, 2019
-  size: 19, 24
-  orig: 19, 24
+  xy: 1796, 1945
+  size: 88, 111
+  orig: 88, 111
   offset: 0, 0
   index: -1
 shoe_back
   rotate: false
-  xy: 128, 2029
-  size: 21, 9
-  orig: 21, 9
+  xy: 568, 1994
+  size: 94, 39
+  orig: 94, 39
   offset: 0, 0
   index: -1
 Фигура 5 копия
   rotate: false
-  xy: 891, 2005
-  size: 43, 33
-  orig: 43, 33
+  xy: 1828, 1791
+  size: 196, 152
+  orig: 196, 152
   offset: 0, 0
   index: -1
 волосы светлые
   rotate: false
-  xy: 235, 2023
-  size: 33, 15
-  orig: 33, 15
+  xy: 1022, 1964
+  size: 152, 69
+  orig: 152, 69
   offset: 0, 0
   index: -1
 грудь
   rotate: false
-  xy: 847, 2008
-  size: 42, 30
-  orig: 42, 30
+  xy: 1634, 1807
+  size: 192, 136
+  orig: 192, 136
   offset: 0, 0
   index: -1
 грудь доспех
   rotate: false
-  xy: 936, 2000
-  size: 45, 38
-  orig: 45, 38
+  xy: 2, 1728
+  size: 203, 172
+  orig: 203, 172
   offset: 0, 0
   index: -1
 живот
   rotate: false
-  xy: 498, 2015
-  size: 34, 23
-  orig: 34, 23
+  xy: 126, 1902
+  size: 153, 103
+  orig: 153, 103
   offset: 0, 0
   index: -1
 задние пальцы за молотом
   rotate: true
-  xy: 151, 2028
-  size: 10, 11
-  orig: 10, 11
+  xy: 664, 1989
+  size: 44, 48
+  orig: 44, 48
   offset: 0, 0
   index: -1
 корона
   rotate: false
-  xy: 633, 2014
-  size: 34, 24
-  orig: 34, 24
+  xy: 706, 1861
+  size: 153, 107
+  orig: 153, 107
   offset: 0, 0
   index: -1
 лицо
   rotate: true
-  xy: 703, 2011
-  size: 27, 32
-  orig: 27, 32
+  xy: 1009, 1841
+  size: 121, 144
+  orig: 121, 144
   offset: 0, 0
   index: -1
 молот
   rotate: false
-  xy: 1057, 1966
-  size: 75, 72
-  orig: 75, 72
+  xy: 537, 1521
+  size: 342, 328
+  orig: 342, 328
   offset: 0, 0
   index: -1
 наплечник л
   rotate: false
-  xy: 737, 2011
-  size: 30, 27
-  orig: 30, 27
+  xy: 1155, 1832
+  size: 136, 122
+  orig: 136, 122
   offset: 0, 0
   index: -1
 наплечник п
   rotate: true
-  xy: 270, 2021
-  size: 17, 24
-  orig: 17, 24
+  xy: 1578, 1954
+  size: 79, 108
+  orig: 79, 108
   offset: 0, 0
   index: -1
 нога л1
   rotate: true
-  xy: 296, 2021
-  size: 17, 26
-  orig: 17, 26
+  xy: 1176, 1956
+  size: 77, 120
+  orig: 77, 120
   offset: 0, 0
   index: -1
 нога л2
   rotate: false
-  xy: 534, 2015
-  size: 24, 23
-  orig: 24, 23
+  xy: 464, 1886
+  size: 108, 106
+  orig: 108, 106
   offset: 0, 0
   index: -1
 нога п1
   rotate: true
-  xy: 324, 2021
-  size: 17, 26
-  orig: 17, 26
+  xy: 1460, 1955
+  size: 78, 116
+  orig: 78, 116
   offset: 0, 0
   index: -1
 нога п2
   rotate: true
-  xy: 440, 2019
-  size: 19, 27
-  orig: 19, 27
+  xy: 1909, 1945
+  size: 88, 122
+  orig: 88, 122
   offset: 0, 0
   index: -1
 перчатка л
   rotate: true
-  xy: 769, 2011
-  size: 27, 31
-  orig: 27, 31
+  xy: 1293, 1832
+  size: 122, 140
+  orig: 122, 140
   offset: 0, 0
   index: -1
 перчатка п
   rotate: true
-  xy: 352, 2021
-  size: 17, 35
-  orig: 17, 35
+  xy: 1298, 1956
+  size: 77, 160
+  orig: 77, 160
   offset: 0, 0
   index: -1
 пластина живот
   rotate: true
-  xy: 560, 2015
-  size: 23, 40
-  orig: 23, 40
+  xy: 281, 1901
+  size: 104, 181
+  orig: 104, 181
   offset: 0, 0
   index: -1
 плащ
   rotate: false
-  xy: 983, 1968
-  size: 72, 70
-  orig: 72, 70
+  xy: 207, 1567
+  size: 328, 317
+  orig: 328, 317
   offset: 0, 0
   index: -1
 пляс
   rotate: false
-  xy: 198, 2024
-  size: 35, 14
-  orig: 35, 14
+  xy: 860, 1970
+  size: 160, 63
+  orig: 160, 63
   offset: 0, 0
   index: -1
 рука л1
   rotate: true
-  xy: 669, 2012
-  size: 26, 32
-  orig: 26, 32
+  xy: 861, 1851
+  size: 117, 146
+  orig: 117, 146
   offset: 0, 0
   index: -1
 рука п1
   rotate: true
-  xy: 164, 2025
-  size: 13, 32
-  orig: 13, 32
+  xy: 714, 1976
+  size: 57, 144
+  orig: 57, 144
   offset: 0, 0
   index: -1
 сапог л
   rotate: true
-  xy: 602, 2015
-  size: 23, 29
-  orig: 23, 29
+  xy: 574, 1881
+  size: 106, 130
+  orig: 106, 130
   offset: 0, 0
   index: -1
 сапог п
   rotate: true
-  xy: 469, 2018
-  size: 20, 27
-  orig: 20, 27
+  xy: 2, 1916
+  size: 89, 122
+  orig: 89, 122
   offset: 0, 0
   index: -1
 тень
   rotate: false
-  xy: 2, 2032
-  size: 124, 6
-  orig: 124, 6
+  xy: 2, 2007
+  size: 564, 26
+  orig: 564, 26
   offset: 0, 0
   index: -1
 юбка
   rotate: false
-  xy: 802, 2009
-  size: 43, 29
-  orig: 43, 29
+  xy: 1435, 1821
+  size: 197, 131
+  orig: 197, 131
+  offset: 0, 0
+  index: -1
+
+Prince_2.png
+size: 1940, 1940
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Ult_axe00012
+  rotate: false
+  xy: 1304, 332
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+magic-circle 01
+  rotate: false
+  xy: 2, 18
+  size: 1300, 1920
+  orig: 1300, 1920
+  offset: 0, 0
+  index: -1
+pngegg
+  rotate: true
+  xy: 1304, 834
+  size: 1104, 632
+  orig: 1104, 632
+  offset: 0, 0
+  index: -1
+
+Prince_3.png
+size: 2012, 2012
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Ult_axe00013
+  rotate: false
+  xy: 1304, 1510
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00014
+  rotate: false
+  xy: 1304, 1510
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00015
+  rotate: false
+  xy: 1304, 1008
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00016
+  rotate: false
+  xy: 1304, 1008
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00017
+  rotate: false
+  xy: 1304, 506
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00018
+  rotate: false
+  xy: 1304, 4
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+magic-circle 02
+  rotate: false
+  xy: 2, 90
+  size: 1300, 1920
+  orig: 1300, 1920
+  offset: 0, 0
+  index: -1
+
+Prince_4.png
+size: 2012, 2012
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Ult_axe00019
+  rotate: false
+  xy: 1304, 1510
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00020
+  rotate: false
+  xy: 1304, 1008
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00021
+  rotate: false
+  xy: 1304, 1008
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00022
+  rotate: false
+  xy: 1304, 506
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00023
+  rotate: false
+  xy: 1304, 4
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+magic-circle 03
+  rotate: false
+  xy: 2, 90
+  size: 1300, 1920
+  orig: 1300, 1920
+  offset: 0, 0
+  index: -1
+
+Prince_5.png
+size: 2012, 2012
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00001
+  rotate: false
+  xy: 2, 930
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+Ult_axe00024
+  rotate: false
+  xy: 2, 428
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00025
+  rotate: false
+  xy: 1084, 1510
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00026
+  rotate: false
+  xy: 504, 428
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00027
+  rotate: false
+  xy: 1084, 1008
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00028
+  rotate: false
+  xy: 1006, 428
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00029
+  rotate: false
+  xy: 1508, 506
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00030
+  rotate: false
+  xy: 1508, 4
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+
+Prince_6.png
+size: 2012, 2012
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00002
+  rotate: false
+  xy: 2, 930
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+Ult_axe00031
+  rotate: false
+  xy: 2, 428
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00032
+  rotate: false
+  xy: 1084, 1510
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00033
+  rotate: false
+  xy: 504, 428
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00034
+  rotate: false
+  xy: 1084, 1008
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00035
+  rotate: false
+  xy: 1006, 428
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00036
+  rotate: false
+  xy: 1508, 506
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00037
+  rotate: false
+  xy: 1508, 4
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+
+Prince_7.png
+size: 2012, 2012
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00003
+  rotate: false
+  xy: 2, 930
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+Ult_axe00038
+  rotate: false
+  xy: 2, 428
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00039
+  rotate: false
+  xy: 2, 428
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00040
+  rotate: false
+  xy: 1084, 1510
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00041
+  rotate: false
+  xy: 504, 428
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00042
+  rotate: false
+  xy: 504, 428
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00043
+  rotate: false
+  xy: 1084, 1008
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00044
+  rotate: false
+  xy: 1084, 1008
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00045
+  rotate: false
+  xy: 1006, 428
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00046
+  rotate: false
+  xy: 1006, 428
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00047
+  rotate: false
+  xy: 1508, 506
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00048
+  rotate: false
+  xy: 1508, 4
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+
+Prince_8.png
+size: 2012, 2012
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Ult_axe00049
+  rotate: false
+  xy: 2, 1510
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00050
+  rotate: false
+  xy: 504, 1510
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00051
+  rotate: false
+  xy: 1006, 1510
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00052
+  rotate: false
+  xy: 1006, 1510
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00053
+  rotate: false
+  xy: 1508, 1510
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_axe00054
+  rotate: false
+  xy: 1508, 1510
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_shine_00002
+  rotate: false
+  xy: 2, 1008
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_shine_00003
+  rotate: false
+  xy: 504, 1008
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_shine_00004
+  rotate: false
+  xy: 504, 1008
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_shine_00005
+  rotate: false
+  xy: 1006, 1008
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_shine_00006
+  rotate: false
+  xy: 1006, 1008
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_shine_00007
+  rotate: false
+  xy: 1006, 1008
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_shine_00008
+  rotate: false
+  xy: 1508, 1008
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_shine_00009
+  rotate: false
+  xy: 1508, 1008
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_shine_00010
+  rotate: false
+  xy: 2, 506
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_shine_00011
+  rotate: false
+  xy: 2, 506
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_shine_00012
+  rotate: false
+  xy: 2, 506
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_shine_00013
+  rotate: false
+  xy: 504, 506
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+Ult_shine_00014
+  rotate: false
+  xy: 504, 506
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+
+Prince_9.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00004
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_10.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00005
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_11.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00006
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_12.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00007
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_13.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00008
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_14.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00009
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_15.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00010
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_16.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00011
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_17.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00012
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_18.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00013
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_19.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00014
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_20.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00015
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_21.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00016
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_22.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00017
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_23.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00018
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_24.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00019
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_25.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00020
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_26.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00021
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_27.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00022
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_28.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00023
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_29.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00024
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_30.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00025
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_31.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00026
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_32.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00027
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_33.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00028
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_34.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00029
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_35.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00030
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_36.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00031
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_37.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00032
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_38.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00033
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_39.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00034
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_40.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00035
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_41.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00036
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_42.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Magic_VFX_00037
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_43.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Strike_VFX_00000
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_44.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Strike_VFX_00001
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_45.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Strike_VFX_00002
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_46.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Strike_VFX_00003
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_47.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Strike_VFX_00004
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_48.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Strike_VFX_00005
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+Strike_VFX_00006
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_49.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Strike_VFX_00007
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_50.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Strike_VFX_00008
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_51.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Strike_VFX_00009
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_52.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Strike_VFX_00010
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_53.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Strike_VFX_00011
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_54.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Strike_VFX_00012
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_55.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Strike_VFX_00013
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_56.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Strike_VFX_00014
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+Strike_VFX_00015
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_57.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Strike_VFX_00016
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_58.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Strike_VFX_00017
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_59.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Strike_VFX_00018
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
+  offset: 0, 0
+  index: -1
+
+Prince_60.png
+size: 1084, 1084
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+Strike_VFX_00019
+  rotate: false
+  xy: 2, 4
+  size: 1080, 1080
+  orig: 1080, 1080
   offset: 0, 0
   index: -1
