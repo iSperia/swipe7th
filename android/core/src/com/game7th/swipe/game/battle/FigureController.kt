@@ -185,7 +185,7 @@ class FigureController(
     }
 
     override fun render(batch: SpriteBatch, delta: Float) {
-        timePassed += delta * battle.timeScale()
+        timePassed += delta
 
         if (targetX != x || targetY != y) {
             val percent = (timePassed - timeMoveStarted) / (timeMoveFinished - timeMoveStarted)
@@ -205,7 +205,7 @@ class FigureController(
         }
 
         effectsToShow.forEach { effect ->
-            effect.timeLeft -= delta * battle.timeScale()
+            effect.timeLeft -= delta
             if (effect.timeLeft <= 0f) {
                 battle.showEffect(this@FigureController, effect.model)
             }

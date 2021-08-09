@@ -81,7 +81,7 @@ class BattleController(
 
         controllers.filter { it.zIndex >= ElementController.Z_INDEX_HUD }.forEach { it.render(batch, delta) }
 
-        timePassed += delta * timeScale()
+        timePassed += delta
         timeShiftLocal = max(timePassed, timeShiftLocal)
         timeShiftGlobal = max(timePassed, timeShiftGlobal)
 
@@ -245,6 +245,7 @@ class BattleController(
     }
 
     private fun schedulePersonageAttack(event: BattleEvent.PersonageAttackEvent) {
+        timeShiftLocal = timeShiftGlobal
         val figure = findFigure(event.source.id)
         figure?.let { figure ->
             context.gdxModel.figures.firstOrNull { it.name == event.source.skin }?.let { figureGdxModel ->
@@ -344,7 +345,7 @@ class BattleController(
     }
 
     private fun moveAndPunch(figureGdxModel: FigureGdxModel, attack: AttackGdxModel, figure: FigureController, tox: Float) {
-
+        timeShiftLocal = timeShiftGlobal
         when (figureGdxModel.render) {
             GdxRenderType.SEQUENCE -> {
                 val attackPose = figureGdxModel.poses!!.first { it.name == "attack" }
@@ -475,7 +476,7 @@ class BattleController(
         val totalWidthRightNotScaled = (rightFigures.sumByDouble { it.figureModel.scale * it.figureModel.width.toDouble() } + (maxRight - rightFigures.size + 1) * 80f).toFloat()
 
         val targetScale = (Gdx.graphics.width - 4 * padding) / (totalWidthLeftNotScaled + totalWidthRightNotScaled)
-        toScale = min(Gdx.graphics.width * 1.6f / 1440f, max(Gdx.graphics.width * 0.8f / 1440f, targetScale))
+        toScale = min(Gdx.graphics.width * 2f / 1440f, max(Gdx.graphics.width * 1f / 1440f, targetScale))
 
         val needBackLine = targetScale < toScale
         val overWidth = 2 * padding + toScale * (totalWidthLeftNotScaled + totalWidthRightNotScaled) - Gdx.graphics.width
@@ -512,10 +513,6 @@ class BattleController(
     fun removeController(controller: ElementController) {
         controller.dispose()
         controllersToRemove.add(controller)
-    }
-
-    fun timeScale(): Float {
-        return 1f + min(5f, timeShiftLocal - timePassed)
     }
 
     companion object {

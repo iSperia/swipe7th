@@ -29,7 +29,7 @@ class EffectController(
     }
 
     override fun render(batch: SpriteBatch, delta: Float) {
-        timePassed += delta * battle.timeScale()
+        timePassed += delta
 
         if (!animation.isAnimationFinished(timePassed)) {
             batch.draw(animation.getKeyFrame(timePassed, true),

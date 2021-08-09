@@ -29,7 +29,7 @@ class SteppedGeneratorEffectController(
     private val textures = filterAtlas(context.atlases[model.atlas]!!, model.name)
 
     override fun render(batch: SpriteBatch, delta: Float) {
-        passedTime += delta * battle.timeScale()
+        passedTime += delta
         val index = (passedTime / model.time).toInt() + 1
         if (animations.size < index) {
             val nextX = x + index * model.step!! * battle.scale

@@ -36,7 +36,7 @@ class PersonageHealthbarController(
     private var topHei = 8f * context.scale
 
     override fun render(batch: SpriteBatch, delta: Float) {
-        timePassed += delta * battle.timeScale()
+        timePassed += delta
 
         var value = figure.viewModel.stats.health.toFloat()
         if (value != lastKnownValue) {

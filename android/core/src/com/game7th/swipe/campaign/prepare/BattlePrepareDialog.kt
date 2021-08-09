@@ -16,6 +16,7 @@ import com.game7th.metagame.campaign.ActsService
 import com.game7th.metagame.campaign.dto.LocationConfig
 import com.game7th.metagame.dto.UnitConfig
 import com.game7th.metagame.dto.UnitType
+import com.game7th.metagame.network.NetworkError
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.campaign.plist.PersonageScrollActor
 import com.game7th.swipe.game.GameScreen
@@ -134,19 +135,23 @@ class BattlePrepareDialog(
     }
 
     private suspend fun showGameScreen() {
-        val result = game.api.encounterLocation(actId, locationId, personages[personagesGroup.selectedIndex % personages.size].id)
-        game.switchScreen(GameScreen(
-                game,
-                result,
-                accountId,
-                actId,
-                locationId,
-                personages[personagesGroup.selectedIndex % personages.size],
-                actsService,
-                game.gearService,
-                game.storage,
-                game.context
-        ))
+        try {
+            val result = game.api.encounterLocation(actId, locationId, personages[personagesGroup.selectedIndex % personages.size].id)
+            game.switchScreen(GameScreen(
+                    game,
+                    result,
+                    accountId,
+                    actId,
+                    locationId,
+                    personages[personagesGroup.selectedIndex % personages.size],
+                    actsService,
+                    game.gearService,
+                    game.storage,
+                    game.context
+            ))
+        } catch (e: NetworkError) {
+            e.printStackTrace()
+        }
     }
 
     fun startBattle() {
