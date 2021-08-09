@@ -156,7 +156,6 @@ class FigureController(
     var timePoseStarted = 0f
     var timeMoveStarted = 0f
     var timeMoveFinished = 0f
-    var timeShift = 0f
 
     var fromX = x
     var fromY = y

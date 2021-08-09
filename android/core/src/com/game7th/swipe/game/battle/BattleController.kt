@@ -54,7 +54,8 @@ class BattleController(
     var timePassed = 0f                                     //how much time is passed
     var actions = mutableListOf<Pair<Float, () -> Unit>>()  //the actions to complete on time pass
     val scheduledActions = mutableListOf<Pair<Float, () -> Unit>>()
-    var timeShift = 0f
+    var timeShiftLocal = 0f
+    var timeShiftGlobal = 0f
 
     var speechLockStarted = 0f
     var isSpeechLocked = false
@@ -81,9 +82,8 @@ class BattleController(
         controllers.filter { it.zIndex >= ElementController.Z_INDEX_HUD }.forEach { it.render(batch, delta) }
 
         timePassed += delta * timeScale()
-        timeShift = max(timePassed, timeShift)
-
-
+        timeShiftLocal = max(timePassed, timeShiftLocal)
+        timeShiftGlobal = max(timePassed, timeShiftGlobal)
 
         if (!isSpeechLocked) {
             actions.forEachIndexed { index, (timestamp, action) ->
@@ -157,14 +157,14 @@ class BattleController(
     }
 
     private fun schedulePersonageUpdateViewModel(event: BattleEvent.PersonageUpdateEvent) {
-        scheduledActions.add(Pair(timeShift) {
+        scheduledActions.add(Pair(timeShiftLocal) {
             findFigure(event.personage.id)?.let { it.viewModel = event.personage }
             Unit
         })
     }
 
     private fun schedulePositionedAbility(event: BattleEvent.PersonagePositionedAbilityEvent) {
-        scheduledActions.add(Pair(max(timeShift, findFigure(event.source.id)?.timeShift ?: 0f)) {
+        scheduledActions.add(Pair(timeShiftGlobal) {
             findFigure(event.source.id)?.let { figure ->
                 context.gdxModel.figure(event.source.skin)?.let { gdxModel ->
                     var targetPosition = if (figure.flipped) Gdx.graphics.width - padding else padding
@@ -185,7 +185,7 @@ class BattleController(
     }
 
     private fun scheduleAilment(event: BattleEvent.ShowAilmentEffect) {
-        scheduledActions.add(Pair(max(timeShift, findFigure(event.target)?.timeShift ?: 0f)) {
+        scheduledActions.add(Pair(timeShiftLocal) {
             context.gdxModel.ailments.firstOrNull { it.name == event.effectSkin }?.let { effect ->
                 effect.sound?.let { playSound(it) }
                 findFigure(event.target)?.let { figure ->
@@ -199,7 +199,7 @@ class BattleController(
     }
 
     private fun schedulePersonageHeal(event: BattleEvent.PersonageHealEvent) {
-        scheduledActions.add(Pair(timeShift) {
+        scheduledActions.add(Pair(timeShiftLocal) {
             findFigure(event.personage.id)?.let { figure ->
                 val controller = DamagePopupController(
                         context,
@@ -217,7 +217,7 @@ class BattleController(
     }
 
     private fun schedulePersonageDamage(event: BattleEvent.PersonageDamageEvent) {
-        scheduledActions.add(Pair(max(timeShift, findFigure(event.personage.id)?.timeShift ?: 0f)) {
+        scheduledActions.add(Pair(timeShiftLocal) {
             findFigure(event.personage.id)?.let { figure ->
                 val controller = DamagePopupController(
                         context,
@@ -234,7 +234,7 @@ class BattleController(
                     }
                     GdxRenderType.SPINE -> {
                         figure.switchPose("Damage")
-                        timeShift += 0.2f
+                        timeShiftLocal += 0.2f
                     }
                 }
                 figure.viewModel = event.personage
@@ -264,11 +264,11 @@ class BattleController(
                                 GdxRenderType.SPINE -> {
                                     val pose = attackModel.pose
                                     pose?.let { pose ->
-                                        scheduledActions.add(Pair(max(timeShift, figure.timeShift)) {
+                                        scheduledActions.add(Pair(timeShiftGlobal) {
                                             figure.switchPose(pose)
                                         })
-                                        timeShift += attack.trigger!!
-
+                                        timeShiftLocal += attack.trigger!!
+                                        timeShiftGlobal += attack.length!!
                                     }
                                 }
                                 GdxRenderType.SEQUENCE -> {
@@ -280,15 +280,16 @@ class BattleController(
 
                                         attack.effect?.let { effect ->
                                             triggerDuration = effect.trigger * FRAMERATE
-                                            scheduledActions.add(Pair(max(figure.timeShift, timeShift)) {
+                                            scheduledActions.add(Pair(timeShiftGlobal) {
                                                 controllers.add(EffectController(context, this@BattleController, effectId++, figure, effect))
                                             })
                                         }
 
-                                        scheduledActions.add(Pair(max(figure.timeShift, timeShift)) {
+                                        scheduledActions.add(Pair(timeShiftGlobal) {
                                             figure.switchPose(pose.name)
                                         })
-                                        timeShift += triggerDuration
+                                        timeShiftLocal += triggerDuration
+                                        timeShiftGlobal += attackDuration
                                     }
                                 }
                             }
@@ -306,15 +307,15 @@ class BattleController(
                                 val triggerDuration = effect.time * (triggerDistance
                                         ?: Gdx.graphics.width.toFloat()) / (scale * (effect.step
                                         ?: 1))
-                                scheduledActions.add(Pair(timeShift) {
+                                scheduledActions.add(Pair(timeShiftLocal) {
                                     figure.switchPose(poseName)
                                 })
-                                scheduledActions.add(Pair(timeShift + attackTriggerDuration) {
+                                scheduledActions.add(Pair(timeShiftLocal + attackTriggerDuration) {
                                     SteppedGeneratorEffectController(context, this, effectId++, figure.x + 70f * scale * (if (figure.flipped) -1f else 1f), figure.originY,
                                             if (figure.flipped) 0f else Gdx.graphics.width.toFloat(), effect).let { controllers.add(it) }
                                     Unit
                                 })
-                                timeShift += triggerDuration + attackTriggerDuration
+                                timeShiftLocal += triggerDuration + attackTriggerDuration
                             }
                         }
                         GdxAttackType.BOW_STRIKE -> {
@@ -325,15 +326,15 @@ class BattleController(
                                 val attackTriggerDuration = attackPose.triggers?.firstOrNull()?.let { (it - attackPose.start) * FRAMERATE }
                                         ?: attackDuration
                                 val triggerDuration = effect.trigger * FRAMERATE
-                                scheduledActions.add(Pair(timeShift) {
+                                scheduledActions.add(Pair(timeShiftLocal) {
                                     figure.switchPose("attack")
                                 })
-                                scheduledActions.add(Pair(timeShift + attackTriggerDuration) {
+                                scheduledActions.add(Pair(timeShiftLocal + attackTriggerDuration) {
                                     targets.forEach {
                                         it?.let { EffectController(context, this, effectId++, it, effect).let { controllers.add(it) } }
                                     }
                                 })
-                                timeShift += triggerDuration + attackTriggerDuration
+                                timeShiftLocal += triggerDuration + attackTriggerDuration
                             }
                         }
                     }
@@ -351,43 +352,41 @@ class BattleController(
                 val triggerDuration = attackPose.triggers?.firstOrNull()?.let { (it - attackPose.start) * FRAMERATE }
                         ?: attackDuration
 
-                val timeShift = max(timeShift, figure.timeShift)
-
-                scheduledActions.add(Pair(timeShift) {
+                scheduledActions.add(Pair(timeShiftGlobal) {
                     figure.move(tox, figure.originY, MOVE_DURATION)
                 })
-                scheduledActions.add(Pair(timeShift + MOVE_DURATION) {
+                scheduledActions.add(Pair(timeShiftGlobal + MOVE_DURATION) {
                     figure.switchPose("attack")
                 })
-                scheduledActions.add(Pair(timeShift + MOVE_DURATION + attackDuration) {
+                scheduledActions.add(Pair(timeShiftGlobal + MOVE_DURATION + attackDuration) {
                     figure.move(figure.originX, figure.originY, MOVE_DURATION)
                 })
-                this.timeShift += MOVE_DURATION + triggerDuration
+                this.timeShiftLocal += MOVE_DURATION + triggerDuration
+                this.timeShiftGlobal += MOVE_DURATION * 2 + attackDuration
             }
             GdxRenderType.SPINE -> {
                 val trigger = attack.trigger!!
-                val timeShift = max(timeShift, figure.timeShift)
 
-                scheduledActions.add(Pair(timeShift) {
+                scheduledActions.add(Pair(timeShiftGlobal) {
                     figure.move(tox, figure.originY, MOVE_DURATION)
                 })
-                scheduledActions.add(Pair(timeShift + MOVE_DURATION) {
+                scheduledActions.add(Pair(timeShiftGlobal + MOVE_DURATION) {
                     figure.switchPose(attack.pose!!)
                 })
-                scheduledActions.add(Pair(timeShift + MOVE_DURATION + attack.length!!) {
+                scheduledActions.add(Pair(timeShiftGlobal + MOVE_DURATION + attack.length!!) {
                     figure.move(figure.originX, figure.originY, MOVE_DURATION)
                 })
-                figure.timeShift = timeShift + MOVE_DURATION + attack.length
-                this.timeShift += MOVE_DURATION + trigger
+                this.timeShiftLocal += MOVE_DURATION + trigger
+                this.timeShiftGlobal += 2 * MOVE_DURATION + attack.length
             }
         }
     }
 
     private fun schedulePersonageDeath(event: BattleEvent.PersonageDeadEvent) {
-        println(">>> DEATH: $timePassed, $timeShift")
+        println(">>> DEATH: $timePassed, $timeShiftLocal")
         val figure = findFigure(event.personage.id)
 
-        scheduledActions.add(Pair(max(timeShift, figure?.timeShift ?: 0f)) {
+        scheduledActions.add(Pair(timeShiftGlobal) {
             figure?.let {
                 it.switchPose("Death")
                 it.isDead = true
@@ -403,13 +402,13 @@ class BattleController(
             Unit
         })
         if (event.blocking) {
-            timeShift += (figure?.figureModel?.poses?.firstOrNull { it.name == "death" }?.let { (it.end - it.start) * FRAMERATE }
+            timeShiftLocal += (figure?.figureModel?.poses?.firstOrNull { it.name == "death" }?.let { (it.end - it.start) * FRAMERATE }
                     ?: 0f)
         }
     }
 
     private fun scheduleFinalEventPropagation(event: BattleEvent, flipped: Boolean) {
-        scheduledActions.add(Pair(timeShift) {
+        scheduledActions.add(Pair(timeShiftLocal) {
             controllers.mapNotNull { it as? FigureController }.filter { it.flipped == flipped }.forEach {
                 if (it.figureModel.render == GdxRenderType.SPINE) {
                     it.switchPose("Win")
@@ -420,7 +419,7 @@ class BattleController(
     }
 
     private fun scheduleShowSpeech(event: BattleEvent.ShowSpeech) {
-        scheduledActions.add(Pair(timeShift) {
+        scheduledActions.add(Pair(timeShiftLocal) {
             speechLockStarted = timePassed
             isSpeechLocked = true
             screen.showDialog(event.portrait, event.name, context.gameContext.texts[event.text]
@@ -428,7 +427,7 @@ class BattleController(
                 unlockSpeech()
             }
         })
-        timeShift += 1f
+        timeShiftLocal += 1f
     }
 
     fun unlockSpeech() {
@@ -438,8 +437,8 @@ class BattleController(
     }
 
     private fun scheduleCreatePersonage(event: BattleEvent.CreatePersonageEvent) {
-        println(">>> CREATE: $timePassed, $timeShift")
-        scheduledActions.add(Pair(timeShift) {
+        println(">>> CREATE: $timePassed, $timeShiftLocal")
+        scheduledActions.add(Pair(timeShiftLocal) {
             FigureController(context,
                     this@BattleController,
                     event.personage.id,
@@ -459,7 +458,7 @@ class BattleController(
                     it.zIndex = ElementController.Z_INDEX_HUD
                 }
             }
-            timeShift += 0.2f
+            timeShiftLocal += 0.2f
             recalculateScale()
         })
     }
@@ -516,7 +515,7 @@ class BattleController(
     }
 
     fun timeScale(): Float {
-        return 1f + min(5f, timeShift - timePassed)
+        return 1f + min(5f, timeShiftLocal - timePassed)
     }
 
     companion object {
