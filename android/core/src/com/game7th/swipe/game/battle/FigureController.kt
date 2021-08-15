@@ -3,6 +3,7 @@
 package com.game7th.swipe.game.battle
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.*
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.utils.Array
@@ -12,7 +13,7 @@ import com.game7th.swipe.game.battle.model.FigureGdxModel
 import com.game7th.swipe.game.battle.model.GdxRenderType
 import com.game7th.swipe.game.battle.model.PoseEffectGdxModel
 import com.game7th.swipe.game.battle.model.PoseGdxModel
-import com.game7th.swiped.api.battle.PersonageViewModel
+import com.game7th.swiped.api.battle.UnitViewModel
 
 sealed class FigureRenderer {
     abstract fun render(figure: FigureController, batch: SpriteBatch, bodyScale: Float, delta: Float)
@@ -99,6 +100,7 @@ sealed class FigureRenderer {
 
         override fun switchPose(figure: FigureController, pose: PoseGdxModel) {
             //TODO: Remove this crunch
+            pose?.sound?.let { figure.player(it) }
             val poseName = if (pose.name == "idle") getIdlePoseName() else pose.name
             spineAnimation.setAnimation(0, poseName, pose.name == "idle")
             if (pose.name != "Death") {
@@ -141,7 +143,7 @@ class FigureController(
         y: Float,
         val appearStrategy: Int,
         val figureModel: FigureGdxModel,
-        var viewModel: PersonageViewModel,
+        var viewModel: UnitViewModel,
         internal val player: (String) -> Unit
 ) : ElementController(context, battle, id) {
 

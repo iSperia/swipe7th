@@ -159,7 +159,7 @@ class ActScreen(
             bottomMenu.zIndex = 100
             mapBottomOffset = context.scale * 48f
 
-            backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sb_indreams.ogg")).apply {
+            backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("act0_theme.ogg")).apply {
                 volume = 0.5f
                 isLooping = true
                 play()

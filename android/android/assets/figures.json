@@ -15,23 +15,23 @@
         "prince_strike", "prince_ray"
       ],
       "poses": [
-        {"name":  "Strike"},
-        {"name":  "Buff"},
-        {"name":  "Laser", "effect": { "frame": 12, "x": 0, "y": 0, "id": "prince_laser", "pose": "laser_use" }},
-        {"name":  "Damage"},
-        {"name":  "Death"},
+        {"name":  "Strike", "sound": "Prince_Strike"},
+        {"name":  "Buff", "sound": "Prince_Buff"},
+        {"name":  "Laser", "effect": { "frame": 12, "x": 0, "y": 0, "id": "prince_laser", "pose": "laser_use" }, "sound":  "Prince_Laser"},
+        {"name":  "Damage", "sound":  "Prince_Damage"},
+        {"name":  "Death", "sound": "Prince_Death"},
         {"name": "idle"},
         {"name": "idle_long"}
       ],
       "attacks": [
-        {"attackType": "MOVE_AND_PUNCH", "pose": "Strike", "trigger": 0.66, "length": 1, "sound": "sword_strike"},
-        {"attackType": "ATTACK_IN_PLACE", "pose": "Laser", "trigger": 1.4, "length":  2},
+        {"attackType": "MOVE_AND_PUNCH", "pose": "Strike", "trigger": 0.66, "length": 1 },
+        {"attackType": "ATTACK_IN_PLACE", "pose": "Laser", "trigger": 1.4, "length":  2 },
         {"attackType": "ATTACK_IN_PLACE", "trigger": 0.5, "pose": "Buff", "length": 1}
       ]
     },
     {
-      "name": "Knight",
-      "atlas": "Knight",
+      "name": "stomper",
+      "atlas": "stomper",
       "render": "spine",
       "height": 752,
       "width": 764,

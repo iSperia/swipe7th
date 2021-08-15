@@ -260,7 +260,7 @@ class GameScreen(game: SwipeGameGdx,
                                 }
                             }
 
-                            backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sb_chase.ogg")).apply {
+                            backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("beach_battle.ogg")).apply {
                                 volume = 0.5f
                                 isLooping = true
                                 play()

@@ -6,252 +6,231 @@ filter: Nearest, Nearest
 repeat: none
 alchemyadvanced
   rotate: false
-  xy: 1301, 522
+  xy: 869, 388
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 alchemybeginner
   rotate: false
-  xy: 436, 24
+  xy: 1433, 872
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 chararcher
   rotate: false
-  xy: 291, 24
+  xy: 1288, 872
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 charfreezemage
   rotate: false
-  xy: 1446, 522
+  xy: 943, 533
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 circle_blue
   rotate: false
-  xy: 1591, 524
+  xy: 1014, 390
   size: 138, 142
   orig: 138, 142
   offset: 0, 0
   index: -1
 circle_orange
   rotate: false
-  xy: 1005, 458
+  xy: 1087, 729
   size: 138, 142
   orig: 138, 142
   offset: 0, 0
   index: -1
 circle_red
   rotate: false
-  xy: 1730, 524
+  xy: 948, 680
   size: 138, 142
   orig: 138, 142
   offset: 0, 0
   index: -1
 dust0
   rotate: false
-  xy: 1156, 667
+  xy: 1723, 872
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 dust1
   rotate: false
-  xy: 1, 9
+  xy: 998, 872
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 dust2
   rotate: false
-  xy: 1156, 522
+  xy: 724, 387
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 icon_alch
   rotate: false
-  xy: 1069, 125
+  xy: 1923, 807
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 icon_forge
   rotate: false
-  xy: 1004, 55
+  xy: 1728, 807
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 icon_gear
   rotate: false
-  xy: 1134, 125
+  xy: 724, 322
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 icon_gear_focused
   rotate: false
-  xy: 1079, 320
+  xy: 1598, 807
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 icon_shop
   rotate: false
-  xy: 1134, 190
+  xy: 1517, 734
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 icon_squads
   rotate: false
-  xy: 1004, 185
+  xy: 1663, 807
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 inapp_crystals100
   rotate: false
-  xy: 1591, 667
+  xy: 803, 678
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 inapp_crystals1000
   rotate: false
-  xy: 146, 9
+  xy: 1143, 872
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 inapp_crystals10000
   rotate: false
-  xy: 514, 393
+  xy: 348, 162
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 inapp_crystals500
   rotate: false
-  xy: 860, 555
+  xy: 1578, 872
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 inapp_crystals5000
   rotate: false
-  xy: 1736, 667
+  xy: 798, 533
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 itemchest0
   rotate: false
-  xy: 1, 154
+  xy: 1, 81
   size: 225, 225
   orig: 225, 225
   offset: 0, 0
   index: -1
 lock
   rotate: false
-  xy: 982, 323
+  xy: 1355, 737
   size: 96, 134
   orig: 96, 134
   offset: 0, 0
   index: -1
 panel_blue
   rotate: false
-  xy: 1446, 667
+  xy: 493, 162
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 panel_edge
   rotate: false
-  xy: 659, 443
+  xy: 1988, 855
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 panel_modal
   rotate: false
-  xy: 2025, 1006
+  xy: 206, 64
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 shop_beginner_potion_pack
   rotate: false
-  xy: 982, 250
+  xy: 1452, 799
   size: 72, 72
   orig: 72, 72
   offset: 0, 0
   index: -1
 star_grey
   rotate: false
-  xy: 803, 829
+  xy: 803, 823
   size: 194, 193
   orig: 194, 193
   offset: 0, 0
   index: -1
 star_yellow
   rotate: false
-  xy: 514, 538
+  xy: 603, 532
   size: 194, 195
   orig: 194, 195
   offset: 0, 0
   index: -1
 tutorial_swipe_finger
   rotate: false
-  xy: 860, 700
+  xy: 1226, 743
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ui_attrs_tree
   rotate: false
-  xy: 514, 734
+  xy: 514, 728
   size: 288, 288
   orig: 288, 288
   offset: 0, 0
   index: -1
 ui_bg_alch
   rotate: false
-  xy: 1, 380
+  xy: 1, 728
   size: 512, 288
   orig: 512, 288
   offset: 0, 0
   index: -1
-ui_bg_forge
-  rotate: false
-  xy: 1, 669
-  size: 512, 353
-  orig: 512, 353
-  offset: 0, 0
-  index: -1
-ui_button_dust
-  rotate: false
-  xy: 1069, 60
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ui_button_levelup
-  rotate: false
-  xy: 1004, 120
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
 ui_button_pressed
   rotate: false
-  xy: 1134, 92
+  xy: 1087, 696
   size: 64, 32
   split: 8, 9, 8, 8
   orig: 64, 32
@@ -259,7 +238,7 @@ ui_button_pressed
   index: -1
 ui_button_simple
   rotate: false
-  xy: 1134, 59
+  xy: 603, 318
   size: 64, 32
   split: 7, 8, 8, 8
   orig: 64, 32
@@ -267,70 +246,70 @@ ui_button_simple
   index: -1
 ui_button_trans_pressed
   rotate: false
-  xy: 1004, 38
+  xy: 1, 1
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_button_trans_simple
   rotate: false
-  xy: 916, 538
+  xy: 227, 84
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 ui_currency_dust
   rotate: false
-  xy: 1069, 190
+  xy: 1858, 807
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 ui_currency_gems
   rotate: false
-  xy: 1120, 255
+  xy: 1452, 734
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 ui_currency_gold
   rotate: false
-  xy: 1055, 255
+  xy: 1793, 807
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 ui_dialog
   rotate: false
-  xy: 1301, 667
+  xy: 1868, 872
   size: 144, 144
   orig: 144, 144
   offset: 0, 0
   index: -1
 ui_exp_bar_bg
   rotate: false
-  xy: 1904, 817
+  xy: 227, 101
   size: 96, 24
   orig: 96, 24
   offset: 0, 0
   index: -1
 ui_exp_bar_fg
   rotate: false
-  xy: 702, 13
+  xy: 348, 137
   size: 96, 24
   orig: 96, 24
   offset: 0, 0
   index: -1
 ui_gold_panel
   rotate: false
-  xy: 860, 536
+  xy: 668, 332
   size: 55, 18
   orig: 55, 18
   offset: 0, 0
   index: -1
 ui_hor_panel
   rotate: false
-  xy: 659, 460
+  xy: 1, 18
   size: 204, 62
   split: 12, 11, 12, 12
   orig: 204, 62
@@ -338,183 +317,92 @@ ui_hor_panel
   index: -1
 ui_icon_vs
   rotate: false
-  xy: 1079, 385
+  xy: 1525, 799
   size: 72, 72
   orig: 72, 72
   offset: 0, 0
   index: -1
 ui_item_bg
   rotate: false
-  xy: 931, 5
+  xy: 822, 354
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ui_item_bg_body
   rotate: false
-  xy: 832, 5
+  xy: 789, 354
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ui_item_bg_book
   rotate: false
-  xy: 898, 5
+  xy: 2013, 951
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ui_item_bg_boots
   rotate: false
-  xy: 799, 5
+  xy: 1047, 839
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ui_item_bg_hand
   rotate: false
-  xy: 803, 747
+  xy: 2013, 984
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ui_item_bg_hat
   rotate: false
-  xy: 865, 5
+  xy: 1152, 696
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ui_item_bg_ring
   rotate: false
-  xy: 964, 5
+  xy: 1185, 696
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ui_level_bg
   rotate: false
-  xy: 803, 780
+  xy: 998, 823
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 ui_portrait_fg
   rotate: false
-  xy: 1904, 842
+  xy: 227, 126
   size: 120, 180
   orig: 120, 180
   offset: 0, 0
   index: -1
 ui_portrait_fg_focused
   rotate: false
-  xy: 581, 1
+  xy: 603, 351
   size: 120, 180
   orig: 120, 180
   offset: 0, 0
   index: -1
-vp_arachnid_small
-  rotate: false
-  xy: 831, 249
-  size: 150, 210
-  orig: 150, 210
-  offset: 0, 0
-  index: -1
-vp_bhastuse_jolly
-  rotate: false
-  xy: 709, 523
-  size: 150, 210
-  orig: 150, 210
-  offset: 0, 0
-  index: -1
-vp_dryad
-  rotate: false
-  xy: 1300, 812
-  size: 150, 210
-  orig: 150, 210
-  offset: 0, 0
-  index: -1
-vp_dryad_queen
-  rotate: false
-  xy: 529, 182
-  size: 150, 210
-  orig: 150, 210
-  offset: 0, 0
-  index: -1
-vp_freeze_mage
-  rotate: false
-  xy: 1451, 812
-  size: 150, 210
-  orig: 150, 210
-  offset: 0, 0
-  index: -1
-vp_personage_gladiator
-  rotate: false
-  xy: 853, 38
-  size: 150, 210
-  orig: 150, 210
-  offset: 0, 0
-  index: -1
-vp_poison_archer
-  rotate: false
-  xy: 680, 249
-  size: 150, 210
-  orig: 150, 210
-  offset: 0, 0
-  index: -1
 vp_prince
   rotate: false
-  xy: 1753, 812
-  size: 150, 210
-  orig: 150, 210
+  xy: 1, 307
+  size: 300, 420
+  orig: 300, 420
   offset: 0, 0
   index: -1
-vp_slime
+vp_stomper
   rotate: false
-  xy: 1602, 812
-  size: 150, 210
-  orig: 150, 210
-  offset: 0, 0
-  index: -1
-vp_slime_armored
-  rotate: false
-  xy: 1005, 601
-  size: 150, 210
-  orig: 150, 210
-  offset: 0, 0
-  index: -1
-vp_slime_boss
-  rotate: false
-  xy: 227, 169
-  size: 150, 210
-  orig: 150, 210
-  offset: 0, 0
-  index: -1
-vp_slime_father
-  rotate: false
-  xy: 998, 812
-  size: 150, 210
-  orig: 150, 210
-  offset: 0, 0
-  index: -1
-vp_slime_mother
-  rotate: false
-  xy: 378, 169
-  size: 150, 210
-  orig: 150, 210
-  offset: 0, 0
-  index: -1
-vp_slime_red
-  rotate: false
-  xy: 702, 38
-  size: 150, 210
-  orig: 150, 210
-  offset: 0, 0
-  index: -1
-vp_strange_figure
-  rotate: false
-  xy: 1149, 812
-  size: 150, 210
-  orig: 150, 210
+  xy: 302, 307
+  size: 300, 420
+  orig: 300, 420
   offset: 0, 0
   index: -1

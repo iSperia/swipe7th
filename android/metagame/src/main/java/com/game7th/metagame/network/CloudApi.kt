@@ -285,8 +285,8 @@ class CloudApi(
         println("S7TH: CLOSE CONNECTION")
     }
 
-    fun createPersonageViewModel(builder: Protocol.BattleMessage.PersonageViewModel) = PersonageViewModel(
-            builder.personageStats.let { PersonageStats(it.body, it.health, it.maxHealth, it.armor, it.spirit, it.regeneration, it.evasion, it.mind, it.wisdom, it.resist, it.resistMax, it.level, it.tick, it.maxTick, it.tickAbility.let { if (it.isEmpty()) null else it }, it.isStunned, it.isFrozen) },
+    fun createPersonageViewModel(builder: Protocol.BattleMessage.PersonageViewModel) = UnitViewModel(
+            builder.personageStats.let { UnitStatsDto(it.body, it.health, it.maxHealth, it.armor, it.spirit, it.regeneration, it.evasion, it.mind, it.wisdom, it.resist, it.resistMax, it.level, it.tick, it.maxTick, it.tickAbility.let { if (it.isEmpty()) null else it }, it.isStunned, it.isFrozen) },
             builder.skin,
             builder.portrait,
             builder.id,
