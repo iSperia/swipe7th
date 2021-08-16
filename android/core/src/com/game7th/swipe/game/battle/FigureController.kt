@@ -260,6 +260,6 @@ class FigureController(
     }
 
     companion object {
-        const val FRAME_DURATION = 1/30f
+        const val FRAME_DURATION = 1/60f
     }
 }
