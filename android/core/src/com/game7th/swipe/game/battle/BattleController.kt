@@ -254,7 +254,11 @@ class BattleController(
                     when (attack.attackType) {
                         GdxAttackType.MOVE_AND_PUNCH -> {
                             findFigure(event.targets.firstOrNull()?.id)?.let { targetFigure ->
-                                val tox = targetFigure.originX - (if (figure.flipped) -1f else 1f) * figure.figureModel.width * figure.figureModel.scale * 0.5f * scale
+                                val tox = if (attack.shift > 0f) {
+                                    targetFigure.originX - (if (figure.flipped) -1f else 1f) * attack.shift * figure.figureModel.scale * scale
+                                } else {
+                                    targetFigure.originX - (if (figure.flipped) -1f else 1f) * figure.figureModel.width * figure.figureModel.scale * 0.5f * scale
+                                }
 
                                 moveAndPunch(figureGdxModel, figureGdxModel.attacks[event.attackIndex], figure, tox)
                             }

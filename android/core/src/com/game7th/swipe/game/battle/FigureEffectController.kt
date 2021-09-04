@@ -64,13 +64,13 @@ class FigureEffectController(
         timePassed += delta
         when (descriptor) {
             is EffectDescriptor.AttachedToFigure -> {
-                skeleton.scaleX = (if (descriptor.targetFigure.flipped) -1f else 1f) * (if (descriptor.direction) descriptor.targetFigure.figureModel.scale else 1f) * battle.scale
+                skeleton.scaleX = (if (descriptor.targetFigure.flipped xor descriptor.targetFigure.figureModel.invert_x) -1f else 1f) * (if (descriptor.direction) descriptor.targetFigure.figureModel.scale else 1f) * battle.scale
                 skeleton.scaleY = descriptor.targetFigure.figureModel.scale * battle.scale
                 skeleton.setPosition(descriptor.targetFigure.x + effect.x * battle.scale, descriptor.targetFigure.y + effect.y * battle.scale)
 
             }
             is EffectDescriptor.SlideToFigure -> {
-                skeleton.scaleX = (if (descriptor.from.flipped) -1f else 1f) * descriptor.from.figureModel.scale * battle.scale
+                skeleton.scaleX = (if (descriptor.from.flipped xor descriptor.from.figureModel.invert_x) -1f else 1f) * descriptor.from.figureModel.scale * battle.scale
                 skeleton.scaleY = descriptor.from.figureModel.scale * battle.scale
                 val progress = min(1f, timePassed / descriptor.duration)
                 skeleton.setPosition(descriptor.from.x + (descriptor.to.x - descriptor.from.x) * progress,

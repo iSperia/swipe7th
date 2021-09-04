@@ -7,7 +7,8 @@ data class PoseEffectGdxModel(
         val y: Float,
         val frame: Int,
         val id: String,
-        val pose: String
+        val pose: String,
+        val invert_x: Boolean
 )
 
 data class PoseGdxModel(
@@ -41,7 +42,8 @@ data class AttackGdxModel(
         val effect: EffectGdxModel?,
         val pose: String?,
         val trigger: Float?,
-        val length: Float?
+        val length: Float?,
+        val shift: Float
 )
 
 data class FigureGdxModel(

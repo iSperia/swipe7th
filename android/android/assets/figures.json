@@ -74,10 +74,10 @@
         {"name":  "Strike", "sound":  "Stomper_Strike"},
         {"name":  "Special", "sound":  "Stomper_Special", "effect": { "frame": 30, "x": 0, "y": 0, "id": "stomper_web", "pose": "animation" }},
         {"name":  "Damage", "sound":  "Stomper_Damage"},
-        {"name":  "Death", "sound":  "Stomper_Dead", "triggers": [22], "end": 231, "effect":  {"frame":  0, "x":  0, "y":  0, "id":  "arachnovisk_blow", "pose":  "animation"}}
+        {"name":  "Death", "sound":  "Stomper_Dead", "triggers": [60], "end": 231, "effect":  {"frame":  0, "x":  0, "y":  0, "id":  "arachnovisk_blow", "pose":  "animation", "invert_x":  true}}
       ],
       "attacks": [
-        {"attackType": "MOVE_AND_PUNCH", "pose": "Strike", "trigger": 0.81, "length": 1.83, "sound": "sword_strike"},
+        {"attackType": "MOVE_AND_PUNCH", "pose": "Strike", "trigger": 0.81, "length": 1.83, "sound": "sword_strike", "shift": 476},
         {"attackType":  "LAUNCH_PROJECTILE", "pose": "Special", "trigger":  0.5, "length": 1.33}
       ]
     }
