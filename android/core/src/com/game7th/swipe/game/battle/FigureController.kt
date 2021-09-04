@@ -61,7 +61,7 @@ sealed class FigureRenderer {
         }
     }
 
-    class SpineRenderer(context: BattleContext, figureModel: FigureGdxModel): FigureRenderer() {
+    class SpineRenderer(context: BattleContext, figureModel: FigureGdxModel) : FigureRenderer() {
         val polygonBatch = PolygonSpriteBatch()
         val skeletonRenderer = SkeletonRenderer().apply {
             setPremultipliedAlpha(true)
@@ -82,7 +82,7 @@ sealed class FigureRenderer {
 
         override fun render(figure: FigureController, batch: SpriteBatch, bodyScale: Float, delta: Float) {
             figure.apply {
-                skeleton.scaleX = (if (flipped) -1f else 1f) * figureModel.scale * battle.scale
+                skeleton.scaleX = (if (flipped xor figureModel.invert_x) -1f else 1f) * figureModel.scale * battle.scale
                 skeleton.scaleY = figureModel.scale * battle.scale
                 skeleton.setPosition(x, y)
 
@@ -105,32 +105,42 @@ sealed class FigureRenderer {
             spineAnimation.setAnimation(0, poseName, pose.name == "idle")
             if (pose.name != "Death") {
                 spineAnimation.addAnimation(0, getIdlePoseName(), true, 0f)
-            } else {
-                spineAnimation.addListener(object : AnimationState.AnimationStateListener {
-                    override fun start(entry: AnimationState.TrackEntry?) {}
-                    override fun interrupt(entry: AnimationState.TrackEntry?) {}
-                    override fun end(entry: AnimationState.TrackEntry?) {}
-                    override fun dispose(entry: AnimationState.TrackEntry?) {}
-                    override fun event(entry: AnimationState.TrackEntry?, event: Event?) {}
-
-                    override fun complete(entry: AnimationState.TrackEntry?) {
-                        if (entry?.animation?.name == "Death") {
-                            if (figure.flipped || figure.position > 0) {
-                                figure.battle.removeController(figure)
-                            }
+            }
+            spineAnimation.addListener(object : DefaultAnimationStateListener() {
+                override fun complete(entry: AnimationState.TrackEntry?) {
+                    if (entry?.animation?.name == "Death") {
+                        if (figure.flipped || figure.position > 0) {
+                            figure.battle.removeController(figure)
                         }
                     }
-                })
-            }
+                    if (entry?.animation?.name == pose.name) {
+                        figure.figureModel.poses?.firstOrNull { it.name == pose.name }?.let { pose ->
+                            val shiftMulti = if (figure.flipped xor figure.figureModel.invert_x) -1f else 1f
+                            val dx = pose.isx * figure.battle.scale * figure.figureModel.scale * shiftMulti
+                            val dy = pose.isy * figure.battle.scale * figure.figureModel.scale
+                            figure.x += dx
+                            figure.originX += dx
+                            figure.fromX += dx
+                            figure.targetX += dx
+                            figure.y += dy
+                            figure.originY += dy
+                            figure.fromY += dy
+                            figure.targetY += dy
+                        }
+                    }
+                }
+            })
         }
 
-        private fun getIdlePoseName() = jsonData.animations.firstOrNull { it.name == "idle" }?.name ?: "Idle"
+        private fun getIdlePoseName() = jsonData.animations.firstOrNull { it.name == "idle" }?.name
+                ?: "Idle"
     }
 }
 
 data class FigurePostponedEffectWrapper(
         val model: PoseEffectGdxModel,
-        var timeLeft: Float
+        var timeLeft: Float,
+        val descriptor: EffectDescriptor?
 )
 
 /**
@@ -141,7 +151,6 @@ class FigureController(
         battle: BattleController,
         id: Int,
         y: Float,
-        val appearStrategy: Int,
         val figureModel: FigureGdxModel,
         var viewModel: UnitViewModel,
         internal val player: (String) -> Unit
@@ -209,20 +218,21 @@ class FigureController(
         effectsToShow.forEach { effect ->
             effect.timeLeft -= delta
             if (effect.timeLeft <= 0f) {
-                battle.showEffect(this@FigureController, effect.model)
+                battle.showEffect(effect.descriptor
+                        ?: EffectDescriptor.AttachedToFigure(this@FigureController, true), effect.model)
             }
         }
         effectsToShow.removeAll { it.timeLeft <= 0f }
     }
 
-    fun switchPose(poseName: String) {
+    fun switchPose(poseName: String, descriptor: EffectDescriptor? = null) {
         if (isDead) return
         timePoseStarted = timePassed
         this.pose = poseName
         figureModel.poses?.firstOrNull { it.name == pose }?.let { pose ->
             renderer.switchPose(this@FigureController, pose)
             pose.effect?.let { effect ->
-                effectsToShow.add(FigurePostponedEffectWrapper(effect, effect.frame * FRAME_DURATION))
+                effectsToShow.add(FigurePostponedEffectWrapper(effect, effect.frame * FRAME_DURATION, descriptor))
             }
         }
     }
@@ -245,7 +255,7 @@ class FigureController(
         if (needFastMove) {
             move(originX, targetY, duration)
         } else {
-            if (appearStrategy == 0) {
+            if (pose == "idle") {
                 x = if (flipped) Gdx.graphics.width + figureModel.width * figureModel.scale * battle.scale * 2f else -2f * figureModel.width * figureModel.scale * battle.scale
                 move(originX, originY, 2f / (position + 1))
             } else {
@@ -260,6 +270,6 @@ class FigureController(
     }
 
     companion object {
-        const val FRAME_DURATION = 1/60f
+        const val FRAME_DURATION = 1 / 60f
     }
 }

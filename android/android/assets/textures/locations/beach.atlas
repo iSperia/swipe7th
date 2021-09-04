@@ -4,14 +4,14 @@ size: 2048, 4096
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-loc_beach_bg
+loc_bg
   rotate: false
   xy: 1, 1428
   size: 1300, 2245
   orig: 1300, 2245
   offset: 0, 0
   index: -1
-loc_beach_fg
+loc_fg
   rotate: false
   xy: 1, 146
   size: 1300, 1281

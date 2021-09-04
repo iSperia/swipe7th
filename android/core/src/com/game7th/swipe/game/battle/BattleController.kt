@@ -30,8 +30,8 @@ class BattleController(
 
     private val controllers = mutableListOf<ElementController>()
 
-    private val backgroundTexture = context.locationAtlas.findRegion("loc_beach_bg")
-    private val foregroundTexture = context.locationAtlas.findRegion("loc_beach_fg")
+    private val backgroundTexture = context.locationAtlas.findRegion("loc_bg")
+    private val foregroundTexture = context.locationAtlas.findRegion("loc_fg")
     val horizontLinePercent = 0.61f
     val horizontLine = y + context.scale * 140f
     val baseLine = y + 60f * context.scale
@@ -113,8 +113,8 @@ class BattleController(
 
     private fun findFigure(id: Int?) = controllers.firstOrNull { it.id == id } as? FigureController
 
-    fun showEffect(figure: FigureController, effect: PoseEffectGdxModel) {
-        val controller = FigureEffectController(context, this@BattleController, effectId++, figure, effect)
+    fun showEffect(descriptor: EffectDescriptor, effect: PoseEffectGdxModel) {
+        val controller = FigureEffectController(context, this@BattleController, effectId++, descriptor, effect)
         controllers.add(controller)
     }
 
@@ -259,6 +259,23 @@ class BattleController(
                                 moveAndPunch(figureGdxModel, figureGdxModel.attacks[event.attackIndex], figure, tox)
                             }
                         }
+                        GdxAttackType.LAUNCH_PROJECTILE -> {
+                            val attackModel = figureGdxModel.attacks[event.attackIndex]
+                            when (figureGdxModel.render) {
+                                GdxRenderType.SPINE -> {
+                                    val pose = attackModel.pose
+                                    pose?.let { pose ->
+                                        scheduledActions.add(Pair(timeShiftGlobal) {
+                                            val targetFigure = event.targets.firstOrNull()?.let { findFigure(it.id) } ?: figure
+                                            figure.switchPose(pose, EffectDescriptor.SlideToFigure(figure, targetFigure, (attack.length?:1f) - (attack.trigger ?:0f)))
+                                        })
+                                        timeShiftLocal += attack.length!!
+                                        timeShiftGlobal += attack.length!!
+                                    }
+                                }
+                                else -> {}
+                            }
+                        }
                         GdxAttackType.ATTACK_IN_PLACE -> {
                             val attackModel = figureGdxModel.attacks[event.attackIndex]
                             when (figureGdxModel.render) {
@@ -400,8 +417,12 @@ class BattleController(
                 it.dispose()
                 controllersToRemove.add(it)
             }
+
             Unit
         })
+        figure?.figureModel?.poses?.firstOrNull { it.name == "Death" }?.triggers?.let { triggers ->
+            if (triggers.isNotEmpty()) timeShiftLocal += triggers[0] * FRAMERATE
+        }
         if (event.blocking) {
             timeShiftLocal += (figure?.figureModel?.poses?.firstOrNull { it.name == "death" }?.let { (it.end - it.start) * FRAMERATE }
                     ?: 0f)
@@ -438,18 +459,32 @@ class BattleController(
     }
 
     private fun scheduleCreatePersonage(event: BattleEvent.CreatePersonageEvent) {
-        println(">>> CREATE: $timePassed, $timeShiftLocal")
+        println(">>> CREATE: $timePassed, $timeShiftLocal ${event.appearAttachUnitId} ${event.appearPose}")
         scheduledActions.add(Pair(timeShiftLocal) {
             FigureController(context,
                     this@BattleController,
                     event.personage.id,
                     baseLine,
-                    event.appearStrategy,
                     context.gdxModel.figure(event.personage.skin)!!,
                     event.personage,
                     this::playSound).let {
                 it.position = event.position
                 controllers.add(it)
+                if (event.appearAttachUnitId > 0) {
+                    findFigure(event.appearAttachUnitId)?.let { attachFigure ->
+                        it.originX = attachFigure.originX
+                        it.originY = attachFigure.originY
+                        it.x = attachFigure.x
+                        it.y = attachFigure.y
+                        it.fromX = attachFigure.x
+                        it.fromY = attachFigure.y
+                        it.targetX = attachFigure.x
+                        it.targetY = attachFigure.y
+                    }
+                    event.appearPose?.let { pose ->
+                        it.switchPose(pose)
+                    }
+                }
                 PersonageHealthbarController(context, this@BattleController, hudId++, it).let {
                     controllers.add(it)
                     it.zIndex = ElementController.Z_INDEX_HUD
@@ -460,7 +495,9 @@ class BattleController(
                 }
             }
             timeShiftLocal += 0.2f
-            recalculateScale()
+            if (event.appearAttachUnitId == 0) {
+                recalculateScale()
+            }
         })
     }
 
@@ -483,26 +520,30 @@ class BattleController(
         val shift = max(0f, overWidth / (maxLeft + maxRight))
 
         var x = padding
+        var rIndex = 0
         (0..maxLeft).forEachIndexed { index, position ->
             val figures = leftFigures.filter { it.position == position }
             figures.forEach { figure ->
-                val figureY = if (!needBackLine) baseLine else if (leftFigures.size == 1) middleLine else if (index % 2 == 0) baseLine else backLine
+                val figureY = if (!needBackLine) baseLine else if (leftFigures.size == 1) middleLine else if (rIndex % 2 == 0) baseLine else backLine
                 figure.moveOrigin(x + toScale * figure.figureModel.scale * figure.figureModel.width / 2f, figureY, 1f)
                 x += toScale * figure.figureModel.width * figure.figureModel.scale - shift
-                figure.zIndex = 1000 * (1 - index % 2) + index
+                figure.zIndex = 1000 * (1 - rIndex % 2) + index
+                rIndex++
             }
             if (figures.isEmpty()) {
                 x += 80f * toScale - shift
             }
         }
         x = Gdx.graphics.width - padding
+        rIndex = 0
         (0..maxRight).forEachIndexed { index, position ->
             val figures = rightFigures.filter { it.position == position }
             figures.forEach { figure ->
-                val figureY = if (!needBackLine) baseLine else if (rightFigures.size == 1) middleLine else if (index % 2 == 0) baseLine else backLine
+                val figureY = if (!needBackLine) baseLine else if (rightFigures.size == 1) middleLine else if (rIndex % 2 == 0) baseLine else backLine
                 figure.moveOrigin(x - toScale * figure.figureModel.scale * figure.figureModel.width / 2f, figureY, 1f)
                 x -= toScale * figure.figureModel.width * figure.figureModel.scale - shift
-                figure.zIndex = 1000 * (1 - index % 2) + index
+                figure.zIndex = 1000 * (1 - rIndex % 2) + index
+                rIndex++
             }
             if (figures.isEmpty()) {
                 x -= 80f * toScale - shift
@@ -517,6 +558,6 @@ class BattleController(
 
     companion object {
         const val MOVE_DURATION = 0.3f
-        const val FRAMERATE = 1 / 30f
+        const val FRAMERATE = 1 / 60f
     }
 }

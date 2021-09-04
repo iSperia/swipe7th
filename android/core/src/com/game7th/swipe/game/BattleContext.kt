@@ -15,5 +15,7 @@ data class BattleContext(
         val scale: Float,
         val atlases: Map<String, TextureAtlas>,
         val skeletons: Map<String, SkeletonData>,
-        val figuresUi: Map<String, TextureAtlas>
+        val figuresUi: Map<String, TextureAtlas>,
+        val staticTiles: List<String>,
+        val dynamicTiles: List<String>
 )

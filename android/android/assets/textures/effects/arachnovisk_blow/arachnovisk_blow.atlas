@@ -1,0 +1,62 @@
+
+VFX+Blow.png
+size: 2296,388
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+VFX/Blow00040
+  rotate: false
+  xy: 2077, 60
+  size: 97, 105
+  orig: 412, 376
+  offset: 153, 131
+  index: -1
+VFX/Blow00041
+  rotate: true
+  xy: 2077, 167
+  size: 218, 215
+  orig: 412, 376
+  offset: 86, 74
+  index: -1
+VFX/Blow00042
+  rotate: true
+  xy: 1776, 36
+  size: 349, 299
+  orig: 412, 376
+  offset: 28, 36
+  index: -1
+VFX/Blow00043
+  rotate: true
+  xy: 1458, 22
+  size: 363, 316
+  orig: 412, 376
+  offset: 20, 27
+  index: -1
+VFX/Blow00044
+  rotate: true
+  xy: 1109, 11
+  size: 374, 347
+  orig: 412, 376
+  offset: 15, 12
+  index: -1
+VFX/Blow00045
+  rotate: true
+  xy: 745, 5
+  size: 380, 362
+  orig: 412, 376
+  offset: 12, 4
+  index: -1
+VFX/Blow00046
+  rotate: true
+  xy: 375, 2
+  size: 383, 368
+  orig: 412, 376
+  offset: 10, 1
+  index: -1
+VFX/Blow00047
+  rotate: true
+  xy: 2, 2
+  size: 383, 371
+  orig: 412, 376
+  offset: 10, 1
+  index: -1

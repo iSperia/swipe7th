@@ -6,149 +6,105 @@ filter: Nearest, Nearest
 repeat: none
 ailment_frozen
   rotate: false
-  xy: 721, 827
+  xy: 513, 692
   size: 144, 77
   orig: 144, 77
   offset: 0, 0
   index: -1
 bg_dialog
   rotate: false
-  xy: 2, 750
+  xy: 2, 798
   size: 579, 154
   orig: 579, 154
   offset: 0, 0
   index: -1
 btn_settings
   rotate: false
-  xy: 583, 770
+  xy: 375, 635
   size: 136, 134
   orig: 136, 134
   offset: 0, 0
   index: -1
 btn_settings_pressed
   rotate: false
-  xy: 375, 587
+  xy: 209, 286
   size: 136, 134
   orig: 136, 134
   offset: 0, 0
   index: -1
 icon_mind
   rotate: false
-  xy: 209, 518
+  xy: 209, 566
   size: 164, 203
   orig: 164, 203
   offset: 0, 0
   index: -1
 icon_spirit
   rotate: false
-  xy: 867, 715
+  xy: 867, 763
   size: 155, 189
   orig: 155, 189
   offset: 0, 0
   index: -1
 inventory_bg
   rotate: false
-  xy: 209, 374
+  xy: 209, 422
   size: 142, 142
   orig: 142, 142
   offset: 0, 0
   index: -1
-lifebar_background_bottom
+lifebar_bg
   rotate: false
-  xy: 513, 681
-  size: 160, 6
-  orig: 160, 6
+  xy: 659, 749
+  size: 158, 20
+  orig: 158, 20
   offset: 0, 0
   index: -1
-lifebar_background_top
+lifebar_stripe
   rotate: false
-  xy: 675, 710
-  size: 160, 11
-  orig: 160, 11
+  xy: 659, 725
+  size: 149, 8
+  orig: 149, 8
   offset: 0, 0
   index: -1
-lifebar_border_bottom
+lifebar_vert_big
   rotate: false
-  xy: 675, 702
-  size: 160, 6
-  split: 1, 1, 1, 1
-  orig: 160, 6
+  xy: 583, 804
+  size: 2, 10
+  orig: 2, 10
   offset: 0, 0
   index: -1
-lifebar_border_top
+lifebar_vert_small
   rotate: false
-  xy: 513, 710
-  size: 160, 11
-  split: 1, 1, 1, 1
-  orig: 160, 11
+  xy: 722, 817
+  size: 2, 4
+  orig: 2, 4
   offset: 0, 0
   index: -1
-lifebar_health
+pictogram_sword
   rotate: false
-  xy: 513, 697
-  size: 160, 11
-  orig: 160, 11
+  xy: 209, 173
+  size: 104, 111
+  orig: 104, 111
   offset: 0, 0
   index: -1
-lifebar_line
+pictogram_web
   rotate: false
-  xy: 41, 122
-  size: 2, 2
-  orig: 2, 2
-  offset: 0, 0
-  index: -1
-lifebar_resist
-  rotate: false
-  xy: 513, 689
-  size: 160, 6
-  orig: 160, 6
-  offset: 0, 0
-  index: -1
-pic_debuff
-  rotate: false
-  xy: 441, 521
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-pic_magic
-  rotate: false
-  xy: 209, 270
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-pic_shield
-  rotate: false
-  xy: 513, 615
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-pic_slime
-  rotate: false
-  xy: 579, 615
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-pic_sword
-  rotate: false
-  xy: 375, 521
-  size: 64, 64
-  orig: 64, 64
+  xy: 583, 816
+  size: 137, 136
+  orig: 137, 136
   offset: 0, 0
   index: -1
 prince_ray_indicator_empty
   rotate: false
-  xy: 721, 789
+  xy: 513, 654
   size: 118, 36
   orig: 118, 36
   offset: 0, 0
   index: -1
 prince_ray_indicator_full
   rotate: false
-  xy: 209, 336
+  xy: 375, 597
   size: 118, 36
   orig: 118, 36
   offset: 0, 0
@@ -162,7 +118,7 @@ progress_active
   index: -1
 progress_background
   rotate: false
-  xy: 209, 731
+  xy: 209, 779
   size: 656, 17
   orig: 656, 17
   offset: 0, 0
@@ -176,21 +132,21 @@ progress_boss
   index: -1
 progress_mark
   rotate: false
-  xy: 275, 288
+  xy: 2, 122
   size: 49, 46
   orig: 49, 46
   offset: 0, 0
   index: -1
 progress_reward
   rotate: false
-  xy: 209, 210
+  xy: 375, 537
   size: 68, 58
   orig: 68, 58
   offset: 0, 0
   index: -1
 progress_scale
   rotate: false
-  xy: 209, 723
+  xy: 209, 771
   size: 637, 6
   orig: 637, 6
   offset: 0, 0
@@ -202,65 +158,100 @@ progress_simple
   orig: 40, 38
   offset: 0, 0
   index: -1
+resbar_bg
+  rotate: false
+  xy: 659, 735
+  size: 160, 12
+  orig: 160, 12
+  offset: 0, 0
+  index: -1
+resbar_stripe
+  rotate: false
+  xy: 659, 719
+  size: 149, 4
+  orig: 149, 4
+  offset: 0, 0
+  index: -1
+resbar_vert_big
+  rotate: false
+  xy: 848, 772
+  size: 2, 5
+  orig: 2, 5
+  offset: 0, 0
+  index: -1
+resbar_vert_small
+  rotate: false
+  xy: 583, 798
+  size: 2, 4
+  orig: 2, 4
+  offset: 0, 0
+  index: -1
 scale_bg
   rotate: false
-  xy: 2, 122
+  xy: 2, 170
   size: 37, 626
   orig: 37, 626
   offset: 0, 0
   index: -1
 scale_combo
   rotate: false
-  xy: 158, 142
+  xy: 158, 190
   size: 15, 606
   orig: 15, 606
   offset: 0, 0
   index: -1
 scale_filled_effect
   rotate: false
-  xy: 80, 126
+  xy: 80, 174
   size: 37, 622
   orig: 37, 622
   offset: 0, 0
   index: -1
 scale_flash
   rotate: false
-  xy: 119, 126
+  xy: 119, 174
   size: 37, 622
   orig: 37, 622
   offset: 0, 0
   index: -1
 scale_flash_pink
   rotate: false
-  xy: 41, 126
+  xy: 41, 174
   size: 37, 622
   orig: 37, 622
   offset: 0, 0
   index: -1
 scale_shadow
   rotate: false
-  xy: 175, 142
+  xy: 175, 190
   size: 15, 606
   orig: 15, 606
   offset: 0, 0
   index: -1
 scale_wisdom
   rotate: false
-  xy: 192, 142
+  xy: 192, 190
   size: 15, 606
   orig: 15, 606
   offset: 0, 0
   index: -1
 tile_stun
   rotate: false
-  xy: 209, 160
+  xy: 445, 547
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
+web
+  rotate: false
+  xy: 722, 823
+  size: 143, 129
+  orig: 143, 129
+  offset: 0, 0
+  index: -1
 white_line
   rotate: false
-  xy: 158, 138
+  xy: 41, 170
   size: 2, 2
   orig: 2, 2
   offset: 0, 0

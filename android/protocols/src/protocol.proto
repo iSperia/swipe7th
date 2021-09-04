@@ -49,6 +49,7 @@ message BattleMessage {
         int32 stackSize = 3;
         int32 maxStackSize = 4;
         bool stun = 5;
+        int32 layer = 6;
     }
 
     TileViewModel tile_view_model = 5;
@@ -65,6 +66,8 @@ message BattleMessage {
         enum TileFieldEventType {
             MOVE = 0;
             MERGE = 1;
+            DELETE = 2;
+            UPDATE = 3;
         }
         TileFieldEventType tile_field_event_type = 1;
         int32 id = 2;
@@ -104,7 +107,7 @@ message BattleMessage {
     }
 
     PersonageViewModel personage_view_model = 12;
-    int32 appear_strategy = 14;
+    int32 appear_attach_unit_id = 14;
     repeated PersonageViewModel targets = 15;
     int32 attack_index = 16;
     repeated int32 target_indexes = 17;
@@ -120,4 +123,5 @@ message BattleMessage {
     }
 
     SpeechMessage speech_message = 22;
+    string appear_pose = 23;
 }

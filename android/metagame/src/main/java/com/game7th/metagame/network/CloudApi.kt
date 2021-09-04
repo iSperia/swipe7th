@@ -213,7 +213,7 @@ class CloudApi(
                     Protocol.BattleMessage.MessageType.HEARTBEAT_RESPONSE -> BattleEvent.HeartbeatResponse("")
                     Protocol.BattleMessage.MessageType.CREATE_TILE -> BattleEvent.CreateTileEvent("",
                             message.tileViewModel.let {
-                                TileViewModel(it.id, it.skin, it.stackSize, it.maxStackSize, it.stun)
+                                TileViewModel(it.id, it.skin, it.stackSize, it.maxStackSize, it.stun, it.layer)
                             },
                             message.position,
                             message.sourcePosition
@@ -224,23 +224,26 @@ class CloudApi(
                                         when (tileEvent.tileFieldEventType) {
                                             Protocol.BattleMessage.TileFieldEvent.TileFieldEventType.MOVE -> TileFieldEventType.MOVE
                                             Protocol.BattleMessage.TileFieldEvent.TileFieldEventType.MERGE -> TileFieldEventType.MERGE
+                                            Protocol.BattleMessage.TileFieldEvent.TileFieldEventType.UPDATE -> TileFieldEventType.UPDATE
+                                            Protocol.BattleMessage.TileFieldEvent.TileFieldEventType.DELETE -> TileFieldEventType.DELETE
                                             else -> TileFieldEventType.MOVE
                                         },
                                         tileEvent.id, tileEvent.position, if (tileEvent.hasTile()) tileEvent.tile.let {
-                                    TileViewModel(it.id, it.skin, it.stackSize, it.maxStackSize, it.stun)
+                                    TileViewModel(it.id, it.skin, it.stackSize, it.maxStackSize, it.stun, it.layer)
                                 } else null
                                 )
                             }
                     )
                     Protocol.BattleMessage.MessageType.COMBO_UPDATE -> BattleEvent.ComboUpdateEvent("", message.id)
                     Protocol.BattleMessage.MessageType.UPDATE_TILE -> BattleEvent.UpdateTileEvent("", message.id,
-                            message.tileViewModel.let { TileViewModel(it.id, it.skin, it.stackSize, it.maxStackSize, it.stun) })
+                            message.tileViewModel.let { TileViewModel(it.id, it.skin, it.stackSize, it.maxStackSize, it.stun, it.layer) })
                     Protocol.BattleMessage.MessageType.REMOVE_TILE -> BattleEvent.RemoveTileEvent("", message.id)
                     Protocol.BattleMessage.MessageType.SHOW_TILE -> BattleEvent.ShowTileEffect("", message.position, message.effect)
                     Protocol.BattleMessage.MessageType.CREATE_PERSONAGE -> BattleEvent.CreatePersonageEvent(
                             message.personageViewModel.let { createPersonageViewModel(it) },
                             message.position,
-                            message.appearStrategy
+                            message.appearAttachUnitId,
+                            message.appearPose
                     )
                     Protocol.BattleMessage.MessageType.PERSONAGE_ATTACK -> BattleEvent.PersonageAttackEvent(
                             createPersonageViewModel(message.personageViewModel),

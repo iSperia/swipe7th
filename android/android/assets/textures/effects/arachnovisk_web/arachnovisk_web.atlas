@@ -1,0 +1,146 @@
+
+Web.png
+size: 1024,2044
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+VFX/Web_1
+  rotate: false
+  xy: 512, 2
+  size: 48, 34
+  orig: 48, 35
+  offset: 0, 1
+  index: -1
+VFX/Web_10
+  rotate: false
+  xy: 715, 97
+  size: 184, 173
+  orig: 220, 221
+  offset: 22, 19
+  index: -1
+VFX/Web_11
+  rotate: true
+  xy: 794, 272
+  size: 168, 187
+  orig: 169, 189
+  offset: 1, 1
+  index: -1
+VFX/Web_12
+  rotate: false
+  xy: 512, 38
+  size: 201, 248
+  orig: 201, 250
+  offset: 0, 1
+  index: -1
+VFX/Web_13
+  rotate: false
+  xy: 512, 288
+  size: 280, 346
+  orig: 280, 347
+  offset: 0, 1
+  index: -1
+VFX/Web_14
+  rotate: true
+  xy: 513, 636
+  size: 412, 423
+  orig: 413, 425
+  offset: 1, 1
+  index: -1
+VFX/Web_15
+  rotate: false
+  xy: 513, 1050
+  size: 480, 479
+  orig: 480, 481
+  offset: 0, 1
+  index: -1
+VFX/Web_16
+  rotate: false
+  xy: 2, 512
+  size: 508, 508
+  orig: 509, 508
+  offset: 0, 0
+  index: -1
+VFX/Web_17
+  rotate: true
+  xy: 514, 1531
+  size: 509, 508
+  orig: 510, 508
+  offset: 0, 0
+  index: -1
+VFX/Web_18
+  rotate: false
+  xy: 2, 1532
+  size: 510, 508
+  orig: 510, 508
+  offset: 0, 0
+  index: -1
+VFX/Web_19
+  rotate: false
+  xy: 2, 1022
+  size: 509, 508
+  orig: 510, 508
+  offset: 0, 0
+  index: -1
+VFX/Web_2
+  rotate: true
+  xy: 995, 1491
+  size: 38, 21
+  orig: 38, 21
+  offset: 0, 0
+  index: -1
+VFX/Web_20
+  rotate: false
+  xy: 2, 2
+  size: 508, 508
+  orig: 509, 508
+  offset: 0, 0
+  index: -1
+VFX/Web_3
+  rotate: false
+  xy: 901, 106
+  size: 54, 29
+  orig: 54, 30
+  offset: 0, 0
+  index: -1
+VFX/Web_4
+  rotate: false
+  xy: 938, 909
+  size: 65, 59
+  orig: 78, 73
+  offset: 9, 3
+  index: -1
+VFX/Web_5
+  rotate: false
+  xy: 810, 17
+  size: 80, 78
+  orig: 93, 94
+  offset: 8, 7
+  index: -1
+VFX/Web_6
+  rotate: true
+  xy: 938, 970
+  size: 78, 70
+  orig: 91, 93
+  offset: 2, 8
+  index: -1
+VFX/Web_7
+  rotate: false
+  xy: 715, 12
+  size: 93, 83
+  orig: 110, 96
+  offset: 9, 5
+  index: -1
+VFX/Web_8
+  rotate: false
+  xy: 901, 137
+  size: 95, 133
+  orig: 129, 169
+  offset: 24, 27
+  index: -1
+VFX/Web_9
+  rotate: false
+  xy: 794, 442
+  size: 189, 192
+  orig: 238, 234
+  offset: 27, 13
+  index: -1

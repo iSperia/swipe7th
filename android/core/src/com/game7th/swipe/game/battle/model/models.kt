@@ -17,14 +17,17 @@ data class PoseGdxModel(
         val triggers: List<Int>?,
         val sound: String?,
         val duration: Float?,
-        val effect: PoseEffectGdxModel?
+        val effect: PoseEffectGdxModel?,
+        val isx: Float, //instant shift x after pose
+        val isy: Float  //instant shift y after pose
 )
 
 enum class GdxAttackType {
     MOVE_AND_PUNCH,
     AOE_STEPPED_GENERATOR,
     BOW_STRIKE,
-    ATTACK_IN_PLACE
+    ATTACK_IN_PLACE,
+    LAUNCH_PROJECTILE
 }
 
 enum class GdxRenderType {
@@ -55,7 +58,9 @@ data class FigureGdxModel(
     val source_width: Float,
     val source_height: Float,
     val anchor_x: Float,
-    val tiles: List<String>?
+    val tiles: List<String>?,
+    val invert_x: Boolean,
+    val static_tiles: List<String>?
 )
 
 data class EffectGdxModel(
@@ -87,6 +92,11 @@ data class AttachEffectGdxModel(
         val anchor_x: Int? = 0,
         val anchor_y: Int? = 0,
         val scale: Float? = 0f
+)
+
+data class TileLayer(
+        val name: String,
+        val layer: Int
 )
 
 data class GdxModel(

@@ -11,6 +11,7 @@
       "source_width": 960,
       "source_height": 960,
       "anchor_x": 480,
+      "invert_x": false,
       "tiles": [
         "prince_strike", "prince_ray"
       ],
@@ -33,24 +34,51 @@
       "name": "stomper",
       "atlas": "stomper",
       "render": "spine",
-      "height": 752,
-      "width": 764,
-      "scale": 0.5,
-      "body": "Knight",
+      "height": 250,
+      "width": 325,
+      "scale": 0.8,
+      "body": "stomper",
       "source_width": 960,
       "source_height": 960,
       "anchor_x": 480,
+      "invert_x": true,
+      "static_tiles": ["web"],
       "poses": [
-        {"name":  "Strike"},
-        {"name":  "Buff"},
-        {"name":  "Ultimate"},
-        {"name":  "Damage"},
-        {"name":  "Death"},
-        {"name": "idle"},
-        {"name": "idle_long"}
+        {"name":  "Strike", "sound":  "Stomper_Strike"},
+        {"name":  "Special", "sound":  "Stomper_Special", "effect": { "frame": 28, "x": 0, "y": 0, "id": "stomper_web", "pose": "animation" }},
+        {"name":  "Damage", "sound":  "Stomper_Damage"},
+        {"name":  "Death", "sound":  "Stomper_Dead"},
+        {"name": "Attract2", "isx":  -195.67, "isy":  -6.69},
+        {"name": "Attract", "isx":  87, "isy": -37}
       ],
       "attacks": [
-        {"attackType": "MOVE_AND_PUNCH", "pose": "Strike", "trigger": 0.66, "length": 1, "sound": "sword_strike"}
+        {"attackType": "MOVE_AND_PUNCH", "pose": "Strike", "trigger": 0.35, "length": 1, "sound": "sword_strike"},
+        {"attackType":  "LAUNCH_PROJECTILE", "pose": "Special", "trigger":  0.46, "length": 1}
+      ]
+    },
+    {
+      "name": "arachnovisk",
+      "atlas": "arachnovisk",
+      "render": "spine",
+      "dependencies": ["stomper"],
+      "height": 600,
+      "width": 470,
+      "scale": 0.8,
+      "body": "arachnovisk",
+      "source_width": 960,
+      "source_height": 960,
+      "anchor_x": 300,
+      "invert_x": true,
+      "static_tiles": ["web"],
+      "poses": [
+        {"name":  "Strike", "sound":  "Stomper_Strike"},
+        {"name":  "Special", "sound":  "Stomper_Special", "effect": { "frame": 30, "x": 0, "y": 0, "id": "stomper_web", "pose": "animation" }},
+        {"name":  "Damage", "sound":  "Stomper_Damage"},
+        {"name":  "Death", "sound":  "Stomper_Dead", "triggers": [22], "end": 231, "effect":  {"frame":  0, "x":  0, "y":  0, "id":  "arachnovisk_blow", "pose":  "animation"}}
+      ],
+      "attacks": [
+        {"attackType": "MOVE_AND_PUNCH", "pose": "Strike", "trigger": 0.81, "length": 1.83, "sound": "sword_strike"},
+        {"attackType":  "LAUNCH_PROJECTILE", "pose": "Special", "trigger":  0.5, "length": 1.33}
       ]
     }
   ],

@@ -63,6 +63,8 @@ class GameScreen(game: SwipeGameGdx,
     val figureUis = mutableMapOf<String, TextureAtlas>()
     val skeletonDatas = mutableMapOf<String, SkeletonData>()
     val sounds = mutableMapOf<String, Sound>()
+    val staticTiles = mutableListOf<String>()
+    val dynamicTiles = mutableListOf<String>()
 
     lateinit var backgroundMusic: Music
 
@@ -93,10 +95,7 @@ class GameScreen(game: SwipeGameGdx,
         game.multiplexer.addProcessor(0, processor)
 
         KtxAsync.launch {
-
             listenEvents()
-
-
         }
     }
 
@@ -143,6 +142,7 @@ class GameScreen(game: SwipeGameGdx,
                     skeletonDatas[effect.id] = jsonData
                 }
             }
+            gdxFigure.static_tiles?.let { staticTiles.addAll(it) }
             Gdx.files.internal("textures/personages/${gdxFigure.name}/ui.atlas").let { handle ->
                 if (handle.exists()) {
                     val uiAtlas = TextureAtlas(handle)
@@ -151,6 +151,7 @@ class GameScreen(game: SwipeGameGdx,
                 }
             }
             gdxFigure.tiles?.forEach {
+                dynamicTiles.add(it)
                 val spineAtlas = TextureAtlas(Gdx.files.internal("textures/tiles/$it/tile.atlas"))
                 val json = SkeletonJson(spineAtlas)
                 val jsonData = json.readSkeletonData(Gdx.files.internal("textures/tiles/$it/spine.json"))
@@ -235,7 +236,9 @@ class GameScreen(game: SwipeGameGdx,
                                 height = Gdx.graphics.height.toFloat(),
                                 atlases = atlases,
                                 skeletons = skeletonDatas,
-                                figuresUi = figureUis
+                                figuresUi = figureUis,
+                                staticTiles = staticTiles,
+                                dynamicTiles = dynamicTiles
                             )
 
                             gameActor = GameActor(
@@ -289,6 +292,10 @@ class GameScreen(game: SwipeGameGdx,
         if (ready) {
             batch.begin()
             battleController?.act(batch, delta)
+            batch.end()
+        } else {
+            batch.begin()
+            batch.draw(context.commonAtlas.findRegion("loading_screen"), 0f, 0f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
             batch.end()
         }
 

@@ -1,0 +1,34 @@
+
+bridge.png
+size: 2048, 4096
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+loc_bg
+  rotate: false
+  xy: 2, 1330
+  size: 1300, 2245
+  orig: 1300, 2245
+  offset: 0, 0
+  index: -1
+loc_fg
+  rotate: false
+  xy: 2, 148
+  size: 1300, 1180
+  orig: 1300, 1180
+  offset: 0, 0
+  index: -1
+tile_bg
+  rotate: false
+  xy: 2, 2
+  size: 144, 144
+  orig: 144, 144
+  offset: 0, 0
+  index: -1
+tile_fg
+  rotate: false
+  xy: 1304, 3427
+  size: 148, 148
+  orig: 148, 148
+  offset: 0, 0
+  index: -1
