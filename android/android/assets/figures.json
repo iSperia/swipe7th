@@ -83,6 +83,31 @@
         {"attackType": "MOVE_AND_PUNCH", "pose": "Strike", "trigger": 0.81, "length": 1.83, "sound": "sword_strike", "shift": 476},
         {"attackType":  "LAUNCH_PROJECTILE", "pose": "Special", "trigger":  0.5, "length": 1.9}
       ]
+    },
+    {
+      "name": "undead_knight",
+      "atlas": "undead_knight",
+      "render": "spine",
+      "height": 752,
+      "width": 764,
+      "scale": 0.5,
+      "body": "undead_knight",
+      "source_width": 960,
+      "source_height": 960,
+      "anchor_x": 480,
+      "invert_x": false,
+      "poses": [
+        {"name":  "Strike", "sound": "Prince_Strike"},
+        {"name":  "Buff", "sound": "Prince_Buff"},
+        {"name":  "Laser", "effect": { "frame": 0, "x": 0, "y": 0, "id": "prince_laser", "pose": "laser_use" }, "sound":  "Prince_Laser"},
+        {"name":  "Damage", "sound":  "Prince_Damage"},
+        {"name":  "Death", "sound": "Prince_Death"},
+        {"name": "idle"},
+        {"name": "idle_long"}
+      ],
+      "attacks": [
+        {"attackType": "MOVE_AND_PUNCH", "pose": "Strike", "trigger": 0.66, "length": 1 }
+      ]
     }
   ],
   "ailments": [
