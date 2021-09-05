@@ -510,6 +510,10 @@ public final class Protocol {
        */
       HEARTBEAT(4),
       /**
+       * <code>USE_ULTIMATE = 5;</code>
+       */
+      USE_ULTIMATE(5),
+      /**
        * <code>CREATE_TILE = 1000;</code>
        */
       CREATE_TILE(1000),
@@ -609,6 +613,10 @@ public final class Protocol {
        * <code>WISDOM_UPDATE = 1024;</code>
        */
       WISDOM_UPDATE(1024),
+      /**
+       * <code>ULTIMATE_UPDATE = 1025;</code>
+       */
+      ULTIMATE_UPDATE(1025),
       UNRECOGNIZED(-1),
       ;
 
@@ -632,6 +640,10 @@ public final class Protocol {
        * <code>HEARTBEAT = 4;</code>
        */
       public static final int HEARTBEAT_VALUE = 4;
+      /**
+       * <code>USE_ULTIMATE = 5;</code>
+       */
+      public static final int USE_ULTIMATE_VALUE = 5;
       /**
        * <code>CREATE_TILE = 1000;</code>
        */
@@ -732,6 +744,10 @@ public final class Protocol {
        * <code>WISDOM_UPDATE = 1024;</code>
        */
       public static final int WISDOM_UPDATE_VALUE = 1024;
+      /**
+       * <code>ULTIMATE_UPDATE = 1025;</code>
+       */
+      public static final int ULTIMATE_UPDATE_VALUE = 1025;
 
 
       public final int getNumber() {
@@ -757,6 +773,7 @@ public final class Protocol {
           case 2: return CONCEDE;
           case 3: return FLASK;
           case 4: return HEARTBEAT;
+          case 5: return USE_ULTIMATE;
           case 1000: return CREATE_TILE;
           case 1001: return SWIPE_MOTION;
           case 1002: return COMBO_UPDATE;
@@ -782,6 +799,7 @@ public final class Protocol {
           case 1022: return HEARTBEAT_RESPONSE;
           case 1023: return DEFEAT;
           case 1024: return WISDOM_UPDATE;
+          case 1025: return ULTIMATE_UPDATE;
           default: return null;
         }
       }
@@ -9179,7 +9197,7 @@ public final class Protocol {
   static {
     java.lang.String[] descriptorData = {
       "\n\016protocol.proto\022&com.game7th.swiped.api" +
-      ".battle.protocol\"\206\024\n\rBattleMessage\022\014\n\004ty" +
+      ".battle.protocol\"\256\024\n\rBattleMessage\022\014\n\004ty" +
       "pe\030\001 \001(\005\022W\n\014message_type\030\002 \001(\0162A.com.gam" +
       "e7th.swiped.api.battle.protocol.BattleMe" +
       "ssage.MessageType\022\n\n\002dx\030\003 \001(\005\022\n\n\002dy\030\004 \001(" +
@@ -9229,21 +9247,22 @@ public final class Protocol {
       " \001(\005\022\024\n\014tick_ability\030\017 \001(\t\022\022\n\nis_stunned" +
       "\030\020 \001(\010\022\021\n\tis_frozen\030\021 \001(\010\032=\n\rSpeechMessa",
       "ge\022\020\n\010portrait\030\001 \001(\t\022\014\n\004text\030\002 \001(\t\022\014\n\004na" +
-      "me\030\003 \001(\t\"\276\004\n\013MessageType\022\t\n\005SWIPE\020\000\022\t\n\005R" +
+      "me\030\003 \001(\t\"\346\004\n\013MessageType\022\t\n\005SWIPE\020\000\022\t\n\005R" +
       "EADY\020\001\022\013\n\007CONCEDE\020\002\022\t\n\005FLASK\020\003\022\r\n\tHEARTB" +
-      "EAT\020\004\022\020\n\013CREATE_TILE\020\350\007\022\021\n\014SWIPE_MOTION\020" +
-      "\351\007\022\021\n\014COMBO_UPDATE\020\352\007\022\020\n\013UPDATE_TILE\020\353\007\022" +
-      "\020\n\013REMOVE_TILE\020\354\007\022\016\n\tSHOW_TILE\020\355\007\022\025\n\020CRE" +
-      "ATE_PERSONAGE\020\356\007\022\025\n\020PERSONAGE_ATTACK\020\357\007\022" +
-      "!\n\034PERSONAGE_POSITIONED_ABILITY\020\360\007\022\025\n\020PE" +
-      "RSONAGE_DAMAGE\020\361\007\022\023\n\016PERSONAGE_DEAD\020\362\007\022\025" +
-      "\n\020PERSONAGE_UPDATE\020\363\007\022\023\n\016PERSONAGE_HEAL\020",
-      "\364\007\022\014\n\007NPC_AOE\020\365\007\022\024\n\017SHOW_PROJECTILE\020\366\007\022\021" +
-      "\n\014SHOW_AILMENT\020\367\007\022\025\n\020REMOVE_PERSONAGE\020\370\007" +
-      "\022\r\n\010NEW_WAVE\020\371\007\022\020\n\013SHOW_SPEECH\020\372\007\022\014\n\007VIC" +
-      "TORY\020\373\007\022\021\n\014BATTLE_READY\020\374\007\022\023\n\016FLASK_CONS" +
-      "UMED\020\375\007\022\027\n\022HEARTBEAT_RESPONSE\020\376\007\022\013\n\006DEFE" +
-      "AT\020\377\007\022\022\n\rWISDOM_UPDATE\020\200\010b\006proto3"
+      "EAT\020\004\022\020\n\014USE_ULTIMATE\020\005\022\020\n\013CREATE_TILE\020\350" +
+      "\007\022\021\n\014SWIPE_MOTION\020\351\007\022\021\n\014COMBO_UPDATE\020\352\007\022" +
+      "\020\n\013UPDATE_TILE\020\353\007\022\020\n\013REMOVE_TILE\020\354\007\022\016\n\tS" +
+      "HOW_TILE\020\355\007\022\025\n\020CREATE_PERSONAGE\020\356\007\022\025\n\020PE" +
+      "RSONAGE_ATTACK\020\357\007\022!\n\034PERSONAGE_POSITIONE" +
+      "D_ABILITY\020\360\007\022\025\n\020PERSONAGE_DAMAGE\020\361\007\022\023\n\016P" +
+      "ERSONAGE_DEAD\020\362\007\022\025\n\020PERSONAGE_UPDATE\020\363\007\022",
+      "\023\n\016PERSONAGE_HEAL\020\364\007\022\014\n\007NPC_AOE\020\365\007\022\024\n\017SH" +
+      "OW_PROJECTILE\020\366\007\022\021\n\014SHOW_AILMENT\020\367\007\022\025\n\020R" +
+      "EMOVE_PERSONAGE\020\370\007\022\r\n\010NEW_WAVE\020\371\007\022\020\n\013SHO" +
+      "W_SPEECH\020\372\007\022\014\n\007VICTORY\020\373\007\022\021\n\014BATTLE_READ" +
+      "Y\020\374\007\022\023\n\016FLASK_CONSUMED\020\375\007\022\027\n\022HEARTBEAT_R" +
+      "ESPONSE\020\376\007\022\013\n\006DEFEAT\020\377\007\022\022\n\rWISDOM_UPDATE" +
+      "\020\200\010\022\024\n\017ULTIMATE_UPDATE\020\201\010b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

@@ -10,6 +10,7 @@ message BattleMessage {
         CONCEDE = 2;
         FLASK = 3;
         HEARTBEAT = 4;
+        USE_ULTIMATE = 5;
 
         CREATE_TILE = 1000;
         SWIPE_MOTION = 1001;
@@ -36,6 +37,7 @@ message BattleMessage {
         HEARTBEAT_RESPONSE = 1022;
         DEFEAT = 1023;
         WISDOM_UPDATE = 1024;
+        ULTIMATE_UPDATE = 1025;
     }
 
     MessageType message_type = 2;

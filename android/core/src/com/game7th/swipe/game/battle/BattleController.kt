@@ -408,7 +408,7 @@ class BattleController(
         println(">>> DEATH: $timePassed, $timeShiftLocal")
         val figure = findFigure(event.personage.id)
 
-        scheduledActions.add(Pair(timeShiftGlobal) {
+        scheduledActions.add(Pair(timeShiftLocal) {
             figure?.let {
                 it.switchPose("Death")
                 it.isDead = true
@@ -498,7 +498,6 @@ class BattleController(
                     it.zIndex = ElementController.Z_INDEX_HUD
                 }
             }
-            timeShiftLocal += 0.2f
             if (event.appearAttachUnitId == 0) {
                 recalculateScale()
             }

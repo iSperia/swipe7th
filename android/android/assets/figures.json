@@ -27,7 +27,8 @@
       "attacks": [
         {"attackType": "MOVE_AND_PUNCH", "pose": "Strike", "trigger": 0.66, "length": 1 },
         {"attackType": "ATTACK_IN_PLACE", "pose": "Laser", "trigger": 0.93, "length":  2 },
-        {"attackType": "ATTACK_IN_PLACE", "trigger": 0.5, "pose": "Buff", "length": 1}
+        {"attackType": "ATTACK_IN_PLACE", "trigger": 0.5, "pose": "Buff", "length": 1},
+        {"attackType":  "ATTACK_IN_PLACE", "pose":  "Buff", "trigger":  0.5, "length":  1}
       ]
     },
     {
@@ -49,11 +50,12 @@
         {"name":  "Damage", "sound":  "Stomper_Damage"},
         {"name":  "Death", "sound":  "Stomper_Dead"},
         {"name": "Attract2", "isx":  -195.67, "isy":  -6.69},
-        {"name": "Attract", "isx":  87, "isy": -37}
+        {"name": "Attract", "isx":  87, "isy": -37},
+        {"name":  "idle"}
       ],
       "attacks": [
-        {"attackType": "MOVE_AND_PUNCH", "pose": "Strike", "trigger": 0.35, "length": 1, "sound": "sword_strike"},
-        {"attackType":  "LAUNCH_PROJECTILE", "pose": "Special", "trigger":  0.46, "length": 1}
+        {"attackType": "MOVE_AND_PUNCH", "pose": "Strike", "trigger": 0.35, "length": 1, "sound": "sword_strike", "shift": "257"},
+        {"attackType":  "LAUNCH_PROJECTILE", "pose": "Special", "trigger":  0.46, "length": 1.5}
       ]
     },
     {
@@ -74,11 +76,12 @@
         {"name":  "Strike", "sound":  "Stomper_Strike"},
         {"name":  "Special", "sound":  "Stomper_Special", "effect": { "frame": 30, "x": 0, "y": 0, "id": "stomper_web", "pose": "animation" }},
         {"name":  "Damage", "sound":  "Stomper_Damage"},
-        {"name":  "Death", "sound":  "Stomper_Dead", "triggers": [60], "end": 231, "effect":  {"frame":  0, "x":  0, "y":  0, "id":  "arachnovisk_blow", "pose":  "animation", "invert_x":  true}}
+        {"name":  "Death", "sound":  "Stomper_Dead", "triggers": [60], "end": 231, "effect":  {"frame":  0, "x":  0, "y":  0, "id":  "arachnovisk_blow", "pose":  "animation", "invert_x":  true}},
+        {"name":  "idle"}
       ],
       "attacks": [
         {"attackType": "MOVE_AND_PUNCH", "pose": "Strike", "trigger": 0.81, "length": 1.83, "sound": "sword_strike", "shift": 476},
-        {"attackType":  "LAUNCH_PROJECTILE", "pose": "Special", "trigger":  0.5, "length": 1.33}
+        {"attackType":  "LAUNCH_PROJECTILE", "pose": "Special", "trigger":  0.5, "length": 1.9}
       ]
     }
   ],

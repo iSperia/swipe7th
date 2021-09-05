@@ -249,8 +249,10 @@ class FigureController(
     fun moveOrigin(targetX: Float, targetY: Float, duration: Float) {
         val needFastMove = originX > 0f
 
-        originX = targetX
-        originY = targetY
+        figureModel.poses?.firstOrNull { it.name == pose }?.let { pose ->
+            originX = targetX - pose.isx * battle.scale * figureModel.scale
+            originY = targetY - pose.isy * battle.scale * figureModel.scale
+        }
 
         if (needFastMove) {
             move(originX, targetY, duration)

@@ -73,8 +73,8 @@ class FigureEffectController(
                 skeleton.scaleX = (if (descriptor.from.flipped xor descriptor.from.figureModel.invert_x) -1f else 1f) * descriptor.from.figureModel.scale * battle.scale
                 skeleton.scaleY = descriptor.from.figureModel.scale * battle.scale
                 val progress = min(1f, timePassed / descriptor.duration)
-                skeleton.setPosition(descriptor.from.x + (descriptor.to.x - descriptor.from.x) * progress,
-                    descriptor.from.y + (descriptor.to.y - descriptor.from.y) * progress)
+                skeleton.setPosition(descriptor.from.x + (descriptor.to.originX - descriptor.from.x) * progress,
+                    descriptor.from.y + (descriptor.to.originY - descriptor.from.y) * progress)
             }
         }
 

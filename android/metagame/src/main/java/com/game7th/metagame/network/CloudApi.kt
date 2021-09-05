@@ -186,6 +186,9 @@ class CloudApi(
                             is InputBattleEvent.HeartBeatEvent -> {
                                 messageType = Protocol.BattleMessage.MessageType.HEARTBEAT
                             }
+                            is InputBattleEvent.UseUltimateEvent -> {
+                                messageType = Protocol.BattleMessage.MessageType.USE_ULTIMATE
+                            }
                         }
                     }
                     val data = builder.build().toByteArray()
@@ -275,6 +278,7 @@ class CloudApi(
                     Protocol.BattleMessage.MessageType.VICTORY -> BattleEvent.VictoryEvent
                     Protocol.BattleMessage.MessageType.DEFEAT -> BattleEvent.DefeatEvent
                     Protocol.BattleMessage.MessageType.WISDOM_UPDATE -> BattleEvent.WisdomUpdateEvent("", message.id)
+                    Protocol.BattleMessage.MessageType.ULTIMATE_UPDATE -> BattleEvent.UltimateUpdateEvent("", message.id, message.position)
                     else -> null
                 }
                 event?.let { event ->

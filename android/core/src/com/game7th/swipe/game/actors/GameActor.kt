@@ -56,7 +56,7 @@ class GameActor(
         x = scaleIconCombo.x + 27f * context.scale
         y = scaleIconCombo.y + 68f * context.scale
     }
-    val scaleUltimate = ScaleActor(context, "scale_combo", 20).apply {
+    val scaleUltimate = ScaleActor(context, "scale_combo", 10).apply {
         x = scaleIconUltimate.x + 26f * context.scale
         y = scaleIconUltimate.y + 70f * context.scale
     }
@@ -181,6 +181,19 @@ class GameActor(
                 comboCaption.isVisible = event.combo > 0
                 comboValue.isVisible = event.combo > 0
                 comboValue.setText("X${event.combo}")
+            }
+            is BattleEvent.UltimateUpdateEvent -> {
+                scaleUltimate.applyProgress(event.ultimate * 10)
+                if (event.ultimate == 10) {
+                    scaleIconUltimate.addAction(SequenceAction().apply {
+                        addAction(ScaleToAction().apply { setScale(1.2f); duration = 0.3f })
+                        addAction(ScaleToAction().apply { setScale(1f); duration = 0.3f })
+                    }.repeatForever())
+                    scaleIconUltimate.onClick { screen.processUseUltimate(false) }
+                } else {
+                    scaleIconUltimate.clearActions()
+                    scaleIconUltimate.onClick {  }
+                }
             }
             is BattleEvent.WisdomUpdateEvent ->  {
 //                scaleWisdom.applyProgress(event.wisdomProgress)

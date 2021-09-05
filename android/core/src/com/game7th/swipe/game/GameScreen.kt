@@ -27,6 +27,7 @@ import com.game7th.swiped.api.PersonageDto
 import com.game7th.swiped.api.battle.BattleEvent
 import com.game7th.swiped.api.battle.InputBattleEvent
 import com.google.gson.Gson
+import com.sun.org.apache.xpath.internal.operations.Bool
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import ktx.async.KtxAsync
@@ -107,6 +108,14 @@ class GameScreen(game: SwipeGameGdx,
             if (!gameEnded && !prevent) {
                 gameActor?.tileField?.finalizeActions()
                 swipeFlow.emit(InputBattleEvent.SwipeBattleEvent(dx, dy))
+            }
+        }
+    }
+
+    fun processUseUltimate(prevent: Boolean) {
+        KtxAsync.launch {
+            if (!gameEnded) {
+                swipeFlow.emit(InputBattleEvent.UseUltimateEvent)
             }
         }
     }
