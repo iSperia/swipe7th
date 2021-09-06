@@ -30,8 +30,8 @@ abstract class BaseScreen(
         stage.draw()
     }
 
-    fun showDialog(portrait: String, name: String, text: String, dismisser: () -> Unit) {
-        SpeechView(context, name, text, portrait, dismisser).let { dialog -> stage.addActor(dialog) }
+    fun showDialog(text: String, x: Float, y: Float, dismisser: () -> Unit) {
+        SpeechView(context, text, x, y, dismisser).let { dialog -> stage.addActor(dialog) }
     }
 
     fun showRewardDialog(title: String, rewards: List<PackEntryDto>) {

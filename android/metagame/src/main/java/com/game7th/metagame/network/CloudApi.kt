@@ -272,7 +272,7 @@ class CloudApi(
                     Protocol.BattleMessage.MessageType.NEW_WAVE -> BattleEvent.NewWaveEvent(message.id)
                     Protocol.BattleMessage.MessageType.SHOW_SPEECH -> message.speechMessage.let {
                         BattleEvent.ShowSpeech(
-                                it.portrait, it.text, it.name
+                                it.id, it.text
                         )
                     }
                     Protocol.BattleMessage.MessageType.VICTORY -> BattleEvent.VictoryEvent
@@ -297,7 +297,8 @@ class CloudApi(
             builder.skin,
             builder.portrait,
             builder.id,
-            builder.team
+            builder.team,
+            builder.ghost
     )
 
     fun ByteArray.toHexString() = joinToString("") { "%02x".format(it) }

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import com.game7th.swipe.BaseScreen
 import com.game7th.swipe.game.BattleContext
+import com.game7th.swipe.game.GameScreen
 import com.game7th.swipe.game.battle.model.*
 import com.game7th.swiped.api.battle.BattleEvent
 import kotlin.math.abs
@@ -86,9 +87,11 @@ class BattleController(
         timeShiftGlobal = max(timePassed, timeShiftGlobal)
 
         if (!isSpeechLocked) {
+            var indexesProcessed = 0
             actions.forEachIndexed { index, (timestamp, action) ->
-                if (timestamp < timePassed) {
+                if (timestamp < timePassed && !isSpeechLocked) {
                     action()
+                    indexesProcessed++
                 }
             }
 
@@ -96,7 +99,7 @@ class BattleController(
 
             controllers.removeAll(controllersToRemove)
             controllersToRemove.clear()
-            actions.removeAll { it.first < timePassed }
+            actions = actions.drop(indexesProcessed).toMutableList()
 
             actions.addAll(scheduledActions)
             scheduledActions.clear()
@@ -125,6 +128,9 @@ class BattleController(
             }
             is BattleEvent.CreatePersonageEvent -> {
                 scheduleCreatePersonage(event)
+            }
+            is BattleEvent.RemovePersonageEvent -> {
+                scheduleRemovePersonage(event)
             }
             is BattleEvent.VictoryEvent -> {
                 scheduleFinalEventPropagation(event, false)
@@ -445,26 +451,52 @@ class BattleController(
     }
 
     private fun scheduleShowSpeech(event: BattleEvent.ShowSpeech) {
-        scheduledActions.add(Pair(timeShiftLocal) {
-            speechLockStarted = timePassed
+        scheduledActions.add(Pair(timeShiftGlobal) {
+            println(">>>>> SPEECHING ${event.text} ${event.unitId}")
             isSpeechLocked = true
-            screen.showDialog(event.portrait, event.name, context.gameContext.texts[event.text]
-                    ?: event.text) {
-                unlockSpeech()
+            speechLockStarted = timePassed
+            (screen as GameScreen).let {
+                it.preventLeftSwipe = true
+                it.preventRightSwipe = true
+                it.preventTopSwipe = true
+                it.preventBottomSwipe = true
+            }
+            findFigure(event.unitId)?.let { figure ->
+                screen.showDialog(
+                        event.text,
+                        figure.originX + figure.figureModel.shift_x * figure.figureModel.scale * scale,
+                        figure.originY + (figure.figureModel.shift_y + 0.65f * figure.figureModel.height) * figure.figureModel.scale * scale) {
+                    unlockSpeech()
+                    (screen as GameScreen).let {
+                        it.preventLeftSwipe = false
+                        it.preventRightSwipe = false
+                        it.preventTopSwipe = false
+                        it.preventBottomSwipe = false
+                    }
+                }
             }
         })
-        timeShiftLocal += 1f
+        timeShiftGlobal += 0.5f
     }
 
     fun unlockSpeech() {
         val delta = timePassed - speechLockStarted
-        actions = actions.map { Pair(it.first + delta, it.second) }.toMutableList()
+        actions = actions.map { Pair(it.first + delta + 0.1f, it.second) }.toMutableList()
         isSpeechLocked = false
     }
 
-    private fun scheduleCreatePersonage(event: BattleEvent.CreatePersonageEvent) {
-        println(">>> CREATE: $timePassed, $timeShiftLocal ${event.appearAttachUnitId} ${event.appearPose}")
+    private fun scheduleRemovePersonage(event: BattleEvent.RemovePersonageEvent) {
         scheduledActions.add(Pair(timeShiftLocal) {
+            findFigure(event.target)?.let {
+                controllersToRemove.add(it)
+            }
+        })
+    }
+
+    private fun scheduleCreatePersonage(event: BattleEvent.CreatePersonageEvent) {
+        println(">>>>> CREATE: $timePassed, $timeShiftLocal ${event.appearAttachUnitId} ${event.appearPose} ${event.personage.skin}")
+        scheduledActions.add(Pair(timeShiftLocal) {
+            println(">>>>> CREATING")
             FigureController(context,
                     this@BattleController,
                     event.personage.id,
@@ -478,8 +510,8 @@ class BattleController(
                     findFigure(event.appearAttachUnitId)?.let { attachFigure ->
                         it.originX = attachFigure.originX
                         it.originY = attachFigure.originY
-                        it.x = attachFigure.x
-                        it.y = attachFigure.y
+                        it.x = attachFigure.originX
+                        it.y = attachFigure.originY
                         it.fromX = attachFigure.x
                         it.fromY = attachFigure.y
                         it.targetX = attachFigure.x
@@ -489,13 +521,15 @@ class BattleController(
                         it.switchPose(pose)
                     }
                 }
-                PersonageHealthbarController(context, this@BattleController, hudId++, it).let {
-                    controllers.add(it)
-                    it.zIndex = ElementController.Z_INDEX_HUD
-                }
-                PersonageTickerController(context, this@BattleController, hudId++, it).let {
-                    controllers.add(it)
-                    it.zIndex = ElementController.Z_INDEX_HUD
+                if (!event.personage.ghost) {
+                    PersonageHealthbarController(context, this@BattleController, hudId++, it).let {
+                        controllers.add(it)
+                        it.zIndex = ElementController.Z_INDEX_HUD
+                    }
+                    PersonageTickerController(context, this@BattleController, hudId++, it).let {
+                        controllers.add(it)
+                        it.zIndex = ElementController.Z_INDEX_HUD
+                    }
                 }
             }
             if (event.appearAttachUnitId == 0) {
@@ -505,7 +539,7 @@ class BattleController(
     }
 
     private fun recalculateScale() {
-        val figures = controllers.filterIsInstance<FigureController>()
+        val figures = controllers.filterIsInstance<FigureController>().filter { !it.viewModel.ghost }
         val leftFigures = figures.filter { !it.flipped }
         val rightFigures = figures.filter { it.flipped && it.pose != "death" }
 

@@ -11,6 +11,7 @@
       "source_width": 960,
       "source_height": 960,
       "anchor_x": 480,
+      "dependencies": ["wisp"],
       "invert_x": false,
       "tiles": [
         "prince_strike", "prince_ray"
@@ -30,6 +31,26 @@
         {"attackType": "ATTACK_IN_PLACE", "trigger": 0.5, "pose": "Buff", "length": 1},
         {"attackType":  "ATTACK_IN_PLACE", "pose":  "Buff", "trigger":  0.5, "length":  1}
       ]
+    },
+    {
+      "name": "wisp",
+      "atlas": "wisp",
+      "render": "spine",
+      "height": 360,
+      "width": 360,
+      "scale": 0.35,
+      "body": "wisp",
+      "source_width": 960,
+      "source_height": 960,
+      "shift_x": 300,
+      "shift_y": 600,
+      "anchor_x": 180,
+      "invert_x": false,
+      "static_tiles": [],
+      "poses": [
+        {"name":  "Idle"}
+      ],
+      "attacks": []
     },
     {
       "name": "stomper",

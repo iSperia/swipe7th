@@ -62,7 +62,9 @@ data class FigureGdxModel(
     val anchor_x: Float,
     val tiles: List<String>?,
     val invert_x: Boolean,
-    val static_tiles: List<String>?
+    val static_tiles: List<String>?,
+    val shift_x: Float,
+    val shift_y: Float
 )
 
 data class EffectGdxModel(

@@ -84,7 +84,7 @@ sealed class FigureRenderer {
             figure.apply {
                 skeleton.scaleX = (if (flipped xor figureModel.invert_x) -1f else 1f) * figureModel.scale * battle.scale
                 skeleton.scaleY = figureModel.scale * battle.scale
-                skeleton.setPosition(x, y)
+                skeleton.setPosition(x + figure.figureModel.shift_x * figure.figureModel.scale * battle.scale, y + figure.figureModel.shift_y * figure.figureModel.scale * battle.scale)
 
                 spineAnimation.update(delta)
                 spineAnimation.apply(skeleton)

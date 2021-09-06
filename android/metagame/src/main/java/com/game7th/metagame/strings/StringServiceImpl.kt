@@ -31,10 +31,10 @@ class StringServiceImpl(
             val pack = api.getStringPack(packName)
             storage.put("string_pack_${packName}", gson.toJson(StringPackWrapper(pack)))
             storage.put("string_pack_${packName}_version", remoteVersion.toString())
-            pack.forEach { texts[it.name] = it.value }
+            pack.forEach { texts[it.name] = it.ru }
         } else {
             val pack = gson.fromJson(storage.get("string_pack_$packName") ?: "{entries:[]}", StringPackWrapper::class.java)
-            pack.entries.forEach { texts[it.name] = it.value }
+            pack.entries.forEach { texts[it.name] = it.ru }
         }
     }
 }

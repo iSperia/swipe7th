@@ -224,7 +224,7 @@ class GameScreen(game: SwipeGameGdx,
                             listOf("wind").forEach {
                                 sounds[it] = Gdx.audio.newSound(Gdx.files.internal("sounds/$it.ogg"))
                             }
-                            it.battleInfo.figures.forEach { figureName ->
+                            (it.battleInfo.figures + "wisp").forEach { figureName ->
                                 gdxModel.figures.firstOrNull { it.name == figureName }?.let {
                                     loadResources(it, atlases)
                                 }

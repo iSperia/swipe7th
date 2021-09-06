@@ -12,61 +12,61 @@ import com.badlogic.gdx.utils.Align
 import com.game7th.swipe.GdxGameContext
 import com.game7th.swipe.campaign.plist.PersonageVerticalPortrait
 import com.game7th.swipe.campaign.plist.PortraitConfig
+import kotlinx.coroutines.launch
 import ktx.actors.onClick
+import ktx.async.KtxAsync
 
 class SpeechView(
         private val context: GdxGameContext,
-        name: String,
-        text: String,
-        texture: String,
+        private val textId: String,
+        private val attachX: Float,
+        private val attachY: Float,
         private val dismisser: () -> Unit
 ) : Group() {
 
-    val portrait = PersonageVerticalPortrait(context, PortraitConfig(name, texture, -1), 200f * context.scale).apply {
-        onClick { dismiss() }
-    }
-
-    val textLabel = Label(text, Label.LabelStyle(context.regularFont, Color.BLACK)).apply {
-        x = 140f * context.scale
-        width = 330f * context.scale
-        height = 180f * context.scale
-        y = 10f * context.scale
+    val textLabel = Label("", Label.LabelStyle(context.regularFont, Color.BLACK)).apply {
+        x = attachX + wid * context.scale * 0.1f
+        width = wid * context.scale * 0.8f
+        height = hei * context.scale * 0.8f
+        y = attachY - hei * context.scale
         setFontScale(context.scale * 100f/3f/36f)
         setAlignment(Align.topLeft)
         wrap = true
         onClick { dismiss() }
     }
 
-    val bg = Image(context.commonAtlas.findRegion("ui_dialog")).apply {
-        x = 130f * context.scale
-        width = 350f * context.scale
-        height = 200f * context.scale
+    val bg = Image(context.commonAtlas.findRegion("bg_dialog")).apply {
+        x = attachX
+        y = attachY - context.scale * hei
+        width = wid * context.scale
+        height = hei * context.scale
     }
 
-    val modale = Image(context.commonAtlas.findRegion("panel_modal")).apply {
+    val modale = Image(context.commonAtlas.findRegion("panel_modal_trans")).apply {
         x = 0f
         y = 0f
         width = Gdx.graphics.width.toFloat()
-        height = Gdx.graphics.height.toFloat() + 200f * context.scale
+        height = Gdx.graphics.height.toFloat()
         onClick { }
     }
 
     init {
         addActor(modale)
-        addActor(portrait)
         addActor(bg)
         addActor(textLabel)
 
-        y = -200f * context.scale
-        addAction(MoveByAction().apply { duration = 0.3f; setAmount(0f, 200f * context.scale) })
+        KtxAsync.launch {
+            context.stringService.getString(textId).let { textLabel.setText(it) }
+        }
+
     }
 
     private fun dismiss() {
-        addAction(SequenceAction(
-                MoveByAction().apply { duration = 0.3f; setAmount(0f, -200f * context.scale) },
-                RunnableAction().apply { setRunnable {
-                    dismisser()
-                    remove()
-                } }))
+        dismisser()
+        remove()
+    }
+    companion object {
+        const val wid = 280f
+        const val hei = 130f
     }
 }

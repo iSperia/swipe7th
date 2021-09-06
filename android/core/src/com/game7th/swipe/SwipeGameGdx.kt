@@ -25,6 +25,7 @@ import com.game7th.metagame.network.CloudApi
 import com.game7th.metagame.network.NetworkError
 import com.game7th.metagame.network.NetworkErrorStatus
 import com.game7th.metagame.shop.PurchaseItemMapper
+import com.game7th.metagame.strings.StringServiceImpl
 import com.game7th.swipe.network.NetworkErrorScreen
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -124,6 +125,12 @@ class SwipeGameGdx(
         height = Gdx.graphics.height.toFloat()
         scale = Gdx.graphics.width / 480f
 
+        val stringService = StringServiceImpl(storage, gson, api)
+        //TODO: sync some way
+        KtxAsync.launch {
+            stringService.loadPack("act_prolog")
+        }
+
         val commonAtlas = TextureAtlas(Gdx.files.internal("textures/common.atlas"))
         val itemsAtlas = TextureAtlas(Gdx.files.internal("textures/artifacts.atlas"))
         val regularFont = BitmapFont(Gdx.files.internal("cuprum.fnt"), Gdx.files.internal("cuprum_0.png"), false).apply {
@@ -138,7 +145,7 @@ class SwipeGameGdx(
         val token = object : TypeToken<Map<String, String>>() {}.type
         val texts = gson.fromJson<Map<String, String>>(textsText, token)
 
-        context = GdxGameContext(commonAtlas, itemsAtlas, regularFont, captionFont, scale, texts, storage)
+        context = GdxGameContext(commonAtlas, itemsAtlas, regularFont, captionFont, scale, texts, stringService, storage)
 
         Gdx.input.inputProcessor = multiplexer
 

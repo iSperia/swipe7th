@@ -3168,6 +3168,11 @@ public final class Protocol {
        * <code>optional int32 team = 5;</code>
        */
       int getTeam();
+
+      /**
+       * <code>optional bool ghost = 6;</code>
+       */
+      boolean getGhost();
     }
     /**
      * Protobuf type {@code com.game7th.swiped.api.battle.protocol.BattleMessage.PersonageViewModel}
@@ -3185,6 +3190,7 @@ public final class Protocol {
         portrait_ = "";
         id_ = 0;
         team_ = 0;
+        ghost_ = false;
       }
 
       @java.lang.Override
@@ -3245,6 +3251,11 @@ public final class Protocol {
               case 40: {
 
                 team_ = input.readInt32();
+                break;
+              }
+              case 48: {
+
+                ghost_ = input.readBool();
                 break;
               }
             }
@@ -4890,6 +4901,15 @@ public final class Protocol {
         return team_;
       }
 
+      public static final int GHOST_FIELD_NUMBER = 6;
+      private boolean ghost_;
+      /**
+       * <code>optional bool ghost = 6;</code>
+       */
+      public boolean getGhost() {
+        return ghost_;
+      }
+
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -4917,6 +4937,9 @@ public final class Protocol {
         if (team_ != 0) {
           output.writeInt32(5, team_);
         }
+        if (ghost_ != false) {
+          output.writeBool(6, ghost_);
+        }
       }
 
       public int getSerializedSize() {
@@ -4941,6 +4964,10 @@ public final class Protocol {
         if (team_ != 0) {
           size += com.google.protobuf.CodedOutputStream
             .computeInt32Size(5, team_);
+        }
+        if (ghost_ != false) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBoolSize(6, ghost_);
         }
         memoizedSize = size;
         return size;
@@ -4971,6 +4998,8 @@ public final class Protocol {
             == other.getId());
         result = result && (getTeam()
             == other.getTeam());
+        result = result && (getGhost()
+            == other.getGhost());
         return result;
       }
 
@@ -4993,6 +5022,9 @@ public final class Protocol {
         hash = (53 * hash) + getId();
         hash = (37 * hash) + TEAM_FIELD_NUMBER;
         hash = (53 * hash) + getTeam();
+        hash = (37 * hash) + GHOST_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+            getGhost());
         hash = (29 * hash) + unknownFields.hashCode();
         memoizedHashCode = hash;
         return hash;
@@ -5125,6 +5157,8 @@ public final class Protocol {
 
           team_ = 0;
 
+          ghost_ = false;
+
           return this;
         }
 
@@ -5156,6 +5190,7 @@ public final class Protocol {
           result.portrait_ = portrait_;
           result.id_ = id_;
           result.team_ = team_;
+          result.ghost_ = ghost_;
           onBuilt();
           return result;
         }
@@ -5213,6 +5248,9 @@ public final class Protocol {
           }
           if (other.getTeam() != 0) {
             setTeam(other.getTeam());
+          }
+          if (other.getGhost() != false) {
+            setGhost(other.getGhost());
           }
           onChanged();
           return this;
@@ -5546,6 +5584,32 @@ public final class Protocol {
           onChanged();
           return this;
         }
+
+        private boolean ghost_ ;
+        /**
+         * <code>optional bool ghost = 6;</code>
+         */
+        public boolean getGhost() {
+          return ghost_;
+        }
+        /**
+         * <code>optional bool ghost = 6;</code>
+         */
+        public Builder setGhost(boolean value) {
+          
+          ghost_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional bool ghost = 6;</code>
+         */
+        public Builder clearGhost() {
+          
+          ghost_ = false;
+          onChanged();
+          return this;
+        }
         public final Builder setUnknownFields(
             final com.google.protobuf.UnknownFieldSet unknownFields) {
           return this;
@@ -5600,14 +5664,9 @@ public final class Protocol {
         com.google.protobuf.MessageOrBuilder {
 
       /**
-       * <code>optional string portrait = 1;</code>
+       * <code>optional int32 id = 1;</code>
        */
-      java.lang.String getPortrait();
-      /**
-       * <code>optional string portrait = 1;</code>
-       */
-      com.google.protobuf.ByteString
-          getPortraitBytes();
+      int getId();
 
       /**
        * <code>optional string text = 2;</code>
@@ -5618,16 +5677,6 @@ public final class Protocol {
        */
       com.google.protobuf.ByteString
           getTextBytes();
-
-      /**
-       * <code>optional string name = 3;</code>
-       */
-      java.lang.String getName();
-      /**
-       * <code>optional string name = 3;</code>
-       */
-      com.google.protobuf.ByteString
-          getNameBytes();
     }
     /**
      * Protobuf type {@code com.game7th.swiped.api.battle.protocol.BattleMessage.SpeechMessage}
@@ -5641,9 +5690,8 @@ public final class Protocol {
         super(builder);
       }
       private SpeechMessage() {
-        portrait_ = "";
+        id_ = 0;
         text_ = "";
-        name_ = "";
       }
 
       @java.lang.Override
@@ -5671,22 +5719,15 @@ public final class Protocol {
                 }
                 break;
               }
-              case 10: {
-                java.lang.String s = input.readStringRequireUtf8();
+              case 8: {
 
-                portrait_ = s;
+                id_ = input.readInt32();
                 break;
               }
               case 18: {
                 java.lang.String s = input.readStringRequireUtf8();
 
                 text_ = s;
-                break;
-              }
-              case 26: {
-                java.lang.String s = input.readStringRequireUtf8();
-
-                name_ = s;
                 break;
               }
             }
@@ -5712,38 +5753,13 @@ public final class Protocol {
                 com.game7th.swiped.api.battle.protocol.Protocol.BattleMessage.SpeechMessage.class, com.game7th.swiped.api.battle.protocol.Protocol.BattleMessage.SpeechMessage.Builder.class);
       }
 
-      public static final int PORTRAIT_FIELD_NUMBER = 1;
-      private volatile java.lang.Object portrait_;
+      public static final int ID_FIELD_NUMBER = 1;
+      private int id_;
       /**
-       * <code>optional string portrait = 1;</code>
+       * <code>optional int32 id = 1;</code>
        */
-      public java.lang.String getPortrait() {
-        java.lang.Object ref = portrait_;
-        if (ref instanceof java.lang.String) {
-          return (java.lang.String) ref;
-        } else {
-          com.google.protobuf.ByteString bs = 
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          portrait_ = s;
-          return s;
-        }
-      }
-      /**
-       * <code>optional string portrait = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getPortraitBytes() {
-        java.lang.Object ref = portrait_;
-        if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          portrait_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
+      public int getId() {
+        return id_;
       }
 
       public static final int TEXT_FIELD_NUMBER = 2;
@@ -5780,40 +5796,6 @@ public final class Protocol {
         }
       }
 
-      public static final int NAME_FIELD_NUMBER = 3;
-      private volatile java.lang.Object name_;
-      /**
-       * <code>optional string name = 3;</code>
-       */
-      public java.lang.String getName() {
-        java.lang.Object ref = name_;
-        if (ref instanceof java.lang.String) {
-          return (java.lang.String) ref;
-        } else {
-          com.google.protobuf.ByteString bs = 
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          name_ = s;
-          return s;
-        }
-      }
-      /**
-       * <code>optional string name = 3;</code>
-       */
-      public com.google.protobuf.ByteString
-          getNameBytes() {
-        java.lang.Object ref = name_;
-        if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          name_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
@@ -5826,14 +5808,11 @@ public final class Protocol {
 
       public void writeTo(com.google.protobuf.CodedOutputStream output)
                           throws java.io.IOException {
-        if (!getPortraitBytes().isEmpty()) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 1, portrait_);
+        if (id_ != 0) {
+          output.writeInt32(1, id_);
         }
         if (!getTextBytes().isEmpty()) {
           com.google.protobuf.GeneratedMessageV3.writeString(output, 2, text_);
-        }
-        if (!getNameBytes().isEmpty()) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 3, name_);
         }
       }
 
@@ -5842,14 +5821,12 @@ public final class Protocol {
         if (size != -1) return size;
 
         size = 0;
-        if (!getPortraitBytes().isEmpty()) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, portrait_);
+        if (id_ != 0) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeInt32Size(1, id_);
         }
         if (!getTextBytes().isEmpty()) {
           size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, text_);
-        }
-        if (!getNameBytes().isEmpty()) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, name_);
         }
         memoizedSize = size;
         return size;
@@ -5867,12 +5844,10 @@ public final class Protocol {
         com.game7th.swiped.api.battle.protocol.Protocol.BattleMessage.SpeechMessage other = (com.game7th.swiped.api.battle.protocol.Protocol.BattleMessage.SpeechMessage) obj;
 
         boolean result = true;
-        result = result && getPortrait()
-            .equals(other.getPortrait());
+        result = result && (getId()
+            == other.getId());
         result = result && getText()
             .equals(other.getText());
-        result = result && getName()
-            .equals(other.getName());
         return result;
       }
 
@@ -5883,12 +5858,10 @@ public final class Protocol {
         }
         int hash = 41;
         hash = (19 * hash) + getDescriptorForType().hashCode();
-        hash = (37 * hash) + PORTRAIT_FIELD_NUMBER;
-        hash = (53 * hash) + getPortrait().hashCode();
+        hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + getId();
         hash = (37 * hash) + TEXT_FIELD_NUMBER;
         hash = (53 * hash) + getText().hashCode();
-        hash = (37 * hash) + NAME_FIELD_NUMBER;
-        hash = (53 * hash) + getName().hashCode();
         hash = (29 * hash) + unknownFields.hashCode();
         memoizedHashCode = hash;
         return hash;
@@ -6007,11 +5980,9 @@ public final class Protocol {
         }
         public Builder clear() {
           super.clear();
-          portrait_ = "";
+          id_ = 0;
 
           text_ = "";
-
-          name_ = "";
 
           return this;
         }
@@ -6035,9 +6006,8 @@ public final class Protocol {
 
         public com.game7th.swiped.api.battle.protocol.Protocol.BattleMessage.SpeechMessage buildPartial() {
           com.game7th.swiped.api.battle.protocol.Protocol.BattleMessage.SpeechMessage result = new com.game7th.swiped.api.battle.protocol.Protocol.BattleMessage.SpeechMessage(this);
-          result.portrait_ = portrait_;
+          result.id_ = id_;
           result.text_ = text_;
-          result.name_ = name_;
           onBuilt();
           return result;
         }
@@ -6079,16 +6049,11 @@ public final class Protocol {
 
         public Builder mergeFrom(com.game7th.swiped.api.battle.protocol.Protocol.BattleMessage.SpeechMessage other) {
           if (other == com.game7th.swiped.api.battle.protocol.Protocol.BattleMessage.SpeechMessage.getDefaultInstance()) return this;
-          if (!other.getPortrait().isEmpty()) {
-            portrait_ = other.portrait_;
-            onChanged();
+          if (other.getId() != 0) {
+            setId(other.getId());
           }
           if (!other.getText().isEmpty()) {
             text_ = other.text_;
-            onChanged();
-          }
-          if (!other.getName().isEmpty()) {
-            name_ = other.name_;
             onChanged();
           }
           onChanged();
@@ -6117,71 +6082,28 @@ public final class Protocol {
           return this;
         }
 
-        private java.lang.Object portrait_ = "";
+        private int id_ ;
         /**
-         * <code>optional string portrait = 1;</code>
+         * <code>optional int32 id = 1;</code>
          */
-        public java.lang.String getPortrait() {
-          java.lang.Object ref = portrait_;
-          if (!(ref instanceof java.lang.String)) {
-            com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            portrait_ = s;
-            return s;
-          } else {
-            return (java.lang.String) ref;
-          }
+        public int getId() {
+          return id_;
         }
         /**
-         * <code>optional string portrait = 1;</code>
+         * <code>optional int32 id = 1;</code>
          */
-        public com.google.protobuf.ByteString
-            getPortraitBytes() {
-          java.lang.Object ref = portrait_;
-          if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
-                com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref);
-            portrait_ = b;
-            return b;
-          } else {
-            return (com.google.protobuf.ByteString) ref;
-          }
-        }
-        /**
-         * <code>optional string portrait = 1;</code>
-         */
-        public Builder setPortrait(
-            java.lang.String value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  
-          portrait_ = value;
+        public Builder setId(int value) {
+          
+          id_ = value;
           onChanged();
           return this;
         }
         /**
-         * <code>optional string portrait = 1;</code>
+         * <code>optional int32 id = 1;</code>
          */
-        public Builder clearPortrait() {
+        public Builder clearId() {
           
-          portrait_ = getDefaultInstance().getPortrait();
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>optional string portrait = 1;</code>
-         */
-        public Builder setPortraitBytes(
-            com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-          
-          portrait_ = value;
+          id_ = 0;
           onChanged();
           return this;
         }
@@ -6251,75 +6173,6 @@ public final class Protocol {
   checkByteStringIsUtf8(value);
           
           text_ = value;
-          onChanged();
-          return this;
-        }
-
-        private java.lang.Object name_ = "";
-        /**
-         * <code>optional string name = 3;</code>
-         */
-        public java.lang.String getName() {
-          java.lang.Object ref = name_;
-          if (!(ref instanceof java.lang.String)) {
-            com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            name_ = s;
-            return s;
-          } else {
-            return (java.lang.String) ref;
-          }
-        }
-        /**
-         * <code>optional string name = 3;</code>
-         */
-        public com.google.protobuf.ByteString
-            getNameBytes() {
-          java.lang.Object ref = name_;
-          if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
-                com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref);
-            name_ = b;
-            return b;
-          } else {
-            return (com.google.protobuf.ByteString) ref;
-          }
-        }
-        /**
-         * <code>optional string name = 3;</code>
-         */
-        public Builder setName(
-            java.lang.String value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  
-          name_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>optional string name = 3;</code>
-         */
-        public Builder clearName() {
-          
-          name_ = getDefaultInstance().getName();
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>optional string name = 3;</code>
-         */
-        public Builder setNameBytes(
-            com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-          
-          name_ = value;
           onChanged();
           return this;
         }
@@ -9197,7 +9050,7 @@ public final class Protocol {
   static {
     java.lang.String[] descriptorData = {
       "\n\016protocol.proto\022&com.game7th.swiped.api" +
-      ".battle.protocol\"\256\024\n\rBattleMessage\022\014\n\004ty" +
+      ".battle.protocol\"\251\024\n\rBattleMessage\022\014\n\004ty" +
       "pe\030\001 \001(\005\022W\n\014message_type\030\002 \001(\0162A.com.gam" +
       "e7th.swiped.api.battle.protocol.BattleMe" +
       "ssage.MessageType\022\n\n\002dx\030\003 \001(\005\022\n\n\002dy\030\004 \001(" +
@@ -9232,37 +9085,37 @@ public final class Protocol {
       "n\030\003 \001(\005\022Q\n\004tile\030\004 \001(\0132C.com.game7th.swip" +
       "ed.api.battle.protocol.BattleMessage.Til" +
       "eViewModel\"A\n\022TileFieldEventType\022\010\n\004MOVE" +
-      "\020\000\022\t\n\005MERGE\020\001\022\n\n\006DELETE\020\002\022\n\n\006UPDATE\020\003\032\371\003" +
+      "\020\000\022\t\n\005MERGE\020\001\022\n\n\006DELETE\020\002\022\n\n\006UPDATE\020\003\032\210\004" +
       "\n\022PersonageViewModel\022p\n\017personage_stats\030" +
       "\001 \001(\0132W.com.game7th.swiped.api.battle.pr" +
       "otocol.BattleMessage.PersonageViewModel.",
       "PersonageStats\022\014\n\004skin\030\002 \001(\t\022\020\n\010portrait" +
-      "\030\003 \001(\t\022\n\n\002id\030\004 \001(\005\022\014\n\004team\030\005 \001(\005\032\266\002\n\016Per" +
-      "sonageStats\022\014\n\004body\030\001 \001(\005\022\016\n\006health\030\002 \001(" +
-      "\005\022\022\n\nmax_health\030\003 \001(\005\022\r\n\005armor\030\004 \001(\005\022\016\n\006" +
-      "spirit\030\005 \001(\005\022\024\n\014regeneration\030\006 \001(\005\022\017\n\007ev" +
-      "asion\030\007 \001(\005\022\014\n\004mind\030\010 \001(\005\022\016\n\006wisdom\030\t \001(" +
-      "\005\022\016\n\006resist\030\n \001(\005\022\022\n\nresist_max\030\013 \001(\005\022\r\n" +
-      "\005level\030\014 \001(\005\022\014\n\004tick\030\r \001(\005\022\020\n\010max_tick\030\016" +
-      " \001(\005\022\024\n\014tick_ability\030\017 \001(\t\022\022\n\nis_stunned" +
-      "\030\020 \001(\010\022\021\n\tis_frozen\030\021 \001(\010\032=\n\rSpeechMessa",
-      "ge\022\020\n\010portrait\030\001 \001(\t\022\014\n\004text\030\002 \001(\t\022\014\n\004na" +
-      "me\030\003 \001(\t\"\346\004\n\013MessageType\022\t\n\005SWIPE\020\000\022\t\n\005R" +
-      "EADY\020\001\022\013\n\007CONCEDE\020\002\022\t\n\005FLASK\020\003\022\r\n\tHEARTB" +
-      "EAT\020\004\022\020\n\014USE_ULTIMATE\020\005\022\020\n\013CREATE_TILE\020\350" +
-      "\007\022\021\n\014SWIPE_MOTION\020\351\007\022\021\n\014COMBO_UPDATE\020\352\007\022" +
-      "\020\n\013UPDATE_TILE\020\353\007\022\020\n\013REMOVE_TILE\020\354\007\022\016\n\tS" +
-      "HOW_TILE\020\355\007\022\025\n\020CREATE_PERSONAGE\020\356\007\022\025\n\020PE" +
-      "RSONAGE_ATTACK\020\357\007\022!\n\034PERSONAGE_POSITIONE" +
-      "D_ABILITY\020\360\007\022\025\n\020PERSONAGE_DAMAGE\020\361\007\022\023\n\016P" +
-      "ERSONAGE_DEAD\020\362\007\022\025\n\020PERSONAGE_UPDATE\020\363\007\022",
-      "\023\n\016PERSONAGE_HEAL\020\364\007\022\014\n\007NPC_AOE\020\365\007\022\024\n\017SH" +
-      "OW_PROJECTILE\020\366\007\022\021\n\014SHOW_AILMENT\020\367\007\022\025\n\020R" +
-      "EMOVE_PERSONAGE\020\370\007\022\r\n\010NEW_WAVE\020\371\007\022\020\n\013SHO" +
-      "W_SPEECH\020\372\007\022\014\n\007VICTORY\020\373\007\022\021\n\014BATTLE_READ" +
-      "Y\020\374\007\022\023\n\016FLASK_CONSUMED\020\375\007\022\027\n\022HEARTBEAT_R" +
-      "ESPONSE\020\376\007\022\013\n\006DEFEAT\020\377\007\022\022\n\rWISDOM_UPDATE" +
-      "\020\200\010\022\024\n\017ULTIMATE_UPDATE\020\201\010b\006proto3"
+      "\030\003 \001(\t\022\n\n\002id\030\004 \001(\005\022\014\n\004team\030\005 \001(\005\022\r\n\005ghos" +
+      "t\030\006 \001(\010\032\266\002\n\016PersonageStats\022\014\n\004body\030\001 \001(\005" +
+      "\022\016\n\006health\030\002 \001(\005\022\022\n\nmax_health\030\003 \001(\005\022\r\n\005" +
+      "armor\030\004 \001(\005\022\016\n\006spirit\030\005 \001(\005\022\024\n\014regenerat" +
+      "ion\030\006 \001(\005\022\017\n\007evasion\030\007 \001(\005\022\014\n\004mind\030\010 \001(\005" +
+      "\022\016\n\006wisdom\030\t \001(\005\022\016\n\006resist\030\n \001(\005\022\022\n\nresi" +
+      "st_max\030\013 \001(\005\022\r\n\005level\030\014 \001(\005\022\014\n\004tick\030\r \001(" +
+      "\005\022\020\n\010max_tick\030\016 \001(\005\022\024\n\014tick_ability\030\017 \001(" +
+      "\t\022\022\n\nis_stunned\030\020 \001(\010\022\021\n\tis_frozen\030\021 \001(\010",
+      "\032)\n\rSpeechMessage\022\n\n\002id\030\001 \001(\005\022\014\n\004text\030\002 " +
+      "\001(\t\"\346\004\n\013MessageType\022\t\n\005SWIPE\020\000\022\t\n\005READY\020" +
+      "\001\022\013\n\007CONCEDE\020\002\022\t\n\005FLASK\020\003\022\r\n\tHEARTBEAT\020\004" +
+      "\022\020\n\014USE_ULTIMATE\020\005\022\020\n\013CREATE_TILE\020\350\007\022\021\n\014" +
+      "SWIPE_MOTION\020\351\007\022\021\n\014COMBO_UPDATE\020\352\007\022\020\n\013UP" +
+      "DATE_TILE\020\353\007\022\020\n\013REMOVE_TILE\020\354\007\022\016\n\tSHOW_T" +
+      "ILE\020\355\007\022\025\n\020CREATE_PERSONAGE\020\356\007\022\025\n\020PERSONA" +
+      "GE_ATTACK\020\357\007\022!\n\034PERSONAGE_POSITIONED_ABI" +
+      "LITY\020\360\007\022\025\n\020PERSONAGE_DAMAGE\020\361\007\022\023\n\016PERSON" +
+      "AGE_DEAD\020\362\007\022\025\n\020PERSONAGE_UPDATE\020\363\007\022\023\n\016PE",
+      "RSONAGE_HEAL\020\364\007\022\014\n\007NPC_AOE\020\365\007\022\024\n\017SHOW_PR" +
+      "OJECTILE\020\366\007\022\021\n\014SHOW_AILMENT\020\367\007\022\025\n\020REMOVE" +
+      "_PERSONAGE\020\370\007\022\r\n\010NEW_WAVE\020\371\007\022\020\n\013SHOW_SPE" +
+      "ECH\020\372\007\022\014\n\007VICTORY\020\373\007\022\021\n\014BATTLE_READY\020\374\007\022" +
+      "\023\n\016FLASK_CONSUMED\020\375\007\022\027\n\022HEARTBEAT_RESPON" +
+      "SE\020\376\007\022\013\n\006DEFEAT\020\377\007\022\022\n\rWISDOM_UPDATE\020\200\010\022\024" +
+      "\n\017ULTIMATE_UPDATE\020\201\010b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -9305,7 +9158,7 @@ public final class Protocol {
     internal_static_com_game7th_swiped_api_battle_protocol_BattleMessage_PersonageViewModel_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_game7th_swiped_api_battle_protocol_BattleMessage_PersonageViewModel_descriptor,
-        new java.lang.String[] { "PersonageStats", "Skin", "Portrait", "Id", "Team", });
+        new java.lang.String[] { "PersonageStats", "Skin", "Portrait", "Id", "Team", "Ghost", });
     internal_static_com_game7th_swiped_api_battle_protocol_BattleMessage_PersonageViewModel_PersonageStats_descriptor =
       internal_static_com_game7th_swiped_api_battle_protocol_BattleMessage_PersonageViewModel_descriptor.getNestedTypes().get(0);
     internal_static_com_game7th_swiped_api_battle_protocol_BattleMessage_PersonageViewModel_PersonageStats_fieldAccessorTable = new
@@ -9317,7 +9170,7 @@ public final class Protocol {
     internal_static_com_game7th_swiped_api_battle_protocol_BattleMessage_SpeechMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_game7th_swiped_api_battle_protocol_BattleMessage_SpeechMessage_descriptor,
-        new java.lang.String[] { "Portrait", "Text", "Name", });
+        new java.lang.String[] { "Id", "Text", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
