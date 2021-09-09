@@ -3,15 +3,10 @@ package com.game7th.swipe.dialog
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
-import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction
-import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.game7th.swipe.GdxGameContext
-import com.game7th.swipe.campaign.plist.PersonageVerticalPortrait
-import com.game7th.swipe.campaign.plist.PortraitConfig
 import kotlinx.coroutines.launch
 import ktx.actors.onClick
 import ktx.async.KtxAsync
@@ -58,13 +53,13 @@ class SpeechView(
         KtxAsync.launch {
             context.stringService.getString(textId).let { textLabel.setText(it) }
         }
-
     }
 
     private fun dismiss() {
         dismisser()
         remove()
     }
+
     companion object {
         const val wid = 280f
         const val hei = 130f
